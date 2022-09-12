@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myplexus | SIP Planner</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/responsive.css">
+</head>
+
+<body>
+
+    <div class="header-top bg-b">
+        <div class="container">
+            <div class="row welcome">
+                <div class="col-lg-4 col-md-4 col-sm-12 header-1">
+                    <p>Welcome To myplexus.com</p>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 header-2">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-9 col-sm-12 header-menu pr-0">
+                            <ul class="navbar-nav d-flex flex-row justify-content-end">
+                                <li><a href="contact-us.html">Connect With Us</a>.</li>
+                                <li><a href="#">Knowledge Center</a>.</li>
+                                <li><a href="#">FAQ's</a>.</li>
+                                <li><a href="#">Market Updates</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12 login-nav">
+                            <ul class="navbar-nav d-flex flex-row justify-content-end">
+                                <li class="user-login"><a href="login.html">Login</a>.</li>
+                                <li class="user-register"><a href="analysis-register.html">Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="main-menu navbar navbar-expand-lg p-0">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html"><img src="../images/myplexus-logo.png" alt="myplexus logo"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse align-items-end justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Monthly Ranking</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Portfolios</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Test 1</a>
+                            <a class="dropdown-item" href="#">Test 2</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Snapshot Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Calculators</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Company</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Memberships</a>
+                    </li>
+                    <li class="nav-item ask-expert-link">
+                        <a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#expert-help">ASK OUR EXPERTS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="custom-banner no-bg sip-planner-banner">
+        <div class="container">
+            <h1 class="f-b">Mutual Funds <br/> "A Better Way Of Investment"</h1>
+        </div>
+    </div>
+
+    <div class="myplexus-login-page sip-calc-login">
+        <div class="login-page">
+            <div class="container">
+                <div class="login-block bg-gry br-5 box-shadow">
+                    <div class="login-wrap">
+                        <div class="col-lg-5 col-md-6 col-sm-12 m-auto sip-calc-wrapper">
+                            <h3>Please Login First To Get Your Result</h3>
+                            <div class="sip-calc-loginin-wrap">
+
+                                <div class="sip-calc-social-login">
+                                    <h6>Log in with</h6>
+                                    <ul>
+                                        <li><a href="#"><img src="../images/gmail-login-img.jpg" /></a></li>
+                                        <li><a href="#"><img src="../images/facebook-login-img.jpg" /></a></li>
+                                    </ul>
+                                    <h6>OR</h6>
+                                </div>
+
+                                <form action="#">
+                                    <div class="login-field">
+                                        <label>Enter your name</label>
+                                        <input type="text" id="login_user" class="box-shadow" placeholder="John Doe" required />
+                                    </div>
+                                    <div class="password-field">
+                                        <label>Enter your mail</label>
+                                        <input type="text" id="login_pass" class="box-shadow" min="6" max="20" maxlength="20" placeholder="XXXXXXXXXX" required />
+                                    </div>
+                                    <div class="log-other-opt">
+                                        <div class="login-action-btn float-right">
+                                            <input type="submit" value="Next" class="text-uppercase btn-bg-2 f-b text-white" />
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </form>
+
+                                <div class="calculator-select-calc" style="display: none;">
+                                    <img src="../images/select-calc-bg-img.jpg" class="img-fluid">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Select Calculator Category -->
+
+    <div class="calculator-select-calc-popup" style="display: none;">
+        <div class="select-calc-popup-wrap">
+            <h6>Please select calculator</h6>
+            <div class="select-calc-choose select2-styles">
+                <form action="#" method="post">
+                    <select id="select-calcy" class="js-example-placeholder-single js-states form-control">
+                        <option></option>
+                        <option>Classification</option>
+                        <option>Classification 2</option>
+                        <option>Classification 3</option>
+                        <option>Classification 4</option>
+                    </select>
+                    <div class="select-calc-submit float-right">
+                        <input type="submit" value="Submit" id="selected-calc-submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- CALCULATOR TABS -->
+
+    <div class="compare-scemes-sec investing-tools select2-styles">
+        <div class="container">
+            <div class="compare-block">
+                <h4>Calculators</h4>
+            </div>
+
+            <ul class="nav nav-tabs justify-content-center border-0">
+                <li><a class="active" data-toggle="tab" href="#sip-planner">SIP Planner</a></li>
+                <li><a data-toggle="tab" href="#sip-p-calc">SIP Performance Calculator</a></li>
+                <li><a data-toggle="tab" href="#inf-calc">Inflation Calculator</a></li>
+                <li><a data-toggle="tab" href="#retire-calc">Retirement Calculator</a></li>
+                <li><a data-toggle="tab" href="#risk-tol-eval">Risk Tolerance Evaluator</a></li>
+            </ul>
+        </div>
+        <div class="tab-wrapper">
+            <div class="container">
+                <div class="tab-content">
+
+                    <!-- SIP PLANNER CALCULATOR TAB START -->
+
+                    <div id="sip-planner" class="tab-pane fade in active">
+                        <div class="invst-wrap invst-sip-planner">
+
+                            <h3>Inflation Calculator</h3>
+
+                            <ul class="nav nav-tabs justify-content-start">
+                                <li><a class="active" data-toggle="tab" href="#calculate-sip">Calculate SIP</a></li>
+                                <li><a data-toggle="tab" href="#sip-planner-faq">FAQ's</a></li>
+                            </ul>
+
+                            <div class="tab-wrapper">
+                                <div class="tab-content">
+
+                                    <!-- CALCULATE SIP TAB -->
+
+                                    <div id="calculate-sip" class="tab-pane fade in active">
+
+                                        <div class="row mx-0 invst-fields invst-field-1 justify-content-between">
+                                            <div class="sip-planner-ic-common sip-planner-ic-name">
+                                                <label>Value of Current Expenses (Rs.)</label>
+                                                <input type="text" id="inflation-username" placeholder="Enter Name" />
+                                            </div>
+                                            <div class="sip-planner-ic-common sip-planner-ic-email">
+                                                <label>Value of Current Expenses (Rs.)</label>
+                                                <input type="email" id="inflation-user-email" placeholder="Enter Email" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mx-0 invst-fields invst-field-1 justify-content-between">
+                                            <div class="sip-planner-ic-common sip-planner-ic-phone">
+                                                <label>Time Period (Y)</label>
+                                                <input type="number" id="inflation-user-phone" placeholder="Enter Number" min="10" max="12" />
+                                            </div>
+                                            <div class="sip-planner-ic-common sip-planner-ic-plan">
+                                                <label>Select Plan</label>
+                                                <select id="inflation-user-plan" class="js-example-placeholder-single js-states form-control">
+                                                    <option></option>
+                                                    <option>Plan 1</option>
+                                                    <option>Plan 2</option>
+                                                    <option>Plan 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+            
+                                        <div class="row mx-0 invst-fields invst-field-1 justify-content-between align-items-center sip-planner-ic-action">
+                                            <div class="sip-planner-ic-action-cm sip-planner-ic-action-1">
+                                                <a href="#" class="sip-tut">SIP Tutorial</a>
+                                            </div>
+                                            <div class="sip-planner-ic-action-cm sip-planner-ic-action-2">
+                                                <input id="sip-planner-ic-submit" type="submit" value="Submit" />
+                                            </div>
+                                        </div>
+
+                                        <!-- CALCULATE SIP END -->
+
+                                    </div>
+
+                                    <!-- FAQ'S TAB START -->
+
+                                    <div id="sip-planner-faq" class="tab-pane fade">
+
+                                        <div class="tabs-faqs">
+                                            <div class="tab-faqs">
+
+                                                <!-- FAQ PAGE ACCORDIONS -->
+        
+                                                <div class="faq-main">
+                                                    
+                                                    <h6>All the questions that you want to know the answers to - the why, the how, the what etc. neatly put forth for your benefit.</h6>
+                                                    <div class="faq-wrap">
+                                                        <div id="accordion">
+                                                            
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingOne">
+                                                                    <h5 class="mb-0">
+                                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                                            What is SIP?
+                                                                        </button>
+                                                                    </h5>
+                                                                </div>
+                                        
+                                                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                                                    <div class="card-body">
+                                                                        <p>Do you want to make a lot of money sometime in the future without worrying about short term swings and always beat markets and have ample access to the money that you have invested yet be relatively sure that the targets would be met? If just reading this long sentence has wound you up but if your wish list is really this long then here it is. The best thing to have happened to us since Aladdin's Lamp is here and we explain everything about it. Read on if you want to know everything about it and if you still have some queries then let us know and we would try to clear all your doubts.</p>
+                                        
+                                                                        <p>SIP is the popular shortened form for Systematic Investment Plan. This form of investing refers to the system of putting in small amounts at regular intervals into a mutual fund scheme to meet a, or a set of medium to long-term goals. The principle of regular investing provides a working mechanism of beating markets - IT IS NOT ONLY IMPORTANT HOW MUCH YOU INVEST IN THE MARKETS BUT IT IS FAR MORE IMPORTANT HOW MANY TIMES YOU INVEST.</p>
+                                        
+                                                                        <p>Further, it has been observed that target based investments are the most likely to succeed. The reasons for this are not very difficult to find. The discipline to save and invest for the target is high because there is a tangible objective and more importantly YOU have set the objective. So it can be assumed that once you have set for yourself a target, viz. buying a house, higher education for the children or your own retirement planning, you would be more focused on meeting these objectives. But remember, discipline is the most important factor and it makes sense that the discipline is strictly enforced.</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingTwo">
+                                                                    <h5 class="mb-0">
+                                                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                            What are the benefits of SIP?
+                                                                        </button>
+                                                                    </h5>
+                                                                </div>
+                                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                                                    <div class="card-body">
+                                                                        
+                                                                        <h6>Long term wealth creation</h6>
+                                                                        <p>SIP provides an easy way for you to pace yourself towards a stated goal. Instead of needing to put down a large amount in one go, you can calculate how much you need to put in on, lets say a monthly basis. But please remember SIP does not work on short terms and there is no way you would predict markets on an annual basis. The minimum duration that we would advice is three years but it gets better the longer it goes.</p>
+                                                                        
+                                                                        <h6>Low Risk</h6>
+                                                                        <p>We are often compelled to envy someone who has made a killing in the stock markets but we completely ignore the many instances when he had seen his money simply vanish. Nor do we really advertise our goof ups as readily as we speak of our successes. But please understand-it is impossible to beat the markets and even the best fund managers would come short on beating markets all the time. But we can definitely, largely de-risk ourselves from the entire gamut of high markets and low markets and needing to stay one step ahead. By riding on all the cycles, it simply averages out the highs and the lows. So long as the economy grows it is impossible that the markets or specifically the stock market indices would not. Markets always tend to move along with the P.E(refers to the ratio of the price of the stock to the profit per share) growth of the market, apart from temporary aberrations. Just use this simple and easy step to make your fortune.</p>
+                                                                        
+                                                                        <h6>Liquidity</h6>
+                                                                        <p>What happens if we suddenly needed some money, a little more than we have immediate access to? Mutual funds and the equity mutual funds are largely open ended, and we advocate largely open ended schemes. The good news is that you can pull out the entire amount lying in your account. Just like that. No questions asked. And the entire amount would be in your bank account within three working days.</p>
+                                                                        
+                                                                        <h6>Predicatbility</h6>
+                                                                        <p>Can we look into our crystal ball and say that SIP is guaranteed to make money? The simple answer is yes but with a condition. As long as we are investing in equities, in an economy that is growing then we can safely say that we are guaranteed of performance. It has been proven across diverse markets and a variety of time spans with the same set of results. It is so common in the western world that SIP is now the most preferred way to accumulate wealth amongst the salary earning population as well as self employed professionals. Frankly do you expect that India would not grow or even worse, go down in the next decade or more? Really that is not impossible but very very unlikely.</p>
+                                                                        
+                                                                        <h6>Who all should use the system - what age, what profile, what stage of life etc.</h6>
+                                                                        <p>SIP is a long-term wealth creation tool. It is best suited for Professionals who would want to painlessly plan for their long-term goals. Self-employed professionals who need to definitely plan for their long-term goals and who do not have the benefit of pension, gratuity etc. Businessmen who would want to hedge their risk by not putting everything back into their own business but also take minor position in other business cycles as well. For those planning to utilize the Income Tax bracket. Everybody else!!!!!!</p>
+                                                                        
+                                                                        <h6>How does it work?</h6>
+                                                                        <p>Starting an SIP is very simple. You just need to fill up a form and payments could be made by cheques or by using the auto debit facility from your bank. But you can stop the payments for one time or for several times or for the remainder of the stated time frame. It is actually very simple. Unless of course it is a lock in scheme where the scheme does not allow withdrawal.</p>
+                                                                        
+                                                                        <h6>Tax benefits</h6>
+                                                                        <p>Mutual fund schemes (the ones that are majorly invested in equity) do not have any long term capital gains tax, dividends are tax free and short term capital gains are taxed at 10% Plus surcharge.</p>
+                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- FAQ'S TAB END -->
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SIP PLANNER CALCULATOR TAB END -->
+
+                    <!-- SIP CALCULATOR TAB START -->
+
+                    <div id="sip-p-calc" class="tab-pane fade">
+                        <div class="invst-wrap invst-sip-performace">
+                            <h3>SIP Performance Calculator</h3>
+
+                            <div class="row invst-fields invst-field-1">
+                                <div class="col-lg-2 col-md-2 col-sm-12 invst-field-1-c invst-field-1-c1">
+                                    <label>SIP Amount (Rs.)</label>
+                                    <input type="number" id="sip-amount-val" placeholder="10000" min="0" />
+                                </div>
+                                <div class="col-lg-6 col-md-4 col-sm-12 invst-field-1-c invst-field-1-c2">
+                                    <label>Select Fund</label>
+                                    <select id="select-fund" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>Aditya Birla Sun Life Assets</option>
+                                        <option>Fund 1</option>
+                                        <option>Fund 2</option>
+                                        <option>Fund 3</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 invst-field-1-c invst-field-1-c3">
+                                    <label>Duration (month)</label>
+                                    <input type="number" id="duration-val" placeholder="12" min="0" />
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 invst-field-1-c invst-field-1-c4">
+                                    <label>Day of SIP</label>
+                                    <select id="day-sip" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row invst-fields invst-field-2">
+                                <div class="col-custom col invst-field-2-c invst-field-2-c1">
+                                    <label>Return Rate (%)</label>
+                                    <input type="number" id="return-rate" placeholder="18.62" min="0" />
+                                </div>
+                                <div class="col-custom col invst-field-2-c invst-field-2-c2">
+                                    <label>Your Investment (Rs.)</label>
+                                    <input type="number" id="your-investment" placeholder="Ex: 12000" min="0" />
+                                </div>
+                                <div class="col-custom col invst-field-2-c invst-field-2-c3">
+                                    <label>Your Current Value (Rs.)</label>
+                                    <input type="number" id="current-value" placeholder="120000" min="0" />
+                                </div>
+                                <div class="col-custom col invst-field-2-c invst-field-2-c4">
+                                    <label>Current NAV (Rs.)</label>
+                                    <input type="number" id="current-nav" placeholder="1364654.546" min="0" />
+                                </div>
+                                <div class="col-custom col invst-field-2-c invst-field-2-c5">
+                                    <label>Total Unit</label>
+                                    <select id="day-sip-2" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="invst-fields-graph">
+                                <img src="../images/graph-image.jpg" alt="graph" class="img-fluid">
+                                <div class="invst-fields-action-buttons">
+                                    <div class="row m-0 justify-content-end">
+                                        <div class="action-common action-btn-1">
+                                            <a id="show-table" href="javascript:void(0);">Show In Table</a>
+                                        </div>
+                                        <div class="action-common action-btn-2">
+                                            <a id="send-email" href="javascript:void(0);">Send Results In Email</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SIP CALCULATOR TAB END -->
+
+                    <!-- INFLATION CALCULATOR TAB START -->
+
+                    <div id="inf-calc" class="tab-pane fade">
+                        <div class="invst-wrap inst-inflation-calc">
+
+                            <h3>Inflation Calculator</h3>
+
+                            <div class="row invst-fields invst-field-1">
+                                <div class="col-lg-4 col-md-4 col-sm-12 invst-field-1-c invst-field-1-c1">
+                                    <label>Value of Current Expenses (Rs.)</label>
+                                    <input type="number" id="inflation-current-exp" placeholder="10000" min="0" />
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 invst-field-1-c invst-field-1-c2">
+                                    <label>Annual Inflation Rate (%)</label>
+                                    <select id="annual-inflation" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 invst-field-1-c invst-field-1-c3">
+                                    <label>Time Period (Y)</label>
+                                    <input type="number" id="duration-val" placeholder="12" min="0" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Return Rate (%)</label>
+                                    <input type="number" id="return-rate" placeholder="18.62" min="0" />
+                                </div>
+                            </div>
+
+                            <div class="invst-fields-graph">
+                                <img src="../images/inflation-calc-chart.jpg" alt="graph" class="img-fluid">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- INFLATION CALCULATOR TAB END -->
+
+                    <!-- RETIREMENT CALCULATOR TAB START -->
+
+                    <div id="retire-calc" class="tab-pane fade">
+                        <div class="invst-wrap invst-retirement-calc">
+
+                            <h3>Retirement Calulator</h3>
+
+                            <div class="row invst-fields invst-field-1 justify-content-between">
+                                <div class="invst-retirement-column col-sm-12 mt-0">
+                                    <label>Current age *</label>
+                                    <select id="retirement-current-age" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                                <div class="invst-retirement-column col-sm-12 mt-0">
+                                    <label>Expected age of Retirement *</label>
+                                    <select id="retirement-expected-age" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Life Expectancy *</label>
+                                    <select id="retirement-life-expectancy" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Rate of return during accumulation period *</label>
+                                    <select id="retirement-return-accu-period" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Rate of return after retirement *</label>
+                                    <select id="retirement-return-retirement" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Inflation *</label>
+                                    <select id="retirement-inflation" class="js-example-placeholder-single js-states form-control">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Monthly expenditure (In Rs.) *</label>
+                                    <input type="number" id="retirement-monthly-exp" />
+                                </div>
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Pension/income after retirement (If any)</label>
+                                    <input type="number" id="retirement-income-pension" />
+                                </div>
+
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Current Savings per month/SIP (If any)</label>
+                                    <input type="number" id="retirement-current-savings" />
+                                </div>
+                                <div class="invst-retirement-column col-sm-12">
+                                    <label>Current lump sum (If any)</label>
+                                    <input type="number" id="retirement-current-lumpsum" />
+                                </div>
+
+                                <div class="invst-retirement-calc invst-inflation-calc col-12">
+                                    <div class="invst-fields-action-buttons">
+                                        <div class="row m-0 justify-content-end">
+                                            <div class="action-common action-btn-1">
+                                                <a id="show-table" href="javascript:void(0);">Calculate</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="invst-inflation-data col-12">
+                                    <div class="row m-0">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 inflataion-data-common">
+                                            <h5>Corpus you will need on retirement</h5>
+                                            <span class="data">30416767.00</span>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-4 inflataion-data-common">
+                                            <h5>Savings Required per month</h5>
+                                            <span class="data">30416767.00</span>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-4 inflataion-data-common">
+                                            <h5>Savings Required per year</h5>
+                                            <span class="data">30416767.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="invst-fields-graph">
+                                <img src="../images/inflation-calc-chart.jpg" alt="graph" class="img-fluid">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- RETIREMENT CALCULATOR TAB END -->
+
+                    <!-- RISK TOLERANCE CALCULATOR TAB START -->
+
+                    <div id="risk-tol-eval" class="tab-pane fade">
+                        <div class="invst-wrap invst-risk-tol-calc">
+
+                            <div class="row m-0 invst-fields invst-field-1 justify-content-between">
+                                <div class="risk-tol-eval-common risk-tol-eval-email">
+                                    <label>Email Address</label>
+                                    <input type="email" id="risk-tolerance-user-email" placeholder="Enter Email" />
+                                </div>
+                                <div class="risk-tol-eval-common risk-tol-eval-name">
+                                    <label>Enter Name</label>
+                                    <input type="text" id="risk-tolerance-username" placeholder="Enter Name" />
+                                </div>
+                            </div>
+
+                            <div class="invst-fields-action-buttons">
+                                <div class="row m-0 justify-content-end">
+                                    <div class="action-common action-btn-1">
+                                        <a id="next-step" href="javascript:void(0);">Next Step</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="risk-tol-choose-age">
+                                <div class="risk-tol-age-wrap">
+                                    <div class="row align-items-center risk-tol-age-wrap-in">
+                                        <div class="risk-tol-age-lft">
+                                            <h5>How old are you?</h5>
+                                        </div>
+                                        <div class="risk-tol-age-rgt">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="optradio" checked />&lt;=20 years old
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="optradio">21 years old -40 years old
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="optradio">41 years old -60 years old
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="optradio">60 years old -80 years old
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio" class="form-check-input" name="optradio">&gt;=80 years old
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="invst-fields-action-buttons risk-tol-age-action">
+                                        <div class="row m-0 justify-content-end">
+                                            <div class="action-common action-btn-1">
+                                                <a id="back" href="javascript:void(0);">Back</a>
+                                            </div>
+                                            <div class="action-common action-btn-2">
+                                                <a id="next" href="javascript:void(0);">Next</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="risk-tol-eval-results br-5">
+                                <div class="risk-tol-eval-result-table br-5">
+                                    <h3>Evaluation Results</h3>
+                                    <h6>Hello aslam khandwani, Here is summary of your Risk Profile that you just filled.</h6>
+                                    <table id="evaluation-results" class="br-5 box-shadow border-s">
+                                        <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Type of investor</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Capacity to take Risk</td>
+                                                <td>Moderate</td>
+                                                <td><img src="../images/4-green-star.png" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Risk appetite</td>
+                                                <td>Highly Conservative</td>
+                                                <td><img src="../images/3-green-star.png" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Need to take Risk</td>
+                                                <td>Conservative</td>
+                                                <td><img src="../images/3-green-star.png" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="risk-tol-eval-risk-profile br-5">
+                                    <div class="row risk-profile-titles">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 title-1"><h3>Your Overall Risk Profile</h3></div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 title-2"><h3>Conservative</h3></div>
+                                    </div>
+                                    <table id="overall-risk-profile" class="br-5 box-shadow">
+                                        <thead>
+                                            <tr>
+                                                <th>Score</th>
+                                                <th>Tolerance level</th>
+                                                <th>Preferable Equity holding</th>
+                                                <th>Preferable Debt holding</th>
+                                                <th>Type of Investor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="table-very-high">
+                                                <td>4-5</td>
+                                                <td>Very High</td>
+                                                <td>100%</td>
+                                                <td>0%</td>
+                                                <td>Highly Aggresive</td>
+                                            </tr>
+                                            <tr class="table-moderate">
+                                                <td>3-4</td>
+                                                <td>Moderate</td>
+                                                <td>80%</td>
+                                                <td>20%</td>
+                                                <td>HAggresive</td>
+                                            </tr>
+                                            <tr class="table-high">
+                                                <td>3-2</td>
+                                                <td>High</td>
+                                                <td>60%</td>
+                                                <td>40%</td>
+                                                <td>Moderate</td>
+                                            </tr>
+                                            <tr class="table-low">
+                                                <td>1-2</td>
+                                                <td>Low</td>
+                                                <td>40%</td>
+                                                <td>60%</td>
+                                                <td>Conservative</td>
+                                            </tr>
+                                            <tr class="table-very-low">
+                                                <td>0-1</td>
+                                                <td>Very Low</td>
+                                                <td>20%</td>
+                                                <td>80%</td>
+                                                <td>Highly Conservative</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- RISK TOLERANCE CALCULATOR TAB END -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIP CALCULATOR GRAPH DIV START -->
+
+    <div id="sip-performance-calc-data" class="sip-performance-calc-table" style="display: none;">
+        <div class="container">
+            <div class="sip-p-table-inner full-table-style">
+                <table id="sip_calc_table" class="display box-shadow br-5">
+                    <thead>
+                        <tr>
+                            <th>SI No.</th>
+                            <th>SIP Date</th>
+                            <th>NAV</th>
+                            <th>SIP Amount</th>
+                            <th>No.of Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>04/07/2020</td>
+                            <td>20.34</td>
+                            <td>-2e+006</td>
+                            <td>98328.42</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>04/08/2020</td>
+                            <td>20.35</td>
+                            <td>-2e+007</td>
+                            <td>98328.44</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>04/09/2020</td>
+                            <td>20.36</td>
+                            <td>-2e+008</td>
+                            <td>98328.44</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>04/10/2020</td>
+                            <td>20.37</td>
+                            <td>-2e+009</td>
+                            <td>98328.45</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>04/11/2020</td>
+                            <td>20.38</td>
+                            <td>-2e+010</td>
+                            <td>98328.46</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>04/12/2020</td>
+                            <td>20.39</td>
+                            <td>-2e+011</td>
+                            <td>98328.47</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>04/01/2021</td>
+                            <td>20.40</td>
+                            <td>-2e+012</td>
+                            <td>98328.48</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>04/02/2021</td>
+                            <td>20.41</td>
+                            <td>-2e+013</td>
+                            <td>98328.49</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>04/03/2021</td>
+                            <td>20.42</td>
+                            <td>-2e+014</td>
+                            <td>98328.50</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>04/04/2021</td>
+                            <td>20.43</td>
+                            <td>-2e+015</td>
+                            <td>98328.51</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>04/05/2021</td>
+                            <td>20.44</td>
+                            <td>-2e+016</td>
+                            <td>98328.52</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIP CALCULATOR GRAPH DIV END -->
+
+
+    <!-- INFLATION CALCULATOR GRAPH DIV START -->
+
+    <div id="inflation-calc-data" style="display: none;">
+        <div class="container">
+            <img src="../images/inflation-calc-chart-data.jpg" class="img-fuid" />
+        </div>
+    </div>
+
+    <!-- INFLATION CALCULATOR GRAPH DIV END -->
+
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-sm-9 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-12 f-col-cn f-col-1">
+                                <h6>Quick Links</h6>
+                                <ul>
+                                    <li><a href="login.html">Investors Login</a></li>
+                                    <li><a href="#">Analysis</a></li>
+                                    <li><a href="#">NFO Monitor</a></li>
+                                    <li><a href="#">Panta Tec</a></li>
+                                    <li><a href="#">Ask Us</a></li>
+                                    <li><a href="#">About Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 f-col-cn f-col-2">
+                                <h6>Navigation</h6>
+                                <ul>
+                                    <li><a href="../index.html">Home</a></li>
+                                    <li><a href="monthly-ranking.html">Monthly Ranking</a></li>
+                                    <li><a href="#">Weekly Report</a></li>
+                                    <li><a href="#">Monthly Report</a></li>
+                                    <li><a href="fund-portfolio.html">Fund Portfolio</a></li>
+                                    <li><a href="composition-snapshot.html">Composition Snapshot</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 f-col-cn f-col-3">
+                                <h6>Contact Us</h6>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/location-icon.png" alt="location"></div>
+                                    <div class="f-content">
+                                        <p>11/5, 75C Park Street.</p>
+                                        <p>Kolkata-700016.</p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/call-icon.png" alt="call-icon"></div>
+                                    <div class="f-content">
+                                        <p>INDIA- <a href="tel:09073977460">09073977460</a></p>
+                                        <p>INDIA- <a href="tel:033-40646145">033-40646145</a></p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/web-icon.png" alt="web-icon"></div>
+                                    <div class="f-content">
+                                        <p>Email: <a href="mailto:contact@myplexus.com">contact@myplexus.com</a></p>
+                                        <p>Web: <a href="mailto:www.myplexus.com">www.myplexus.com</a></p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12 footer-last">
+                        <div class="col-12 f-col-logo p-0 text-right">
+                            <img src="../images/myplexus-footer-logo.png" alt="myplexus" class="img-fluid">
+                        </div>
+                        <div class="col-12 f-col-social p-0">
+                            <div class="d-flex justify-content-end">
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/facebook-icon.png"
+                                            alt="facebook"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/twiiter-icon.png" alt="twitter"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/instagram-icon.png"
+                                            alt="instagram"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/linkedin-icon.png"
+                                            alt="linkedin"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom bg-b">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 co-sm-12 f-b-lft">
+                        <p>Copyright© 2020 All rights reserved.</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 co-sm-12 f-b-rgt">
+                        <ul>
+                            <li><p><a href="#">Privacy Policy</a> |</p></li>
+                            <li><p><a href="#">Terms & Service</a></p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ASK AN EXPERT POPUP -->
+
+    <div class="expert-main modal fade" id="expert-help">
+        <div class="expert-wrap modal-dialog modal-dialog-centered" role="document">
+            <div class="expert-inner w-100">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="row w-100 m-0 d-flex">
+                    <div class="col-lg-7 col-md-7 col-sm-12 expert-common expert-lft">
+                        <h3>Our Experts Believe <br /> In Personalized Assistance!</h3>
+                        <div class="row expert-bio-wrap align-items-center">
+                            <div class="col-lg-4 col-md-4 col-sm-12 expert-profile">
+                                <img src="../images/sankeerth-reddy-pic.jpg" alt="sankeerth-reddy" class="img-fluid">
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-12 expert-bio">
+                                <span class="text-green">Sankeerth Reddy</span>
+                                <span class="desig">Managing Director</span>
+                                <a href="" target="_blank"><img src="../images/linkedin-icon-3.png" alt="linkedin"></a>
+                                <div class="sign-block">
+                                    <img src="../images/sankeerth-reddy-sign.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="expert-content-para">
+                            <p>We, at myplexus.com believe the financial intermediation and personal finance industry in
+                                India
+                                is going through the fastest evolutionary stage and in the coming days this is only
+                                going to
+                                become more hectic.
+                            </p>
+                            <p>Product life cycles will compress. Variations in performances will manifest itself more
+                                frequently.
+                                Risk evaluation will take centre-stage for marking the success or failure of every
+                                financial product
+                                or solution. Unbiased, user defined statistical tools will be the bedrock for
+                                understanding performance and evaluating efficacy of funds and fund managers in
+                                delivering returns quantum,
+                                providing it consistently and most specifically managing its various risk factors within
+                                manageable levels.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-12 expert-common expert-rgt no-bg">
+                        <form action="#" id="popup-form">
+                            <div class="p-form-field-row">
+                                <label>Name</label>
+                                <div class="p-form-field">
+                                    <input type="text" id="name" placeholder="John Doe" required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Mobile</label>
+                                <div class="p-form-field">
+                                    <input type="tel" id="phone" maxlength="12" placeholder="+91 98989 898989"
+                                        required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Email</label>
+                                <div class="p-form-field">
+                                    <input type="email" id="email" placeholder="john@myplexus.com" required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Select Fund</label>
+                                <div class="p-form-field">
+                                    <textarea name="message" id="message" placeholder="Enter Your Comments "
+                                        required></textarea>
+                                </div>
+                            </div>
+                            <div class="p-form-field-row p-form-s-field">
+                                <div class="p-form-field text-right">
+                                    <input type="submit" class="form-submit btn-bg-2 text-white" id="submit" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="expert-footer">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-lft-block">
+                            <div class="exptert-f-left">
+                                <img src="../images/location-icon-green.png" alt="location icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>11/5, 75C Park Street. <br /> Kolkata-700016</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-centr-block text-center">
+                            <div class="exptert-f-left">
+                                <img src="../images/phone-icon-green.png" alt="call icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>INDIA- 09073977460 <br /> INDIA- 033-40646145</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-rgt-block text-right">
+                            <div class="exptert-f-left">
+                                <img src="../images/web-icon-green.png" alt="web icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>contact@myplexus.com <br /> queries@myplexus.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

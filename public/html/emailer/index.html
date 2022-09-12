@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Snapshot</title>
+</head>
+
+<body style="font-family: 'Volte-Semibold'; color: #000;">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+    @font-face {
+    font-family: 'Volte-Regular';
+    src: url('../fonts/Volte-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Medium';
+    src: url('../fonts/Volte-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Semibold';
+    src: url('../fonts/Volte-Semibold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Bold';
+    src: url('../fonts/Volte-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    display: block; 
+}
+.container {
+    width: 1260px;
+    max-width: 96%;
+    margin: 0 auto;
+}
+.half {
+    width: 50%;
+}
+tbody tr:last-child td {
+    border-bottom: 0 !important;
+}
+tbody tr:last-child {
+    border-radius: 5px;
+}
+.table-col table {
+    flex: 32%;
+    max-width: 32%;
+}
+.table-col {
+    justify-content: space-between;
+}
+.top-banner::after {
+    position: absolute;
+    content: '';
+    top: -10px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/top-layer.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+}
+</style>
+
+    <div class="top-banner" style="border-top: 10px solid #6ab130; background-image: url('images/banner-img.jpg'); background-repeat: no-repeat; background-size: cover; padding-bottom: 70px; position: relative;">
+        <div class="container">
+            <table style="display: block;">
+                <tbody style="display: block;">
+                    <tr style="display: block;">
+                        <td style="display: block;">
+                            <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">myplexus.com</span></p>
+                            <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">Search, Research Mutual Funds</span></p>
+                        </td>
+                    </tr>
+                    <tr style="display: block; margin-top: 90px;">
+                        <td style="display: block;">
+                            <p style="text-align: center; font-family: 'Volte-Bold'; font-size: 60px; color: #fff;">Monthly Snapshot</p>
+                            <p style="text-align: center; color: #6ab130; font-size: 35px;">
+                                <span class="title">Fund Title Here -</span>
+                                <span class="date">February 2022</span>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3 COLUMNS TABLE -->
+
+    <!-- COLUMN 1 -->
+
+    <div class="container table-col" style="display: flex; margin-top: 55px;">
+        <table style="width:420px">
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                <tr style="display: block;">
+                    <td style="display: block; padding: 15px 16px 13px 16px; background-color: #00665e; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <p style="font-size: 18px; line-height: 24px; margin: 0; color: #fff;">Index Changes</p>
+                    </td>
+                </tr>
+            </tbody>
+            <thead style="display: block;">
+                <tr style="display: block; text-align: left;">
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Indices</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Closing Value</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12x; width:420px">% Change</th>
+                </tr>
+            </thead>
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">200000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1200/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">10%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">2000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">8000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">22%</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <!-- COLUMN 2 -->
+
+        <table style="width:420px">
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                <tr style="display: block;">
+                    <td style="display: block; padding: 15px 16px 13px 16px; background-color: #00665e; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <p style="font-size: 18px; line-height: 24px; margin: 0; color: #fff;">Index Changes</p>
+                    </td>
+                </tr>
+            </tbody>
+            <thead style="display: block;">
+                <tr style="display: block; text-align: left;">
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Indices</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Closing Value</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">% Change</th>
+                </tr>
+            </thead>
+
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">200000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1200/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">10%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">2000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">8000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">22%</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <!-- COLUMN 3 -->
+
+        <table style="width:420px">
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+                <tr style="display: block;">
+                    <td style="display: block; padding: 15px 16px 13px 16px; background-color: #00665e; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                        <p style="font-size: 18px; line-height: 24px; margin: 0; color: #fff;">Index Changes</p>
+                    </td>
+                </tr>
+            </tbody>
+            <thead style="display: block;">
+                <tr style="display: block; text-align: left;">
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Indices</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">Closing Value</th>
+                    <th style="background-color: #000; color: #509b41; padding: 15px 12px; width:420px">% Change</th>
+                </tr>
+            </thead>
+            <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;">
+
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">200000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1200/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">10%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">15%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">2000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">8000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">12%</td>
+                </tr>
+                <tr style="display: block; background-color:#f7f7fb;">
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">1500/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">20000/-</td>
+                    <td style="width:420px; padding: 15px 12px; border-bottom: 1px solid #000;">22%</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FULL WIDTH TABLE -->
+
+    <table style="margin-bottom: 40px; margin-top: 35px;">
+        <tbody style="display: block;" class="container">
+            <tr style="display: block;">
+                <td style="display: block; padding: 15px 16px 13px 16px; background-color: #00665e; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+                    <p style="font-size: 18px; line-height: 24px; margin: 0; color: #fff;">Monthly Percentage Changes (By Category of Funds)</p>
+                </td>
+            </tr>
+        </tbody>
+        <thead style="display: block;" class="container">
+            <tr style="display: block; text-align: left;">
+                <th style="background-color: #000; color: #509b41; padding: 15px 20px; width:420px">Fund Category</th>
+                <th style="background-color: #000; color: #509b41; padding: 15px 20px; width:420px">% Change</th>
+                <th style="background-color: #000; color: #509b41; padding: 15px 20px; width:420px">Median</th>
+            </tr>
+        </thead>
+        <tbody style="box-shadow: 2px 8px 15px -6px #0000001f; display: block; border: 1px solid #e7e4e4; border-top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="container">
+
+            <tr style="display: block; background-color:#f7f7fb;">
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">ABY Funds Pvt. Ltd.</td>
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">20%</td>
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">ABY Funds Pvt. Ltd.</td>
+            </tr>
+            <tr style="display: block; background-color:#f7f7fb;">
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">ABY Funds Pvt. Ltd.</td>
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">22%</td>
+                <td style="width:420px; padding: 15px 20px; border-bottom: 1px solid #000;">ABY Funds Pvt. Ltd.</td>
+            </tr>
+            <tr style="display: block; background-color:#f7f7fb;">
+                <td style="width:420px; padding: 15px 20px;">ABY Funds Pvt. Ltd.</td>
+                <td style="width:420px; padding: 15px 20px;">20%</td>
+                <td style="width:420px; padding: 15px 20px;">ABY Funds Pvt. Ltd.</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- FOOTER -->
+
+    <table style="display: block; background-image: url('images/footer-bg.jpg'); background-size: cover; background-repeat: no-repeat; padding: 65px 0 55px 0;">
+        <tbody style="display: block;" class="container">
+            <tr style="display: flex; justify-content:space-between">
+                <td class="half" style="margin-top: 10px;"><img src="images/myplexus-footer-logo.png" /></td>
+                <td class="half" style="text-align: right;">
+                    <a href="#" style="margin-right: 8px;"><img src="images/facebook-icon.png"></a>
+                    <a href="#" style="margin-right: 8px;"><img src="images/twiiter-icon.png"></a>
+                    <a href="#" style="margin-right: 8px;"><img src="images/linkedin-icon.png"></a>
+                    <a href="#" style="margin-right: 8px;"><img src="images/instagram-icon.png"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- FOOTER BOTTOM -->
+
+    <table style="background-color: #000; padding: 20px 0; display: block;">
+        <tbody style="display: block;">
+            <tr style="display: block;" class="container">
+                <td><p style="font-size: 16px; line-height: 24px; margin: 0; opacity: 0.5; color: #fff;">Copyright© 2020 All rights reserved.</p></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>

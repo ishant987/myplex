@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myplexus | Blog</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../blog/styles/style.css">
+    <link rel="stylesheet" href="../styles/responsive.css">
+    <link rel="stylesheet" href="../blog/styles/responsive.css">
+</head>
+
+<body>
+
+    <div class="header-top bg-b">
+        <div class="container">
+            <div class="row welcome">
+                <div class="col-lg-4 col-md-4 col-sm-12 header-1">
+                    <p>Welcome To myplexus.com</p>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-12 header-2">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-9 col-sm-12 header-menu pr-0">
+                            <ul class="navbar-nav d-flex flex-row justify-content-end">
+                                <li><a href="contact-us.html">Connect With Us</a>.</li>
+                                <li><a href="#">Knowledge Center</a>.</li>
+                                <li><a href="#">FAQ's</a>.</li>
+                                <li><a href="#">Market Updates</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12 login-nav">
+                            <ul class="navbar-nav d-flex flex-row justify-content-end">
+                                <li class="user-login"><a href="login.html">Login</a>.</li>
+                                <li class="user-register"><a href="analysis-register.html">Register</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="main-menu navbar navbar-expand-lg p-0">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html"><img src="../images/myplexus-logo.png" alt="myplexus logo"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse align-items-end justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav d-flex align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Monthly Ranking</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Portfolios</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Test 1</a>
+                            <a class="dropdown-item" href="#">Test 2</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Snapshot Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Calculators</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Company</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Memberships</a>
+                    </li>
+                    <li class="nav-item ask-expert-link">
+                        <a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#expert-help">ASK OUR EXPERTS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="blog-banner" style="background-image: url('../images/blog-banner-01.jpg');">
+        <div class="container">
+            <div class="blog-titles text-center">
+                <h3>MONEY, SERIOUSLY.</h3>
+                <h4>Get Inspiration & Guidance From Expert Views</h4>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-dg blog-menu p-0">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarBlog" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarBlog">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Business Ideas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Stock Market</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Personal Finance</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Investment Ideas</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Credit Methods</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Market Trends</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0 blog-form" action="#">
+                    <input class="form-control mr-sm-2 blog-form-input" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0 blog-form-search" type="submit"><img src="../images/blog-search-icon.png" alt="blog-search-icon" /></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="blog-wrapper">
+        <div class="container">
+            <div class="blog-inner-wrapper">
+                <div class="row">
+                    <div class="col-lg-9 col-md-12 col-sm-12 blog-main-cnt">
+
+                        <div class="blog-top-block">
+                            <h1>Best Financial Blogs in India of All Time for Better <br/> Finance and Money Management in 2022</h1>
+                            <p>We, at myplexus.com believe the financial intermediation and personal finance industry in India is going through the fastest 
+                                evolutionary stage and in the coming days this is only going to become more hectic.
+                            </p>    
+                            <p>Product life cycles will compress. Variations in performances will manifest itself more frequently. Risk evaluation will take 
+                                centre-stage for marking the success or failure of every financial product or solution. Unbiased, user defined statistical tools will be the bedrock for understanding performance and evaluating efficacy of funds and fund managers in delivering returns quantum, 
+                                providing it consistently and most specifically managing its various risk factors within manageable levels.
+                            </p>
+                        </div>
+
+                        <div class="blogs-blocks-main">
+
+                            <div class="blogs-blocks-heading">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <h3>Mutual Funds</h3>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <select id="blogPostFilter" class="js-example-placeholder-single js-states form-control select2-styles">
+                                            <option>Sort By</option>
+                                            <option value="blog-latest">Latest</option>
+                                            <option value="blog-old">Old</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="blog-posts-wrap" id="blog-post-wrap">
+                                <div class="row">
+                                    <div class="blog-post-box col-lg-6 col-sm-6 col-sm-12">
+                                        <div class="post-container blog-latest">
+                                            <div class="blog-post-img">
+                                                <img src="../images/blog-post-img-01.jpg" alt="blog-post-img-01">
+                                                <div class="blog-post-meta">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-article"><p>Article By: <span class="post-author">Shiv Nanda</span></p></div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-date"><p>Posted On: <span class="post-date">11/03/2022</span></p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="blog-post-content">
+                                                <h4 class="title"><a href="#">Will I Invest Now? Is It The Right Time?</a></h4>
+                                                <p class="para">The past few weeks have seen the markets make enormous 
+                                                    amounts of money and profits return to the patient investors. 
+                                                    The popular index, the BSE Sensex has breached the 52,000 
+                                                    mark.
+                                                </p>
+                                                <div class="blog-read-more">
+                                                    <a href="#">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="blog-post-box col-lg-6 col-sm-6 col-sm-12">
+                                        <div class="post-container blog-old">
+                                            <div class="blog-post-img">
+                                                <img src="../images/blog-post-img-02.jpg" alt="blog-post-img-02">
+                                                <div class="blog-post-meta">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-article"><p>Article By: <span class="post-author">Shiv Nanda</span></p></div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-date"><p>Posted On: <span class="post-date">11/03/2022</span></p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="blog-post-content">
+                                                <h4 class="title"><a href="#">Will I Invest Now? Is It The Right Time?</a></h4>
+                                                <p class="para">The past few weeks have seen the markets make enormous 
+                                                    amounts of money and profits return to the patient investors. 
+                                                    The popular index, the BSE Sensex has breached the 52,000 
+                                                    mark.
+                                                </p>
+                                                <div class="blog-read-more">
+                                                    <a href="#">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="g-ads-sec blog-g-ads w-100 col-12">
+                                        <div class="ads-continer">
+                                            <img src="../images/google-ads.jpg" alt="ad">
+                                        </div>
+                                    </div>
+                                    <div class="blog-post-box col-lg-6 col-sm-6 col-sm-12">
+                                        <div class="post-container blog-latest">
+                                            <div class="blog-post-img">
+                                                <img src="../images/blog-post-img-01.jpg" alt="blog-post-img-01">
+                                                <div class="blog-post-meta">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-article"><p>Article By: <span class="post-author">Shiv Nanda</span></p></div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-date"><p>Posted On: <span class="post-date">11/03/2022</span></p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="blog-post-content">
+                                                <h4 class="title"><a href="#">Will I Invest Now? Is It The Right Time?</a></h4>
+                                                <p class="para">The past few weeks have seen the markets make enormous 
+                                                    amounts of money and profits return to the patient investors. 
+                                                    The popular index, the BSE Sensex has breached the 52,000 
+                                                    mark.
+                                                </p>
+                                                <div class="blog-read-more">
+                                                    <a href="#">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="blog-post-box col-lg-6 col-sm-6 col-sm-12">
+                                        <div class="post-container blog-old">
+                                            <div class="blog-post-img">
+                                                <img src="../images/blog-post-img-02.jpg" alt="blog-post-img-02">
+                                                <div class="blog-post-meta">
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-article"><p>Article By: <span class="post-author">Shiv Nanda</span></p></div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-12 meta-date"><p>Posted On: <span class="post-date">11/03/2022</span></p></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="blog-post-content">
+                                                <h4 class="title"><a href="#">Will I Invest Now? Is It The Right Time?</a></h4>
+                                                <p class="para">The past few weeks have seen the markets make enormous 
+                                                    amounts of money and profits return to the patient investors. 
+                                                    The popular index, the BSE Sensex has breached the 52,000 
+                                                    mark.
+                                                </p>
+                                                <div class="blog-read-more">
+                                                    <a href="#">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="blog-navigation">
+                                    <div class="row">
+                                        <ul>
+                                            <li class="prev-post"><a href="#"><img src="../images/prev-post-arrow.png" /></a></li>
+                                            <li><a href="#">1</a></li>
+                                            <li><a href="#" class="current-page">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">4</a></li>
+                                            <li><a href="#">5</a></li>
+                                            <li><a href="#">6</a></li>
+                                            <li><a href="#">7</a></li>
+                                            <li><a href="#">8</a></li>
+                                            <li><a href="#">9</a></li>
+                                            <li><a href="#">10</a></li>
+                                            <li class="next-post"><a href="#"><img src="../images/next-post-arrow.png" /></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="blog-feedback-section bg-gry br-5 box-shadow">
+                            <h3>Leave A Feedback</h3>
+                            <form id="blog-feedback" action="#" class="blog-feedback-form">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-name-box">
+                                        <input id="feedback-name" type="text" placeholder="Name" class="feedback-input feedback-name-input" required />
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-email-box">
+                                        <input id="feedback-email" type="email" placeholder="Email" class="feedback-input feedback-email-input" required />
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-mobile-box">
+                                        <input id="feedback-phone" type="phone" placeholder="Mobile" class="feedback-input feedback-mobile-input" required />
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-country-box">
+                                        <input id="feedback-country" type="text" placeholder="Country" class="feedback-input feedback-country-input" required />
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-state-box">
+                                        <input id="feedback-state" type="text" placeholder="State" class="feedback-input feedback-state-input" required />
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 feedback-city-box">
+                                        <input id="feedback-city" type="text" placeholder="City" class="feedback-input feedback-city-input" required />
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 feedback-message-box">
+                                        <textarea id="feedback-message" class="feedback-input feedback-message-input" placeholder="Message" required></textarea>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 text-right feedback-submit-box">
+                                        <input id="feedback-submit" class="feedback-input feedback-input-submit" type="submit" value="Submit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3 col-md-12 col-sm-12 blog-main-sidebar">
+                        <div class="blog-subscribe bg-dg br-5">
+                            <h5>Subscribe Now!</h5>
+                            <form action="#" id="blog-subscribe-form" class="blog-sub-form">
+                                <input id="blog-subscribed-email" class="blog-subed-email" type="email" placeholder="Enter Email" required />
+                                <input id="blog-subed-submit" class="blog-subed-submit-btn" type="submit" value="Subscribe" />
+                            </form>
+                        </div>
+
+                        <div class="blog-sidebar-links blog-sidebar-block bg-gry br-5 box-shadow">
+                            <h6>Most Popular Posts</h6>
+                            <ul class="reset">
+                                <li><a href="#">The Second Stage of Covid & Your Investment Plans</a></li>
+                                <li><a href="#">Are The Small Cap Funds Expensive</a></li>
+                                <li><a href="#">What, Who, When and Were They Successful?</a></li>
+                                <li><a href="#">The Second Stage of Covid & Your Investment Plans</a></li>
+                                <li><a href="#">Are The Small Cap Funds Expensive</a></li>
+                                <li><a href="#">What, Who, When and Were They Successful?</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="blog-sidebar-links blog-sidebar-block bg-gry br-5 box-shadow">
+                            <h6>Most Commented</h6>
+                            <ul class="reset">
+                                <li><a href="#">The Second Stage of Covid & Your Investment Plans</a></li>
+                                <li><a href="#">Are The Small Cap Funds Expensive</a></li>
+                                <li><a href="#">What, Who, When and Were They Successful?</a></li>
+                                <li><a href="#">The Second Stage of Covid & Your Investment Plans</a></li>
+                                <li><a href="#">Are The Small Cap Funds Expensive</a></li>
+                                <li><a href="#">What, Who, When and Were They Successful?</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="blog-sidebar-ads blog-sidebar-adblock br-5">
+                            <img src="../images/ads-image.jpg" />
+                        </div>
+
+                        <div class="blog-sidebar-links blog-sidebar-block bg-gry br-5 box-shadow">
+                            <h6>Archives</h6>
+                            <ul class="reset">
+                                <li><a href="#">June 2021 <span>(1)</span></a></li>
+                                <li><a href="#">May 2021 <span>(1)</span></a></li>
+                                <li><a href="#">April 2021 <span>(2)</span></a></li>
+                                <li><a href="#">March 2021 <span>(2)</span></a></li>
+                                <li><a href="#">February 2021 <span>(3)</span></a></li>
+                                <li><a href="#">January 2021 <span>(3)</span></a></li>
+                                <li><a href="#">December 2020 <span>(3)</span></a></li>
+                                <li><a href="#">November 2020 <span>(3)</span></a></li>
+                                <li><a href="#">October 2020 <span>(1)</span></a></li>
+                                <li><a href="#">September 2020 <span>(4)</span></a></li>
+                                <li><a href="#">June 2020 <span>(1)</span></a></li>
+                                <li><a href="#">April 2020 <span>(3)</span></a></li>
+                                <li><a href="#">February 2020 <span>(3)</span></a></li>
+                                <li><a href="#">January 2020 <span>(4)</span></a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-sm-9 col-sm-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-12 f-col-cn f-col-1">
+                                <h6>Quick Links</h6>
+                                <ul>
+                                    <li><a href="login.html">Investors Login</a></li>
+                                    <li><a href="#">Analysis</a></li>
+                                    <li><a href="#">NFO Monitor</a></li>
+                                    <li><a href="#">Panta Tec</a></li>
+                                    <li><a href="#">Ask Us</a></li>
+                                    <li><a href="#">About Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 f-col-cn f-col-2">
+                                <h6>Navigation</h6>
+                                <ul>
+                                    <li><a href="../index.html">Home</a></li>
+                                    <li><a href="monthly-ranking.html">Monthly Ranking</a></li>
+                                    <li><a href="#">Weekly Report</a></li>
+                                    <li><a href="#">Monthly Report</a></li>
+                                    <li><a href="fund-portfolio.html">Fund Portfolio</a></li>
+                                    <li><a href="composition-snapshot.html">Composition Snapshot</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12 f-col-cn f-col-3">
+                                <h6>Contact Us</h6>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/location-icon.png" alt="location"></div>
+                                    <div class="f-content">
+                                        <p>11/5, 75C Park Street.</p>
+                                        <p>Kolkata-700016.</p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/call-icon.png" alt="call-icon"></div>
+                                    <div class="f-content">
+                                        <p>INDIA- <a href="tel:09073977460">09073977460</a></p>
+                                        <p>INDIA- <a href="tel:033-40646145">033-40646145</a></p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="col-12 p-0 f-dd">
+                                    <div class="f-icon"><img src="../images/web-icon.png" alt="web-icon"></div>
+                                    <div class="f-content">
+                                        <p>Email: <a href="mailto:contact@myplexus.com">contact@myplexus.com</a></p>
+                                        <p>Web: <a href="mailto:www.myplexus.com">www.myplexus.com</a></p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-12 footer-last">
+                        <div class="col-12 f-col-logo p-0 text-right">
+                            <img src="../images/myplexus-footer-logo.png" alt="myplexus" class="img-fluid">
+                        </div>
+                        <div class="col-12 f-col-social p-0">
+                            <div class="d-flex justify-content-end">
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/facebook-icon.png"
+                                            alt="facebook"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/twiiter-icon.png" alt="twitter"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/instagram-icon.png"
+                                            alt="instagram"></a>
+                                </div>
+                                <div class="social-div">
+                                    <a href="#" target="_blank"><img src="../images/linkedin-icon.png"
+                                            alt="linkedin"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom bg-b">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 co-sm-12 f-b-lft">
+                        <p>Copyright© 2020 All rights reserved.</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 co-sm-12 f-b-rgt">
+                        <p>Website Designed by <a href="#" target="_blank">ShowTIme Multimedia</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ASK AN EXPERT POPUP -->
+
+    <div class="expert-main modal fade" id="expert-help">
+        <div class="expert-wrap modal-dialog modal-dialog-centered" role="document">
+            <div class="expert-inner w-100">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="row w-100 m-0 d-flex">
+                    <div class="col-lg-7 col-md-7 col-sm-12 expert-common expert-lft">
+                        <h3>Our Experts Believe <br /> In Personalized Assistance!</h3>
+                        <div class="row expert-bio-wrap align-items-center">
+                            <div class="col-lg-4 col-md-4 col-sm-12 expert-profile">
+                                <img src="../images/sankeerth-reddy-pic.jpg" alt="sankeerth-reddy" class="img-fluid">
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-12 expert-bio">
+                                <span class="text-green">Sankeerth Reddy</span>
+                                <span class="desig">Managing Director</span>
+                                <a href="" target="_blank"><img src="../images/linkedin-icon-3.png" alt="linkedin"></a>
+                                <div class="sign-block">
+                                    <img src="../images/sankeerth-reddy-sign.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="expert-content-para">
+                            <p>We, at myplexus.com believe the financial intermediation and personal finance industry in
+                                India
+                                is going through the fastest evolutionary stage and in the coming days this is only
+                                going to
+                                become more hectic.
+                            </p>
+                            <p>Product life cycles will compress. Variations in performances will manifest itself more
+                                frequently.
+                                Risk evaluation will take centre-stage for marking the success or failure of every
+                                financial product
+                                or solution. Unbiased, user defined statistical tools will be the bedrock for
+                                understanding performance and evaluating efficacy of funds and fund managers in
+                                delivering returns quantum,
+                                providing it consistently and most specifically managing its various risk factors within
+                                manageable levels.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-12 expert-common expert-rgt no-bg">
+                        <form action="#" id="popup-form">
+                            <div class="p-form-field-row">
+                                <label>Name</label>
+                                <div class="p-form-field">
+                                    <input type="text" id="name" placeholder="John Doe" required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Mobile</label>
+                                <div class="p-form-field">
+                                    <input type="tel" id="phone" maxlength="12" placeholder="+91 98989 898989"
+                                        required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Email</label>
+                                <div class="p-form-field">
+                                    <input type="email" id="email" placeholder="john@myplexus.com" required />
+                                </div>
+                            </div>
+                            <div class="p-form-field-row">
+                                <label>Select Fund</label>
+                                <div class="p-form-field">
+                                    <textarea name="message" id="message" placeholder="Enter Your Comments "
+                                        required></textarea>
+                                </div>
+                            </div>
+                            <div class="p-form-field-row p-form-s-field">
+                                <div class="p-form-field text-right">
+                                    <input type="submit" class="form-submit btn-bg-2 text-white" id="submit" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="expert-footer">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-lft-block">
+                            <div class="exptert-f-left">
+                                <img src="../images/location-icon-green.png" alt="location icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>11/5, 75C Park Street. <br /> Kolkata-700016</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-centr-block text-center">
+                            <div class="exptert-f-left">
+                                <img src="../images/phone-icon-green.png" alt="call icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>INDIA- 09073977460 <br /> INDIA- 033-40646145</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 exptert-f-rgt-block text-right">
+                            <div class="exptert-f-left">
+                                <img src="../images/web-icon-green.png" alt="web icon">
+                            </div>
+                            <div class="exptert-f-rgt">
+                                <p>contact@myplexus.com <br /> queries@myplexus.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

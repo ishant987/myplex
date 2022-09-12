@@ -1,0 +1,1 @@
+@extends('themes.backend.pages.dashboard')

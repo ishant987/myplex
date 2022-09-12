@@ -1,0 +1,139 @@
+@extends('themes.backend.layouts.app')
+
+@section('breadcrumb')
+{{ Breadcrumbs::render($editDataAtrArr['route'], $dataArr) }} 
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card m-b-0">
+            <div class="card-header">
+                <h5 class="card-header-text">{{ $editDataAtrArr['title'] }}</h5>
+            </div>
+            <div class="card-block">
+            <x-form.alert type="{{ session()->get('alert') }}" title="{{ session()->get('title') }}" message="{{ session()->get('message') }}" />
+            
+            <form name="aeDataFrm" id="aeDataFrm" action="{{ route('admin.customfield.grouptype.update', [$dataArr->cf_group_id, $dataArr->cf_group_type_id])}}" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('PATCH') }}
+
+                <x-form.section_label>
+                {{ __('admin.general_lbl') }}
+                </x-form.section_label>
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.sel_fldfor_txt') }}" for="field_for" 
+                    error="{{ $errors->first('field_for') }}" required="true">
+                <select id="field_for" class="form-control" name="field_for">
+                    @foreach( $cfForAssoc as $fld_for => $field_for )
+                    <option value="{{ $fld_for }}" @if((old('field_for') > 0) && ($fld_for == old('field_for'))) {{ 'selected' }} @elseif((($dataArr->field_for) && ($fld_for == $dataArr->field_for))) {{ 'selected' }} @endif>{{ $field_for }}</option>
+                    @endforeach
+                </select>
+                </x-form.group_lyt1_2_10>
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.sel_fldtype_txt') }}" for="field_type" 
+                    error="{{ $errors->first('field_type') }}" required="true">
+                <select id="field_type" class="form-control" name="field_type">
+                    @foreach( $cfTypeAssoc as $type => $field_type )
+                    <option value="{{ $type }}" @if((old('field_type') > 0) && ($type == old('field_type'))) {{ 'selected' }} @elseif((($dataArr->field_type) && ($type == $dataArr->field_type))) {{ 'selected' }} @endif>{{ $field_type }}</option>
+                    @endforeach
+                </select>
+                </x-form.group_lyt1_2_10>
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.label_txt') }}" for="label" 
+                    error="{{ $errors->first('label') }}" required="true">
+                    <x-form.field.text id="label" name="label" value="{{ $dataArr->field_options['label'] }}" />
+                </x-form.group_lyt1_2_10>                                  
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.placeholder_txt') }}" for="placeholder" 
+                    error="{{ $errors->first('placeholder') }}">
+                    <x-form.field.text id="placeholder" name="placeholder" value="{{ $dataArr->field_options['placeholder'] }}" />
+                </x-form.group_lyt1_2_10>       
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.required_txt') }}" for="required" 
+                    error="{{ $errors->first('required') }}">
+                <select id="required" class="form-control" name="required">
+                    @foreach( $reqArr as $opt => $optval )
+                    <option value="{{ $opt }}" @if((old('optval') > 0) && ($opt == old('optval'))) {{ 'selected' }} @elseif((($dataArr->field_options['required'] > 0) && ($opt == $dataArr->field_options['required']))) {{ 'selected' }} @endif>{{ $optval }}</option>
+                    @endforeach
+                </select>
+                </x-form.group_lyt1_2_10>  
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.description_txt') }}" for="description" 
+                    error="{{ $errors->first('description') }}">
+                    <x-form.field.textarea id="description" name="description" value="{!! $dataArr->field_options['description'] !!}" />
+                </x-form.group_lyt1_2_10>                                   
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.customfield.grouptype.instruction_txt') }}" for="instruction" 
+                    error="{{ $errors->first('instruction') }}">
+                    <x-form.field.textarea id="instruction" name="instruction" value="{!! $dataArr->field_options['instruction'] !!}" />
+                </x-form.group_lyt1_2_10>                                   
+                
+                <x-form.group_lyt1_2_10 label="{{ __('admin.order_txt') }}" for="c_order" 
+                    error="{{ $errors->first('c_order') }}">
+                    <x-form.field.text id="c_order" name="c_order" value="{{ $dataArr->c_order > 0 ? $dataArr->c_order : '' }}" />
+                </x-form.group_lyt1_2_10>      
+
+                <x-form.group_lyt1_2_10 label="{{ __('admin.status_txt') }}" for="status" 
+                    error="{{ $errors->first('status') }}" required="true">
+                <select id="status" class="form-control" name="status">
+                    @foreach( $moduleAtrArr['status'] as $sid => $status )
+                    <option value="{{ $sid }}" @if((old('status') > 0) && ($sid == old('status'))) {{ 'selected' }} @elseif((($dataArr->status > 0) && ($sid == $dataArr->status))) {{ 'selected' }} @endif>{{ $status }}</option>
+                    @endforeach
+                </select>
+                </x-form.group_lyt1_2_10>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                    <x-form.group_lyt1_2_10 class="m-t-10">
+                    <x-form.field.button id="submit" name="submit" />
+                    <x-form.field.button type="reset" id="cancel" name="cancel" class="btn-danger" text="{{ __('admin.cancel_txt') }}"/>
+                    </x-form.group_lyt1_2_10>
+                    </div>
+                </div>
+
+            </form>
+            </div>
+            <!-- end of card-block -->
+        </div>
+    </div>
+</div>
+@stop
+@push('scripts') 
+<script>
+
+    $(document).ready(function () {
+        //getdefaultoption();
+    });
+
+    $('#field_type').bind('change', function() {       
+        getdefaultoption();
+    });
+
+    function getdefaultoption()
+    {
+        var field_type = $("#field_type").val();
+        var url = '';
+        if(field_type)
+        {
+            url = '{{ route("admin.customfield.grouptype.defaultoption", ":field_type") }}';
+            url = url.replace(':field_type', field_type);
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "json",
+                success: function (data)
+                {
+                    $("#label").val(data.label);
+                    $("#placeholder").val(data.placeholder);
+                    if(data.required)
+                        $("#required").val('y');
+                    else
+                        $("#required").val('n');
+                    $("#description").val(data.description);
+                    $("#instruction").val(data.instruction);
+                }
+            });
+        }
+    }
+</script>
+@endpush

@@ -1,0 +1,32 @@
+USE [MYPLEXUSDB_70803_COPY]
+GO
+/****** Object:  StoredProcedure [dbo].[SpFundCompositionSnapshot]    Script Date: 25-02-2022 10:38:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ALTER PROCEDURE [dbo].[SpFundCompositionSnapshot]
+
+@StartMonth		INT,
+@StartYear		INT,
+@FundCode		VARCHAR(25)
+
+AS
+
+BEGIN
+	SET NOCOUNT ON;
+	--SELECT SCRIPNAME, INDUSTRY, CATEGORY, CONTENTPER, AMOUNT FROM TBFUNDCOMPOSITION
+	--	WHERE MONTH(ENTRYDATE) = @StartMonth AND YEAR(ENTRYDATE) = @StartYear
+	--		AND FundCode = @FundCode
+	--ORDER BY SCRIPNAME
+	
+	
+	SELECT SCRIPNAME, INDUSTRY, CATEGORY, CONTENTPER,((C.CONTENTPER*A.CorpusEntry)/100) AMOUNT,A.CorpusEntry
+	 FROM TBFUNDCOMPOSITION C
+	 INNER JOIN TbCorpusEntry A ON A.FundCode=C.FundCode AND C.EntryDate=A.EntryDate
+	WHERE MONTH(A.ENTRYDATE) = @StartMonth AND YEAR(A.ENTRYDATE) = @StartYear
+			AND A.FundCode = @FundCode
+	ORDER BY SCRIPNAME
+END
