@@ -319,7 +319,7 @@ export default {
                 selectedFundClassificationMonthly:null,
                 selectedCategoryMonthly:'',
                 monthly_snapshot_data:[],
-                app_url:'https://beta.myplexus.com'
+                app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :''
             }
   },
   methods: {
