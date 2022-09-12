@@ -40,7 +40,7 @@ class PageController extends BaseController
         $classNameArr = explode('\\', __CLASS__);
         $this->className = end($classNameArr);
         $this->class_id = self::getClassIdByname($this->className);
-        $this->page_path =env('PAGE_PATHS');
+        $this->page_path =env('PAGE_PATHS','web.pages');
         $this->defDataArr = self::getDefData();
     }
 

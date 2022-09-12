@@ -600,7 +600,7 @@ export default {
             comp_scheme1_text: '',
             comp_scheme2_text: '',
             currentTab: 'daily_price',
-            app_url: 'https://beta.myplexus.com',
+            app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
             loadingStatus:false
         }
     },
@@ -901,7 +901,6 @@ export default {
     },
     mounted() {
         let that = this
-
         let compare_price_type = that.getURLParams("compare_price_type")
         let compare_ratio_type = that.getURLParams("compare_ratio_type")
         let compare_composition_type = that.getURLParams("compare_composition_type")

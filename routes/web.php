@@ -125,7 +125,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
 
         Route::resource('indices', 'IndicesMasterController', ['except' => 'show', 'destroy']);
         Route::get('indices/{time?}', [
-            'as' => 'indices.index',
+            'as' => 'indicess.index',
             'uses' => 'IndicesMasterController@index'
         ]);
         Route::get('indices/download-deleted/{time?}', [
@@ -385,7 +385,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         ]);
 
         Route::get('missing-indices/list', [
-            'as' => 'missing-indices.index',
+            'as' => 'missing-s',
             'uses' => 'MissingIndicesController@index'
         ]);
         Route::get('/missing-indices/export/', 'MissingIndicesController@export')->name('missing-indices.export');
