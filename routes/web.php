@@ -385,7 +385,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         ]);
 
         Route::get('missing-indices/list', [
-            'as' => 'missing-s',
+            'as' => 'missing-indices.index',
             'uses' => 'MissingIndicesController@index'
         ]);
         Route::get('/missing-indices/export/', 'MissingIndicesController@export')->name('missing-indices.export');

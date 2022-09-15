@@ -29,7 +29,6 @@ class MenuComposer
 				});
 			})->where(['parent_module_id' => 0, 'status' => 1, 'is_menu' => 1])->orderBy('c_order', 'asc')->get();
 
-
 			foreach ($moduleModel as $key => $module) {
 				$persMethodModels = $module->getPermissionableModuleMethods($role_id);
 
@@ -109,6 +108,7 @@ class MenuComposer
 				}
 			}
 			$menu .= '</ul>';
+			
 			$view->with('menu', $menu);
 		}
 

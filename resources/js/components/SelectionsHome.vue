@@ -62,9 +62,9 @@
             <h4>Monthly Ranking</h4>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             <div class="select_option">
-                <select class="abt_select">
+                <select class="abt_select" v-model="selectedFundClassification2">
                     <option>Select Scheme</option>
-                    <option v-for="claify in fundClassifications" :value="claify.fund_name">{{claify.fund_name}}</option>
+                    <option v-for="claify in fundClassifications" :value="claify">{{claify.name}}</option>
                 </select>
             </div>
         </div>

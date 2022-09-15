@@ -19,24 +19,21 @@
 
 @section('vue-js') @stop
 @section('content')
-<div class="custom-banner no-bg fw-banner @if(!$dataArr['image_path']) fund-portfolio-banner  @endif" @if($dataArr['image_path']) style="background-image:url({{$dataArr['image_path']}})"  @endif>
-    <section class="inner_banner_section" >
+    <div class="custom-banner no-bg fw-banner @if(!$dataArr['image_path']) fund-portfolio-banner  @endif" @if($dataArr['image_path']) style="background-image:url({{$dataArr['image_path']}})"  @endif>
+    <section class="inner_banner_section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="inner_section_banner">
-                        <h4>{{ $dataArr['title'] }}</h4>
-                        <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
+                        <h4>{{$dataArr['title']}}</h4>
+                        <p>{{$dataArr['descp']}}</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-<div id="vue-app">
-<compare-scheme image_path="{{asset('themes/frontend/assets/v1/img/')}}"></compare-scheme>
-<div class="clearfix">&nbsp;</div>
-</div>
+    <div id="vue-app">
+        <monthly-ranking page_title="{{$dataArr['title']}}"  page_description="{{$dataArr['descp']}}" page_image="{{ $dataArr['image_path'] }}"></monthly-ranking>
+    </div>
 @stop
-@push('style')
-@endpush

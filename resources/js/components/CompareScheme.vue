@@ -837,17 +837,13 @@ export default {
         },
         ratioCompare() {
             let that = this
-             that.show_ratio_graph = true
+             that.show_ratio_graph = false
             this.loadingStatus=true
             let data = {}
-            let title1 = ''
-            let title2 = ''
             data.compare_type = (this.selectedRatioRisk) ? this.selectedRatioRisk : this.selectedRatioReturn
             data.value1 = encodeURIComponent(this.selectedFund1Ratio.fund_code)
-            title1 = this.selectedFund1Ratio.fund_name
             data.value2 = encodeURIComponent(this.selectedFund2Ratio.fund_code)
-            title2 = this.selectedFund2Ratio.fund_name
-            console.log(this.selectedRatioDateFrom,this.selectedRatioDuration);
+            let titles =[this.selectedFund1Ratio.fund_name,this.selectedFund2Ratio.fund_name];
             if (!this.selectedRatioDateFrom) {
                 data.from_date = moment().subtract(1, 'days').subtract(this.selectedRatioDuration, 'months').format('YYYY-MM-DD')
                 data.to_date = moment().subtract(1, 'days').format('YYYY-MM-DD');
@@ -878,7 +874,7 @@ export default {
                             let yVal = value[data.compare_type].toFixed(2)
                             that.chart_ratio.options.data[0].dataPoints.push({
                                 y: parseFloat(yVal),
-                                label: title1
+                                label: titles[key]
                             });
                         }
                     })

@@ -19,6 +19,8 @@
 
 @section('vue-js') @stop
 @section('content')
+<div class="custom-banner no-bg fw-banner @if(!$dataArr['image_path']) fund-portfolio-banner  @endif" @if($dataArr['image_path']) style="background-image:url({{$dataArr['image_path']}})"  @endif>
+
 <section class="inner_banner_section">
     <div class="container">
         <div class="row">
@@ -30,7 +32,8 @@
             </div>
         </div>
     </div>
-</section>  
+</section>
+</div>
 <div id="vue-app">
 <performance-snapshot page_title="{{$dataArr['title']}}"  page_description="{{$dataArr['descp']}}" page_image="{{ $dataArr['image_path'] }}"></performance-snapshot>
 </div>

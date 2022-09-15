@@ -109,7 +109,7 @@ class PageController extends BaseController
 
             // $plansMdl = Plans::list(['status' => $status, 'show_on_wa' => $commonconstants['y_n_val'][1]], ['p_id', 'plan_name', 'amount', 'duration_name'], 'c_order', 'ASC');
 
-            $blogPosts = json_decode(file_get_contents(env('BLOG_URL') . '/wp-json/wp/v2/posts/?_embed&per_page=3'), true);
+            // $blogPosts = json_decode(file_get_contents(env('BLOG_URL') . '/wp-json/wp/v2/posts/?_embed&per_page=3'), true);
 
             $nwsListMdl = News::list(['status' => $commonconstants['status_val']['1']], ['title', 'slug', 'media_type', 'image', 'video_from', 'video_data', 'video_image', 'news_source_link'], '', '', 3);
 
@@ -387,7 +387,7 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('web.pages.faq', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr'));
+            return view('themes.frontend.pages.faq', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr'));
         }
         return abort(404);
     }
@@ -591,8 +591,7 @@ class PageController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
 
             $defDataArr = $this->defDataArr;
-
-            return view('themes.frontend.pages.monthly-ranking', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.monthly-ranking', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }

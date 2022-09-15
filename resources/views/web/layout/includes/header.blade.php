@@ -3,8 +3,22 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="trade_details_result">
-
+                    <div class="live-market-data">
+                        <div class="container">
+                            <div class="live-market-wrap">
+                                <div id="marketRadar" style="display:none">
+                                    <input type="hidden" value="0" id="pricevalcntr">
+                                    <div class="tpSec clearfix">
+                                        <div class="stockDsl">
+                                            <div class="mrdBox item" id="elm1"></div>
+                                            <div class="mrdBox item" id="elm2"></div>
+                                            <div class="mrdBox item" id="elm3"></div>
+                                            <div class="mrdBox item" id="elm4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
