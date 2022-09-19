@@ -12,7 +12,7 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                        <button class="nav-link" :class="{'active show':currentTab == 'ratios'}" @click="currentTab='ratios'" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
                             <img :src="this.image_path+'/tab_icon1.png'" alt="" />
                             Ratio
                         </button>
@@ -148,6 +148,125 @@
                     </div>
                      <p v-if="nodata_text" class="text-warning mt-3 text-center w-100 mb-0">{{nodata_text}}</p>
                 </div>
+                <!-- ratio calulation -->
+                <div class="tab-pane fade"  :class="{'active show':currentTab == 'ratios'}" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <div class="table_scc">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr class="bg_top top_bg_right_black">
+                                                <td colspan="3">
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td class="bg_222">
+                                                    <div class="form_select">
+                                                        <label for="">From Date</label>
+                                                        <input class="form-date" type="date" v-model="selectedRatioDateFrom"/>
+                                                    </div>
+                                                </td>
+                                                <td class="bg_222">
+                                                    <div class="form_select">
+                                                        <label for="">To Date</label>
+                                                        <input class="form-date" type="date" v-model="selectedRatioDateTo" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="bg_green">
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                       <select class="form-select" aria-label="Default select example" v-model="selectedFund1Ratio" :disabled="compare_price_process">
+                                                            <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                               <select class="form-select" aria-label="Default select example" v-model="selectedFund2Ratio" :disabled="compare_price_process">
+                                                            <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="three_btn">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-4">
+                                        <div class="middle_left">
+                                            <a href="javascript://" :disabled="disableCompareRatio" @click="ratioCompare">Compare</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="middle_a d-flex align-items-center justify-content-center">
+                                            <a href="" class="active">Day to Day</a>
+                                            <a href="">Weekly</a>
+                                            <a href="">Monthly</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                            <a href="javascript://" @click="selectedRatioDuration=1" :class="selectedRatioDuration==1 ? 'active' :''">1M</a>
+                                            <a href="javascript://" @click="selectedRatioDuration=3" :class="selectedRatioDuration==3 ? 'active' :''">3M</a>
+                                            <a href="javascript://" @click="selectedRatioDuration=6" :class="selectedRatioDuration==6 ? 'active' :''">6M</a>
+                                            <a href="javascript://" @click="selectedRatioDuration=12" :class="selectedRatioDuration==12 ? 'active' :''">1Y</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="text-center mt-3">
+                                    <LoadingBar :status="loadingStatus"></LoadingBar>
+                                </div>
+                            <p v-if="notice_text_ratio" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_ratio}}</p>
+                            <div class="mt-5 " style="width: 100%;" v-show="show_ratio_graph">
+                            <div id="chartContainerRatio" style="height: 360px; width: 100%;"></div>
+                            </div>
+                        </div>
+                <!-- ratio calulation end-->
             </div>
         </div>
     </div>
@@ -577,11 +696,13 @@ export default {
             nodata_text: '',
             selectedFund1Ratio: [],
             selectedFund2Ratio: [],
-            selectedRatioReturn: '',
+            selectedRatioReturn: 'cagr',
             selectedRatioRisk: '',
             selectedRatioDuration: '12',
             enableRatioCustomDates: false,
             selectedRatioDateRange: null,
+            selectedRatioDateFrom: null,// added by sandeep
+            selectedRatioDateTo: null, // added by sandeep as per new UI
             selectedFund1Composition: [],
             selectedFund2Composition: [],
             selectedCompositionCategory: '',
@@ -601,7 +722,8 @@ export default {
             comp_scheme2_text: '',
             currentTab: 'daily_price',
             app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
-            loadingStatus:false
+            loadingStatus:false,
+            notice_text_comp:''
         }
     },
     methods: {
@@ -715,22 +837,19 @@ export default {
         },
         ratioCompare() {
             let that = this
-            that.show_ratio_graph = true
+             that.show_ratio_graph = false
+            this.loadingStatus=true
             let data = {}
-            let title1 = ''
-            let title2 = ''
             data.compare_type = (this.selectedRatioRisk) ? this.selectedRatioRisk : this.selectedRatioReturn
             data.value1 = encodeURIComponent(this.selectedFund1Ratio.fund_code)
-            title1 = this.selectedFund1Ratio.fund_name
             data.value2 = encodeURIComponent(this.selectedFund2Ratio.fund_code)
-            title2 = this.selectedFund2Ratio.fund_name
-
-            if (!this.enableRatioCustomDates) {
+            let titles =[this.selectedFund1Ratio.fund_name,this.selectedFund2Ratio.fund_name];
+            if (!this.selectedRatioDateFrom) {
                 data.from_date = moment().subtract(1, 'days').subtract(this.selectedRatioDuration, 'months').format('YYYY-MM-DD')
-                data.to_date = moment().subtract(1, 'days').format('YYYY-MM-DD')
-            } else if (this.enableRatioCustomDates) {
-                data.from_date = moment(this.selectedRatioDateRange[0]).format('YYYY-MM-DD')
-                data.to_date = moment(this.selectedRatioDateRange[1]).format('YYYY-MM-DD')
+                data.to_date = moment().subtract(1, 'days').format('YYYY-MM-DD');
+            } else if (this.selectedRatioDateFrom) {
+                data.from_date = this.selectedRatioDateFrom; //moment(this.selectedRatioDateRange[0]).format('YYYY-MM-DD')
+                data.to_date =this.selectedRatioDateTo ;// moment(this.selectedRatioDateRange[1]).format('YYYY-MM-DD')
             }
             that.compare_ratio_process = true
             that.notice_text_ratio = ''
@@ -742,37 +861,64 @@ export default {
                 .then(response => {
                     let graph_data = that.compare_ratio_data = response.data.data.graph_data
                     that.compare_ratio_data = response.data.data.graph_data
+                        // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
+                        // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
+                        // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
                     let notice_text = response.data.data.notice_text
                     if (notice_text) {
                         that.notice_text_ratio = (response.data.data.notice_value_type == 1) ? title1 + ' ' + notice_text : title2 + ' ' + notice_text
                     }
-
-                    if (Object.keys(graph_data[0]).length) {
-                        let yVal = graph_data[0][data.compare_type].toFixed(2)
-                        that.chart_ratio.options.data[0].dataPoints.push({
-                            y: parseFloat(yVal),
-                            label: title1
-                        });
+                    if(graph_data.length){
+                        graph_data.map(function(value,key){
+                        if(typeof value.length !=undefined){
+                            let yVal = value[data.compare_type].toFixed(2)
+                            that.chart_ratio.options.data[0].dataPoints.push({
+                                y: parseFloat(yVal),
+                                label: titles[key]
+                            });
+                        }
+                    })
+                    }else{
+                        
                     }
-                    if (Object.keys(graph_data[1]).length) {
-                        let yVal = graph_data[1][data.compare_type].toFixed(2)
-                        that.chart_ratio.options.data[0].dataPoints.push({
-                            y: parseFloat(yVal),
-                            label: title2
-                        });
-                    }
+                    
+                    // if (Object.keys(graph_data[0]).length) {
+                    //     let yVal = graph_data[0][data.compare_type].toFixed(2)
+                    //     that.chart_ratio.options.data[0].dataPoints.push({
+                    //         y: parseFloat(yVal),
+                    //         label: title1
+                    //     });
+                    // }
+                    // if (Object.keys(graph_data[1]).length) {
+                    //     let yVal = graph_data[1][data.compare_type].toFixed(2)
+                    //     that.chart_ratio.options.data[0].dataPoints.push({
+                    //         y: parseFloat(yVal),
+                    //         label: title2
+                    //     });
+                    // }
+                    // if (Object.keys(graph_data[2]).length) {
+                    //     let yVal = graph_data[2][data.compare_type].toFixed(2)
+                    //     that.chart_ratio.options.data[0].dataPoints.push({
+                    //         y: parseFloat(yVal),
+                    //         label: title2
+                    //     });
+                    // }
                     if (Object.keys(graph_data[0]).length || Object.keys(graph_data[1]).length) {
                         that.chart_ratio.render();
                     } else {
-
                         that.show_ratio_graph = false
                         that.notice_text_ratio = 'No data Found'
+                        return;
                     }
+                    this.loadingStatus=false
+                    that.show_ratio_graph = true
 
                 })
                 .catch(error => {
                     //var message = error.response.data.message || error.message
-                    console.log(error);
+                     this.loadingStatus=false
+                     that.show_ratio_graph = false
+                     that.notice_text_ratio = 'No data Found'
                 })
                 .finally(() => {
                     that.compare_ratio_process = false
@@ -829,9 +975,9 @@ export default {
 
                 })
                 .catch(error => {
-                    console.log(error);
                     var message = error.response.data.message || error.message
                     that.show_comp = false
+                    that.notice_text_comp = 'No data Found'
                     that.notice_text_comp = message
                 })
                 .finally(() => {
@@ -845,6 +991,11 @@ export default {
         selectedDuration(value){
             if(value){
                 this.priceCompare();
+            }
+        },
+        selectedRatioDuration(value){
+            if(value){
+                this.ratioCompare();
             }
         }
     },
@@ -884,7 +1035,7 @@ export default {
                 return true
             } else if (!this.enableRatioCustomDates && !this.selectedRatioDuration) {
                 return true
-            } else if (this.enableRatioCustomDates && !this.selectedRatioDateRange) {
+            } else if (this.enableRatioCustomDates && !this.selectedRatioDateFrom) {
                 return true
             }
 
@@ -1053,7 +1204,7 @@ export default {
 
         let chart_ratio = {
             colorSet: "greenShades",
-            backgroundColor: "#000000",
+            backgroundColor: "#fff",
             theme: "light2",
             animationEnabled: true,
             zoomEnabled: false,
@@ -1071,7 +1222,7 @@ export default {
                 itemclick: this.toggleDataSeries
             },
             title: {},
-            dataPointWidth: 250,
+            dataPointWidth: 100,
             data: [{
                 type: "column",
                 name: "",

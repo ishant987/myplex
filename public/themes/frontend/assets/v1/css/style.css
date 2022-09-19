@@ -22,6 +22,7 @@ font-family: 'Roboto Condensed', sans-serif; */
     --darkgreen: #2e6446;
     --darkblue: #083964;
     --golden: #cdaa44;
+    --grey: #ebebeb;
     --body-font: "bodyfont", sans-serif;
     --heading-font: "headingdont", sans-serif;
 }
@@ -2469,15 +2470,155 @@ ul {
 
 
 
+/******Monthly Ranking***********/
+
+.monthly_ranking_text h4{
+    font-size: 30px;
+    color: var(--darkgreen);
+    font-weight: 500;
+}
+.monthly_ranking_text p{
+    font-size: 16px;
+    text-transform: uppercase;
+}
+.monthly_ranking_share a.share_btn{
+    border-radius: 8px 20px 20px 20px;
+    color: #fff;
+    padding: 10px 25px;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 5px
+}
+.monthly_ranking_share a.share_btn i{
+    font-size: 25px;
+    padding-right: 5px
+}
+.facebook{
+    background-color: #385a99;
+}
+.twitter{
+    background-color: #00cdff;
+}
+.linkedin{
+    background-color: #007bb6;
+}
+.pdf{
+    background-color: #de0000;
+}
+
+.monthly_ranking_Search_part{
+    background-color: #f3f6f4;
+    padding: 30px;
+}
+.monthly_ranking_select{
+    border-radius: 50px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin-bottom: 10px
+}
+.monthly_ranking_select{
+    background-image: none;
+}
+.monthly_ranking_table table tbody tr td:first-child, .monthly_ranking_table table thead tr th:first-child{
+    text-align: left
+}
+
+.monthly_ranking_table table tbody tr td, .monthly_ranking_table table thead tr th{
+    text-align: center;
+    border: none
+}
+.monthly_ranking_table table thead tr th{
+    background-color: var(--green) !important
+}
+.monthly_ranking_table table thead tr th:first-child, .monthly_ranking_table table thead tr th:nth-child(2), .monthly_ranking_table table thead tr th:nth-child(3){
+    background-color: var(--darkgreen) !important
+}
+.return_quality_td i{
+    font-size: 23px;
+    margin: 0px 2px;
+    color:#fff;
+}
+.return_quality_td i.active{
+    color: var(--green)
+}
+.return_quality_td i.grey{
+    color: var(--grey)
+}
+
+.Volitilty_icon img{
+    margin: 0px 3px;
+}
+
+.monthly_ranking_table table{
+    border-spacing: 0px !important
+}
 
 
+.monthly_ranking_table table tbody tr td, .monthly_ranking_table table tfoot tr th{
+    border-radius: 0px
+}
 
+/******Dictionary***********/
 
+.dictionary_table table tbody tr td{
+    border: none;
+    font-weight: 500
+}
+.dictionary_table table thead tr th:last-child{
+    text-align: center
+}
+.dictionary_table table tbody tr td:first-child{
+    white-space: nowrap
+}
+.dictionary_search_area{
+    background-color: #f4f7f5;
+    padding: 25px;
+    border-radius: 10px;
+    width: 100%;
+    margin-bottom: 30px
+}
+.dictionary_entity_row{
+    width: 20%;
+}
+.dictionary_search{
+    width: 70%
+}
+.dictionary_entity_select{
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid #ccc;
+    margin-right: 15px
+}
+.dictionary_entity_select:focus{
+    outline: none
+}
+.dictionary_entity_row label{
+    margin-right: 10px
+}
 
+.search_dictionary input{
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    padding: 15px
+}
 
-
-
-
+.search_dictionary input:focus{
+    outline: none
+}
+.search_dictionary button{
+    background-color: var(--golden);
+    border-radius: 50px;
+white-space: nowrap;
+    color: #fff;
+    padding: 10px 30px;
+    border: none;
+    margin-left: 15px
+}
 
 
 
@@ -2601,6 +2742,9 @@ ul {
 }
 
 @media (max-width: 767px) {
+    .monthly_ranking_share a.share_btn{
+        margin-bottom: 10px
+    }
     .tab_comp .nav-pills .nav-link {
         margin-right: 3px;
         padding: 7px;
@@ -3015,4 +3159,57 @@ ul {
     .fund_watch_left{
         margin-bottom: 30px;
     }
+    
+    
+  .monthly_ranking_table table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .monthly_ranking_table table tr td img.arrow-up {
+        margin-right: 12px;
+    }
+  .monthly_ranking_table table tr td img.arrow-up {
+    margin-top: -6px;
+    }
+  .monthly_ranking_table table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+  
+  .monthly_ranking_table table td {
+    border-bottom: 1px solid #ddd !important;
+    display: block;
+    font-size: .8em;
+    text-align: right !important;
+  }
+  
+  .monthly_ranking_table table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .monthly_ranking_table table td:last-child {
+    border-bottom: 0;
+  }
+    .info_monitor_inner{
+        padding: 10px
+    }
+    .return_quality_td i{
+        font-size: 17px;
+    }
+    
+    
 }
