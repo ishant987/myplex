@@ -286,7 +286,7 @@ class PageController extends BaseController
 
     public function fundManData(Request $request, $slug)
     {
-        $dataArr = PageModel::getData($this->class_id, '', 30);
+        $dataArr = PageModel::getData($this->class_id, '', 31);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
 
@@ -308,7 +308,30 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
 
-            return view('themes.frontend.pages.fund-man', compact('defDataArr', 'dataArr', 'fundManMdl', 'fundManListMdl'));
+            return view($this->page_path.'.fund-man', compact('defDataArr', 'dataArr', 'fundManMdl', 'fundManListMdl'));
+        }
+        return abort(404);
+    }
+    public function founder(Request $request)
+    {
+        $dataArr = PageModel::getData($this->class_id, '',48);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $fundManMdl = $fundManListMdl = [];
+
+            $commonconstants = Config('commonconstants');
+
+            $status = $commonconstants['status_val']['1'];
+
+
+            $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
+
+            return view($this->page_path.'.founder', compact('defDataArr', 'dataArr', 'fundManMdl', 'fundManListMdl'));
         }
         return abort(404);
     }

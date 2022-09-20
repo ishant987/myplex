@@ -123,44 +123,49 @@
                     <p data-aos="fade-up" data-aos-duration="1000">Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,</p>
 
                     <div class="compare_accrodian_sec mt-4">
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item mb-3" data-aos="fade-up" data-aos-duration="1000">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        <img src="{{asset('themes/frontend/assets/v1/img/daily-price-icon.png')}}" /> <span>Daily Price</san>
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body pt-0">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                        
+
+                            <ul class="accordion" id="accordion">
+                                <li class="accordion__item is-open">
+                                    <div class="accordion__link js-accordion-link"> <img src="{{asset('themes/frontend/assets/v1/img/daily-price-icon.png')}}" /> <span>Daily Price</span>
+                                        <div class="acc_icon_group">
+                                            <i class="ph-plus-bold"></i>
+                                            <i class="ph-minus-bold"></i> 
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item mb-3" data-aos="fade-up" data-aos-duration="1500">
-                                <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        <img src="{{asset('themes/frontend/assets/v1/img/ratio-icon.png')}}"/><span>Ratio</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body pt-0">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                                    <ul class="accordion__submenu js-accordion-submenu" style="display: block;">
+                                        <div class="accordion-body pt-2">
+                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                                        </div>
+                                    </ul>
+                                </li>
+                                <li class="accordion__item">
+                                    <div class="accordion__link js-accordion-link"><img src="{{asset('themes/frontend/assets/v1/img/ratio-icon.png')}}" /><span>Ratio</span>
+                                        <div class="acc_icon_group">
+                                            <i class="ph-plus-bold"></i>
+                                            <i class="ph-minus-bold"></i> 
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item" data-aos="fade-up" data-aos-duration="2000">
-                                <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        <img src="{{asset('themes/frontend/assets/v1/img/composition-icon.png')}}" /><span>Composition</span>
-                                    </button>
-                                </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body pt-0">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                                    <ul class="accordion__submenu js-accordion-submenu" style="display: none;">
+                                        <div class="accordion-body pt-2">
+                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                                        </div>
+                                    </ul>
+                                </li>
+                                <li class="accordion__item">
+                                    <div class="accordion__link js-accordion-link"><img src="{{asset('themes/frontend/assets/v1/img/composition-icon.png')}}" /><span>Composition</span>
+                                        <div class="acc_icon_group">
+                                            <i class="ph-plus-bold"></i>
+                                            <i class="ph-minus-bold"></i> 
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <ul class="accordion__submenu js-accordion-submenu" style="display: none;">
+                                        <div class="accordion-body pt-2">
+                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard.
+                                        </div>
+                                    </ul>
+                                </li>
+                            </ul>
                         <button data-aos="fade-up" data-aos-duration="1000" class="compare_scheme_btn btn-block">Compare Schemes</button>
                     </div>
                 </div>

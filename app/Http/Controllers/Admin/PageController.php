@@ -146,7 +146,7 @@ class PageController extends BaseController
                     $input[$key] = trim($value);
                 }
             }
-
+            
             $store = new PageModel($input);
 
             $reqSlug        = isset($input['slug']) ? $input['slug'] : $input['title'];
@@ -289,7 +289,6 @@ class PageController extends BaseController
             $input = $request->except($excldInputArr); 
 
             $store = PageModel::find($id);
-
             foreach ($input as $key => $value) 
             {
                 if(substr( $key, 0, 3 ) === "cf_" ){
@@ -334,14 +333,11 @@ class PageController extends BaseController
             if($store->save()){
                 $cfGroupValueModel = new CustomFieldGroupValueModel;
                 $cfGroupValueModel->saveCfGroupDataValues($this->class_id,$store->page_id,$templateId,$request->all());
-
                 \DB::commit();
-
                 return back()->with('alert', $adminconstants['alert_css'][1])->with('message', $messageLang['success']['update'])->with('title', $adminLang['success_ttl']);
             }
         } catch (QueryException $exception) {
             \DB::rollBack();
-
             if($loginAdminId == $commonconstants['def_super_admin_id']){
                 return back()->with('alert', $adminconstants['alert_css'][2])->with('message', $exception->getMessage())->with('title', $adminLang['error_ttl'])->withInput();
             }

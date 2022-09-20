@@ -59,7 +59,7 @@ class Common
         }
         $slug = '';
         $newTitle = $title;
-        $dbPrfx = env('DB_PREFIX');
+        $dbPrfx = env('DB_PREFIX','mpx_');
 
         if ($updtQry) {
             $sqlDuplicateCount = UsefulSql::getData("SELECT COUNT(*) FROM " . $dbPrfx . "" . $tableName . " WHERE " . $field . "='" . $newTitle . "' AND " . $updtQry . " " . $moreWhrQry . "");
@@ -78,7 +78,6 @@ class Common
                 $slug = $newTitle;
             }
         }
-
         return $slug;
     }
 

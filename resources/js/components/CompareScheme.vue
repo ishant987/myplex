@@ -781,7 +781,7 @@ export default {
             }
             that.compare_price_process = true
             that.notice_text = ''
-            axios.get(that.app_url + '/api/v1/compare-price', {
+            axios.get('/api/v1/compare-price', {
                     params: data
                 })
                 .then(response => {

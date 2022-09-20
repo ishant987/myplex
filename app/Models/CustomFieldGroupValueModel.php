@@ -66,7 +66,7 @@ class CustomFieldGroupValueModel extends Model
     ** Save the template of Cf values of particular with table data...
     */
     public function saveCfGroupDataValues($class_id, $data_id, $template_id, $input)
-    {
+    { 
         if ($class_id > 0 && $template_id > 0 && $data_id > 0 && is_array($input) && count($input) > 0) {
             $templateCfObj = CustomFieldGroupModel::getGroupwiseCfTypes($class_id, $template_id);
             if ($templateCfObj && $templateCfObj->count() > 0) {
