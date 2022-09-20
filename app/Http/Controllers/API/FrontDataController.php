@@ -1109,6 +1109,7 @@ class FrontDataController extends BaseController
             $responseArr['graph_data'] = $graphArr;
             $responseArr['notice_text'] = $notice_text;
             $responseArr['notice_value_type'] = $notice_value_type;
+            $responseArr['notice_value_type_text'] = $value1;
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
@@ -1156,7 +1157,6 @@ class FrontDataController extends BaseController
             if ($compare_type != 'rolling_return') {
                 $graph1 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value1.'")');
                 $graphArr[0] = count($graph1) ? $graph1[0] : [];
-
                 $graph2 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value2.'")');
                 $graphArr[1] = count($graph2) ? $graph2[0] : [];
             } else {

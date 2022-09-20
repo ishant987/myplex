@@ -63,7 +63,7 @@
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             <div class="select_option">
                 <select class="abt_select" v-model="selectedFundClassification2">
-                    <option>Select Scheme</option>
+                    <option value="">Select Scheme</option>
                     <option v-for="claify in fundClassifications" :value="claify">{{claify.name}}</option>
                 </select>
             </div>
@@ -94,8 +94,8 @@ export default {
             snapshotText: null,
             process: false,
             selectedFund: null,
-            selectedFundClassification1: null,
-            selectedFundClassification2: null,
+            selectedFundClassification1: '',
+            selectedFundClassification2: '',
             monthly_ranking_date: null
         }
     },

@@ -2,8 +2,8 @@
 <script src="{{asset('themes/frontend/assets/v1/js/bootstrap.bundle.min.js')}}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+{{-- <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script> --}}
 <script src="{{asset('themes/frontend/assets/v1/js/custom.js')}}"></script>
 @if(View::hasSection('moneycontrol'))
 <script src="https://stat2.moneycontrol.com/mcjs/common/jquery-1.7.2.min.js"></script>

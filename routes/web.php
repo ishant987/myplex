@@ -492,6 +492,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::post('contact-process', 'EnquiryController@storeContact')->name('contact.save');
 
     Route::get('meet-the-fund-man/{slug?}', 'PageController@fundManData')->name('fundman');
+    Route::get('founder', 'PageController@founder')->name('founder');
 
     Route::get('mutual-fund-dictionary', 'MutualFundDictionaryController@index')->name('mutualfunddictionary');
     Route::get('mutual-fund-dictionary-list', 'MutualFundDictionaryController@dataList')->name('mutualfunddictionary.list');

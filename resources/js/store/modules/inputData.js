@@ -96,7 +96,7 @@ const actions = {
     },
     async getFundClassifications({ commit, state }) {
         commit('setLoading', true)
-        await axios.get(state.apiURL+'/api/v1/fund-classifications')
+        await axios.get('/api/v1/fund-classifications')
             .then(response => {
                 commit('setFundClassifications', response.data.data)
             })

@@ -1,9 +1,9 @@
 <template>
-    <div class="compare-scemes-sec investing-tools perform-snapshot-tabs select2-styles">
-         <section class="compare_scheme">
+    <div class=" investing-tools perform-snapshot-tabs select2-styles">
+         <section class="">
         <div class="container">
             <div class="comp_schem_bdr">
-                <h4>Compare Scheme</h4>
+                <h4>Performance snapshot</h4>
                 <div class="tab_snap_shot">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -93,6 +93,13 @@
                                             <td>{{ data['30DAYS'].toFixed(2) }}</td>
                                             <td>{{ data['60DAYS'].toFixed(2) }}</td>
                                         </tr>
+                                        <tr v-if="processWeekly">
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="processWeekly"></LoadingBar>
+                                                        </div>      
+                                                    </td>
+                                                </tr>
                                     </tbody>
                                 </table>
                                 </div>
@@ -171,85 +178,13 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(data,index) in monthly_snapshot_data" :key="index" :class="index%2 ? 'even' : 'odd'">
-                                            <td v-if="dataCategoryMonthly != 'indices'"><a class="text-white" :href="`/fund-performance?fund_code=${encodeURIComponent(data.fund_code)}`" target="_blank">{{ data.fund_name }}</a></td>
-                                            <td v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'">{{ data.indices_name }}</td>
-                                            <td>{{ data['sixmonths'].toFixed(2) }}</td>
-                                            <td>{{ data['oneyear'].toFixed(2) }}</td>
-                                            <td>{{ data['twoyear'].toFixed(2) }}</td>
-                                            <td>{{ data['threeyear'].toFixed(2) }}</td>
+                                            
                                         </tr>
                                         <tr v-if="processMonthly">
                                         <td class="top_th text-center" colspan="6" rowspan="1">
-                                            <svg style="width:50px" version="1.1" id="L1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-                                                <circle fill="none" stroke="#fff" stroke-width="6" stroke-miterlimit="15" stroke-dasharray="14.2472,14.2472" cx="50" cy="50" r="47" >
-                                                    <animateTransform 
-                                                        attributeName="transform" 
-                                                        attributeType="XML" 
-                                                        type="rotate"
-                                                        dur="5s" 
-                                                        from="0 50 50"
-                                                        to="360 50 50" 
-                                                        repeatCount="indefinite" />
-                                                </circle>
-                                                <circle fill="none" stroke="#fff" stroke-width="1" stroke-miterlimit="10" stroke-dasharray="10,10" cx="50" cy="50" r="39">
-                                                    <animateTransform 
-                                                        attributeName="transform" 
-                                                        attributeType="XML" 
-                                                        type="rotate"
-                                                        dur="5s" 
-                                                        from="0 50 50"
-                                                        to="-360 50 50" 
-                                                        repeatCount="indefinite" />
-                                                </circle>
-                                                <g fill="#fff">
-                                                <rect x="30" y="35" width="5" height="30">
-                                                    <animateTransform 
-                                                    attributeName="transform" 
-                                                    dur="1s" 
-                                                    type="translate" 
-                                                    values="0 5 ; 0 -5; 0 5" 
-                                                    repeatCount="indefinite" 
-                                                    begin="0.1"/>
-                                                </rect>
-                                                <rect x="40" y="35" width="5" height="30" >
-                                                    <animateTransform 
-                                                    attributeName="transform" 
-                                                    dur="1s" 
-                                                    type="translate" 
-                                                    values="0 5 ; 0 -5; 0 5" 
-                                                    repeatCount="indefinite" 
-                                                    begin="0.2"/>
-                                                </rect>
-                                                <rect x="50" y="35" width="5" height="30" >
-                                                    <animateTransform 
-                                                    attributeName="transform" 
-                                                    dur="1s" 
-                                                    type="translate" 
-                                                    values="0 5 ; 0 -5; 0 5" 
-                                                    repeatCount="indefinite" 
-                                                    begin="0.3"/>
-                                                </rect>
-                                                <rect x="60" y="35" width="5" height="30" >
-                                                    <animateTransform 
-                                                    attributeName="transform" 
-                                                    dur="1s" 
-                                                    type="translate" 
-                                                    values="0 5 ; 0 -5; 0 5"  
-                                                    repeatCount="indefinite" 
-                                                    begin="0.4"/>
-                                                </rect>
-                                                <rect x="70" y="35" width="5" height="30" >
-                                                    <animateTransform 
-                                                    attributeName="transform" 
-                                                    dur="1s" 
-                                                    type="translate" 
-                                                    values="0 5 ; 0 -5; 0 5" 
-                                                    repeatCount="indefinite" 
-                                                    begin="0.5"/>
-                                                </rect>
-                                                </g>
-                                                </svg>      
-
+                                            <div class="text-center mt-3">
+                                                            <LoadingBar :status="processWeekly"></LoadingBar>
+                                                        </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -273,6 +208,7 @@
 import CustomTable from './Common/CustomTable.vue'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import mixin from '../mixin';
+import LoadingBar from "./Common/loading";
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment';
 export default {
@@ -295,6 +231,7 @@ export default {
     },
     components: {
       Multiselect,
+      LoadingBar
   },
   mixins: [mixin],
    data() {
@@ -408,8 +345,6 @@ export default {
             .then(response => {
                 that.weekly_snapshot_data = response.data.data.snapshot_data
                 return true
-            })
-            .then(response => {
             })
             .catch(error => {
                 console.log(error);
