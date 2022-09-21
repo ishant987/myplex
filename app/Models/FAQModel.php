@@ -43,7 +43,7 @@ class FAQModel extends Model
     return $this->hasOne(CommonCategory::class, 'cc_id', 'cc_id')->select(['cc_id', 'title', 'slug']);
   }
 
-  public static function faqList($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false)
+  public static function faqList($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false,$limit=false)
   {
     if ($fields == false) {
       $fields = ['*'];
@@ -57,6 +57,9 @@ class FAQModel extends Model
     $status = isset($filterArr['status']) ? intval($filterArr['status']) : 0;
     if ($status > 0) {
       $query->where('status', '=', $status);
+    }
+    if ($limit) {
+      $query->limit($limit);
     }
 
     $search = isset($filterArr['search']) ? $filterArr['search'] : '';

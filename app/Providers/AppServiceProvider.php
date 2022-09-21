@@ -56,6 +56,9 @@ class AppServiceProvider extends ServiceProvider
         \View::composer(
             'web.layout.includes.*', 'App\Http\View\Composers\FrontendincludesComposer'
            );
+           \View::composer(
+            'web.*', 'App\Http\View\Composers\FaqComposer'
+           );
         Collection::macro('setAppends', function ($attributes) {
             return $this->map(function ($item) use ($attributes) {
                 return $item->setAppends($attributes);
