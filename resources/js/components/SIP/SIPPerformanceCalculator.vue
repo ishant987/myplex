@@ -1,4 +1,62 @@
 <template>
+    <div class="comp_schem_bdr">
+                            <div class="s_renge sip_calc_range_grop">
+                                <h4>SIP Performance Calculator</h4>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="range-slider-wrapper">
+                                            <span class="slider-heading">SIP Amount (Rs.)</span>
+                                            <div id="slider-bedrooms" class="slider" data-min="0" data-max="8" data-value="7" data-step="1" ></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="range-slider-wrapper">
+                                            <span class="slider-heading">Duration (Month)</span>
+                                            <div id="slider-price" class="slider" data-min="10" data-max="100" data-value="100" data-step="10"></div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="range-slider-wrapper">
+                                            <span class="slider-heading">Day of SIP</span>
+                                            <div id="slider-bedrooms" class="slider" data-min="0" data-max="8" data-value="7" data-step="1"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label class="mb-3" for="">Select Fund</label>
+                                            <select class="form-text"  v-model="selectedFund"  @change="sipCalculations" :disabled="process">
+                                                <option value="">Select Fund</option>
+                                                <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="d-sm-flex d-block sip_calc_input mt-3">
+                                    <div class="cal_form_select">
+                                        <label for="">Return Rate (%)</label>
+                                        <input class="form-text" type="number" />
+                                    </div>
+                                    <div class="cal_form_select">
+                                        <label for="">Your Investments (Rs.)</label>
+                                        <input class="form-text" type="number" />
+                                    </div>
+                                    <div class="cal_form_select">
+                                        <label for="">Your Current Value (Rs.)</label>
+                                        <input class="form-text" type="number" />
+                                    </div>
+                                    <div class="cal_form_select">
+                                        <label for="">Your Current Value (Rs.)</label>
+                                        <input class="form-text" type="number" />
+                                    </div>
+                                    <div class="cal_form_select mr-0">
+                                        <label for="">Your Current Value (Rs.)</label>
+                                        <input class="form-text" type="number" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 <div class="invst-wrap invst-sip-performace">
     <h3>SIP Performance Calculator</h3>
 
@@ -235,7 +293,8 @@ export default {
                 sip_day:'',
                 sipCalculatedData:[],
                 showTable:false,
-                processEmail:false
+                processEmail:false,
+                app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
             }
   },
   methods: {
@@ -339,7 +398,7 @@ export default {
         this.processEmail = true
         let data = {
             name:this.name,
-            email:this.email,
+            email:'sandeep@gmail.com',
             output:this.output,
             fund_code:this.selectedFund.fund_code,
             fund_name:this.selectedFund.fund_name,
@@ -352,7 +411,7 @@ export default {
             current_nav:this.sipCalculatedData.current_nav,
             total_unit:this.sipCalculatedData.total_unit,
         };
-        axios.post('/api/v1/send-sip-calculator-email',data)
+        axios.post(this.app_url+'/api/v1/send-sip-calculator-email',data)
             .then(response => {
                 this.emailMsg = response.data.message
             })
@@ -368,10 +427,11 @@ export default {
             return true;
     },
     sipCalculations(){
+        // console.log(document.querySelector(".value").getAttribute('data-selected-value'));
         if(this.sip_amount && this.selectedFund && this.duration_months && this.sip_day){
             let data = {
             name:this.name,
-            email:this.email,
+            email:'sandeep@gmail.com',
             fund_code:this.selectedFund.fund_code,
             sip_amount:this.sip_amount,
             duration_months:this.duration_months,
@@ -380,7 +440,7 @@ export default {
         };
         this.process = true
         this.sipCalculatedData = []
-        axios.post('/api/v1/sip-performance-calculator',data)
+        axios.post(this.app_url+'/api/v1/sip-performance-calculator',data)
             .then(response => {
                 this.sipCalculatedData = response.data.data
             })
@@ -483,6 +543,7 @@ export default {
   },
   mounted() {
     this.getFunds({})
+    
   },
 }
 </script>

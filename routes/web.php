@@ -483,7 +483,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('fund-performance', 'PageController@fundPerformanceData')->name('fund.performance');
     Route::get('compare-scheme', 'PageController@compareSchemeData')->name('compare.scheme');
     Route::get('performance-snapshot', 'PageController@performanceSnapshotData')->name('performance.snapshot');
-    Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
+    // Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
+    Route::any('calculator', 'CalculatorController@calculatorsPageData')->name('calculators');
 
     Route::get('calculator-login/{provider}', 'PageController@redirectCalculator')->name('calculators.social.login');
     Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
