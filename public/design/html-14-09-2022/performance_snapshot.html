@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/new.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/phosphor-icons"></script>
+    <title>My Plexus</title>
+</head> 
+<body>
+    <section class="trade_detais_sec">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="trade_details_result">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="header_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar_section">
+                        <nav class="navbar navbar-expand-lg">                            
+                            <a class="navbar-brand" href="#">
+                                <img src="img/logo-white.png" />
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                                <i class="ph-list-light"></i>
+                            </button>
+                            <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+                                <div class="navbar-nav">
+                                    <a class="nav-link active" aria-current="page" href="#">Mutual Funds</a>
+                                    <a class="nav-link" href="#">Compare Scheme</a>
+                                    <a class="nav-link" href="#">Research</a>
+                                    <a class="nav-link" href="#">Why Myplexus</a>
+                                    <a class="nav-link" href="#">Reviews</a>
+                                    <a class="nav-link" href="#">News</a>
+                                    <a class="nav-link" href="#">Blogs</a>
+                                </div>
+                            </div>                            
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <section class="inner_banner_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner_section_banner">
+                        <h4>Performance Snapshot</h4>
+                        <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>  
+    
+    
+    <section class="compare_scheme">
+        <div class="container">
+            <div class="comp_schem_bdr">
+                <h4>Compare Scheme</h4>
+                <div class="tab_snap_shot">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="pills-weekly-tab" data-bs-toggle="pill" data-bs-target="#pills-weekly" type="button" role="tab" aria-controls="pills-weekly" aria-selected="true"><i class="ph-calendar-check"></i> Weekly</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="pills-monthly-tab" data-bs-toggle="pill" data-bs-target="#pills-monthly" type="button" role="tab" aria-controls="pills-monthly" aria-selected="false"><i class="ph-calendar"></i> Monthly</button>
+                        </li>
+                      </ul>
+                      <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab">
+                            <div class="top_table_bg_color">                         
+                            <div class="row align-items-end">
+                                <div class="col-lg-10">                                    
+                                    <div class="row align-items-end">
+                                        <div class="col-lg-4">
+                                            <div class="form_select">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                    <option value="">2000</option>
+                                                    <option value="">2001</option>
+                                                    <option value="">2002</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form_select">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Open Ended FOF Domestic</option>
+                                                    <option value="">2000</option>
+                                                    <option value="">2001</option>
+                                                    <option value="">2002</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form_select">
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Return%</option>
+                                                    <option value="">10%</option>
+                                                    <option value="">20%</option>
+                                                    <option value="">30%</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="middle_left">
+                                        <a href="">Submit</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <p>Term of Fund : Medium Term</p>
+                                <p>Type of Fund : Open Ended FoF Domestic for the Week Ended As On : <b>11/08/2022</b></p>
+                            </div>
+                            </div>
+                            <div class="datatable_ll main_trer">
+                                <div class="table-responsive">
+                                <table id="example" class="table table-striped" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Scrip Name</th>
+                                            <th>Index Name</th>
+                                            <th>Daily</th>
+                                            <th>Week</th>
+                                            <th>14days</th>
+                                            <th>30days</th>
+                                            <th>60days</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Asset Allocator FoF</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Financial Planning - Aggressive Plan</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Asset Allocator FoF</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Financial Planning - Aggressive Plan</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Asset Allocator FoF</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Financial Planning - Aggressive Plan</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Asset Allocator FoF</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Financial Planning - Aggressive Plan</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Asset Allocator FoF</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aditya Birla Sun Life Financial Planning - Aggressive Plan</td>
+                                            <td>S&P CNX 500</td>
+                                            <td>0.16</td>
+                                            <td>0.00</td>
+                                            <td>0.73</td>
+                                            <td>3.80</td>
+                                            <td>5.79</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>                 
+                            
+                            
+                        </div>
+                        <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
+                            
+                            
+                            
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    
+    <section class="footer_section pt-4">
+        <div class="container">
+            <div class="row pt-5 pb-5">
+                <div class="col-md-3">
+                    <div class="footer_logo_sec">
+                        <img src="img/logo-white.png" />
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+                        <div class="footer_social">
+                            <ul class="d-flex align-items-center">
+                                <li><a href="#"><i class="ph-facebook-logo-light"></i></a></li>
+                                <li><a href="#"><i class="ph-twitter-logo-light"></i></a></li>
+                                <li><a href="#"><i class="ph-instagram-logo-light"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="footer_menu">
+                                <h4>Company</h4>
+                                <ul>
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">Disclosures</a></li>
+                                    <li><a href="#">Investor Charter</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Terms & Condition</a></li>
+                                    <li><a href="#">Disclaimer</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="footer_menu">
+                                <h4>Business Type</h4>
+                                <ul>
+                                    <li><a href="#">Electronics & Mobiles</a></li>
+                                    <li><a href="#">Lifestyle</a></li>
+                                    <li><a href="#">Automobile</a></li>
+                                    <li><a href="#">Grocery</a></li>
+                                    <li><a href="#">Healthcare</a></li>
+                                    <li><a href="#">Hospitality</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="footer_menu">
+                                <h4>Products</h4>
+                                <ul>
+                                    <li><a href="#">Publisher</a></li>
+                                    <li><a href="#">Share</a></li>
+                                    <li><a href="#">Gateway</a></li>
+                                    <li><a href="#">Brokers</a></li>
+                                    <li><a href="#">Tickertape</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="footer_menu">
+                                <h4>Explore</h4>
+                                <ul>
+                                    <li><a href="#"> Mutual Funds</a></li>
+                                    <li><a href="#">Explore Stocks</a></li>
+                                    <li><a href="#">NPS Investment</a></li>
+                                    <li><a href="#">Health Insurance</a></li>
+                                    <li><a href="#">Term Insurance</a></li>
+                                    <li><a href="#">All Mutual Fund Schemes</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="copyright_inner d-sm-flex d-block align-items-center justify-content-between">
+                        <p>©Copyright 2022 All Rights Reserved.</p>
+                        <div class="copyright_menu">
+                            <ul class="d-flex align-items-center justify-content-end">
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="#">Sitemap</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/custom.js"></script>
+
+</body>
+
+</html>
