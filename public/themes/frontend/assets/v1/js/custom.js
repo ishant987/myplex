@@ -180,13 +180,11 @@ $('body').on('click', '.toggle-filters', function() {
           currentValueMin = currentValueMin / 1000 + 'k';
           currentValueMax = currentValueMax / 1000 + 'k';
         }
-        
         $this.find('span[tabindex]:first-of-type .value').html(currentValueMin).attr('data-selected-value', minValue);
         $this.find('span[tabindex]:last-of-type').append('<span class="value max-value" data-selected-value></span>').find('.value').html(currentValueMax).attr('data-selected-value', maxValue);
       });
       
     } else {
-      
       $this.html('Show advanced filters');
       rangeWrapper.removeClass('filters-expanded');
       advancedFilters.slideUp();
@@ -216,6 +214,7 @@ $('body').on('click', '.toggle-filters', function() {
         maxValue = Number($(this).attr('data-max')),
         value = Number($(this).attr('data-value')),
         step = Number($(this).attr('data-step')),
+        type = $(this).attr('data-type'),
         $this = $(this);
     
     $this.slider({
@@ -230,12 +229,16 @@ $('body').on('click', '.toggle-filters', function() {
           currentValue = currentValue / 1000 + 'k';
         }
         $(this).find('.value').html(currentValue).attr('data-selected-value', ui.value);
+      },
+      change:function(event,ui){
+        $(this).parent().find('.vue-value').val(ui.value);
+        document.getElementById('show-table-click').click();
       }
     });
     
     var sliderHandle = $this.find('.ui-slider-handle'),
         currentValue = sliderHandle.parent().attr('data-value');
-    sliderHandle.append('<span ref="sip" class="value min-value" data-type="type" data-selected-value="'+ currentValue +'"></span>');
+    sliderHandle.append('<span ref="sip" class="value min-value" data-type="'+type+'" data-selected-value="'+ currentValue +'"></span>');
     
     if(minValue > 999) {
       value = value / 1000 + 'k';

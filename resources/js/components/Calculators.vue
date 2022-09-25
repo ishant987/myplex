@@ -61,14 +61,14 @@
                     <SIPPerformanceCalculator :useremail="useremail" :username="username"></SIPPerformanceCalculator>
                 </div>
                 <!-- SIP CALCULATOR TAB END -->
-                 <!-- INFLATION CALCULATOR TAB START -->
-                 <div id="inf-calc" class="tab-pane fade" :class="{'active show':currentTab == 'inf-calc'}">
+                <!-- INFLATION CALCULATOR TAB START -->
+                <div id="inf-calc" class="tab-pane fade" :class="{'active show':currentTab == 'inf-calc'}">
                     <InflationCalculator :useremail="useremail" :username="username"></InflationCalculator>
                 </div>
                 <!-- INFLATION CALCULATOR TAB END -->
-                                <!-- RETIREMENT CALCULATOR TAB START -->
+                <!-- RETIREMENT CALCULATOR TAB START -->
 
-                                <div id="retire-calc" class="tab-pane fade" :class="{'active show':currentTab == 'retire-calc'}">
+                <div id="retire-calc" class="tab-pane fade" :class="{'active show':currentTab == 'retire-calc'}">
                     <RetirementCalulator :useremail="useremail" :username="username"></RetirementCalulator>
                 </div>
 
@@ -124,8 +124,8 @@ export default {
             required: true,
             default: '',
         },
-        image_path:{
-            requires:true,
+        image_path: {
+            requires: true,
         }
     },
     components: {
