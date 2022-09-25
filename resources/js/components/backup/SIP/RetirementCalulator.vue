@@ -66,7 +66,6 @@
             <label class="" data-toggle="tooltip" data-placement="top"  title="Did you invest any lumpsum amount of money from which you are expecting a return at the age of retirement? If yes then mention the lump sum amount.">Current lump sum (If any)</label>
             <input type="number" id="current_lumsum" v-model="current_lumsum"/>
         </div>
-
         <div class="invst-retirement-calc invst-inflation-calc col-12">
             <div class="invst-fields-action-buttons">
                 <div class="row m-0 justify-content-end">

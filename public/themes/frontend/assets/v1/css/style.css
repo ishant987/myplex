@@ -3267,7 +3267,13 @@ white-space: nowrap;
         margin-bottom: 30px;
         margin-left: 0;
       }
-      
+      .inflataion-data-common{
+        display: block;
+        font-size: 17px;
+        font-style: italic;
+        margin-bottom: 30px;
+        margin-left: 0;
+      }
       .range-slider-wrapper .slider {
         position: relative;
         width: 80%;
