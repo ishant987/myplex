@@ -105,12 +105,11 @@ class PageController extends BaseController
             $tstmnlMdl = TestimonialModel::testimonialList(['status' => $status], ['tmnl_id', 'name', 'descp', 'company', 'designation', 'media_id'], 'tmnl_id', 'DESC');
             $pthPgsMdl = PageModel::pageList(['ids' => [21, 22, 23, 24, 25], 'status' => $status], ['title', 'slug', 'template_id'], 'c_order', 'ASC');
             $stngDataArr = SettingsModel::getSettingsArr(['paathshaala_heading', 'paathshaala_image', 'newsletter_heading', 'newsletter_description'], $commonconstants['status_val'][1]);
-            $faqMdl = FAQModel::faqList(['category_id' => $commonconstants['def_faq_cat_id'], 'status' => $status], ['title', 'descp', 'faq_id'], 'c_order', 'ASC');
+            // $faqs = FAQModel::faqList(['category_id' => $commonconstants['def_faq_cat_id'], 'status' => $status], ['title', 'descp', 'faq_id'], 'c_order', 'ASC');
 
             // $plansMdl = Plans::list(['status' => $status, 'show_on_wa' => $commonconstants['y_n_val'][1]], ['p_id', 'plan_name', 'amount', 'duration_name'], 'c_order', 'ASC');
 
             // $blogPosts = json_decode(file_get_contents(env('BLOG_URL') . '/wp-json/wp/v2/posts/?_embed&per_page=3'), true);
-
             $nwsListMdl = News::list(['status' => $commonconstants['status_val']['1']], ['title', 'slug', 'media_type', 'image', 'video_from', 'video_data', 'video_image', 'news_source_link'], '', '', 3);
 
             $aeQuesMdl = AskExpertQuestion::list(['status' => $status], '', 'created_at', 'DESC', 1);
@@ -121,7 +120,7 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "news_folder" => Core::getUploadedURL($commonconstants['news_dir_name']), "user_media_folder" => $commonconstants['user_dir_name'], "payment_lang" => __('payment'), "yes_no_txt" => __('common.yes_no_txt'), "web_lang" => __('web')));
             // dd($defDataArr);
-            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr', 'faqMdl', 'blogPosts', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl'));
+            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr','blogPosts', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl'));
         }
         return abort(404);
     }
@@ -256,7 +255,7 @@ class PageController extends BaseController
             $teamMdl = Teams::list(['status' => $status], ['team_id', 'name', 'media_id', 'designation', 'linkedin_link'], 'c_order', 'ASC');
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
-            return view('web.pages.about', compact('defDataArr', 'dataArr', 'teamMdl'));
+            return view($this->page_path.'.about', compact('defDataArr', 'dataArr', 'teamMdl'));
         }
         return abort(404);
     }
@@ -402,7 +401,7 @@ class PageController extends BaseController
 
             $status = $commonconstants['status_val']['1'];
 
-            $dataArr['faqs'] = FAQModel::faqList(['category_id' => $commonconstants['def_faq_cat_id'], 'status' => $status], ['faq_id', 'title', 'descp'], 'c_order', 'ASC');
+            $faqs = FAQModel::faqList(['category_id' => $commonconstants['def_faq_cat_id'], 'status' => $status], ['faq_id', 'title', 'descp'], 'c_order', 'ASC');
             $pthPgsMdl = PageModel::pageList(['ids' => [21, 22, 23, 24, 25], 'status' => $status], ['title', 'slug', 'template_id'], 'c_order', 'ASC');
             $stngDataArr = SettingsModel::getSettingsArr(['paathshaala_heading', 'paathshaala_image', 'newsletter_heading', 'newsletter_description'], $commonconstants['status_val'][1]);
 
@@ -410,7 +409,7 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('themes.frontend.pages.faq', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr'));
+            return view($this->page_path.'.faq', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr','faqs'));
         }
         return abort(404);
     }

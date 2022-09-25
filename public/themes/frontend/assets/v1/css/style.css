@@ -3213,3 +3213,196 @@ white-space: nowrap;
     
     
 }
+/*--- calculator -------*/
+.filter_tab.nav-pills .nav-link.active img, .filter_tab.nav-pills .show>.nav-link img{
+    -webkit-filter: brightness(0) invert(1);
+      filter: brightness(0) invert(1);
+    }
+    
+    .s_renge{
+        background:rgb(156 197 174 / 10%);
+        padding: 25px;
+        border-radius: 10px 10px 0 0;
+    }
+    .range-slider-wrapper {
+        width: 100%;
+      }
+      .range-slider-wrapper.filters-expanded .slider {
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+      }
+      .range-slider-wrapper.filters-expanded .ui-slider-range {
+        background-color: #ccc;
+        background-image: none;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+      }
+      
+      .range-slider-wrapper .advanced-filters {
+        display: none;
+      }
+      
+      .range-slider-wrapper .toggle-filters {
+        display: inline-block;
+        padding: 15px 10px;
+        margin-top: 15px;
+        margin-left: 15px;
+        cursor: pointer;
+        background-color: #666;
+        color: #eee;
+        min-width: 162px;
+        text-align: center;
+        border-radius: 5px;
+        transition: all 0.6s ease;
+      }
+      .range-slider-wrapper .toggle-filters:hover {
+        background-color: #932222;
+        color: #fff;
+      }
+      
+      .range-slider-wrapper .slider-heading {
+        display: block;
+        font-size: 17px;
+        font-style: italic;
+        margin-bottom: 30px;
+        margin-left: 0;
+      }
+      
+      .range-slider-wrapper .slider {
+        position: relative;
+        width: 80%;
+        height: 13px;
+        margin-left: 0px;
+        background:#dfe3e1 !important;
+        margin-bottom: 25px;
+        border-radius: 6px;
+        border: 1px solid rgb(0 0 0 / 0%);
+      }
+      .ui-widget-content{
+        background: rgb(34 34 34 / 10%);
+      }
+      .range-slider-wrapper .slider .ui-slider-handle {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 45px;
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 1px 1px 30px 1px rgb(0 0 0 / 20%);
+        cursor: pointer;
+        outline: none;
+        border: none;
+      }
+      
+      .range-slider-wrapper .value {
+        display: block;
+        position: absolute;
+        border-radius: 5px;
+        top: -18px;
+        left: 100%;
+        transform: translateX(0%);
+        color: #000;
+        font-size: 11px;
+      }
+      .range-slider-wrapper .ui-state-focus,
+      .range-slider-wrapper .ui-state-hover {
+        border-color: transparent !important;
+      }
+      .range-slider-wrapper .ui-widget-header{
+        background: #31aa66;
+        border-radius: 30px;
+      }
+    
+      .calculator_table .form_select {
+        padding: 15px;
+        }
+       .calculator_table .top_bg_right_black .bg_222 label {
+        color: #fff;
+        margin-bottom: 8px;
+        }
+        .bg_top td:first-child {
+            border-radius:0 0 0 10px;
+        }
+        .bg_top td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+        .one_btn{
+            width: 100%;
+        }
+        .one_btn .middle_left{
+            display: block;
+        }
+        .one_btn .middle_left a{
+            text-align: center;
+            border-radius: 5px 30px 30px 30px;
+        }
+        .cal_form_select .form-text {
+            color: #000;
+            border-radius: 30px;
+            padding: 11px 15px;
+            display: block;
+            width: 100%;
+            border: 1px solid rgb(0 0 0 / 10%);
+        }
+        .mn_h4{
+            color: var(--darkgreen);
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+        .cal_form_select .form-text:focus-visible{
+            outline: none;
+        }
+        .tab_snap_shot .nav{
+            overflow: hidden;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+        .tab_snap_shot .nav-pills .nav-link{
+            white-space: nowrap;
+        }
+    .sip_calc_input .cal_form_select{
+        width: 20%;
+        margin-right: 15px
+    }
+    .sip_calc_range_grop h4{
+        font-size: 24px;
+        color: var(--darkgreen);
+        margin-bottom: 30px
+    }
+    
+    .plan_faq{
+        margin-top: 30px
+    }
+    .faq_title h4{
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 0
+    }
+    .faq_title h4 span{
+        font-size: 20px;
+    }
+    .faq_title{
+        background-color: var(--darkgreen);
+        padding: 15px;
+        border-radius: 7px;
+        margin-bottom: 15px
+    }
+    .single_faq_calc h4{
+        font-size: 20px;
+        color: var(--darkgreen);
+    }
+    .single_faq_calc h6{
+        font-size: 18px;
+        margin-top: 30px;
+        margin-bottom: 10px
+    }
+    .single_faq_calc{
+        background-color: #f5f9f7;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 7px
+    }
+    
+    /*--- calculator -------*/

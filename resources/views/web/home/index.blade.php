@@ -218,21 +218,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="calculator_inner d-md-flex d-block align-items-center-between w-100">
-                    <div class="single_calculator">
-                        <span class="right_circle d-none d-sm-block"></span>
-                        <div data-aos="zoom-in" data-aos-duration="500">
-                            <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon1.png')}}" />
-                            <h4>SIP Planner</h4>
+                    <x-link url="{{ route('web.calculators') }}?tab=sip-planner">
+                        <div class="single_calculator">
+                            <span class="right_circle d-none d-sm-block"></span>
+                            <div data-aos="zoom-in" data-aos-duration="500">
+                                <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon1.png')}}" />
+                                <h4>SIP Planner</h4>
+                            </div>
                         </div>
-                    </div>
-                    <div class="single_calculator have_before">
-                        <span class="left_circle d-none d-sm-block"></span>
-                        <span class="right_circle d-none d-sm-block"></span>
-                        <div data-aos="zoom-in" data-aos-duration="1000">
-                            <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon2.png')}}" />
-                            <h4>SIP Performance Calculator</h4>
+                    </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=sip-p-calc">
+                        <div class="single_calculator have_before">
+                            <span class="left_circle d-none d-sm-block"></span>
+                            <span class="right_circle d-none d-sm-block"></span>
+                            <div data-aos="zoom-in" data-aos-duration="1000">
+                                <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon2.png')}}" />
+                                <h4>SIP Performance Calculator</h4>
+                            </div>
                         </div>
-                    </div>
+                    </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=inf-calc">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <span class="right_circle d-none d-sm-block"></span>
@@ -241,6 +246,8 @@
                             <h4>Inflation Calculator</h4>
                         </div>
                     </div>
+                </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=retire-calc">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <span class="right_circle d-none d-sm-block"></span>
@@ -249,6 +256,8 @@
                             <h4>Retiremen Calculator</h4>
                         </div>
                     </div>
+                </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=risk-tol-eval">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <div data-aos="zoom-in" data-aos-duration="2500">
@@ -256,6 +265,7 @@
                             <h4>Riak Tolerance Evaluator</h4>
                         </div>
                     </div>
+                </x-link>
                 </div>
             </div>
         </div>
@@ -361,59 +371,6 @@
 </section>
 
 <section class="faq_section">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 offset-md-1 offset-lg-2 mb-4">
-                <div class="faq_title text-center">
-                    <h4>Frequently Asked Question</h4>
-                    <p>Pro membership brings exclusive and timely data at your fingertips.<br> Discover your next great investment idea quicker and easier</p>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-8 col-md-10 offset-md-1 offset-lg-2">
-                <div class="faq_inner">
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    What is a Mutual Fund?
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    Mutual fund is a mechanism for pooling money by issuing units to the investors and investing funds in securities in accordance with objectives as disclosed in offer document.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingTwo">
-                                <button class="accordion-button collapsed" type="" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    How is a mutual fund set up?
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    Mutual fund is a mechanism for pooling money by issuing units to the investors and investing funds in securities in accordance with objectives as disclosed in offer document.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    How is the applicable NAV determined?
-                                </button>
-                            </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    Mutual fund is a mechanism for pooling money by issuing units to the investors and investing funds in securities in accordance with objectives as disclosed in offer document.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('web.common.faq_section')
 </section>
 @stop
