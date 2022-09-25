@@ -7,21 +7,21 @@
                 <div class="range-slider-wrapper">
                     <span class="slider-heading">SIP Amount (Rs.)</span>
                     <div id="slider-bedrooms" class="slider" data-min="0" data-max="10000" data-value="" data-step="1000" data-type="sip_amount"></div>
-                    <input class="vue-value" type="hidden" ref="sipAmount" value="7" :disabled="process" />
+                    <input class="vue-value" data-from="sipPerformance" type="hidden" ref="sipAmount" value="7" :disabled="process" />
                 </div>
             </div>
             <div class="col-lg-3 col-md-12">
                 <div class="range-slider-wrapper">
                     <span class="slider-heading">Duration (Month)</span>
                     <div id="slider-price" class="slider" data-min="10" data-max="100" data-value="" data-step="10" data-type="duration_months"></div>
-                    <input class="vue-value" type="hidden" ref="sipDuration" value="10" :disabled="process" />
+                    <input class="vue-value" data-from="sipPerformance" type="hidden" ref="sipDuration" value="10" :disabled="process" />
                 </div>
             </div>
             <div class="col-lg-3 col-md-12">
                 <div class="range-slider-wrapper">
                     <span class="slider-heading">Day of SIP</span>
                     <div id="slider-bedrooms" class="slider" data-min="0" data-max="31" data-value="0" data-step="1" data-type="sip_day"></div>
-                    <input class="vue-value" type="hidden" ref="sipDay" value="" :disabled="process" />
+                    <input class="vue-value" data-from="sipPerformance" type="hidden" ref="sipDay" value="" :disabled="process" />
                 </div>
             </div>
             <div class="col-lg-3 col-md-12">
@@ -33,7 +33,7 @@
                     </select>
                 </div>
             </div>
-            <a href="javascript://" id="show-table-click" class="money_title_btn d-none" @click="sipCalculations"  :disabled="process">Show In Table</a>
+            <a href="javascript://" id="show-table-click" class="money_title_btn d-none" @click="sipCalculations"  :disabled="process"></a>
         </div>
         <div class="d-sm-flex d-block sip_calc_input mt-3" v-if="Object.keys(sipCalculatedData).length">
             <div class="cal_form_select">

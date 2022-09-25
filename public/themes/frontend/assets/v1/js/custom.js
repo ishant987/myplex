@@ -231,8 +231,12 @@ $('body').on('click', '.toggle-filters', function() {
         $(this).find('.value').html(currentValue).attr('data-selected-value', ui.value);
       },
       change:function(event,ui){
+        const source = $(this).parent().find('.vue-value').attr('data-from');
         $(this).parent().find('.vue-value').val(ui.value);
         document.getElementById('show-table-click').click();
+        if(source=='infCalucaltor'){
+          document.getElementById('infCalucaltor-jquery-click').click();
+        }
       }
     });
     

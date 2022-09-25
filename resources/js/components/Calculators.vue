@@ -57,7 +57,7 @@
                 </div>
                 <!-- SIP PLANNER CALCULATOR TAB END -->
                 <!-- SIP CALCULATOR TAB START -->
-                <div id="pills-monthly1" role="tabpanel" aria-labelledby="pills-monthly-tab1" :class="{'active show':currentTab == 'sip-p-calc'}">
+                <div id="pills-monthly1" class="tab-pane fade "  role="tabpanel" aria-labelledby="pills-monthly-tab1" :class="{'active show':currentTab == 'sip-p-calc'}">
                     <SIPPerformanceCalculator :useremail="useremail" :username="username"></SIPPerformanceCalculator>
                 </div>
                 <!-- SIP CALCULATOR TAB END -->
@@ -138,7 +138,7 @@ export default {
     mixins: [mixin],
     data() {
         return {
-            currentTab: 'sip-p-calc'
+            currentTab: 'sip-planner'
         }
     },
     methods: {

@@ -218,21 +218,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="calculator_inner d-md-flex d-block align-items-center-between w-100">
-                    <div class="single_calculator">
-                        <span class="right_circle d-none d-sm-block"></span>
-                        <div data-aos="zoom-in" data-aos-duration="500">
-                            <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon1.png')}}" />
-                            <h4>SIP Planner</h4>
+                    <x-link url="{{ route('web.calculators') }}?tab=sip-planner">
+                        <div class="single_calculator">
+                            <span class="right_circle d-none d-sm-block"></span>
+                            <div data-aos="zoom-in" data-aos-duration="500">
+                                <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon1.png')}}" />
+                                <h4>SIP Planner</h4>
+                            </div>
                         </div>
-                    </div>
-                    <div class="single_calculator have_before">
-                        <span class="left_circle d-none d-sm-block"></span>
-                        <span class="right_circle d-none d-sm-block"></span>
-                        <div data-aos="zoom-in" data-aos-duration="1000">
-                            <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon2.png')}}" />
-                            <h4>SIP Performance Calculator</h4>
+                    </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=sip-p-calc">
+                        <div class="single_calculator have_before">
+                            <span class="left_circle d-none d-sm-block"></span>
+                            <span class="right_circle d-none d-sm-block"></span>
+                            <div data-aos="zoom-in" data-aos-duration="1000">
+                                <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon2.png')}}" />
+                                <h4>SIP Performance Calculator</h4>
+                            </div>
                         </div>
-                    </div>
+                    </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=inf-calc">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <span class="right_circle d-none d-sm-block"></span>
@@ -241,6 +246,8 @@
                             <h4>Inflation Calculator</h4>
                         </div>
                     </div>
+                </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=retire-calc">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <span class="right_circle d-none d-sm-block"></span>
@@ -249,6 +256,8 @@
                             <h4>Retiremen Calculator</h4>
                         </div>
                     </div>
+                </x-link>
+                    <x-link url="{{ route('web.calculators') }}?tab=risk-tol-eval">
                     <div class="single_calculator have_before">
                         <span class="left_circle d-none d-sm-block"></span>
                         <div data-aos="zoom-in" data-aos-duration="2500">
@@ -256,6 +265,7 @@
                             <h4>Riak Tolerance Evaluator</h4>
                         </div>
                     </div>
+                </x-link>
                 </div>
             </div>
         </div>
