@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Snapshot</title>
+</head>
+
+<body style="font-family: 'Volte-Semibold'; color: #000;">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+    @font-face {
+    font-family: 'Volte-Regular';
+    src: url('{{ url('fonts/Volte-Regular.ttf') }}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Medium';
+    src: url('{{ url('fonts/Volte-Medium.ttf') }}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Semibold';
+    src: url('{{ url('fonts/Volte-Semibold.ttf') }}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Volte-Bold';
+    src: url('{{ url('fonts/Volte-Bold.ttf') }}') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Volte-Regular'
+     
+}
+table td.header{
+    font-family: 'Volte-Bold'
+}
+.data_tr{
+    font-family: 'Volte-Medium'
+}
+.container {
+    width: 100%;
+    max-width: 96%;
+    margin: 0 auto;
+}
+.half {
+    width: 50%;
+}
+tbody tr:last-child td {
+    border-bottom: 0 !important;
+}
+tbody tr:last-child {
+    border-radius: 5px;
+}
+
+.table-col {
+    justify-content: space-between;
+}
+.top-banner::after {
+    position: absolute;
+    content: '';
+    top: -10px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('{{ url('images/top-layer.png') }}');
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+}
+.w-arr{
+    width:15px;
+}
+</style>
+
+    <div class="top-banner" style="border-top: 10px solid #6ab130; background-image: url('{{ url('images/banner-img.jpg') }}'); background-repeat: no-repeat; background-size: cover; padding-bottom: 70px; position: relative;">
+        <div class="container">
+            <table style="">
+                <tbody style="">
+                    <tr style="">
+                        <td style="">
+                            <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">myplexus.com</span></p>
+                            <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">Search, Research Mutual Funds</span></p>
+                        </td>
+                    </tr>
+                    <tr style=" margin-top: 90px;">
+                        <td style="">
+                            <p style="text-align: center; font-family: 'Volte-Bold'; font-size: 60px; color: #fff;">Performance Snapshot</p>
+                            <p style="text-align: center; color: #6ab130; font-size: 35px;">
+                                <span class="title">{{$dataArr['type_data']['name']}}</span><br>
+                                <span class="date">{{ $dataArr['type_data']['text'] }}</span>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<table style="margin-bottom: 0px; margin-top: 0px;font-size:12px">
+        
+        <thead style="" class="container">
+            @if($dataArr['type_data']['type'] == 'weekly')
+            <tr style=" text-align: left;">
+                @if($dataArr['type_data']['report_category'] != 'indices')
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Fund name</td>
+                @endif
+                @if($dataArr['type_data']['report_category'] == 'indices' || $dataArr['type_data']['report_category'] == 'return')
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Index name</td>
+                @endif
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">7 days</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">14 days</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center;">30 days</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">60 days</td>
+            </tr>
+            @elseif($dataArr['type_data']['type'] == 'monthly')
+            <tr style=" text-align: left;">
+                @if($dataArr['type_data']['report_category'] != 'indices')
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Fund name</td>
+                @endif
+                @if($dataArr['type_data']['report_category'] == 'indices' || $dataArr['type_data']['report_category'] == 'return')
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Index name</td>
+                @endif
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">Six Months</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">One Year</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center;">Two Year</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;text-align:center; ">Three Year</td>
+            </tr>
+            @endif
+        </thead>
+        <tbody style="box-shadow: 2px 8px 15px -6px #0000001f;  border: 1px solid #e7e4e4; border-top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="container">
+            @foreach($dataArr['performance_snapshot_data'] as $performance_snapshot_data)
+
+                @if($dataArr['type_data']['type'] == 'weekly')
+                <tr style=" background-color:#f7f7fb;" class="data_tr">
+                    @if($dataArr['type_data']['report_category'] != 'indices')
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;"><a href="{{ url('fund-performance?fund_code='.$performance_snapshot_data['fund_code']) }}" >{{ $performance_snapshot_data['fund_name'] }}</a></td>
+                    @endif
+                    @if($dataArr['type_data']['report_category'] == 'indices' || $dataArr['type_data']['report_category'] == 'return')
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;">{{ $performance_snapshot_data['indices_name'] }}</td>
+                    @endif
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['7DAYS'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['14DAYS'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['30DAYS'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['60DAYS'], 2, '.', '') }}</td>
+
+                </tr>
+                @elseif($dataArr['type_data']['type'] == 'monthly')
+                <tr style=" background-color:#f7f7fb;" class="data_tr">
+                    @if($dataArr['type_data']['report_category'] != 'indices')
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;"><a href="{{ url('fund-performance?fund_code='.$performance_snapshot_data['fund_code']) }}" >{{ $performance_snapshot_data['fund_name'] }}</a></td>
+                    @endif
+                    @if($dataArr['type_data']['report_category'] == 'indices' || $dataArr['type_data']['report_category'] == 'return')
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;">{{ $performance_snapshot_data['indices_name'] }}</td>
+                    @endif
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['sixmonths'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['oneyear'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['twoyear'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$performance_snapshot_data['threeyear'], 2, '.', '') }}</td>
+
+                </tr>
+                @endif
+                
+
+            @endforeach
+        </tbody>
+    </table>
+    <!-- FOOTER -->
+
+    <table style=" background-image: url('{{ url('images/footer-bg.jpg') }}'); background-size: 100%; background-repeat: no-repeat; padding: 28px 0 10px 0;">
+        <tbody style="" class="container">
+            <tr style="justify-content:space-between">
+                <td class="half" style="padding-left:20px;margin-top: -10px"><img src="{{ url('images/myplexus-footer-logo.png') }}" /></td>
+                <td class="half" style="text-align: right;padding-right:20px">
+                    <a href="https://www.facebook.com/MyplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/facebook-icon.png') }}"></a>
+                    <a href="https://twitter.com/myplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/twiiter-icon.png') }}"></a>
+                    <a href="https://www.linkedin.com/company/myplexus.com" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/linkedin-icon.png') }}"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<table style="background-color: #000; padding: 20px 0;">
+    <tbody>
+        <tr class="container">
+            <td><p style="font-size: 16px; line-height: 24px; margin: 0; opacity: 0.5; color: #fff;padding-left:20px">Copyright© 2020 All rights reserved.</p></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

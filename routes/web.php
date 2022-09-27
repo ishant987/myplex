@@ -480,6 +480,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('weekly-snapshot', 'PageController@weeklySnapshotData')->name('weekly.snapshot');
     Route::get('monthly-snapshot', 'PageController@monthlySnapshotData')->name('monthly.snapshot');
     Route::get('monthly-ranking', 'PageController@monthlyRankingData')->name('monthly.ranking');
+    Route::get('monthly-ranking-pdf/{type_id}', 'PDFDataController@monthlyRankingPDF')->name('monthly.ranking.pdf');
     Route::get('fund-performance', 'PageController@fundPerformanceData')->name('fund.performance');
     Route::get('compare-scheme', 'PageController@compareSchemeData')->name('compare.scheme');
     Route::get('performance-snapshot', 'PageController@performanceSnapshotData')->name('performance.snapshot');

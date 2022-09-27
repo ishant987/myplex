@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Composition Snapshot</title>
+    <title>Monthly Ranking</title>
 </head>
 
 <body style="font-family: 'Volte-Semibold'; color: #000;">
@@ -82,6 +82,9 @@ tbody tr:last-child {
     background-size: contain;
     z-index: 0;
 }
+.w-arr{
+    width:15px;
+}
 </style>
 
     <div class="top-banner" style="border-top: 10px solid #6ab130; background-image: url('{{ url('images/banner-img.jpg') }}'); background-repeat: no-repeat; background-size: cover; padding-bottom: 70px; position: relative;">
@@ -96,10 +99,10 @@ tbody tr:last-child {
                     </tr>
                     <tr style=" margin-top: 90px;">
                         <td style="">
-                            <p style="text-align: center; font-family: 'Volte-Bold'; font-size: 60px; color: #fff;">Composition Snapshot</p>
+                            <p style="text-align: center; font-family: 'Volte-Bold'; font-size: 60px; color: #fff;">Monthly Ranking</p>
                             <p style="text-align: center; color: #6ab130; font-size: 35px;">
                                 <span class="title">{{$dataArr['type_data']['name']}}</span><br>
-                                <span class="date">{{ date("F", mktime(null, null, null, $dataArr['composition_data'][0]['monthinfo'] , 1)) }}, {{ $dataArr['composition_data'][0]['yearinfo'] }}</span>
+                                <span class="date">{{ $dataArr['month'] }}, {{ $dataArr['year'] }}</span>
                             </p>
                         </td>
                     </tr>
@@ -111,35 +114,53 @@ tbody tr:last-child {
         
         <thead style="" class="container">
             <tr role="row" style=" text-align: center;">
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;" colspan="4" rowspan="1">&nbsp;</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;border-left:1px solid #fff;border-right:1px solid #fff " colspan="4" rowspan="1"> Equity</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px; " rowspan="1" colspan="1">&nbsp;</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;" colspan="1" rowspan="1">&nbsp;</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;" colspan="1" rowspan="1">&nbsp;</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;" colspan="1" rowspan="1">&nbsp;</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;border-left:1px solid #fff; " rowspan="1" colspan="3">RANKING</td>
             </tr>
             <tr style=" text-align: left;">
                 <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Name of the Fund</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Cash %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Sov %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Corp Debt %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;border-left:1px solid #fff;width:10%">Small Cap %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Mid Cap %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10%">Large Cap %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10%;border-right:1px solid #fff  ">Very Large Cap %</td>
-                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Wt . PE</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">AAUM (Rs. Lacs)</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:10% ">Return% (1 Year)</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;border-left:1px solid #fff;width:20% ">Return Quality</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20%">Volatility</td>
+                <td class="header" style="background-color: #000; color: #509b41; padding: 15px 20px;width:20% ">Market Risk</td>
             </tr>
         </thead>
         <tbody style="box-shadow: 2px 8px 15px -6px #0000001f;  border: 1px solid #e7e4e4; border-top: 0; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" class="container">
-            @foreach($dataArr['composition_data'] as $composition_data)
-            <tr style=" background-color:#f7f7fb;" class="data_tr">
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;width:20%">{{ $composition_data['fund_name'] }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['cash'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['sov'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['debt'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['eq_small'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['eq_mid'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['eq_large'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['eq_very_large'], 2, '.', '') }}</td>
-                <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$composition_data['wt_pe'], 2, '.', '') }}</td>
-            </tr>
+            @foreach($dataArr['monthly_ranking_data'] as $monthly_ranking_data)
+
+                @if(!$monthly_ranking_data['one_year_return'])
+                <tr style=" background-color:#f7f7fb;" class="data_tr">
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;" rowspan="1" colspan="1">{{ $monthly_ranking_data['fund_name'] }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;" rowspan="1" colspan="5">NA</td>
+                </tr>
+                @else
+                <tr style=" background-color:#f7f7fb;" class="data_tr">
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;">{{ $monthly_ranking_data['fund_name'] }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">
+                        @if($monthly_ranking_data['per_change_aaum'] > 0)
+                        <img class="w-arr" src="{{ url('images/up-green-arrow.png') }}" title="{{ $monthly_ranking_data['per_change_aaum'] }}%" class="arrow-up" > 
+                        @elseif($monthly_ranking_data['per_change_aaum'] < 0)
+                        <img class="w-arr" src="{{ url('images/down-red-arrow.png') }}"  title="{{ $monthly_ranking_data['per_change_aaum'] }}%" class="arrow-up" > 
+                        @endif
+                        ({{ number_format((float)$monthly_ranking_data['per_change_aaum'], 2, '.', '') }}%)<br>
+                        {{ number_format((float)$monthly_ranking_data['aaum'], 2, '.', '') }}
+                    </td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">{{ number_format((float)$monthly_ranking_data['one_year_return'], 2, '.', '') }}</td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">
+                        <img  src="{{ url('images/'.$monthly_ranking_data['return_quality'].'-green-star.png') }}" title="{{ $monthly_ranking_data['return_quality'] }}" alt="{{ $monthly_ranking_data['return_quality'] }}">
+                    </td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">
+                        <img  src="{{ url('images/'.$monthly_ranking_data['volatality'].'-red-star.png') }}" title="{{ $monthly_ranking_data['volatality'] }}" alt="{{ $monthly_ranking_data['volatality'] }}">
+                    </td>
+                    <td style=" padding: 15px 20px; border-bottom: 1px solid #000;text-align:center;">
+                        <img src="{{ url('images/'.$monthly_ranking_data['market_risk'].'-red-star.png') }}" title="{{ $monthly_ranking_data['market_risk'] }}" alt="{{ $monthly_ranking_data['market_risk'] }}">
+                    </td>
+                </tr>
+                @endif
+
             @endforeach
         </tbody>
     </table>

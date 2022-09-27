@@ -11,10 +11,10 @@
                                     <p v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
                                 </div>
                                 <div class="monthly_ranking_share d-block d-sm-flex">
-                                    <a href="#" class="share_btn facebook"><i class="ph-facebook-logo"></i> Facebook</a>
-                                    <a href="#" class="share_btn twitter"><i class="ph-twitter-logo"></i> Twitter</a>
-                                    <a href="#" class="share_btn linkedin"><i class="ph-linkedin-logo"></i> Linkedin</a>
-                                    <a href="#" class="share_btn pdf"><i class="ph-file-pdf"></i> Pdf</a>
+                                    <a  target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+currentURL()"  class="share_btn facebook"><i class="ph-facebook-logo"></i> Facebook</a>
+                                    <a  target="_blank" :href="'http://twitter.com/share?text='+shareText+'&url='+currentURL()" class="share_btn twitter"><i class="ph-twitter-logo"></i> Twitter</a>
+                                    <a target="_blank" :href="'https://www.linkedin.com/shareArticle?mini=true&url='+currentURL()+'&title='+shareText" class="share_btn linkedin"><i class="ph-linkedin-logo"></i> Linkedin</a>
+                                    <a href="javascript://" class="share_btn pdf" @click="downloadPDF"><i class="ph-file-pdf"></i> Pdf</a>
                                 </div>
                             </div>
                             <div class="monthly_ranking_Search_part mb-1">
@@ -138,13 +138,17 @@ export default {
                 process:false,
                 app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
                 counts:2,
-                defaultStart:5
+                defaultStart:5,
+                shareText:''
             }
   },
   methods: {
    ...mapActions('InputData', ['getFundClassifications']),
    getRemaningStars(rates){
         return typeof rates=='number'? this.defaultStart-rates:0;
+   },
+   currentURL(){
+    return window.location.href
    },
    sortTable(col) {
       if (this.sortKey === col) {
@@ -180,6 +184,7 @@ export default {
                 var formattedYear = moment(first_fund.end_date, 'YYYY-MM-DD').format('YYYY');
                 that.snapshotTextHeding='For The Month of  '+formattedMonth+' , '+ formattedYear;
                 that.snapshotText = that.selectedFundClassification.name+' : '+ that.snapshotTextHeding
+                that.shareText = 'Monthly Ranking For the Month of  '+formattedMonth+' '+ formattedYear
             })
             .catch(error => {
                 console.log(error);
@@ -187,6 +192,9 @@ export default {
             .finally(() => {
                 that.process = false
             })
+   },
+   downloadPDF(){
+       window.open('/monthly-ranking-pdf/'+this.selectedFundClassification.ft_id, '_blank');
    },
   },
   watch: {
@@ -215,7 +223,7 @@ export default {
     myPromise.then( async (resolve, reject) => {
         if(fund_classification){
             that.selectedFundClassification = that.fundClassifications.filter(function(el) { return el.name == fund_classification })[0]
-            //that.getMonthlyRanking()
+            that.getMonthlyRanking()
         }
         return true
     })
