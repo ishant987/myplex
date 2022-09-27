@@ -81,7 +81,9 @@ ul {
     }
 }
 
-
+.text-gray{
+    color: #6e6c6c;
+}
 
 .single_trade_info {
     display: inline-block;
