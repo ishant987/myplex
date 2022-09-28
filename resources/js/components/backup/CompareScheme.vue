@@ -754,7 +754,7 @@ export default {
         }
         that.compare_price_process = true
         that.notice_text = ''
-        axios.get('/api/v1/compare-price', { params: data })
+        axios.get(this.app_url+'/api/v1/compare-price', { params: data })
             .then(response => {
                 let graph_data = that.compare_price_data = response.data.data.graph_data
                 that.compare_price_data = response.data.data.graph_data
@@ -815,7 +815,7 @@ export default {
         that.notice_text_ratio = ''
         that.chart_ratio.options.data[0].dataPoints = []
         that.chart_ratio.render();
-        axios.get('/api/v1/compare-ratios', { params: data })
+        axios.get(this.app_url+'/api/v1/compare-ratios', { params: data })
             .then(response => {
                 let graph_data = that.compare_ratio_data = response.data.data.graph_data
                 that.compare_ratio_data = response.data.data.graph_data
@@ -870,7 +870,7 @@ export default {
         that.compare_comp_script = []
         that.compare_comp_industry = []
         that.compare_comp_aaum = []
-        axios.get('/api/v1/compare-compositions', { params: data })
+        axios.get(this.app_url+'/api/v1/compare-compositions', { params: data })
             .then(response => {
                 let graph_data = that.compare_ratio_data = response.data.data.composition_data
                 

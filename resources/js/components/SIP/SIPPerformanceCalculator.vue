@@ -282,7 +282,7 @@ export default {
             this.processEmail = true
             let data = {
                 name: this.name,
-                email: 'sandeep@gmail.com',
+                email: this.email,
                 output: this.output,
                 fund_code: this.selectedFund.fund_code,
                 fund_name: this.selectedFund.fund_name,
@@ -317,7 +317,7 @@ export default {
             if (this.sip_amount && Object.keys(this.selectedFund).length && this.duration_months && this.sip_day) {
                 let data = {
                     name: this.name,
-                    email: 'sandeep@gmail.com',
+                    email: this.email,
                     fund_code: this.selectedFund.fund_code,
                     sip_amount: this.sip_amount,
                     duration_months: this.duration_months,

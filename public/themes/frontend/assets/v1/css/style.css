@@ -81,7 +81,9 @@ ul {
     }
 }
 
-
+.text-gray{
+    color: #6e6c6c;
+}
 
 .single_trade_info {
     display: inline-block;
@@ -3267,7 +3269,13 @@ white-space: nowrap;
         margin-bottom: 30px;
         margin-left: 0;
       }
-      
+      .inflataion-data-common{
+        display: block;
+        font-size: 17px;
+        font-style: italic;
+        margin-bottom: 30px;
+        margin-left: 0;
+      }
       .range-slider-wrapper .slider {
         position: relative;
         width: 80%;
@@ -3405,4 +3413,52 @@ white-space: nowrap;
         border-radius: 7px
     }
     
+/* CALCULATOR - RISK TOLERANCE TAB */
+
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap {
+    display: block;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-lft {
+    flex: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-lft h5 {
+    font-size: 20px;
+    line-height: 28px;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap-in {
+    max-width: 100%;
+    flex: 100%;
+    margin: 0;
+    display: block;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt {
+    flex: 100%;
+    max-width: 100%;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt input {
+    margin-left: 0px;
+    position: relative;
+    margin-right: 10px;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .risk-tol-age-action {
+    max-width: 100%;
+    flex: 100%;
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+}
+.risk_tolarance_evaliator .risk-tol-choose-age .form-check {
+    padding: 0;
+    margin-bottom: 20px;
+}
+.risk_tolarance_evaliator  .invst-risk-tol-calc .risk-tol-eval-common {
+    flex: 48%;
+    max-width: 48%;
+}
+
+
+
     /*--- calculator -------*/

@@ -233,9 +233,12 @@ $('body').on('click', '.toggle-filters', function() {
       change:function(event,ui){
         const source = $(this).parent().find('.vue-value').attr('data-from');
         $(this).parent().find('.vue-value').val(ui.value);
-        document.getElementById('show-table-click').click();
         if(source=='infCalucaltor'){
           document.getElementById('infCalucaltor-jquery-click').click();
+        }else if(source=='retirementCalculator'){
+          // document.getElementById('retirementCalulator-jquery-click').click();
+        }else{
+          document.getElementById('show-table-click').click();
         }
       }
     });

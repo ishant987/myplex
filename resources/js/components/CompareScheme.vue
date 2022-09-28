@@ -73,11 +73,8 @@
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme3" :disabled="compare_price_process">
+                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -143,6 +140,14 @@
                             </div>
                             <div class="col-lg-6 col-md-5 col-sm-12">
                                 <div id="dataPriceChatTwo" style="height: 360px;"></div>
+                            </div>
+                        </div>
+                        <div class="row row mt-5">
+                            <div class="col-lg-6 col-md-5 col-sm-12">
+                                <div id="dataPriceChatThree" style="height: 360px;"></div>
+                            </div>
+                            <div class="col-lg-6 col-md-5 col-sm-12">
+                                <div id="dataPriceChatFour" style="height: 360px;"></div>
                             </div>
                         </div>
                     </div>
@@ -686,6 +691,8 @@ export default {
             selectedDuration: "12",
             selectedScheme1: [],
             selectedScheme2: [],
+            selectedScheme2: [],
+            selectedScheme3: [],
             selectedIndex1: [],
             selectedIndex2: [],
             selectedCurrency1: [],
@@ -746,7 +753,7 @@ export default {
                 'compare_type': this.selectedComparePriceType
             }
             let title1 = ''
-            let title2 = ''
+            let title2 = '',title3='';
             if ((this.selectedComparePriceType == 'scheme_scheme' || this.selectedComparePriceType == 'scheme_index' || this.selectedComparePriceType == 'scheme_currency')) {
                 data.value1 = encodeURIComponent(this.selectedScheme1.fund_code)
                 title1 = this.selectedScheme1.fund_name
@@ -754,6 +761,8 @@ export default {
             if ((this.selectedComparePriceType == 'scheme_scheme')) {
                 data.value2 = encodeURIComponent(this.selectedScheme2.fund_code)
                 title2 = this.selectedScheme2.fund_name
+                data.value3 = encodeURIComponent(this.selectedScheme3.fund_code)
+                title3 = this.selectedScheme3.fund_name
             }
             if ((this.selectedComparePriceType == 'index_index' || this.selectedComparePriceType == 'index_currency')) {
                 data.value1 = encodeURIComponent(this.selectedIndex1.name)
@@ -781,7 +790,7 @@ export default {
             }
             that.compare_price_process = true
             that.notice_text = ''
-            axios.get('/api/v1/compare-price', {
+            axios.get(that.app_url+'/api/v2/compare-price', {
                     params: data
                 })
                 .then(response => {
@@ -824,6 +833,21 @@ export default {
                         });
                     });
                     that.chart2.render();
+                    that.show_graph = true
+                    // chart 3 
+                    that.chart3.options.data[0].dataPoints = []
+
+                    that.chart3.options.data[0].name = title3;
+                    that.chart3.options.axisY[0].title = title3;
+
+                    graph_data[2].forEach(function (item, index) {
+
+                        that.chart3.options.data[0].dataPoints.push({
+                            y: item.VALUE,
+                            label: item.DATE
+                        });
+                    });
+                    that.chart3.render();
                     that.show_graph = true
                 })
                 .catch(error => {
@@ -1199,8 +1223,10 @@ export default {
         CanvasJS.addColorSet("greenShades", ["#4661EE", "#EC5657", "#1BCDD1", "#8FAABB", "#B08BEB", "#3EA0DD", "#F5A52A", "#23BFAA", "#FAA586", "#EB8CC6"]);
         this.chart = new CanvasJS.Chart("chartContainer", chart);
         this.chart2 = new CanvasJS.Chart("dataPriceChatTwo", chart);
+        this.chart3 = new CanvasJS.Chart("dataPriceChatThree", chart);
         this.chart.render();
         this.chart2.render();
+        this.chart3.render();
 
         let chart_ratio = {
             colorSet: "greenShades",

@@ -36,8 +36,8 @@ class CalculatorController extends BaseController
             if ($request->isMethod('post')) {
                 // session()->put('useremail', $request->useremail);
                 // session()->put('username', $request->username);
-                session()->put('useremail','sandeep');
-                session()->put('username', 'sandyec01@gmail.com');
+                session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
             }
             return view($this->page_path.'.calculators', compact('defDataArr', 'dataArr'));
         }
