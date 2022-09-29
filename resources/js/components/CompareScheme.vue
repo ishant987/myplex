@@ -35,8 +35,8 @@
                                         <td colspan="3">
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" id="scheme_one">
-
+                                                <select class="form-select"  v-model="selectedScheme1" :disabled="compare_price_process" aria-label="Default select example" id="scheme_one">
+                                                    <option v-for="fund in funds" :value="fund" :key="fund.fund_name">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -57,7 +57,7 @@
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme1" :disabled="compare_price_process">
+                                                <select  class="form-select" aria-label="Default select example" v-model="selectedScheme2" :disabled="compare_price_process">
                                                     <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
@@ -65,7 +65,7 @@
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme2" :disabled="compare_price_process">
+                                                <select  class="form-select" aria-label="Default select example" v-model="selectedScheme3" :disabled="compare_price_process">
                                                     <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
@@ -73,7 +73,7 @@
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme3" :disabled="compare_price_process">
+                                                <select v-model="selectedScheme4" class="form-select" aria-label="Default select example"  :disabled="compare_price_process">
                                                     <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
@@ -81,22 +81,16 @@
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                <select v-model="selectedScheme5" class="form-select" aria-label="Default select example"  :disabled="compare_price_process">
+                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="form_select">
                                                 <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                    <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                <select v-model="selectedScheme6" class="form-select" aria-label="Default select example"  :disabled="compare_price_process">
+                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -142,12 +136,20 @@
                                 <div id="dataPriceChatTwo" style="height: 360px;"></div>
                             </div>
                         </div>
-                        <div class="row row mt-5">
-                            <div class="col-lg-6 col-md-5 col-sm-12">
+                        <div class="row  mt-5">
+                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph3">
                                 <div id="dataPriceChatThree" style="height: 360px;"></div>
                             </div>
-                            <div class="col-lg-6 col-md-5 col-sm-12">
+                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph4">
                                 <div id="dataPriceChatFour" style="height: 360px;"></div>
+                            </div>
+                        </div>
+                        <div class="row  mt-5">
+                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph5">
+                                <div id="dataPriceChatFive" style="height: 360px;"></div>
+                            </div>
+                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph6">
+                                <div id="dataPriceChatSix" style="height: 360px;"></div>
                             </div>
                         </div>
                     </div>
@@ -689,16 +691,23 @@ export default {
             selectedDateRangeTo: null,
             selectedToDate: null,
             selectedDuration: "12",
+            selectedSchemes:[],
             selectedScheme1: [],
             selectedScheme2: [],
-            selectedScheme2: [],
             selectedScheme3: [],
+            selectedScheme4: [],
+            selectedScheme5: [],
+            selectedScheme6: [],
             selectedIndex1: [],
             selectedIndex2: [],
             selectedCurrency1: [],
             selectedCurrency2: [],
             compare_price_data: [],
             show_graph: false,
+            show_graph3: false,
+            show_graph4: false,
+            show_graph5: false,
+            show_graph6: false,
             notice_text: '',
             nodata_text: '',
             selectedFund1Ratio: [],
@@ -743,6 +752,10 @@ export default {
             }
             this.chart.render();
         },
+        DailyPriceScheme(e,position){
+            this.selectedSchemes[position]={'value':encodeURIComponent(e.target.value),'title':e.target.options[e.target.options.selectedIndex].text};
+
+        },
         priceCompare() {
             let that = this
             this.loadingStatus=true
@@ -750,10 +763,10 @@ export default {
             that.show_graph = false
             this.selectedComparePriceType = 'scheme_scheme';
             let data = {
-                'compare_type': this.selectedComparePriceType
+                'compare_type': this.selectedComparePriceType,
             }
             let title1 = ''
-            let title2 = '',title3='';
+            let title2 = '',title3='',title4='',title5='',title6='';
             if ((this.selectedComparePriceType == 'scheme_scheme' || this.selectedComparePriceType == 'scheme_index' || this.selectedComparePriceType == 'scheme_currency')) {
                 data.value1 = encodeURIComponent(this.selectedScheme1.fund_code)
                 title1 = this.selectedScheme1.fund_name
@@ -763,11 +776,18 @@ export default {
                 title2 = this.selectedScheme2.fund_name
                 data.value3 = encodeURIComponent(this.selectedScheme3.fund_code)
                 title3 = this.selectedScheme3.fund_name
+                data.value4 = encodeURIComponent(this.selectedScheme4.fund_code)
+                title4 = this.selectedScheme4.fund_name
+                data.value5 = encodeURIComponent(this.selectedScheme5.fund_code)
+                title5 = this.selectedScheme5.fund_name
+                data.value6 = encodeURIComponent(this.selectedScheme6.fund_code)
+                title6 = this.selectedScheme6.fund_name
             }
             if ((this.selectedComparePriceType == 'index_index' || this.selectedComparePriceType == 'index_currency')) {
                 data.value1 = encodeURIComponent(this.selectedIndex1.name)
                 title1 = this.selectedIndex1.name
             }
+            console.log(data);
             if ((this.selectedComparePriceType == 'index_index' || this.selectedComparePriceType == 'scheme_index')) {
                 data.value2 = encodeURIComponent(this.selectedIndex2.name)
                 title2 = this.selectedIndex2.name
@@ -847,8 +867,48 @@ export default {
                             label: item.DATE
                         });
                     });
-                    that.chart3.render();
-                    that.show_graph = true
+                    data.value3!='undefined' ? that.show_graph3 = true : that.show_graph3 = false
+                        that.chart3.render();
+                        
+                     // chart 4
+                     that.chart4.options.data[0].dataPoints = []
+                        that.chart4.options.data[0].name = title4;
+                        that.chart4.options.axisY[0].title = title4;
+
+                        graph_data[3].forEach(function (item, index) {
+                            that.chart4.options.data[0].dataPoints.push({
+                                y: item.VALUE,
+                                label: item.DATE
+                            });
+                        });
+                            that.chart4.render();
+                            data.value4!='undefined' ? that.show_graph4 = true : that.show_graph4 = false
+                           // chart 5
+                     that.chart5.options.data[0].dataPoints = []
+                        that.chart5.options.data[0].name = title5;
+                        that.chart5.options.axisY[0].title = title5;
+
+                        graph_data[4].forEach(function (item, index) {
+                            that.chart5.options.data[0].dataPoints.push({
+                                y: item.VALUE,
+                                label: item.DATE
+                            });
+                        });
+                            that.chart5.render();
+                            data.value5!='undefined' ? that.show_graph5 = true : that.show_graph5 = false
+                           // chart 6
+                     that.chart6.options.data[0].dataPoints = []
+                        that.chart6.options.data[0].name = title6;
+                        that.chart6.options.axisY[0].title = title6;
+
+                        graph_data[5].forEach(function (item, index) {
+                            that.chart6.options.data[0].dataPoints.push({
+                                y: item.VALUE,
+                                label: item.DATE
+                            });
+                        });
+                            that.chart6.render();
+                            data.value6!='undefined' ? that.show_graph6 = true : that.show_graph6 = false
                 })
                 .catch(error => {
                     //var message = error.response.data.message || error.message
@@ -1224,9 +1284,15 @@ export default {
         this.chart = new CanvasJS.Chart("chartContainer", chart);
         this.chart2 = new CanvasJS.Chart("dataPriceChatTwo", chart);
         this.chart3 = new CanvasJS.Chart("dataPriceChatThree", chart);
+        this.chart4 = new CanvasJS.Chart("dataPriceChatFour", chart);
+        this.chart5 = new CanvasJS.Chart("dataPriceChatFive", chart);
+        this.chart6 = new CanvasJS.Chart("dataPriceChatSix", chart);
         this.chart.render();
         this.chart2.render();
         this.chart3.render();
+        this.chart4.render();
+        this.chart5.render();
+        this.chart6.render();
 
         let chart_ratio = {
             colorSet: "greenShades",
