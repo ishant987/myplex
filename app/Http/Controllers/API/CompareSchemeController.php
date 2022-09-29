@@ -40,6 +40,10 @@ class CompareSchemeController extends BaseController
         $compare_type = (isset($request->compare_type) && $request->compare_type) ? $request->compare_type : '';
         $value1 = (isset($request->value1) && $request->value1) ? urldecode($request->value1) : '';
         $value2 = (isset($request->value2) && $request->value2) ? urldecode($request->value2) : '';
+        $value3 = (isset($request->value3) && $request->value3) ? urldecode($request->value3) : '';
+        $value4 = (isset($request->value4) && $request->value4) ? urldecode($request->value4) : '';
+        $value5 = (isset($request->value5) && $request->value5) ? urldecode($request->value5) : '';
+        $value6 = (isset($request->value6) && $request->value6) ? urldecode($request->value6) : '';
         $from_date = (isset($request->from_date) && $request->from_date) ? $request->from_date : '';
         $to_date = (isset($request->to_date) && $request->to_date) ? $request->to_date : '';
 
@@ -51,6 +55,10 @@ class CompareSchemeController extends BaseController
             $type1_first_date = FundDetail::getFirstPublishedDate($value1);
 
             $type2_first_date = FundDetail::getFirstPublishedDate($value2);
+            $type3_first_date = FundDetail::getFirstPublishedDate($value3);
+            $type4_first_date = FundDetail::getFirstPublishedDate($value4);
+            $type5_first_date = FundDetail::getFirstPublishedDate($value5);
+            $type6_first_date = FundDetail::getFirstPublishedDate($value6);
 
             $notice_text = '';
             $notice_value_type = '';
@@ -59,6 +67,10 @@ class CompareSchemeController extends BaseController
                 $dateTimestampFrom = strtotime($from_date);
                 $dateTimestampType1 = strtotime($type1_first_date);
                 $dateTimestampType2 = strtotime($type2_first_date);
+                $dateTimestampType3 = strtotime($type3_first_date);
+                $dateTimestampType4 = strtotime($type4_first_date);
+                $dateTimestampType5 = strtotime($type5_first_date);
+                $dateTimestampType6 = strtotime($type6_first_date);
 
                 if ($dateTimestampFrom < $dateTimestampType1) {
                     $from_date = $type1_first_date;
@@ -70,19 +82,64 @@ class CompareSchemeController extends BaseController
                     $notice_text = 'data available from '. date('d/m/Y', $dateTimestampType2);
                     $notice_value_type = '2';
                 }
+                if ($dateTimestampFrom < $dateTimestampType3) {
+                    $from_date = $type3_first_date;
+                    $notice_text = 'data available from '. date('d/m/Y', $dateTimestampType3);
+                    $notice_value_type = '3';
+                }
+                if ($dateTimestampFrom < $dateTimestampType4) {
+                    $from_date = $type4_first_date;
+                    $notice_text = 'data available from '. date('d/m/Y', $dateTimestampType4);
+                    $notice_value_type = '4';
+                }
+                if ($dateTimestampFrom < $dateTimestampType5) {
+                    $from_date = $type5_first_date;
+                    $notice_text = 'data available from '. date('d/m/Y', $dateTimestampType5);
+                    $notice_value_type = '5';
+                }
+                if ($dateTimestampFrom < $dateTimestampType6) {
+                    $from_date = $type6_first_date;
+                    $notice_text = 'data available from '. date('d/m/Y', $dateTimestampType6);
+                    $notice_value_type = '6';
+                }
             }
             $graphArr = [];
             if ($compare_type != 'rolling_return') {
+                
                 $graph1 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value1.'")');
-                $graphArr[0] = count($graph1) ? $graph1[0] : [];
+                $graphArr[0] = count($graph1) ? $graph1[0] : (object) [];
                 $graph2 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value2.'")');
-                $graphArr[1] = count($graph2) ? $graph2[0] : [];
+                $graphArr[1] = count($graph2) ? $graph2[0] : (object) [];
+               
+                $graph3 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value3.'")');
+                $graphArr[2] = count($graph3) ? $graph3[0] : (object)[];
+
+                $graph4 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value4.'")');
+                $graphArr[3] = count($graph4) ? $graph4[0] : (object)[];
+
+                $graph5 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value5.'")');
+                $graphArr[4] = count($graph5) ? $graph5[0] : (object)[];
+
+                $graph6 = DB::select('CALL sp_fund_ratios("'.$from_date.'","'.$to_date.'","'.$value6.'")');
+                $graphArr[5] = count($graph6) ? $graph6[0] : (object)[];
             } else {
                 $graph1 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value1.'")');
-                $graphArr[0] = count($graph1) ? $graph1[0] : [];
+                $graphArr[0] = count($graph1) ? $graph1[0] : (object) [];
 
                 $graph2 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value2.'")');
-                $graphArr[1] = count($graph2) ? $graph2[0] : [];
+                $graphArr[1] = count($graph2) ? $graph2[0] : (object) [];
+
+                $graph3 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value3.'")');
+                $graphArr[2] = count($graph3) ? $graph3[0] : (object)[];
+
+                $graph4 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value4.'")');
+                $graphArr[3] = count($graph4) ? $graph4[0] : (object)[];
+
+                $graph5 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value5.'")');
+                $graphArr[4] = count($graph5) ? $graph5[0] : (object)[];
+
+                $graph6 = DB::select('CALL sp_rolling_return("'.$from_date.'","'.$to_date.'","'.$value6.'")');
+                $graphArr[5] = count($graph6) ? $graph6[0] : (object)[];
             }
 
             $responseArr['graph_data'] = $graphArr;
