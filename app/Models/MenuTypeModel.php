@@ -139,6 +139,76 @@ class MenuTypeModel extends Model
 
         return $menuHtml;
     }
+    public static function getMenuV2($menu_for = 'p', $menu_name = '', $append_container_class = '', $ul_class = 'ul-navbar')
+    {
+        $query = MenuTypeModel::with(['menus' => function ($query) {
+            $query->where(['parent_menu_id' => 0]);
+        }])->where(['menu_for' => $menu_for, 'status' => 1]);
+        if ($menu_name)
+            $query->where(['menu_name' => trim($menu_name)]);
+        $menuTypeModel = $query->orderBy('c_order', 'asc')
+            ->first();
+        $menuHtml = '';
+        if ($menuTypeModel && $menuTypeModel->menus->count() > 0) {
+            if ($append_container_class != '') {
+                $menuHtml .= '<div class="' . $append_container_class . '">';
+            }
+            $menuHtml .= '<ul class="' . $ul_class . '">';
+            foreach ($menuTypeModel->menus as $menu) {
+                $image_url = $menu->image_url ? '<span><img src="' . $menu->image_url . '" alt="' . $menu->label . '"></span>' : '';
+                $target = $menu->link_target ? ('target="' . $menu->link_target . '"') : '';
+                $cssClass = $menu->menu_class ? ('class="' . $menu->menu_class . '"') : '';
+                $hint = $menu->hint ? 'title="' . $menu->hint . '"' : '';
+
+                $link = '/';
+                if ($menu->is_link) {
+                    $link = $menu->external_link;
+                } else if ($slug = $menu->getModulePageName()) {
+                    $link = $slug;
+                }
+                if (request()->is(ltrim($link, '/')))
+                    $cssClass = $cssClass . ' active';
+
+                if ($cssClass)
+                    $cssClass = 'class="' . trim($cssClass) . '"';
+
+                $menuHtml .= '<li ' . $cssClass . '  ' . $hint . ' id="menu_' . $menu->menu_type_id . '_' . $menu->menu_id . '">';
+
+                if (isset($menu->menuchildren) && $menu->menuchildren->count() > 0) {
+                    $menuHtml .= '<span class="sub_menu_pretext">' . $menu->label . '</span><ul class="sub_menu">';
+                    foreach ($menu->menuchildren as $menuchild) {
+                        if ($menuchild->is_link) {
+                            $link = $menuchild->external_link;
+                        } else if ($slug = $menuchild->getModulePageName()) {
+                            $link = $slug;
+                        }
+                        $image_url = $menuchild->image_url ? '<span><img src="' . $menuchild->image_url . '" alt="' . $menuchild->label . '"></span>' : '';
+                        $target = $menuchild->link_target ? ('target="' . $menuchild->link_target . '"') : '';
+                        $cssClass = $menuchild->link_target ? ('class="' . $menuchild->menu_class . '"') : '';
+                        $hint = $menuchild->hint ? 'title="' . $menuchild->hint . '"' : '';
+
+                        if (request()->is(ltrim($link, '/')))
+                            $cssClass = $cssClass . ' active';
+
+                        if ($cssClass)
+                            $cssClass = 'class="' . trim($cssClass) . '"';
+
+                        $menuHtml .= '<li ' . $cssClass . ' ' . $hint . ' id="menu_' . $menuchild->menu_type_id . '_' . $menuchild->menu_id . '"><a href="' . $link . '" ' . $target . '>' . $menuchild->label . $image_url . '</a></li>';
+                    }
+                    $menuHtml .= '</ul>';
+                } else {
+                    $menuHtml .= '<a href="' . $link . '" ' . $target . '>' . $menu->label . $image_url . '</a>';
+                }
+                $menuHtml .= '</li>';
+            }
+            $menuHtml .= '</ul>';
+            if ($append_container_class != '') {
+                $menuHtml .= '</div>';
+            }
+        }
+
+        return $menuHtml;
+    }
 
     public static function getCustomMenu($menu_for = 'p', $menu_name = '')
     {
@@ -327,10 +397,28 @@ class MenuTypeModel extends Model
                 $link = '/';
                 if ($val->is_link) {
                     $link = $val->external_link;
-                } else {
-                    $link = '/'.strtolower(str_replace(' ','_',$val->label));
+                } elseif ($slug = $val->getModulePageName()) {
+                    $link = $slug;
                 }
-                $menuhtml .='  <a id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '" class="nav-link" href="'.$link.'" target="'.$val->link_target.'">'.$val->label.'</a>';
+                if($val->menuchildren->count()>0){
+                    $menuhtml .="<li class='nav-item dropdown'>";
+                    $menuhtml .='<a  id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '"  class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'.$val->label.'</a>';
+                    $menuhtml .='<ul class="dropdown-menu" aria-labelledby="navbarDropdown">';
+                    foreach($val->menuchildren as $childKey=>$childVal){
+                        $Childlink = '/';
+                        if ($childVal->is_link) {
+                            $Childlink = $childVal->external_link;
+                        } else if ($slug = $childVal->getModulePageName()) {
+                            $Childlink = $slug;
+                        }
+                        $menuhtml .='<li><a id="menu_child_' . $val->menu_type_id . '_' . $val->menu_id . '_' . $val->menchildKeyu_id . '" class="dropdown-item" href="'.$Childlink.'">'.$childVal->label.'</a></li>';
+                        }
+                    $menuhtml .='</ul>';
+                    $menuhtml .="</li>";
+                }else{
+                    $menuhtml .='  <a chilsdcout="'.$val->menuchildren->count().'" id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '" class="nav-link" href="'.$link.'" target="'.$val->link_target.'">'.$val->label.'</a>';
+
+                }
             }
             $menuhtml .='</div>';
             return $menuhtml;
