@@ -14,7 +14,7 @@ class HeaderAndFooterComposer{
 	 */
 	public function compose(View $view)
 	{
-		$webTopQuickLinkMenuNew = MenuTypeModel::getTopMenu('o', 'top-header-new', '', '');
+		$webTopQuickLinkMenuNew = MenuTypeModel::getTopMenu('p', 'primary_menu', '', '');
 		$view->with('webtopquicklinkmenuNew', $webTopQuickLinkMenuNew);
 
         $webFooterCompanyLinks = MenuTypeModel::getMenu('o', 'footer-company', '', '');

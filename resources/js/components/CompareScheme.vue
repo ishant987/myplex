@@ -18,7 +18,7 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                        <button class="nav-link" :class="{'active show':currentTab == 'composition'}" @click="currentTab='composition'" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
                             <img :src="this.image_path+'/tab_icon2.png'" alt="" />
                             Composition
                         </button>
@@ -261,366 +261,229 @@
                     </div>
                 </div>
                 <!-- ratio calulation end-->
+                <!-- composition  -->
+                <div class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                            <div class="table_scc">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr class="bg_top">
+                                                <td colspan="2">
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Category</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Volatility</option>
+                                                            <option value="">1</option>
+                                                            <option value="">2</option>
+                                                            <option value="">3</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Month</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Volatility</option>
+                                                            <option value="">1</option>
+                                                            <option value="">2</option>
+                                                            <option value="">3</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Volatility</option>
+                                                            <option value="">2000</option>
+                                                            <option value="">2001</option>
+                                                            <option value="">2002</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="bg_green">
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form_select">
+                                                        <label for="">Schemes</label>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="three_btn">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-4">
+                                        <div class="middle_left">
+                                            <a href="">Compare</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="middle_a d-flex align-items-center justify-content-center">
+                                            <a href="" class="active">Day to Day</a>
+                                            <a href="">Weekly</a>
+                                            <a href="">Monthly</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                            <a href="" class="active">1M</a>
+                                            <a href="">3M</a>
+                                            <a href="">6M</a>
+                                            <a href="">1Y</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row main_trer">
+                                <div class="col-lg-6 col-md-12">
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                            <th>Scrips</th>
+                                            <th>Content%</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="">
+                                                <td>HDFC</td>
+                                                <td>8.16</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Honeywell Auto</td>
+                                                <td>8.01</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Pfizer</td>
+                                                <td>7.55</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Reliance Industries</td>
+                                                <td>6.92</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Bayer Crop Science</td>
+                                                <td>5.70</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Kotak Mahindra Bank</td>
+                                                <td>6.14</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>L&T</td>
+                                                <td>4.12</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>ICICI Bank</td>
+                                                <td>3.76</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Gillette India</td>
+                                                <td>4.07</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <th>Total Of Top 10</th>
+                                            <th>58.55</th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="col-lg-6 col-md-12">
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                            <th>Scrips</th>
+                                            <th>Content%</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="">
+                                                <td>Mutual Fund Units</td>
+                                                <td>97.76</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Honeywell Auto</td>
+                                                <td>2.24</td>
+                                            </tr>
+                                            <tr class="">
+                                                <td>Cash</td>
+                                                <td>7.55</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <th>Total Of Top 10</th>
+                                            <th>100.00</th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                <!-- composition end -->
             </div>
         </div>
     </div>
 
 </section>
 
-<div class="compare-scemes-sec investing-tools fund-perform-returns select2-styles d-none">
-    <div class="container">
-        <ul class="nav nav-tabs border-0 mt-5">
-            <li><a class="" data-toggle="tab" href="#daily-price" :class="{'active show':currentTab == 'daily_price'}" @click="currentTab='daily_price'">Daily Price</a></li>
-            <li><a data-toggle="tab" href="#fund-perform-ratios" :class="{'active show':currentTab == 'ratios'}" @click="currentTab='ratios'">Ratios</a></li>
-            <li><a data-toggle="tab" href="#composition" :class="{'active show':currentTab == 'composition'}" @click="currentTab='composition'">Composition</a></li>
-        </ul>
-    </div>
-    <div class="tab-wrapper">
-        <div class="container">
-            <div class="tab-content">
-                <div id="daily-price" class="tab-pane fade in" :class="{'active show':currentTab == 'daily_price'}">
-                    <div class="row investing-tools">
-                        <div class="col-md-12 d-flex mb-4">
-                            <template v-for="compare_type in compare_price_types" :key="compare_type.type">
-                                <div class="d-flex mr-3">
-                                    <input type="radio" name="compare_price_btn" class="compare_price_types_radio" :value="compare_type.type" v-model="selectedComparePriceType" :id="compare_type.type"> <label class="compare_price_types_lbl" :for="compare_type.type">{{ compare_type.title }}</label>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-
-                            <div class="invst-fields mt-0" v-if="selectedComparePriceType == 'index_index' || selectedComparePriceType == 'index_currency'">
-                                <label>Index</label>
-                                <multiselect :disabled="compare_price_process" class="" label="name" track-by="name" v-model="selectedIndex1" tag-placeholder="" placeholder="Select Index" :options="indices" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                            <div class="invst-fields mt-0" v-if="selectedComparePriceType == 'currency_currency'">
-                                <label>Currency</label>
-                                <multiselect :disabled="compare_price_process" class="" label="name" track-by="name" v-model="selectedCurrency1" tag-placeholder="" placeholder="Select Currency" :options="currencies" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0" v-if="selectedComparePriceType == 'scheme_scheme'">
-                                <label>Schemes</label>
-                                <multiselect :disabled="compare_price_process" class="" label="fund_name" track-by="fund_id" v-model="selectedScheme2" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                            <div class="invst-fields mt-0" v-if="selectedComparePriceType == 'index_index' || selectedComparePriceType == 'scheme_index'">
-                                <label>Index</label>
-                                <multiselect :disabled="compare_price_process" class="" label="name" track-by="name" v-model="selectedIndex2" tag-placeholder="" placeholder="Select Index" :options="indices" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                            <div class="invst-fields mt-0" v-if="selectedComparePriceType == 'currency_currency' || selectedComparePriceType == 'index_currency' || selectedComparePriceType == 'scheme_currency'">
-                                <label>Currency</label>
-                                <multiselect :disabled="compare_price_process" class="" label="name" track-by="name" v-model="selectedCurrency2" tag-placeholder="" placeholder="Select Currency" :options="currencies" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0" v-if="!enablePriceCustomDates">
-                                <label class="w-100">Duration</label>
-                                <select class="" v-model="selectedDuration">
-                                    <option value="">Select</option>
-                                    <option value="1">1 Month</option>
-                                    <option value="3">3 Months</option>
-                                    <option value="6">6 Months</option>
-                                    <option value="12">1 Year</option>
-                                </select>
-                            </div>
-                            <div class="invst-fields mt-0" v-if="enablePriceCustomDates">
-                                <label class="w-100">Date Range</label>
-                                <Datepicker v-model="selectedDateRange" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="true" :maxDate="maxDateRang"></Datepicker>
-                            </div>
-                            <div class="invst-fields mt-2 d-flex align-items-center">
-                                <label class="switch size-md">
-                                    <input type="checkbox" v-model="enablePriceCustomDates">
-                                    <span class="toggle-input round"></span>
-                                </label>
-                                <label class="ml-2">Custom Duration</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles d-flex mb-12 align-items-center">
-                            <div class="invst-fields mt-0">
-                                <button class="btn primary-button compare-btn" :disabled="disableComparePrice || compare_price_process" @click="priceCompare">Compare</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div id="fund-perform-ratios" class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}">
-                    <div class="row investing-tools">
-                        <div class="col-lg-3 col-md-5 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label>Scheme name</label>
-                                <multiselect class="" label="fund_name" track-by="fund_id" v-model="selectedFund1Ratio" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-5 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label>Scheme name</label>
-                                <multiselect class="" label="fund_name" track-by="fund_id" v-model="selectedFund2Ratio" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label class="w-100">Return Ratio</label>
-                                <select class="" v-model="selectedRatioReturn" :disabled="selectedRatioRisk !== ''">
-                                    <option value="">Select</option>
-                                    <option value="cagr">Returns</option>
-                                    <option value="jensen_alpha">Jensen</option>
-                                    <option value="information_ratio">Information Ratio</option>
-                                    <option value="rolling_return">Rolling Return</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label class="w-100">Risk Ratio</label>
-                                <select class="" v-model="selectedRatioRisk" :disabled="selectedRatioReturn !== ''">
-                                    <option value="">Select</option>
-                                    <option value="beta">Beta</option>
-                                    <option value="tracking_error">Tracking Error</option>
-                                    <option value="volatality">Volatility</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0" v-if="!enableRatioCustomDates">
-                                <label class="w-100">Duration</label>
-                                <select class="" v-model="selectedRatioDuration">
-                                    <option value="">Select</option>
-                                    <option value="1">1 Month</option>
-                                    <option value="3">3 Months</option>
-                                    <option value="6">6 Months</option>
-                                    <option value="12">1 Year</option>
-                                </select>
-                            </div>
-                            <div class="invst-fields mt-0" v-if="enableRatioCustomDates">
-                                <label class="w-100">Date Range</label>
-                                <Datepicker v-model="selectedRatioDateRange" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="true" :maxDate="maxDateRang"></Datepicker>
-                            </div>
-                            <div class="invst-fields mt-2 d-flex align-items-center">
-                                <label class="switch size-md">
-                                    <input type="checkbox" v-model="enableRatioCustomDates">
-                                    <span class="toggle-input round"></span>
-                                </label>
-                                <label class="ml-2">Custom Duration</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 invst-wrap select2-styles d-flex mb-12 align-items-center">
-                            <div class="invst-fields mt-0">
-                                <button class="btn primary-button compare-btn" :disabled="disableCompareRatio" @click="ratioCompare">Compare</button>
-                            </div>
-                        </div>
-                    </div>
-                    <p v-if="notice_text_ratio" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_ratio}}</p>
-                    <div class="mt-5 " style="width: 100%;" v-show="show_ratio_graph">
-                        <div id="chartContainerRatio" style="height: 360px; width: 100%;"></div>
-                        <div style="height:30px; width:70px; background:#00504a; position:absolute; z-index:999; margin-top:-34px;" id="myplexusC"></div>
-                    </div>
-                    <div class="text-center" v-if="compare_ratio_process">
-                        <svg style="width:50px" version="1.1" id="L1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-                            <circle fill="none" stroke="#fff" stroke-width="6" stroke-miterlimit="15" stroke-dasharray="14.2472,14.2472" cx="50" cy="50" r="47">
-                                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
-                            </circle>
-                            <circle fill="none" stroke="#fff" stroke-width="1" stroke-miterlimit="10" stroke-dasharray="10,10" cx="50" cy="50" r="39">
-                                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="-360 50 50" repeatCount="indefinite" />
-                            </circle>
-                            <g fill="#fff">
-                                <rect x="30" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.1" />
-                                </rect>
-                                <rect x="40" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.2" />
-                                </rect>
-                                <rect x="50" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3" />
-                                </rect>
-                                <rect x="60" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.4" />
-                                </rect>
-                                <rect x="70" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.5" />
-                                </rect>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-
-                <div id="composition" class="tab-pane fade" :class="{'active show':currentTab == 'composition'}">
-                    <div class="row investing-tools">
-                        <div class="col-lg-3 col-md-5 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label>Scheme name</label>
-                                <multiselect class="" label="fund_name" track-by="fund_id" v-model="selectedFund1Composition" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-5 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label>Scheme name</label>
-                                <multiselect class="" label="fund_name" track-by="fund_id" v-model="selectedFund2Composition" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                </multiselect>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label class="w-100">Category</label>
-                                <select class="" v-model="selectedCompositionCategory">
-                                    <option value="">Select</option>
-                                    <option value="top_script">Top Scrip</option>
-                                    <option value="top_industry">Top Industry</option>
-                                    <option value="aaum">AAUM</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 invst-wrap select2-styles">
-                            <div class="invst-fields mt-0">
-                                <label class="w-100">Month/Year</label>
-                                <Datepicker v-model="selectedCompositionDate" :format="'MM/yyyy'" monthPicker :enableTimePicker="false" :autoApply="true" :range="false" :maxDate="maxDateRangComposition"></Datepicker>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 invst-wrap select2-styles d-flex mb-12 align-items-end">
-                            <div class="invst-fields mt-0">
-                                <button class="btn primary-button compare-btn mb-0" :disabled="disableCompareComposition" @click="compositionCompare">Compare</button>
-                            </div>
-                        </div>
-                    </div>
-                    <p v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_comp}}</p>
-                    <div class="mt-5 " v-show="show_comp">
-                        <div class="dy-table-wrap row">
-                            <div class="dy-table-block br-5 col-md-6" v-if="Object.keys(compare_comp_script).length && compare_comp_script.scheme1.data.length">
-                                <p class="text-white mb-2 "> {{ comp_scheme1_text }} </p>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="bg-gray text-white" style="width: 80% !important;">Scrips</th>
-                                        <th class="bg-gray  text-white" style="min-width: 130px;">Content%</th>
-                                    </tr>
-                                    <tbody>
-                                        <tr v-for="script in compare_comp_script.scheme1.data" :key="script.scrip_name">
-                                            <td class="modal-td">{{ script.scrip_name }}</td>
-                                            <td>{{ script.content_per.toFixed(2) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Of Top 10</td>
-                                            <td class="modal-td-dark">{{ compare_comp_script.scheme1.top_scripts_sum.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="dy-table-block br-5 col-md-6" v-if="Object.keys(compare_comp_script).length && compare_comp_script.scheme2.data.length">
-                                <p class="text-white mb-2 "> {{ comp_scheme2_text }} </p>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="bg-gray text-white" style="width: 80% !important;">Scrips</th>
-                                        <th class="bg-gray text-white" style="min-width: 130px;">Content%</th>
-                                    </tr>
-                                    <tbody>
-                                        <tr v-for="script in compare_comp_script.scheme2.data" :key="script.scrip_name">
-                                            <td class="modal-td">{{ script.scrip_name }}</td>
-                                            <td>{{ script.content_per.toFixed(2) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Of Top 10</td>
-                                            <td class="modal-td-dark">{{ compare_comp_script.scheme2.top_scripts_sum.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="dy-table-block br-5 col-md-6" v-if="Object.keys(compare_comp_industry).length && compare_comp_industry.scheme1.data.length">
-                                <p class="text-white mb-2 "> {{ comp_scheme1_text }} </p>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="bg-gray text-white" style="width: 80% !important;">Industries</th>
-                                        <th class="bg-gray  text-white" style="min-width: 130px;">Content%</th>
-                                    </tr>
-                                    <tbody>
-                                        <tr v-for="industry in compare_comp_industry.scheme1.data" :key="industry.industry">
-                                            <td class="modal-td">{{ industry.industry }}</td>
-                                            <td>{{ industry.industry_content_per.toFixed(2) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Of Top 10</td>
-                                            <td class="modal-td-dark">{{ compare_comp_industry.scheme1.top_industry_sum.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="dy-table-block br-5 col-md-6" v-if="Object.keys(compare_comp_industry).length && compare_comp_industry.scheme2.data.length">
-                                <p class="text-white mb-2 "> {{ comp_scheme2_text }} </p>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="bg-gray text-white" style="width: 80% !important;">Industry</th>
-                                        <th class="bg-gray text-white" style="min-width: 130px;">Content%</th>
-                                    </tr>
-                                    <tbody>
-                                        <tr v-for="industry in compare_comp_industry.scheme2.data" :key="industry.industry">
-                                            <td class="modal-td">{{ industry.industry }}</td>
-                                            <td>{{ industry.industry_content_per.toFixed(2) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Of Top 10</td>
-                                            <td class="modal-td-dark">{{ compare_comp_industry.scheme2.top_industry_sum.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="dy-table-block br-5 col-md-6" v-if="Object.keys(compare_comp_aaum).length">
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="bg-gray text-white" style="width: 80% !important;">Name Of Fund</th>
-                                        <th class="bg-gray text-white" style="min-width: 130px;">AAUM</th>
-                                    </tr>
-                                    <tbody>
-                                        <tr v-if="Object.keys(compare_comp_aaum.scheme1.data).length">
-                                            <td class="modal-td">{{ comp_scheme1_text }}</td>
-                                            <td class="bg-gray text-white">{{ compare_comp_aaum.scheme1.data.corpus_entry.toFixed(2) }}</td>
-                                        </tr>
-                                        <tr v-if="Object.keys(compare_comp_aaum.scheme2.data).length">
-                                            <td class="modal-td">{{ comp_scheme2_text }}</td>
-                                            <td class="bg-gray text-white">{{ compare_comp_aaum.scheme2.data.corpus_entry.toFixed(2) }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center" v-if="compare_comp_process">
-                        <svg style="width:50px" version="1.1" id="L1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-                            <circle fill="none" stroke="#fff" stroke-width="6" stroke-miterlimit="15" stroke-dasharray="14.2472,14.2472" cx="50" cy="50" r="47">
-                                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="360 50 50" repeatCount="indefinite" />
-                            </circle>
-                            <circle fill="none" stroke="#fff" stroke-width="1" stroke-miterlimit="10" stroke-dasharray="10,10" cx="50" cy="50" r="39">
-                                <animateTransform attributeName="transform" attributeType="XML" type="rotate" dur="5s" from="0 50 50" to="-360 50 50" repeatCount="indefinite" />
-                            </circle>
-                            <g fill="#fff">
-                                <rect x="30" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.1" />
-                                </rect>
-                                <rect x="40" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.2" />
-                                </rect>
-                                <rect x="50" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.3" />
-                                </rect>
-                                <rect x="60" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.4" />
-                                </rect>
-                                <rect x="70" y="35" width="5" height="30">
-                                    <animateTransform attributeName="transform" dur="1s" type="translate" values="0 5 ; 0 -5; 0 5" repeatCount="indefinite" begin="0.5" />
-                                </rect>
-                            </g>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </template>
 
 <style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>

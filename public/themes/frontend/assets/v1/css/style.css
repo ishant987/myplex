@@ -124,7 +124,16 @@ ul {
     color: var(--green) !important
 }
 
-
+.header_section .cta_header_link {
+    background-color: var(--green);
+    color: #fff;
+    padding: 17px 20px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-family: var(--bodyfont);
+}
 
 .inner_banner_section {
     padding: 80px 0;
@@ -145,7 +154,6 @@ ul {
 .inner_section_banner {
     width: 30%
 }
-
 /*********Hero Banner Section************/
 
 .new_hero_section {
