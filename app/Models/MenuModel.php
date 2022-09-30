@@ -173,6 +173,7 @@ class MenuModel extends Model
           $page = Config('webconstants.page_txt');
           if ($page == $moduleName) {
             if (isset($dataModel->template_id) && $dataModel->template_id > 0) {
+              
               $templateModel = new TemplateModel;
               $templateModel->template_id = $dataModel->template_id;
               $templateSlug = $templateModel->getTemplateByID($value = 'slug');

@@ -394,13 +394,28 @@ class MenuTypeModel extends Model
             ->first();
             $menuhtml=' <div class="navbar-nav">';
             foreach($menuTypeModel->menus as $key=>$val){
-                $link = '/';
+                // $link = '/';
                 if ($val->is_link) {
                     $link = $val->external_link;
-                } elseif ($slug = $val->getModulePageName()) {
-                    $link = $slug;
+                } else{
+                    $link =  $val->getModulePageName();
                 }
-                if($val->menuchildren->count()>0){
+                if($val->label=='Monthly Ranking'){
+                    $link='/monthly-ranking';
+                }
+                \Log::info('link');
+                \Log::info($link);
+                \Log::info($val->label);
+                if($val->menuchildren->count()==0){
+                    if($val->label=='ASK OUR EXPERTS'){
+                        $classM='nav-link'; //cta_header_link
+                    }else{
+                        $classM='nav-link';
+                    }
+                    $menuhtml .='  <a chilsdcout="'.$val->menuchildren->count().'" id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '" class="'.$classM.'" href="'.$link.'" target="'.$val->link_target.'">'.$val->label.'</a>';
+
+                }else{
+                        
                     $menuhtml .="<li class='nav-item dropdown'>";
                     $menuhtml .='<a  id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '"  class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'.$val->label.'</a>';
                     $menuhtml .='<ul class="dropdown-menu" aria-labelledby="navbarDropdown">';
@@ -415,9 +430,6 @@ class MenuTypeModel extends Model
                         }
                     $menuhtml .='</ul>';
                     $menuhtml .="</li>";
-                }else{
-                    $menuhtml .='  <a chilsdcout="'.$val->menuchildren->count().'" id="menu_' . $val->menu_type_id . '_' . $val->menu_id . '" class="nav-link" href="'.$link.'" target="'.$val->link_target.'">'.$val->label.'</a>';
-
                 }
             }
             $menuhtml .='</div>';
