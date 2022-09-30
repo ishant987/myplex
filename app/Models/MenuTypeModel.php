@@ -403,9 +403,6 @@ class MenuTypeModel extends Model
                 if($val->label=='Monthly Ranking'){
                     $link='/monthly-ranking';
                 }
-                \Log::info('link');
-                \Log::info($link);
-                \Log::info($val->label);
                 if($val->menuchildren->count()==0){
                     if($val->label=='ASK OUR EXPERTS'){
                         $classM='nav-link'; //cta_header_link
