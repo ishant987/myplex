@@ -116,46 +116,19 @@
                                     <div class="changes_table">
                                         <table class="table table-responsive table-striped">
                                             <tbody>
+                                                @foreach($rcntDataListModel as $key => $record2)
+                                                @php
+                                                    $mediad_files_data =$record2->getData(['fw_id' => $record2->fw_id, 'status' => 1]);
+                                                @endphp
                                                 <tr>
-                                                    <td>Mahindra Manulife Flexi Cap Yojana</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
+                                                    <td>{{ $record2->title }}</td>
+                                                    <td>
+                                                        <a href="{{$media_folder.$mediad_files_data->file}}" download target="_blank" title="{{ $record2->title }}">
+                                                            <img src="{{asset('themes/frontend/assets/v1/img/download.png')}}"alt="download"/>
+                                                        </a>
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Tata Business Cycle Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>PGIM India Small Cap Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>SBI ETF Consumption</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Nippon India Nifty Pharma ETF</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>ICICI Prudential Flexicap Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>HDFC Banking and Financial Services Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Boi Axa Blue Chip Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Axis Quant Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Aditya Birla Sun Life Weight Index Fund</td>
-                                                    <td><a href="#"><img src="{{asset('themes/frontend/assets/v1/img/download.png')}}" /></a></td>
-                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
