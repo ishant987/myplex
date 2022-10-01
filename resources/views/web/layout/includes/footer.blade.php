@@ -74,7 +74,7 @@
                             <li><a href="#">Contact Us</a></li>                                    
                             <li><a href="#">In The News</a></li>
                             <li><a href="/faq">FAQs</a></li>
-                            <li><a href="founder.html">Meet The Fund Man</a></li>
+                            <li><a href="/founder">Meet The Fund Man</a></li>
                         </ul>
                         </div>
                     </div>
