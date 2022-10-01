@@ -27,8 +27,21 @@ class FundWatchController extends BaseController
             $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
             $meta_descp = $dataArr['meta_descp'];
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+            $dtMdl = new FundWatch();
+            $commonconstants = Config('commonconstants');
+            $archiveListModel = $dtMdl->archiveGroupList();
+            // if ($archiveListModel && $reqYear == 0) {
+            //     $reqYear = $archiveListModel[0]->year;
+            // }
+
+            // $dataListModel = $dtMdl->frontList(['year' => $reqYear]);
+
+            $rcntDataListModel = $dtMdl->frontList([], '', '', '',10);
+            $defDataArr = $this->defDataArr;
+            $dateFormat = $commonconstants['d_m_y_frmt2'];
+            $media_folder=Core::getUploadedURL($commonconstants['pdf_dir_name']);
         }
-        return view($this->page_path.'.fund-watch',compact('dataArr'));
+        return view($this->page_path.'.fund-watch',compact('dataArr', 'rcntDataListModel', 'archiveListModel','media_folder' ));
     }
     public function index(Request $request, $reqYear = 0)
     {
@@ -98,7 +111,6 @@ class FundWatchController extends BaseController
             $rcntDataListModel = $dtMdl->frontList([], '', '', '', 3);
 
             $dataArr['item'] = $dataMdl;
-
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['pdf_dir_name'])));
 
             return view('themes.frontend.pages.fund-watch', compact('defDataArr', 'dataArr', 'dataListModel', 'rcntDataListModel', 'archiveListModel', 'reqYear', 'reqId'));

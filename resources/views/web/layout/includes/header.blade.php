@@ -80,7 +80,7 @@
                                         <li><a class="dropdown-item" href="#">Weekly Snapshot</a></li>
                                     </ul>
                                 </li>
-                                 <a class="nav-link" href="fund-watch.html">Fund Watch</a>
+                                 <a class="nav-link" href="/fund-watch">Fund Watch</a>
                                 <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>
                                 <a class="nav-link" href="/about">Company</a>
