@@ -105,23 +105,26 @@ ul {
 
 /****************Header Section Start********************/
 .trade_detais_sec {
-    background-color: #fff;
+    background-color: var(--darker);
     padding: 5px
+}
+.single_trade_info{
+    color: #fff
 }
 
 .header_section {
-    background-color: var(--darker);
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 999;
 }
 
 .header_section nav .navbar-nav a.nav-link {
-    color: #fff !important;
+    color: var(--darker) !important;
     font-family: var(--bodyfont-font);
-    font-weight: lighter;
-    padding: 0px 15px
-}
-
-.header_section nav .navbar-nav a:hover {
-    color: var(--green) !important
+    font-weight: 500;
+    padding: 20px 10px;
+    font-size: 15px
 }
 
 .header_section .cta_header_link {
@@ -133,7 +136,34 @@ ul {
     font-weight: 500;
     letter-spacing: 1px;
     font-family: var(--bodyfont);
+
 }
+
+.header_section .cta_header_link:hover {
+    background-color: var(--darkgreen);
+    color: #fff !important
+}
+
+.header_section nav .navbar-nav a:hover {
+    color: var(--green) !important
+}
+
+.navbar_section .dropdown-menu {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: 0px;
+    min-width: 250px
+}
+
+.navbar_section .dropdown-menu li a {
+    padding: 10px;
+}
+
+.navbar_section .dropdown-menu li a:hover {
+    background-color: var(--green);
+    color: #fff !important
+}
+
 
 .inner_banner_section {
     padding: 80px 0;
@@ -152,7 +182,7 @@ ul {
 }
 
 .inner_section_banner {
-    width: 30%
+    width: 60%
 }
 /*********Hero Banner Section************/
 

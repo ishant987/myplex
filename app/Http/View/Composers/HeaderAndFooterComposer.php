@@ -17,13 +17,13 @@ class HeaderAndFooterComposer{
 		$webTopQuickLinkMenuNew = MenuTypeModel::getTopMenu('p', 'primary_menu', '', '');
 		$view->with('webtopquicklinkmenuNew', $webTopQuickLinkMenuNew);
 
-        $webFooterCompanyLinks = MenuTypeModel::getMenu('o', 'footer-company', '', '');
+        $webFooterCompanyLinks = MenuTypeModel::getMenu('f', '', '', 'footer-links');
 		$view->with('webFooterCompanyLinks', $webFooterCompanyLinks);
 
-		$webFooterBusinessLinks = MenuTypeModel::getMenu('o', 'footer-business-type', '', '');
+		$webFooterBusinessLinks = MenuTypeModel::getMenu('o', 'footer-2', '', 'footer-links');
 		$view->with('webFooterBusinessLinks', $webFooterBusinessLinks);
 
-		$webFooterProductsLinks = MenuTypeModel::getMenu('o', 'footer-products', '', '');
+		$webFooterProductsLinks =  MenuTypeModel::getMenu('o', 'top-header', '', '');
 		$view->with('webFooterProductsLinks', $webFooterProductsLinks);
 
 		$webFooterExploreLinks = MenuTypeModel::getMenu('o', 'footer-explore', '', '');

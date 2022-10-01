@@ -591,7 +591,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.monthly-snapshot', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.monthly-snapshot', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
@@ -636,7 +636,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.fund-performance', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.fund-performance', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }

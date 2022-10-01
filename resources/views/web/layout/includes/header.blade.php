@@ -1,24 +1,45 @@
 
-<section class="trade_detais_sec d-none">
+ <section class="trade_detais_sec">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                    <div class="live-market-data">
-                        <div class="container">
-                            <div class="live-market-wrap">
-                                <div id="marketRadar" style="display:none">
-                                    <input type="hidden" value="0" id="pricevalcntr">
-                                    <div class="tpSec clearfix">
-                                        <div class="stockDsl">
-                                            <div class="mrdBox item" id="elm1"></div>
-                                            <div class="mrdBox item" id="elm2"></div>
-                                            <div class="mrdBox item" id="elm3"></div>
-                                            <div class="mrdBox item" id="elm4"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="trade_details_result">
+                    <div class="single_trade_info">
+                        RELIANCE 2,576.10 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        SBIN 540.40 <span class="down_trade"><i class="ph-caret-down-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        TCS 3280.60 <span class="down_trade"><i class="ph-caret-down-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        NIFTY 50 17295.85.60 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        BAJFINANCE 7335.30 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        BHARATIARTL 686.00 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        HDFC BANK 1425.25 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        TCS 3280.60 <span class="down_trade"><i class="ph-caret-down-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        NIFTY 50 17295.85.60 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        BAJFINANCE 7335.30 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        BHARATIARTL 686.00 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
+                    <div class="single_trade_info">
+                        HDFC BANK 1425.25 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,13 +53,39 @@
                     <nav class="navbar navbar-expand-lg">
 
                         <a class="navbar-brand" href="{{url('/')}}">
-                            <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" />
+                            <img src="{{asset('themes/frontend/assets/v1/img/logo.png')}}" />
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="ph-list-light"></i>
                         </button>
                         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                            {!! $webtopquicklinkmenuNew ?? '' !!}
+                            {{-- {!! $webtopquicklinkmenuNew ?? '' !!} --}}
+                            <div class="navbar-nav">
+                                <a class="nav-link active" aria-current="page" href="/monthly-ranking">Monthly Ranking</a>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Portfolio
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="/fund-watch">Fund Portfolio</a></li>
+                                        <li><a class="dropdown-item" href="#">Composition Snapshot</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Snapshot Report
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="/monthly-snapshot">Monthly Snapshot</a></li>
+                                        <li><a class="dropdown-item" href="#">Weekly Snapshot</a></li>
+                                    </ul>
+                                </li>
+                                 <a class="nav-link" href="fund-watch.html">Fund Watch</a>
+                                <a class="nav-link" href="/calculator">Calculator</a>
+                                <a class="nav-link" href="#">Blog</a>
+                                <a class="nav-link" href="/about">Company</a>
+                                <a class="cta_header_link" href="#">Ask Your Experts</a>
+                            </div>
                         </div>
                     </nav>
                 </div>

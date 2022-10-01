@@ -1,492 +1,531 @@
 <template>
-<section class="compare_scheme">
-    <div class="container">
-        <div class="comp_schem_bdr">
-            <h4>Compare Scheme</h4>
-            <div class="tab_comp">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" :class="{'active':currentTab == 'daily_price'}" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                            <img :src="this.image_path+'/tab_icon.png'" alt="" />
-                            Daily Price
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" :class="{'active show':currentTab == 'ratios'}" @click="currentTab='ratios'" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                            <img :src="this.image_path+'/tab_icon1.png'" alt="" />
-                            Ratio
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" :class="{'active show':currentTab == 'composition'}" @click="currentTab='composition'" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
-                            <img :src="this.image_path+'/tab_icon2.png'" alt="" />
-                            Composition
-                        </button>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade" :class="{'active show':currentTab == 'daily_price'}" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                    <div class="table_scc">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="bg_top top_bg_right_black">
-                                        <td colspan="3">
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" v-model="selectedScheme1" :disabled="compare_price_process" aria-label="Default select example" id="scheme_one">
-                                                    <option v-for="fund in funds" :value="fund" :key="fund.fund_name">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td class="bg_222">
-                                            <div class="form_select">
-                                                <label for="">From Date</label>
-                                                <input class="form-date" type="date" v-model="selectedDateRangeFrom" />
-                                            </div>
-                                        </td>
-                                        <td class="bg_222">
-                                            <div class="form_select">
-                                                <label for="">To Date</label>
-                                                <input class="form-date" type="date" v-model="selectedDateRangeTo" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg_green">
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme2" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedScheme3" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select v-model="selectedScheme4" class="form-select" aria-label="Default select example" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select v-model="selectedScheme5" class="form-select" aria-label="Default select example" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select v-model="selectedScheme6" class="form-select" aria-label="Default select example" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="three_btn">
-                        <div class="row align-items-center">
-                            <div class="col-lg-4">
-                                <div class="middle_left">
-                                    <a href="javascript://" :disabled="disableComparePrice || compare_price_process" @click="priceCompare">Compare</a>
-                                </div>
+    <section class="compare_scheme">
+        <div class="container">
+            <div class="comp_schem_bdr">
+                <h4>Compare Scheme</h4>
+                <div class="tab_comp">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" :class="{'active':currentTab == 'daily_price'}" id="pills-home-tab"
+                                data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
+                                aria-controls="pills-home" aria-selected="true">
+                                <img :src="this.image_path+'/tab_icon.png'" alt="" />
+                                Daily Price
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" :class="{'active show':currentTab == 'ratios'}"
+                                @click="currentTab='ratios'" id="pills-profile-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
+                                aria-selected="false">
+                                <img :src="this.image_path+'/tab_icon1.png'" alt="" />
+                                Ratio
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" :class="{'active show':currentTab == 'composition'}"
+                                @click="currentTab='composition'" id="pills-contact-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact"
+                                aria-selected="false">
+                                <img :src="this.image_path+'/tab_icon2.png'" alt="" />
+                                Composition
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade" :class="{'active show':currentTab == 'daily_price'}" id="pills-home"
+                        role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="table_scc">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="bg_top top_bg_right_black">
+                                            <td colspan="3">
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedScheme1"
+                                                        :disabled="compare_price_process"
+                                                        aria-label="Default select example" id="scheme_one">
+                                                        <option v-for="fund in funds" :value="fund"
+                                                            :key="fund.fund_name">{{fund.fund_name}}</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td class="bg_222">
+                                                <div class="form_select">
+                                                    <label for="">From Date</label>
+                                                    <input class="form-date" type="date"
+                                                        v-model="selectedDateRangeFrom" />
+                                                </div>
+                                            </td>
+                                            <td class="bg_222">
+                                                <div class="form_select">
+                                                    <label for="">To Date</label>
+                                                    <input class="form-date" type="date"
+                                                        v-model="selectedDateRangeTo" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg_green">
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedScheme2" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedScheme3" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select v-model="selectedScheme4" class="form-select"
+                                                        aria-label="Default select example"
+                                                        :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select v-model="selectedScheme5" class="form-select"
+                                                        aria-label="Default select example"
+                                                        :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select v-model="selectedScheme6" class="form-select"
+                                                        aria-label="Default select example"
+                                                        :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="middle_a d-flex align-items-center justify-content-center">
+                        </div>
+                        <div class="three_btn">
+                            <div class="row align-items-center">
+                                <div class="col-lg-4">
+                                    <div class="middle_left">
+                                        <a href="javascript://" :disabled="disableComparePrice || compare_price_process"
+                                            @click="priceCompare">Compare</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="middle_a d-flex align-items-center justify-content-center">
 
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
-                                    <a href="javascript://" @click="selectedDuration=1" :class="selectedDuration==1 ? 'active' :''">1M</a>
-                                    <a href="javascript://" @click="selectedDuration=3" :class="selectedDuration==3 ? 'active' :''">3M</a>
-                                    <a href="javascript://" @click="selectedDuration=6" :class="selectedDuration==6 ? 'active' :''">6M</a>
-                                    <a href="javascript://" @click="selectedDuration=12" :class="selectedDuration==12 ? 'active' :''">1Y</a>
+                                <div class="col-lg-4">
+                                    <div
+                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                        <a href="javascript://" @click="selectedDuration=1"
+                                            :class="selectedDuration==1 ? 'active' :''">1M</a>
+                                        <a href="javascript://" @click="selectedDuration=3"
+                                            :class="selectedDuration==3 ? 'active' :''">3M</a>
+                                        <a href="javascript://" @click="selectedDuration=6"
+                                            :class="selectedDuration==6 ? 'active' :''">6M</a>
+                                        <a href="javascript://" @click="selectedDuration=12"
+                                            :class="selectedDuration==12 ? 'active' :''">1Y</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="text-center mt-3">
+                            <LoadingBar :status="loadingStatus"></LoadingBar>
+                        </div>
+                        <p v-if="notice_text" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text}}</p>
+                        <div class="mt-5 " style="width: 100%;" v-show="show_graph">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-5 col-sm-12">
+                                    <div id="chartContainer" style="height: 360px;"></div>
+                                </div>
+                                <div class="col-lg-6 col-md-5 col-sm-12">
+                                    <div id="dataPriceChatTwo" style="height: 360px;"></div>
+                                </div>
+                            </div>
+                            <div class="row  mt-5">
+                                <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph3">
+                                    <div id="dataPriceChatThree" style="height: 360px;"></div>
+                                </div>
+                                <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph4">
+                                    <div id="dataPriceChatFour" style="height: 360px;"></div>
+                                </div>
+                            </div>
+                            <div class="row  mt-5">
+                                <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph5">
+                                    <div id="dataPriceChatFive" style="height: 360px;"></div>
+                                </div>
+                                <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph6">
+                                    <div id="dataPriceChatSix" style="height: 360px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p v-if="nodata_text" class="text-warning mt-3 text-center w-100 mb-0">{{nodata_text}}</p>
                     </div>
-                    <div class="text-center mt-3">
-                        <LoadingBar :status="loadingStatus"></LoadingBar>
+                    <!-- ratio calulation -->
+                    <div class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}" id="pills-profile"
+                        role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="table_scc">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="bg_top top_bg_right_black">
+                                            <td colspan="3">
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund1Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td class="bg_222">
+                                                <div class="form_select">
+                                                    <label for="">From Date</label>
+                                                    <input class="form-date" type="date"
+                                                        v-model="selectedRatioDateFrom" />
+                                                </div>
+                                            </td>
+                                            <td class="bg_222">
+                                                <div class="form_select">
+                                                    <label for="">To Date</label>
+                                                    <input class="form-date" type="date"
+                                                        v-model="selectedRatioDateTo" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg_green">
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund2Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund3Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund4Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund5Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        v-model="selectedFund6Ratio" :disabled="compare_price_process">
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="three_btn">
+                            <div class="row align-items-center">
+                                <div class="col-lg-2">
+                                    <div class="middle_left">
+                                        <a href="javascript://" :disabled="disableCompareRatio"
+                                            @click="ratioCompare">Compare</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="middle_a d-flex align-items-center justify-content-center">
+                                        <a href="javascript://" @click="selectedRatioReturn='cagr'"
+                                            :class="selectedRatioReturn=='cagr' ? 'active' :''">Returns</a>
+                                        <a href="javascript://" @click="selectedRatioReturn='jensen_alpha'"
+                                            :class="selectedRatioReturn=='jensen_alpha' ? 'active' :''">Jensen</a>
+                                        <a href="javascript://" @click="selectedRatioReturn='information_ratio'"
+                                            :class="selectedRatioReturn=='information_ratio' ? 'active' :''">Information
+                                            Ratio</a>
+                                        <a href="javascript://" @click="selectedRatioReturn='rolling_return'"
+                                            :class="selectedRatioReturn=='rolling_return' ? 'active' :''">Rolling
+                                            Return</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div
+                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                        <a href="javascript://" @click="selectedRatioDuration=1"
+                                            :class="selectedRatioDuration==1 ? 'active' :''">1M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration=3"
+                                            :class="selectedRatioDuration==3 ? 'active' :''">3M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration=6"
+                                            :class="selectedRatioDuration==6 ? 'active' :''">6M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration=12"
+                                            :class="selectedRatioDuration==12 ? 'active' :''">1Y</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <LoadingBar :status="loadingStatus"></LoadingBar>
+                        </div>
+                        <p v-if="notice_text_ratio" class="text-warning mt-3 text-center w-100 mb-0">
+                            {{notice_text_ratio}}</p>
+                        <div class="mt-5 " style="width: 100%;" v-show="show_ratio_graph">
+                            <div id="chartContainerRatio" style="height: 360px; width: 100%;"></div>
+                        </div>
                     </div>
-                    <p v-if="notice_text" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text}}</p>
-                    <div class="mt-5 " style="width: 100%;" v-show="show_graph">
+                    <!-- ratio calulation end-->
+                    <!-- composition  -->
+                    <div class="tab-pane fade" :class="{'active show':currentTab == 'composition'}" id="pills-contact"
+                        role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <div class="table_scc">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="bg_top">
+                                            <td colspan="2">
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund1Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Category</label>
+                                                    <select class="form-select" v-model="selectedCompositionCategory">
+                                                        <option value="">Select</option>
+                                                        <option value="top_script">Top Scrip</option>
+                                                        <option value="top_industry">Top Industry</option>
+                                                        <option value="aaum">AAUM</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td colspan="2">
+                                                <div class="form_select">
+                                                    <label for="">Month/Year</label>
+                                                    <Datepicker v-model="selectedCompositionDate" :format="'MM/yyyy'"
+                                                        monthPicker :enableTimePicker="false" :autoApply="true"
+                                                        :range="false" :maxDate="maxDateRangComposition"></Datepicker>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="bg_green">
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund2Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund3Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund4Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund5Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form_select">
+                                                    <label for="">Schemes</label>
+                                                    <select class="form-select" v-model="selectedFund6Composition"
+                                                        aria-label="Default select example">
+                                                        <option value="">Select</option>
+                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="three_btn">
+                            <div class="row align-items-center">
+                                <div class="col-lg-4">
+                                    <div class="middle_left">
+                                        <a href="javascript://" :disabled="disableCompareComposition"
+                                            @click="compositionCompare">Compare</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p  v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_comp}}</p>
+                        <p  v-if="compositionTypeValidationError" class="text-warning mt-3 text-center w-100 mb-0">{{compositionTypeValidationError}}</p>
+                        <p  v-if="compositionValidationError" class="text-warning mt-3 text-center w-100 mb-0">{{compositionValidationError}}</p>
+                        <div class="compsition-tables" v-show="show_comp">
+                            <div class="row main_trer mt-5" v-if="compare_comp_script.length">
+                                <div class="col-lg-6 col-md-12" v-for="(com_data,index) in compare_comp_script">
+                                    <p>{{com_data.fund_name}}</p>
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Scrips</th>
+                                                <th>Content%</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="script in com_data.data"
+                                                :key="script.scrip_name">
+                                                <td class="modal-td">{{ script.scrip_name }}</td>
+                                                <td>{{ script.content_per.toFixed(2) }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <th>Total Of Top 10</th>
+                                            <th>{{ com_data.top_scripts_sum.toFixed(2) }}</th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <hr :if="index%2">
+                            </div>
+                            <div class="row main_trer mt-5" v-if="compare_comp_industry.length">
+                                <div class="col-lg-6 col-md-12" v-for="(com_industry,index) in compare_comp_industry">
+                                    <p>{{com_industry.fund_name}}</p>
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Industries</th>
+                                                <th>Content%</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="industry in com_industry.data"
+                                                :key="industry.industry">
+                                                <td class="grey">{{ industry.industry }}</td>
+                                                <td>{{ industry.industry_content_per.toFixed(2) }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <th>Total Of Top 10</th>
+                                            <th>{{  com_industry.top_industry_sum !=0 ? com_industry.top_industry_sum.toFixed(2) :  com_industry.top_industry_sum }}</th>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <hr :if="index%2">
+                            </div>
+                            <div class="row main_trer mt-5" v-if="Object.keys(compare_comp_aaum).length">
+                                <div class="col-lg-6 col-md-12" >
+                                    <table class="table table-borderless table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Name Of Fund</th>
+                                                <th>AAUM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(ammu_data,index) in compare_comp_aaum" :key="index" >
+                                                    <td class="modal-td">{{ ammu_data.fund_name }}</td>
+                                                    <td>{{ ammu_data.corpus_entry.toFixed(2)}}</td>
+                                                </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
-                            <div class="col-lg-6 col-md-5 col-sm-12">
-                                <div id="chartContainer" style="height: 360px;"></div>
-                            </div>
-                            <div class="col-lg-6 col-md-5 col-sm-12">
-                                <div id="dataPriceChatTwo" style="height: 360px;"></div>
-                            </div>
-                        </div>
-                        <div class="row  mt-5">
-                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph3">
-                                <div id="dataPriceChatThree" style="height: 360px;"></div>
-                            </div>
-                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph4">
-                                <div id="dataPriceChatFour" style="height: 360px;"></div>
-                            </div>
-                        </div>
-                        <div class="row  mt-5">
-                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph5">
-                                <div id="dataPriceChatFive" style="height: 360px;"></div>
-                            </div>
-                            <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph6">
-                                <div id="dataPriceChatSix" style="height: 360px;"></div>
+                            <div class="text-center mt-3">
+                                <LoadingBar :status="compare_comp_process"></LoadingBar>
                             </div>
                         </div>
                     </div>
-                    <p v-if="nodata_text" class="text-warning mt-3 text-center w-100 mb-0">{{nodata_text}}</p>
+                    <!-- composition end -->
                 </div>
-                <!-- ratio calulation -->
-                <div class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                    <div class="table_scc">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="bg_top top_bg_right_black">
-                                        <td colspan="3">
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund1Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td class="bg_222">
-                                            <div class="form_select">
-                                                <label for="">From Date</label>
-                                                <input class="form-date" type="date" v-model="selectedRatioDateFrom" />
-                                            </div>
-                                        </td>
-                                        <td class="bg_222">
-                                            <div class="form_select">
-                                                <label for="">To Date</label>
-                                                <input class="form-date" type="date" v-model="selectedRatioDateTo" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg_green">
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund2Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund3Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund4Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund5Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form_select">
-                                                <label for="">Schemes</label>
-                                                <select class="form-select" aria-label="Default select example" v-model="selectedFund6Ratio" :disabled="compare_price_process">
-                                                    <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="three_btn">
-                        <div class="row align-items-center">
-                            <div class="col-lg-2">
-                                <div class="middle_left">
-                                    <a href="javascript://" :disabled="disableCompareRatio" @click="ratioCompare">Compare</a>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="middle_a d-flex align-items-center justify-content-center">
-                                <a href="javascript://" @click="selectedRatioReturn='cagr'" :class="selectedRatioReturn=='cagr' ? 'active' :''">Returns</a>
-                                <a href="javascript://" @click="selectedRatioReturn='jensen_alpha'"  :class="selectedRatioReturn=='jensen_alpha' ? 'active' :''">Jensen</a>
-                                <a href="javascript://" @click="selectedRatioReturn='information_ratio'"  :class="selectedRatioReturn=='information_ratio' ? 'active' :''">Information Ratio</a>
-                                <a href="javascript://" @click="selectedRatioReturn='rolling_return'"  :class="selectedRatioReturn=='rolling_return' ? 'active' :''">Rolling Return</a>
-                                    </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
-                                    <a href="javascript://" @click="selectedRatioDuration=1" :class="selectedRatioDuration==1 ? 'active' :''">1M</a>
-                                    <a href="javascript://" @click="selectedRatioDuration=3" :class="selectedRatioDuration==3 ? 'active' :''">3M</a>
-                                    <a href="javascript://" @click="selectedRatioDuration=6" :class="selectedRatioDuration==6 ? 'active' :''">6M</a>
-                                    <a href="javascript://" @click="selectedRatioDuration=12" :class="selectedRatioDuration==12 ? 'active' :''">1Y</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-3">
-                        <LoadingBar :status="loadingStatus"></LoadingBar>
-                    </div>
-                    <p v-if="notice_text_ratio" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_ratio}}</p>
-                    <div class="mt-5 " style="width: 100%;" v-show="show_ratio_graph">
-                        <div id="chartContainerRatio" style="height: 360px; width: 100%;"></div>
-                    </div>
-                </div>
-                <!-- ratio calulation end-->
-                <!-- composition  -->
-                <div class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                            <div class="table_scc">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tbody>
-                                            <tr class="bg_top">
-                                                <td colspan="2">
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Category</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Volatility</option>
-                                                            <option value="">1</option>
-                                                            <option value="">2</option>
-                                                            <option value="">3</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Month</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Volatility</option>
-                                                            <option value="">1</option>
-                                                            <option value="">2</option>
-                                                            <option value="">3</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Volatility</option>
-                                                            <option value="">2000</option>
-                                                            <option value="">2001</option>
-                                                            <option value="">2002</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="bg_green">
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form_select">
-                                                        <label for="">Schemes</label>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected>Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                            <option value="">Aditya Birla Sun Life Arbitrage</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="three_btn">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-4">
-                                        <div class="middle_left">
-                                            <a href="">Compare</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="middle_a d-flex align-items-center justify-content-center">
-                                            <a href="" class="active">Day to Day</a>
-                                            <a href="">Weekly</a>
-                                            <a href="">Monthly</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
-                                            <a href="" class="active">1M</a>
-                                            <a href="">3M</a>
-                                            <a href="">6M</a>
-                                            <a href="">1Y</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row main_trer">
-                                <div class="col-lg-6 col-md-12">
-                                    <table class="table table-borderless table-striped">
-                                        <thead>
-                                            <th>Scrips</th>
-                                            <th>Content%</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="">
-                                                <td>HDFC</td>
-                                                <td>8.16</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Honeywell Auto</td>
-                                                <td>8.01</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Pfizer</td>
-                                                <td>7.55</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Reliance Industries</td>
-                                                <td>6.92</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Bayer Crop Science</td>
-                                                <td>5.70</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Kotak Mahindra Bank</td>
-                                                <td>6.14</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>L&T</td>
-                                                <td>4.12</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>ICICI Bank</td>
-                                                <td>3.76</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Gillette India</td>
-                                                <td>4.07</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <th>Total Of Top 10</th>
-                                            <th>58.55</th>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="col-lg-6 col-md-12">
-                                    <table class="table table-borderless table-striped">
-                                        <thead>
-                                            <th>Scrips</th>
-                                            <th>Content%</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="">
-                                                <td>Mutual Fund Units</td>
-                                                <td>97.76</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Honeywell Auto</td>
-                                                <td>2.24</td>
-                                            </tr>
-                                            <tr class="">
-                                                <td>Cash</td>
-                                                <td>7.55</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <th>Total Of Top 10</th>
-                                            <th>100.00</th>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                <!-- composition end -->
             </div>
         </div>
-    </div>
 
-</section>
+    </section>
 
 </template>
 
-<style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>
+<style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css">
+
+</style>
 
 <script>
 import CustomTable from './Common/CustomTable.vue'
@@ -510,29 +549,29 @@ export default {
         return {
             compare_price_process: false,
             compare_price_types: [{
-                    type: 'scheme_scheme',
-                    title: 'Scheme to scheme'
-                },
-                {
-                    type: 'scheme_index',
-                    title: 'Scheme to index'
-                },
-                {
-                    type: 'scheme_currency',
-                    title: 'Scheme to currency'
-                },
-                {
-                    type: 'index_index',
-                    title: 'Index to index'
-                },
-                {
-                    type: 'index_currency',
-                    title: 'Index to currency'
-                },
-                {
-                    type: 'currency_currency',
-                    title: 'Currency to currency'
-                },
+                type: 'scheme_scheme',
+                title: 'Scheme to scheme'
+            },
+            {
+                type: 'scheme_index',
+                title: 'Scheme to index'
+            },
+            {
+                type: 'scheme_currency',
+                title: 'Scheme to currency'
+            },
+            {
+                type: 'index_index',
+                title: 'Index to index'
+            },
+            {
+                type: 'index_currency',
+                title: 'Index to currency'
+            },
+            {
+                type: 'currency_currency',
+                title: 'Currency to currency'
+            },
             ],
             selectedComparePriceType: 'scheme_scheme',
             enablePriceCustomDates: true,
@@ -575,6 +614,10 @@ export default {
             selectedRatioDateTo: null, // added by sandeep as per new UI
             selectedFund1Composition: [],
             selectedFund2Composition: [],
+            selectedFund3Composition: [],
+            selectedFund4Composition: [],
+            selectedFund5Composition: [],
+            selectedFund6Composition: [],
             selectedCompositionCategory: '',
             selectedCompositionDate: null,
             show_ratio_graph: false,
@@ -590,10 +633,12 @@ export default {
             compare_comp_aaum: [],
             comp_scheme1_text: '',
             comp_scheme2_text: '',
-            currentTab: 'ratios',
+            currentTab: 'daily_price',
             app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
             loadingStatus: false,
-            notice_text_comp: ''
+            notice_text_comp: '',
+            compositionValidationError:'',
+            compositionTypeValidationError:''
         }
     },
     methods: {
@@ -672,8 +717,8 @@ export default {
             that.compare_price_process = true
             that.notice_text = ''
             axios.get(that.app_url + '/api/v2/compare-price', {
-                    params: data
-                })
+                params: data
+            })
                 .then(response => {
                     this.loadingStatus = false
                     let graph_data = that.compare_price_data = response.data.data.graph_data
@@ -812,14 +857,11 @@ export default {
             that.chart_ratio.options.data[0].dataPoints = []
             that.chart_ratio.render();
             axios.get(that.app_url + '/api/v2/compare-ratios', {
-                    params: data
-                })
+                params: data
+            })
                 .then(response => {
                     let graph_data = that.compare_ratio_data = response.data.data.graph_data
                     that.compare_ratio_data = response.data.data.graph_data
-                    // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
-                    // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
-                    // graph_data.push({beta: 0.932713,cagr:11.7043,end_date:"2022-09-11",fund_code:"Tec 001",information_ratio:2.48504,jensen_alpha:1.41132,per_return:11.7043,r_sqr:null,sharp_ratio:-6.28164,start_date:"2021-09-11",tracking_error:0.370725,treynor_ratio:-7.27713,variance:1.24414,volatality:4.47355})
                     let notice_text = response.data.data.notice_text
                     if (notice_text) {
                         that.notice_text_ratio = (response.data.data.notice_value_type == 1) ? title1 + ' ' + notice_text : title2 + ' ' + notice_text
@@ -866,7 +908,7 @@ export default {
         },
         compositionCompare() {
             let that = this
-            that.show_comp = true
+            
             let data = {}
             let title1 = ''
             let title2 = ''
@@ -875,6 +917,32 @@ export default {
             that.comp_scheme1_text = this.selectedFund1Composition.fund_name
             data.value2 = encodeURIComponent(this.selectedFund2Composition.fund_code)
             that.comp_scheme2_text = this.selectedFund2Composition.fund_name
+            if(data.comapre_type==''){
+                that.compositionTypeValidationError='Please select compare type'
+                return false;
+            }
+            if(data.value1=='' && data.value2==''){
+                that.compositionValidationError='Please select least 2 schems to compare'
+                return false;
+            }
+            that.show_comp = true
+            
+            if (this.selectedFund3Composition.fund_id) {
+                data.value3 = encodeURIComponent(this.selectedFund3Composition.fund_code)
+                that.comp_scheme3_text = this.selectedFund3Composition.fund_name
+            }
+            if (this.selectedFund4Composition.fund_id) {
+                data.value4 = encodeURIComponent(this.selectedFund4Composition.fund_code)
+                that.comp_scheme4_text = this.selectedFund4Composition.fund_name
+            }
+            if (this.selectedFund5Composition.fund_id) {
+                data.value5 = encodeURIComponent(this.selectedFund5Composition.fund_code)
+                that.comp_scheme5_text = this.selectedFund5Composition.fund_name
+            }
+            if (this.selectedFund6Composition.fund_id) {
+                data.value6 = encodeURIComponent(this.selectedFund6Composition.fund_code)
+                that.comp_scheme6_text = this.selectedFund6Composition.fund_name
+            }
             data.month = 1 + this.selectedCompositionDate.month
             data.year = this.selectedCompositionDate.year
 
@@ -884,18 +952,17 @@ export default {
             that.compare_comp_script = []
             that.compare_comp_industry = []
             that.compare_comp_aaum = []
-            axios.get(that.app_url + '/api/v1/compare-compositions', {
-                    params: data
-                })
+            axios.get(that.app_url + '/api/v2/compare-compositions', {
+                params: data
+            })
                 .then(response => {
+                    that.compare_comp_process = false
                     let graph_data = that.compare_ratio_data = response.data.data.composition_data
 
                     let notice_text = response.data.data.notice_text
                     if (notice_text) {
                         that.notice_text_comp = (response.data.data.notice_value_type == 1) ? title1 + ' ' + notice_text : title2 + ' ' + notice_text
                     }
-
-                    if ((graph_data.scheme1.data && Object.keys(graph_data.scheme1.data).length) || (graph_data.scheme2.data && Object.keys(graph_data.scheme2.data).length)) {
 
                         if (data.compare_type == 'top_script') {
                             that.compare_comp_script = graph_data
@@ -906,18 +973,14 @@ export default {
                         if (data.compare_type == 'aaum') {
                             that.compare_comp_aaum = graph_data
                         }
-
-                    } else {
-                        that.show_comp = false
-                        that.notice_text_comp = 'No data Found'
-                    }
-
+                        that.compare_comp_process = false
+                        	
                 })
                 .catch(error => {
-                    var message = error.response.data.message || error.message
+                    // var message = error.response.data.message || error.message
                     that.show_comp = false
                     that.notice_text_comp = 'No data Found'
-                    that.notice_text_comp = message
+                    that.notice_text_comp = 'No data Found'
                 })
                 .finally(() => {
                     that.compare_comp_process = false
@@ -1121,23 +1184,23 @@ export default {
             },
             title: {},
             data: [{
-                    type: "line",
-                    name: "Order",
-                    yValueFormatString: "##.00",
-                    color: "#205738",
-                    axisYIndex: 0,
-                    showInLegend: true,
-                    dataPoints: []
-                },
-                {
-                    type: "line",
-                    name: "Revenue",
-                    yValueFormatString: "##.00",
-                    color: "#fff",
-                    axisYType: "secondary",
-                    showInLegend: true,
-                    dataPoints: []
-                }
+                type: "line",
+                name: "Order",
+                yValueFormatString: "##.00",
+                color: "#205738",
+                axisYIndex: 0,
+                showInLegend: true,
+                dataPoints: []
+            },
+            {
+                type: "line",
+                name: "Revenue",
+                yValueFormatString: "##.00",
+                color: "#fff",
+                axisYType: "secondary",
+                showInLegend: true,
+                dataPoints: []
+            }
             ],
         }
         CanvasJS.addColorSet("greenShades", ["#4661EE", "#EC5657", "#1BCDD1", "#8FAABB", "#B08BEB", "#3EA0DD", "#F5A52A", "#23BFAA", "#FAA586", "#EB8CC6"]);
@@ -1194,15 +1257,18 @@ export default {
     --dp-primary-color: #6ab130 !important;
     --dp-primary-disabled-color: #458e38 !important;
 }
+
 .multiselect__content-wrapper {
     width: auto;
 }
+
 .dp__input_icon_pad {
     padding-left: 35px !important;
 }
-.compare-btn{
-    padding-top:12px;
-    padding-bottom:12px;
+
+.compare-btn {
+    padding-top: 12px;
+    padding-bottom: 12px;
     margin-bottom: 12px;
 }
 </style>
