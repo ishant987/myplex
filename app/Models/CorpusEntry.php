@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\FundMaster;
 class CorpusEntry extends Model
 {
     use HasFactory;
@@ -50,7 +50,9 @@ class CorpusEntry extends Model
     | The following functions are used for admin panel.
     |
     */
-
+    public function FundName(){
+        return $this->hasOne(FundMaster::class,'fund_code','fund_code')->select('fund_code');
+    }
     public static function getActiveAUMs()
     {
         return DB::select('CALL active_aums()');

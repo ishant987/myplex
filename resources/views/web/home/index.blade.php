@@ -166,7 +166,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        <button data-aos="fade-up" data-aos-duration="1000" class="compare_scheme_btn btn-block">Compare Schemes</button>
+                        <a data-aos="fade-up" data-aos-duration="1000" class="compare_scheme_btn btn-block" href="{{url('/compare-scheme')}}">Compare Schemes</a>
                     </div>
                 </div>
             </div>

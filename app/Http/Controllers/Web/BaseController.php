@@ -11,6 +11,10 @@ use App\Models\ModuleClassModel;
 
 class BaseController extends Controller
 {
+    public function __construct()
+    {
+        $this->page_path =env('PAGE_PATHS','web.pages');
+    }
     public static function getClassIdByname($class_name)
     {
         return ModuleClassModel::getClassIdByname($class_name);

@@ -507,6 +507,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('nfo-monitor-list/{year?}', 'NfoMonitorController@index')->name('nfomonitor.list');
     Route::get('nfo-monitor/{id}', 'NfoMonitorController@show')->name('nfomonitor');
+    Route::get('nfo-monitor', 'NfoMonitorController@html')->name('nfomonitor.html');
 
     Route::get('ask-an-expert', 'AskExpertController@askExpertData')->name('ask-expert');
     Route::get('ask-an-expert/topic/{slug}', 'AskExpertController@askExpertTopicData')->name('ask-expert.topic');
@@ -517,6 +518,12 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
     Route::get('fund-watch/{id}', 'FundWatchController@show')->name('fundwatch');
+    Route::get('fund-watch', 'FundWatchController@watch')->name('fundwatch.index');
+
+    //  added by pixel
+    Route::get('mf-taxation','MfTaxationController@index')->name('mf.index');
+    Route::get('pentatech','MfTaxationController@pentatech')->name('pentatech.index');
+    //  added by pixel end
 
     #== Start: Manage by AuthController only ==#
     Route::get('login', 'AuthController@loginForm')->name('login');

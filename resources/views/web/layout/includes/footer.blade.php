@@ -27,26 +27,55 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-3 col-6 ">
                         <div class="footer_menu">
+                            <h4>Important Links</h4>
+                            {{-- {!! $webFooterCompanyLinks!!} --}}
+                            <ul>
+                                <li><a href="/">Home Page</a></li>
+                                <li><a href="/compare-scheme">Compare Scheme</a></li>
+                                <li><a href="/calculator">Calculator</a></li>
+                                <li><a href="#">Paathshaala</a></li>
+                                <li><a href="#">Money Seriously</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-6 ">
+                        <div class="footer_menu">
+                            <h4>Navigation</h4>
+                            {{-- {!! $webFooterBusinessLinks !!} --}}
+                            <ul>
+                                    
+                                <li><a href="#">Fund Portfolio</a></li>
+                                <li><a href="/fund-performance">Fund Performance</a></li>
+                                <li><a href="/fund-watch">Fund Watch</a></li>
+                                <li><a href="/nfo-monitor">NFO Monitor</a></li>
+                                <li><a href="/mf-taxation">Know Your Scheme</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-6 ">
+                        <div class="footer_menu">
+                            <h4>Snapshot</h4>
+                            {{-- {!! $webFooterProductsLinks !!} --}}
+                            <ul>
+                                <li><a href="/monthly-ranking">Rankings</a></li>
+                                <li><a href="/monthly-snapshot">Monthly Snapshot</a></li>
+                                <li><a href="#">Weekly Snapshot</a></li>
+                                <li><a href="#">Composition Snapshot</a></li>
+                                <li><a href="/pentatech">Pentatec</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-6 ">
+                        <div class="footer_menu">
                             <h4>Company</h4>
-                            {!! $webFooterCompanyLinks!!}
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 col-6 ">
-                        <div class="footer_menu">
-                            <h4>Business Type</h4>
-                            {!! $webFooterBusinessLinks !!}
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 col-6 ">
-                        <div class="footer_menu">
-                            <h4>Products</h4>
-                            {!! $webFooterProductsLinks !!}
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 col-6 ">
-                        <div class="footer_menu">
-                            <h4>Explore</h4>
-                          {!!$webFooterExploreLinks!!}
+                          {{-- {!!$webFooterExploreLinks!!} --}}
+                          <ul>
+                            <li><a href="/about">About Us</a></li>
+                            <li><a href="#">Contact Us</a></li>                                    
+                            <li><a href="#">In The News</a></li>
+                            <li><a href="/faq">FAQs</a></li>
+                            <li><a href="/founder">Meet The Fund Man</a></li>
+                        </ul>
                         </div>
                     </div>
                 </div>
