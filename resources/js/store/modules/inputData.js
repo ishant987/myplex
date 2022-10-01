@@ -38,7 +38,7 @@ const getters = {
 const actions = {
     async getFundHouses({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/fund-houses')
+        await axios.get(state.apiURL+'/api/v1/fund-houses')
             .then(response => {
                 commit('setFundHouses', response.data.data)
             })
@@ -58,7 +58,7 @@ const actions = {
     },
     async getIndices({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/indices')
+        await axios.get(state.apiURL+'/api/v1/indices')
             .then(response => {
                 commit('setIndices', response.data.data)
             })
@@ -78,7 +78,7 @@ const actions = {
     },
     async getCurrencies({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/currencies')
+        await axios.get(state.apiURL+'/api/v1/currencies')
             .then(response => {
                 commit('setCurrencies', response.data.data)
             }).catch(error => {
@@ -96,7 +96,7 @@ const actions = {
     },
     async getFundClassifications({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/fund-classifications')
+        await axios.get(state.apiURL+'/api/v1/fund-classifications')
             .then(response => {
                 commit('setFundClassifications', response.data.data)
             })
@@ -116,7 +116,7 @@ const actions = {
     },
     async getFunds({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get('/api/v1/funds', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/funds', { params: payload })
             .then(response => {
                 commit('setFunds', response.data.data)
             })
@@ -136,7 +136,7 @@ const actions = {
     },
     async getSnapshotDates({ commit, state }, payload) {
         this.process = true
-        await axios.get('/api/v1/snapshot-dates', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/snapshot-dates', { params: payload })
             .then(response => {
                 commit('setFromDate', response.data.data.from_date)
                 commit('setToDate', response.data.data.to_date)
@@ -150,7 +150,7 @@ const actions = {
     },
     async getIndexChanges({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get('/api/v1/changes-index', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/changes-index', { params: payload })
             .then(response => {
                 commit('setIndexChanges', response.data.data.changes_index)
                 
@@ -171,7 +171,7 @@ const actions = {
     },
     async getCurrencyChanges({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get('/api/v1/changes-currency', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/changes-currency', { params: payload })
             .then(response => {
                 commit('setCurrencyChanges', response.data.data.changes_currency)
             })
@@ -191,7 +191,7 @@ const actions = {
     },
     async getCommodityChanges({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get('/api/v1/changes-commodity', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/changes-commodity', { params: payload })
             .then(response => {
                 commit('setCommodityChanges', response.data.data.changes_commodity)
             })
@@ -211,7 +211,7 @@ const actions = {
     },
     async getFundChanges({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get('/api/v1/changes-fund', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/changes-fund', { params: payload })
             .then(response => {
                 commit('setFundChanges', response.data.data.changes_fund)
             })
@@ -231,7 +231,7 @@ const actions = {
     },
     async getWeeklyBestFunds({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/weekly-best-funds')
+        await axios.get(state.apiURL+'/api/v1/weekly-best-funds')
             .then(response => {
                 commit('setWeeklyBestFunds', response.data.data.weekly_best_funds)
             })
@@ -251,7 +251,7 @@ const actions = {
     },
     async getMonthlyBestFunds({ commit, state }) {
         commit('setLoading', true)
-        await axios.get('/api/v1/monthly-best-funds')
+        await axios.get(state.apiURL+'/api/v1/monthly-best-funds')
             .then(response => {
                 commit('setMonthlyBestFunds', response.data.data.monthly_best_funds)
             })

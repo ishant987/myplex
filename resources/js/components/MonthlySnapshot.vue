@@ -1,84 +1,195 @@
 <template>
-<div class="custom-banner no-bg fw-banner " :class="{'monthly-ranking monthly-snapshot-banner':!page_image}" :style="(page_image)?{ 'background-image': 'url('+page_image+')'}:{}">
-    <div class="container">
-        <div class="banner-align-lft fw-title">
-            <h1 class="f-b">{{ page_title }}</h1>
-            <h3 class="f-sb text-green"  v-if="from_date && to_date">Monthly Snapshot Report - {{ getMonth(from_date) }}, {{getYear(to_date)}}</h3>
+<div class="custom-banner no-bg fw-bannerfund-portfolio-banner " :class="{'monthly-ranking monthly-snapshot-banner':!page_image}" :style="(page_image)?{ 'background-image': 'url('+page_image+')'}:{}">
+    <section class="inner_banner_section" >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner_section_banner">
+                        <h4>{{ page_title }}</h4>
+                        <p>{{page_description}}</p>
+                    </div>
+                    <h3 class="f-sb text-green"  v-if="from_date && to_date">Monthly Snapshot Report - {{ getMonth(from_date) }}, {{getYear(to_date)}}</h3>
+                </div>
+            </div>
         </div>
-        <div class="clear"></div>
-    </div>
+    </section>
 </div>
 
-    <div class="fund-c-analysis m-t-30 m-b-30 monthly-compo">
-        <div class="container p-0">
-
-            <div class="perform-paramtr monthly-compo-wrap weekly-snapshot-cols">
-                <div class="row perform-pmtr-lumpsum">
-                        
-                    <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="dy-table-wrap">
-                            <div class="dy-table-block br-5">
-                                <h6 class="bg-dg">Index Changes</h6>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="w-50">Indices</th>
-                                        <th>Closing Value</th>
-                                        <th style="min-width: 130px;">% Change</th>
-                                    </tr>
-                                    <tr v-for="index in index_change" :key="index.name">
-                                        <td>{{ index.name }}</td>
-                                        <td>{{ index.cur_value }}</td>
-                                        <td>{{ index.PER_CHANGE.toFixed(2) }}</td>
-                                    </tr>
-                                </table>
+<section class="monthly_snapshop_sec">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="snapshot_inner">
+                        <div class="snapshot_header">
+                            <h4>Monthly Snapshot</h4>
+                            <p>Monthly Snapshot Report : For the Month of July, 2022</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 box_border_right">
+                                <div class="snopshot_changes_box">
+                                    <div class="snopshot_changes_box_header index_changes_header">
+                                        <h4>Index Changes</h4>
+                                    </div>
+                                    <div class="changes_table">
+                                        <table class="table table-responsive table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Indeces</th>
+                                                    <th>Closing  Value</th>
+                                                    <th>%Changes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>BSE 200</td>
+                                                    <td>7465.40</td>
+                                                    <td>9.53</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>S&P CNX Nifty Total Return Index</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE 200</td>
+                                                    <td>7465.40</td>
+                                                    <td>9.53</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 box_border_right">
+                                <div class="snopshot_changes_box">
+                                    <div class="snopshot_changes_box_header">
+                                        <h4>Currency Changes</h4>
+                                    </div>
+                                    <div class="changes_table">
+                                        <table class="table table-responsive table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Currency</th>
+                                                    <th>₹</th>
+                                                    <th>%Changes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>BSE 200</td>
+                                                    <td>7465.40</td>
+                                                    <td>9.53</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>S&P CNX Nifty Total Return Index</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="snopshot_changes_box">
+                                    <div class="snopshot_changes_box_header">
+                                        <h4>Commodity Changes</h4>
+                                    </div>
+                                    <div class="changes_table">
+                                        <table class="table table-responsive table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Currency</th>
+                                                    <th>₹</th>
+                                                    <th>%Changes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>BSE 200</td>
+                                                    <td>7465.40</td>
+                                                    <td>9.53</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>S&P CNX Nifty Total Return Index</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>BSE MidCap</td>
+                                                    <td>24050.90</td>
+                                                    <td>10.03</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="dy-table-wrap">
-                            <div class="dy-table-block br-5">
-                                <h6 class="bg-dg">Currency Changes</h6>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="w-50">Currency</th>
-                                        <th>₹</th>
-                                        <th style="min-width: 130px;">% Change</th>
-                                    </tr>
-                                    <tr v-for="currency in currency_change" :key="currency.name">
-                                        <td>{{ currency.name }}</td>
-                                        <td>{{ currency.cur_value }}</td>
-                                        <td>{{ currency.PER_CHANGE.toFixed(2) }}</td>
-                                    </tr>
-                                </table>
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="snapshopt_download_single">
+                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
+                                        <div class="download_snapshot_pdf_icon">
+                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                                        </div>
+                                        <h4>Monthly Percentage Changes (By Category of Funds)</h4>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-12 col-sm-12">
-                        <div class="dy-table-wrap">
-                            <div class="dy-table-block br-5">
-                                <h6 class="bg-dg">Commodity Changes</h6>
-                                <table class="box-shadow">
-                                    <tr>
-                                        <th class="w-50">Commodity</th>
-                                        <th>₹</th>
-                                        <th style="min-width: 130px;">% Change</th>
-                                    </tr>
-                                    <tr v-for="commodity in commodity_change" :key="commodity.name">
-                                        <td>{{ commodity.name }}</td>
-                                        <td>{{ commodity.cur_value }}</td>
-                                        <td>{{ commodity.PER_CHANGE.toFixed(2) }}</td>
-                                    </tr>
-                                </table>
+                            <div class="col-md-4">
+                                <div class="snapshopt_download_single">
+                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
+                                        <div class="download_snapshot_pdf_icon">
+                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                                        </div>
+                                        <h4>10 Best Performing Schemes for the Month</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="snapshopt_download_single">
+                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
+                                        <div class="download_snapshot_pdf_icon">
+                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                                        </div>
+                                        <h4>10 Worst Performing Schemes for The Month</h4>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="fund-c-analysis m-t-30 custom-sort-table monthly-snap-full weekly-snapshot-blocks">
+    </section>
+    <div class="fund-c-analysis m-t-30 custom-sort-table monthly-snap-full weekly-snapshot-blocks d-none">
         <div class="container p-0">
 
             <div class="perform-paramtr c-snapchot-parent">
@@ -195,6 +306,11 @@ export default {
         required: true,
         default: '',
         },
+        image_path: {
+        type: String,
+        required: true,
+        default: '',
+        },
     },
     components: {
         CustomTable
@@ -209,7 +325,8 @@ export default {
                 showTable2:false,
                 modalClasses: ['modal','fade'],
                 per_changes:[],
-                selectedFundType:''
+                selectedFundType:'',
+                app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
             }
   },
   methods: {
@@ -239,7 +356,7 @@ export default {
     },
     async getMonthlyChangesFundType() {
         this.process = true
-        await axios.get('/api/v1/monthly-changes-fund-type')
+        await axios.get(this.app_url+'/api/v1/monthly-changes-fund-type')
             .then(response => {
                 this.per_changes =  response.data.data.changes_fund_type
             })

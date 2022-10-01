@@ -33,8 +33,10 @@
         </div>
     </div>
 </section>
-
-@if(session()->has('username') && session()->has('useremail') )
+<div id="vue-app">
+    <calculators image_path="{{asset('themes/frontend/assets/v1/img/')}}" sip_faqs="" sip_pdf_url="{{ isset($dataArr['custom_fields']['text_68'])?$dataArr['custom_fields']['text_68']['value']:'' }}" username="{{ session()->get('username') }}" useremail="{{ session()->get('useremail') }}"></calculators>
+</div>
+{{-- @if(session()->has('username') && session()->has('useremail') )
 <div id="vue-app">
     <calculators image_path="{{asset('themes/frontend/assets/v1/img/')}}" sip_faqs="" sip_pdf_url="{{ isset($dataArr['custom_fields']['text_68'])?$dataArr['custom_fields']['text_68']['value']:'' }}" username="{{ session()->get('username') }}" useremail="{{ session()->get('useremail') }}"></calculators>
 </div>
@@ -74,11 +76,9 @@
                                     <div class="clear"></div>
                                 </div>
                             </form>
-                            {{-- Alert message start --}}
                             @if(session()->has('alert'))
                             <x-form.alert type="{{ session()->get('alert') }}" title="{{ session()->get('title') }}" message="{{ session()->get('message') }}" />
                             @endif
-                            {{-- Alert message end --}}
                             <div class="calculator-select-calc" style="display: none;">
                                 <img src="../images/select-calc-bg-img.jpg" class="img-fluid">
                             </div>
@@ -90,5 +90,5 @@
         </div>
     </div>
 </div>
-@endif
+@endif --}}
 @stop

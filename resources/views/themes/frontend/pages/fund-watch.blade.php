@@ -49,6 +49,7 @@
                     </div>
                     <div class="fw-single-file">
                         @if($dataArr['item']->file)
+                        {{$defDataArr['media_folder'].$dataArr['item']->file}}
                         <embed src="{{ $defDataArr['media_folder'].$dataArr['item']->file }}" width="100%" height="375" type="application/pdf">
                         @endif
                     </div>

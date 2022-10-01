@@ -15,8 +15,21 @@ class NfoMonitorController extends BaseController
     public function __construct()
     {
         $this->defDataArr = self::getDefData();
+        $this->page_path =env('PAGE_PATHS','web.pages');
     }
 
+    public function html(Request $request){
+        $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 31);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+        }
+        return view($this->page_path.'.nof-monitor',compact('dataArr'));
+    }
     public function index(Request $request, $reqYear = 0)
     {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 28);
