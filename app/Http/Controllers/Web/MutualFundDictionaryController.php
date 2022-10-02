@@ -13,6 +13,7 @@ class MutualFundDictionaryController extends BaseController
     public function __construct()
     {
         $this->defDataArr = self::getDefData();
+        $this->page_path =env('PAGE_PATHS','web.pages');
     }
 
     public function index(Request $request, $slug = false)
@@ -33,7 +34,7 @@ class MutualFundDictionaryController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.mutual-fund-dictionary', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.mutual-fund-dictionary', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }

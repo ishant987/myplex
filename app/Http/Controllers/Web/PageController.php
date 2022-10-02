@@ -431,25 +431,25 @@ class PageController extends BaseController
 
             $status = $commonconstants['status_val']['1'];
 
-            if ($id == 0) {
-                $fundClsMdl = FundClassification::list(['status' => $status, 'take' => 1], ['fc_id', 'title', 'description', 'file']);
-                if ($fundClsMdl) {
-                    $fundClsMdl = $fundClsMdl[0];
-                }
-            } else {
-                $fundClsMdl = FundClassification::getData(['fc_id' => $id, 'status' => $status], ['fc_id', 'title', 'description', 'file']);
-            }
+            // if ($id == 0) {
+            //     $fundClsMdl = FundClassification::list(['status' => $status, 'take' => 1], ['fc_id', 'title', 'description', 'file']);
+            //     if ($fundClsMdl) {
+            //         $fundClsMdl = $fundClsMdl[0];
+            //     }
+            // } else {
+            //     $fundClsMdl = FundClassification::getData(['fc_id' => $id, 'status' => $status], ['fc_id', 'title', 'description', 'file']);
+            // }
 
-            if ($fundClsMdl) {
-                $fundClsListMdl = FundClassification::list(['status' => $status], ['fc_id', 'title']);
-            }
+            // if ($fundClsMdl) {
+            //     $fundClsListMdl = FundClassification::list(['status' => $status], ['fc_id', 'title']);
+            // }
 
             $pthPgsMdl = PageModel::pageList(['ids' => [21, 22, 23, 24, 25], 'status' => $status], ['title', 'slug', 'template_id'], 'c_order', 'ASC');
             $stngDataArr = SettingsModel::getSettingsArr(['paathshaala_heading', 'paathshaala_image', 'newsletter_heading', 'newsletter_description'], $status);
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['pdf_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('themes.frontend.pages.mutual-fund-classifications', compact('defDataArr', 'dataArr', 'fundClsMdl', 'fundClsListMdl', 'pthPgsMdl', 'stngDataArr'));
+            return view($this->page_path.'.mutual-fund-classifications', compact('defDataArr', 'dataArr', 'fundClsMdl', 'fundClsListMdl', 'pthPgsMdl', 'stngDataArr'));
         }
         return abort(404);
     }
@@ -471,25 +471,25 @@ class PageController extends BaseController
 
             $status = $commonconstants['status_val']['1'];
 
-            if ($id == 0) {
-                $fundTxnMdl = FundTaxation::list(['status' => $status, 'take' => 1], ['ft_id', 'title', 'description', 'file']);
-                if ($fundTxnMdl) {
-                    $fundTxnMdl = $fundTxnMdl[0];
-                }
-            } else {
-                $fundTxnMdl = FundTaxation::getData(['ft_id' => $id, 'status' => $status], ['ft_id', 'title', 'description', 'file']);
-            }
+            // if ($id == 0) {
+            //     $fundTxnMdl = FundTaxation::list(['status' => $status, 'take' => 1], ['ft_id', 'title', 'description', 'file']);
+            //     if ($fundTxnMdl) {
+            //         $fundTxnMdl = $fundTxnMdl[0];
+            //     }
+            // } else {
+            //     $fundTxnMdl = FundTaxation::getData(['ft_id' => $id, 'status' => $status], ['ft_id', 'title', 'description', 'file']);
+            // }
 
-            if ($fundTxnMdl) {
-                $fundTxnListMdl = FundTaxation::list(['status' => $status], ['ft_id', 'title']);
-            }
+            // if ($fundTxnMdl) {
+            //     $fundTxnListMdl = FundTaxation::list(['status' => $status], ['ft_id', 'title']);
+            // }
 
             $pthPgsMdl = PageModel::pageList(['ids' => [21, 22, 23, 24, 25], 'status' => $status], ['title', 'slug', 'template_id'], 'c_order', 'ASC');
             $stngDataArr = SettingsModel::getSettingsArr(['paathshaala_heading', 'paathshaala_image', 'newsletter_heading', 'newsletter_description'], $status);
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['pdf_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('themes.frontend.pages.mutual-fund-taxation', compact('defDataArr', 'dataArr', 'fundTxnMdl', 'fundTxnListMdl', 'pthPgsMdl', 'stngDataArr'));
+            return view($this->page_path.'.mf-taxation', compact('defDataArr', 'dataArr', 'fundTxnMdl', 'fundTxnListMdl', 'pthPgsMdl', 'stngDataArr'));
         }
         return abort(404);
     }
@@ -522,7 +522,7 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('themes.frontend.pages.know-the-ratio', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr'));
+            return view($this->page_path.'.know-the-ratio', compact('defDataArr', 'dataArr', 'pthPgsMdl', 'stngDataArr'));
         }
         return abort(404);
     }

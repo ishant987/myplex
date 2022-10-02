@@ -11,6 +11,8 @@ use App\Models\ModuleClassModel;
 
 class BaseController extends Controller
 {
+    public $page_path ;
+
     public function __construct()
     {
         $this->page_path =env('PAGE_PATHS','web.pages');

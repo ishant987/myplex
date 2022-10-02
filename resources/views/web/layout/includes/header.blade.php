@@ -80,6 +80,18 @@
                                         <li><a class="dropdown-item" href="/weekly-snapshot">Weekly Snapshot</a></li>
                                     </ul>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Paathshaala
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="/mutual-fund-taxation">Mutual Fund Taxation</a></li>
+                                        <li><a class="dropdown-item" href="/mutual-fund-classifications">Mutual Fund Classifications</a></li>
+                                        <li><a class="dropdown-item" href="/know-the-ratio">Know The Ratio</a></li>
+                                        <li><a class="dropdown-item" href="#">Thoughts and Opinion on Funds</a></li>
+                                        <li><a class="dropdown-item" href="/mutual-fund-dictionary">Mutual Fund Dictionary</a></li>
+                                    </ul>
+                                </li>
                                  <a class="nav-link" href="/fund-watch">Fund Watch</a>
                                 <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>

@@ -48,7 +48,7 @@
                                 <li><a href="/fund-performance">Fund Performance</a></li>
                                 <li><a href="/fund-watch">Fund Watch</a></li>
                                 <li><a href="/nfo-monitor">NFO Monitor</a></li>
-                                <li><a href="/mf-taxation">Know Your Scheme</a></li>
+                                <li><a href="#">Know Your Scheme</a></li>
                             </ul>
                         </div>
                     </div>
