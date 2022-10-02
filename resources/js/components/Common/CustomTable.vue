@@ -1,5 +1,5 @@
 <template>
-    <table :id="id" class="display dataTable no-footer">
+    <table :id="id"  class="table table-striped" style="width:100%">
         <thead>
             <tr>
                 <th v-for="col in columns" :key="col.key" v-on:click="sortTable(col.key)" class="sorting" :style="col.hasOwnProperty('style')?col.style:{}" :class="{'sorting_asc':sortKey == col.key && ascending, 'sorting_desc': sortKey == col.key && !ascending}">

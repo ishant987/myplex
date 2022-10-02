@@ -8,7 +8,6 @@
                         <h4>{{ page_title }}</h4>
                         <p>{{page_description}}</p>
                     </div>
-                    <h3 class="f-sb text-green"  v-if="from_date && to_date">Monthly Snapshot Report - {{ getMonth(from_date) }}, {{getYear(to_date)}}</h3>
                 </div>
             </div>
         </div>
@@ -22,7 +21,7 @@
                     <div class="snapshot_inner">
                         <div class="snapshot_header">
                             <h4>Monthly Snapshot</h4>
-                            <p>Monthly Snapshot Report : For the Month of July, 2022</p>
+                            <p v-if="from_date && to_date">Monthly Snapshot Report :{{ getMonth(from_date) }}, {{getYear(to_date)}}</p>
                         </div>
                         <div class="row">
                             <div class="col-md-4 box_border_right">
@@ -39,31 +38,20 @@
                                                     <th>%Changes</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>BSE 200</td>
-                                                    <td>7465.40</td>
-                                                    <td>9.53</td>
+                                            <tbody v-if="index_change.length">
+                                                <tr v-for="index in index_change" :key="index.name">
+                                                    <td>{{ index.name }}</td>
+                                                    <td>{{ index.cur_value }}</td>
+                                                    <td>{{ index.PER_CHANGE.toFixed(2) }}</td>
                                                 </tr>
+                                            </tbody>
+                                            <tbody v-else>
                                                 <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>S&P CNX Nifty Total Return Index</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BSE 200</td>
-                                                    <td>7465.40</td>
-                                                    <td>9.53</td>
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="process"></LoadingBar>
+                                                        </div>      
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -84,26 +72,20 @@
                                                     <th>%Changes</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>BSE 200</td>
-                                                    <td>7465.40</td>
-                                                    <td>9.53</td>
+                                            <tbody v-if="currency_change.length">
+                                                <tr v-for="currency in currency_change" :key="currency.name">
+                                                    <td>{{ currency.name }}</td>
+                                                    <td>{{ currency.cur_value }}</td>
+                                                    <td>{{ currency.PER_CHANGE.toFixed(2) }}</td>
                                                 </tr>
+                                            </tbody>
+                                            <tbody v-else>
                                                 <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>S&P CNX Nifty Total Return Index</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="process"></LoadingBar>
+                                                        </div>      
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -124,26 +106,20 @@
                                                     <th>%Changes</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>BSE 200</td>
-                                                    <td>7465.40</td>
-                                                    <td>9.53</td>
+                                            <tbody v-if="commodity_change.length">
+                                                <tr v-for="commodity in commodity_change" :key="commodity.name">
+                                                    <td>{{ commodity.name }}</td>
+                                                    <td>{{ commodity.cur_value }}</td>
+                                                    <td>{{ commodity.PER_CHANGE.toFixed(2) }}</td>
                                                 </tr>
+                                            </tbody>
+                                            <tbody v-else>
                                                 <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>S&P CNX Nifty Total Return Index</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>BSE MidCap</td>
-                                                    <td>24050.90</td>
-                                                    <td>10.03</td>
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="process"></LoadingBar>
+                                                        </div>      
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -289,6 +265,7 @@ import CustomTable from './Common/CustomTable.vue'
 import mixin from '../mixin';
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment';
+import LoadingBar from "./Common/loading";
 export default {
     props: {
         page_title: {
@@ -313,7 +290,8 @@ export default {
         },
     },
     components: {
-        CustomTable
+        CustomTable,
+        LoadingBar
   },
   mixins: [mixin],
    data() {

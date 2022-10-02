@@ -376,7 +376,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.fund-portfolio', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.fund-portfolio', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
@@ -545,7 +545,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.fund-composition-snapshot', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.fund-composition-snapshot', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
@@ -568,7 +568,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.weekly-snapshot', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.weekly-snapshot', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }

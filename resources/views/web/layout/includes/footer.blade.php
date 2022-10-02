@@ -44,7 +44,7 @@
                             {{-- {!! $webFooterBusinessLinks !!} --}}
                             <ul>
                                     
-                                <li><a href="#">Fund Portfolio</a></li>
+                                <li><a href="/fund-portfolio">Fund Portfolio</a></li>
                                 <li><a href="/fund-performance">Fund Performance</a></li>
                                 <li><a href="/fund-watch">Fund Watch</a></li>
                                 <li><a href="/nfo-monitor">NFO Monitor</a></li>
@@ -59,8 +59,8 @@
                             <ul>
                                 <li><a href="/monthly-ranking">Rankings</a></li>
                                 <li><a href="/monthly-snapshot">Monthly Snapshot</a></li>
-                                <li><a href="#">Weekly Snapshot</a></li>
-                                <li><a href="#">Composition Snapshot</a></li>
+                                <li><a href="/weekly-snapshot">Weekly Snapshot</a></li>
+                                <li><a href="/composition-snapshot">Composition Snapshot</a></li>
                                 <li><a href="/pentatech">Pentatec</a></li>
                             </ul>
                         </div>
