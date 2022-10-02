@@ -67,8 +67,8 @@
                                         Portfolio
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" href="/fund-watch">Fund Portfolio</a></li>
-                                        <li><a class="dropdown-item" href="#">Composition Snapshot</a></li>
+                                        <li><a class="dropdown-item" href="/fund-portfolio">Fund Portfolio</a></li>
+                                        <li><a class="dropdown-item" href="/composition-snapshot">Composition Snapshot</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -77,7 +77,7 @@
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <li><a class="dropdown-item" href="/monthly-snapshot">Monthly Snapshot</a></li>
-                                        <li><a class="dropdown-item" href="#">Weekly Snapshot</a></li>
+                                        <li><a class="dropdown-item" href="/weekly-snapshot">Weekly Snapshot</a></li>
                                     </ul>
                                 </li>
                                  <a class="nav-link" href="/fund-watch">Fund Watch</a>

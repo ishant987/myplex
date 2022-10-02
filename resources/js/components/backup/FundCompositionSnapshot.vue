@@ -1,76 +1,65 @@
 <template>
-     <div class="custom-banner no-bg fw-banner" :class="{'monthly-ranking':!page_image}" :style="(page_image)?{ 'background-image': 'url('+page_image+')'}:{}">
-    <section class="inner_banner_section">
+<div class="custom-banner no-bg fw-banner" :class="{'monthly-ranking':!page_image}" :style="(page_image)?{ 'background-image': 'url('+page_image+')'}:{}">
+    <div class="container">
+        <div class="banner-align-lft fw-title">
+            <h1 class="f-b">{{ page_title }}</h1>
+            <h3 v-if="page_description" class="f-sb text-green" v-html="page_description"></h3>
+        </div>
+        <div class="banner-align-rgt fw-downlaod-btn mt-0 d-none">
+            <a href="javascript:void(0)" class="btn-bg-3 br-5 f-b">
+            Download PDF 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            </a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+    <div class="classifications-pg bg-gry">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="inner_section_banner">
-                        <h4>{{ page_title }}</h4>
-                        <p v-if="page_description" class="f-sb text-green" v-html="page_description"></p>
-                    </div>
-                    
+            <div class="row align-items-center align-fix fund-port-cols">
+                <div class="col-lg-7 col-md-6 col-sm-12 choose-classy select2-styles pl-0 fund-port-col-1">
+                    <h6 class="text-green-2">Fund classifications</h6>
+                        <multiselect 
+                        :disabled="loading || process"
+                        class=""
+                        label="name" 
+                        track-by="ft_id"
+                        v-model="selectedFundClassification" 
+                        tag-placeholder=""
+                        placeholder="Select Fund Classification" 
+                        :options="fundClassifications" 
+                        :multiple="false" 
+                        :taggable="false" 
+                        selectLabel=""
+                        :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']"
+                        :max-height="150"
+                        :showNoResults="true"
+                        >
+                        </multiselect>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12 choose-cnt pr-0 fund-port-col-2" v-if="snapshotText">
+                    <p>Composition Snapshot of - <br/> <span>{{ snapshotText }}</span></p>
                 </div>
             </div>
         </div>
-    </section>
-</div>
-<section class="info_monitor_sec">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="info_monitor_inner">
-                    <div class="info_monitor_inner_wrapper mb-3">
-                        <div class="monthly_ranking_title d-block d-sm-flex align-items-center justify-content-between mb-3">
-                            <div class="monthly_ranking_text">
-                                <h4>Composition Snapshot</h4>
-                            </div>
-                        </div>
-                        <div class="monthly_ranking_Search_part mb-1">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <h6 class="text-green-2">Fund classifications</h6>
-                                    <multiselect 
-                                    :disabled="loading || process"
-                                    class=""
-                                    label="name" 
-                                    track-by="ft_id"
-                                    v-model="selectedFundClassification" 
-                                    tag-placeholder=""
-                                    placeholder="Select Fund Classification" 
-                                    :options="fundClassifications" 
-                                    :multiple="false" 
-                                    :taggable="false" 
-                                    selectLabel=""
-                                    :searchable="true"
-                                    :block-keys="['Tab', 'Enter', 'backspace']"
-                                    :max-height="150"
-                                    :showNoResults="true"
-                                    >
-                                    </multiselect>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12"  v-if="snapshotText">
-                                    <div class="banner-align-rgt fw-downlaod-btn mt-4">
-                                    <a href="javascript:void(0)" class="money_title_btn" @click="downloadPDF">
-                                             Download PDF 
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                                    </svg>
-                                    </a>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3" v-if="snapshotText">
-                                <div class="col-md-12">
-                                    <p><b>Composition Snapshot of </b> -  <span>{{ snapshotText }}</span></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="monthly_ranking_table">
-                            <div class="datatable_ll main_trer">
-                                <div class="table-responsive">
+    </div>
 
-                                    <table class="table table-striped" style="width:100%" role="grid" >
+    <div class="fund-c-analysis m-t-30 custom-sort-table">
+        <div class="container p-0">
+
+            <div class="perform-paramtr">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 perform-pmtr-lumpsum">
+                        <div class="dy-table-wrap">
+                            <div class="dy-table-block br-5">
+                                
+                                    
+                                    <table class="table dataTable no-footer" id="data-table" role="grid" >
                                         <thead class="tb-head">
                                             <tr role="row">
                                                 <th class="top_th" colspan="4" rowspan="1">&nbsp;</th>
@@ -91,10 +80,77 @@
                                         </thead>
                                         <tbody v-if="process">
                                             <tr role="row">
-                                                <td colspan="10">
-                                                        <div class="text-center mt-3">
-                                                            <LoadingBar :status="process"></LoadingBar>
-                                                        </div>      
+                                                <td class="top_th text-center" colspan="9" rowspan="1">
+                                                    <svg style="width:100px" version="1.1" id="L1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+                                                        <circle fill="none" stroke="#fff" stroke-width="6" stroke-miterlimit="15" stroke-dasharray="14.2472,14.2472" cx="50" cy="50" r="47" >
+                                                        <animateTransform 
+                                                            attributeName="transform" 
+                                                            attributeType="XML" 
+                                                            type="rotate"
+                                                            dur="5s" 
+                                                            from="0 50 50"
+                                                            to="360 50 50" 
+                                                            repeatCount="indefinite" />
+                                                    </circle>
+                                                    <circle fill="none" stroke="#fff" stroke-width="1" stroke-miterlimit="10" stroke-dasharray="10,10" cx="50" cy="50" r="39">
+                                                        <animateTransform 
+                                                            attributeName="transform" 
+                                                            attributeType="XML" 
+                                                            type="rotate"
+                                                            dur="5s" 
+                                                            from="0 50 50"
+                                                            to="-360 50 50" 
+                                                            repeatCount="indefinite" />
+                                                    </circle>
+                                                    <g fill="#fff">
+                                                    <rect x="30" y="35" width="5" height="30">
+                                                        <animateTransform 
+                                                        attributeName="transform" 
+                                                        dur="1s" 
+                                                        type="translate" 
+                                                        values="0 5 ; 0 -5; 0 5" 
+                                                        repeatCount="indefinite" 
+                                                        begin="0.1"/>
+                                                    </rect>
+                                                    <rect x="40" y="35" width="5" height="30" >
+                                                        <animateTransform 
+                                                        attributeName="transform" 
+                                                        dur="1s" 
+                                                        type="translate" 
+                                                        values="0 5 ; 0 -5; 0 5" 
+                                                        repeatCount="indefinite" 
+                                                        begin="0.2"/>
+                                                    </rect>
+                                                    <rect x="50" y="35" width="5" height="30" >
+                                                        <animateTransform 
+                                                        attributeName="transform" 
+                                                        dur="1s" 
+                                                        type="translate" 
+                                                        values="0 5 ; 0 -5; 0 5" 
+                                                        repeatCount="indefinite" 
+                                                        begin="0.3"/>
+                                                    </rect>
+                                                    <rect x="60" y="35" width="5" height="30" >
+                                                        <animateTransform 
+                                                        attributeName="transform" 
+                                                        dur="1s" 
+                                                        type="translate" 
+                                                        values="0 5 ; 0 -5; 0 5"  
+                                                        repeatCount="indefinite" 
+                                                        begin="0.4"/>
+                                                    </rect>
+                                                    <rect x="70" y="35" width="5" height="30" >
+                                                        <animateTransform 
+                                                        attributeName="transform" 
+                                                        dur="1s" 
+                                                        type="translate" 
+                                                        values="0 5 ; 0 -5; 0 5" 
+                                                        repeatCount="indefinite" 
+                                                        begin="0.5"/>
+                                                    </rect>
+                                                    </g>
+                                                    </svg>
+
                                                 </td>
                                             </tr> 
                                         </tbody>                            
@@ -112,19 +168,21 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div class="table-total text-right" v-if="totalAmount">
-                                        <p>Total Amount (Rs. in lacs) <span class="total-amount">{{totalAmount}}/-</span></p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-
+                        <div class="classification-disc">
+                            <h6 class="text-green">Disclaimer</h6>
+                            <ul>
+                                <li>For loss making scrips, earnings are considered as zero.</li>
+                                <li>Loss Making Scrips have not been taken into account for calculation of total fund portfolio weighted PE.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-</section>
 </template>
 <style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>
 <script>
@@ -133,7 +191,6 @@ import Multiselect from '@suadelabs/vue3-multiselect'
 import mixin from '../mixin';
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment';
-import LoadingBar from "./Common/loading";
 export default {
     props: {
         page_title: {
@@ -154,7 +211,6 @@ export default {
     },
     components: {
       Multiselect,
-      LoadingBar
   },
   mixins: [mixin],
    data() {
@@ -165,15 +221,10 @@ export default {
                 composition_snapshot: [],
                 snapshotText: null,
                 process:false,
-                totalAmount:'',
-                app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
             }
   },
   methods: {
    ...mapActions('InputData', ['getFundClassifications']),
-   downloadPDF(){
-       window.open(this.app_url+'/composition-snapshot-pdf/'+this.selectedFundClassification.ft_id, '_blank');
-   },
    sortTable(col) {
       if (this.sortKey === col) {
         this.ascending = !this.ascending;
@@ -197,7 +248,7 @@ export default {
        let that = this
        that.process = true
        that.snapshotText = ''
-       await axios.get(that.app_url+'/api/v1/fund-composition-snapshot/'+that.selectedFundClassification.ft_id)
+       await axios.get('/api/v1/fund-composition-snapshot/'+that.selectedFundClassification.ft_id)
             .then(response => {
                 let composition_snapshot = response.data.data.composition_snapshot
                 Object.keys(composition_snapshot).map(function(key, index) {

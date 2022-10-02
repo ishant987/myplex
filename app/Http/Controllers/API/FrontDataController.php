@@ -370,8 +370,10 @@ class FrontDataController extends BaseController
             }
             $days = 7;
         } else {
-            $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
-            $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
+            // $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
+            // $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
+			$start_date =date('Y-m-d',strtotime('2021-02-01'));
+			$end_date =date('Y-m-d',strtotime('2021-03-01'));
             $days = strtotime($start_date) - strtotime($end_date);
             $days = (int)round($days / (60 * 60 * 24))+1;
         }
