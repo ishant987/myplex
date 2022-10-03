@@ -6,8 +6,9 @@
 {{-- <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script> --}}
 <script src="{{ mix('js/vue-app.js') }}"></script>
+<script src="{{asset('themes/frontend/assets/v1/js/stock_header.js')}}"></script>
 <script src="{{asset('themes/frontend/assets/v1/js/custom.js')}}"></script>
-@if(View::hasSection('moneycontrol'))
+{{-- @if(View::hasSection('moneycontrol'))
 <script src="https://stat2.moneycontrol.com/mcjs/common/jquery-1.7.2.min.js"></script>
 <script>
   var ct_v = '170940';
@@ -17,6 +18,6 @@
 <script src="https://stat.moneycontrol.co.in/mcjs/mcradar/jquery-ui-1.10.3.custom.min.js"></script>
 <script src=" https://stat.moneycontrol.co.in/mcjs/portfolio_plus/datepicker.js?"></script>
 <script src="https://stat.moneycontrol.co.in/mcjs/mcradar/jquery.webticker.js"></script>
-@endif
+@endif --}}
 
 @stack('scripts')

@@ -37,62 +37,228 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3" v-if="plan == 1">
-            <div class="row mb-3">
-                <div class="col-lg-6 col-md-12">
-                    <div class="cal_form_select">
-                        <label>Current monthly expenditure (in Rs.)</label>
-                        <input class="form-text" type="text" v-model="var_1" />
+        <template v-if="step==1 || step==2">
+            <div class="row mt-3" v-if="plan == 1">
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Current monthly expenditure (in Rs.)</label>
+                            <input class="form-text" type="text" v-model="var_1" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Number of years left for retirement (Max. 50 years)</label>
+                            <input type="number" max="50" class="form-text" v-model="var_2" />
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12">
-                    <div class="cal_form_select">
-                        <label>Number of years left for retirement (Max. 50 years)</label>
-                        <input type="number" max="50" class="form-text" v-model="var_2" />
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Assume a rate of inflation (in %)</label>
+                            <input class="form-text" type="text" v-model="var_3" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Assume a risk free rate of return on your retirement fund (in Rs.)</label>
+                            <input type="number" max="50" class="form-text" v-model="var_4" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3" v-if="var_5">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Retirement Fund required to meet your post retirement monthly expenses (in Rs.)</label>
+                            <input :disabled="true" type="number" class="form-text" v-model="var_5" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-lg-6 col-md-12">
-                    <div class="cal_form_select">
-                        <label>Assume a rate of inflation (in %)</label>
-                        <input class="form-text" type="text" v-model="var_3" />
+            <div class="row mt-3" v-if="plan == 2">
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>What is the present cost of such marriage ? (in Rs.)</label>
+                            <input type="number" class="form-text" v-model="var_1" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>After how many years is your child likely to get married ? (Max. 50 years)</label>
+                            <input type="number" max="50" class="form-text" v-model="var_2" />
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12">
-                    <div class="cal_form_select">
-                        <label>Assume a risk free rate of return on your retirement fund (in Rs.)</label>
-                        <input type="number" max="50" class="form-text" v-model="var_4" />
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Assume a rate of inflation (in %)</label>
+                            <input type="number" class="form-text" v-model="var_3" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3" v-if="var_5">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>The amount you would require for your child's marriage (in Rs.)</label>
+                            <input :disabled="true" type="number" class="form-text" v-model="var_5" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-lg-6 col-md-12">
-                    <div class="cal_form_select">
-                        <label>Retirement Fund required to meet your post retirement monthly expenses (in Rs.)</label>
-                        <input :disabled="true" type="number" class="form-text" v-model="var_5" />
+            <div class="row mt-3" v-if="plan == 3">
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>What is the present cost of such educaton ? (in Rs.)</label>
+                                <input type="number" class="form-text" v-model="var_1"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>After how many years is your child likely to go for higher education ? (Max. 50 years)</label>
+                                <input type="number" max="50" class="form-text" v-model="var_2"    />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Assume a rate of inflation (in %)</label>
+                                <input type="number" class="form-text" v-model="var_3"    />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3" v-if="var_5">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>The amount you would require for yor child's higher education (in Rs.)</label>
+                                <input :disabled="true" type="number" class="form-text" v-model="var_5"    />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="row mt-3" v-if="plan == 4">
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>What is the present cost of such asset ? (in Rs.)</label>
+                                <input type="number" class="form-text" v-model="var_1"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>After how many years you are planning to buy the said asset ? (Max. 50 years)</label>
+                                <input type="number" max="50" class="form-text" v-model="var_2"    />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Assume a rate of inflation (in %)</label>
+                                <input type="number" class="form-text" v-model="var_3"    />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3" v-if="var_5">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Amount you would require to own the said asset (in Rs.)</label>
+                                <input :disabled="true" type="number" class="form-text" v-model="var_5"    />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3" v-if="plan == 5">
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Goal Amount (Rs.)</label>
+                                <input type="number" class="form-text" v-model="goalsipamount"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Investment Duration (Y)</label>
+                                <input type="number" class="form-text" v-model="goalinvestmentduration"    />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Expected Rate of Return (%p.a.)</label>
+                                <input type="number" class="form-text" v-model="goalrateofreturn"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="cal_form_select">
+                            <label>Annual Inflation Rate (%)</label>
+                                <select  v-model="inflationrate" class="form-text" title="Inflation would decrease your savings buying power every year. A realistic range is in between 2%-10%, but over the last decade it has been between 4%-6% per annum">
+                                    <option value="" selected disabled>Select Inflation Rate</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-lg-4 col-md-12" v-if="final_goal_amt">
+                        <div class="cal_form_select">
+                            <label>Inflation Adjusted Goal Amount (Rs.)</label>
+                                <input :disabled="true" type="number" class="form-text" v-model="final_goal_amt"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12" v-if="goal_sip_investments">
+                        <div class="cal_form_select">
+                            <label>Your Total Investment (Rs.)</label>
+                                <input :disabled="true" type="number" class="form-text" v-model="goal_sip_investments"    />
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12" v-if="goal_sip_amt">
+                        <div class="cal_form_select">
+                            <label>Monthly SIP Amount (Rs.)</label>
+                                <input :disabled="true" type="number" class="form-text" v-model="goal_sip_amt"    />
+                        </div>
+                    </div>
+                    <p class="text-danger" v-if="error_msg">{{error_msg}}</p>
+                </div>
+            </div>
+        </template>
     </div>
     <div class="row mx-0 invst-fields invst-field-1 justify-content-between align-items-center sip-planner-ic-action">
         <div class="sip-planner-ic-action-cm sip-planner-ic-action-1">
             <a v-if="sip_pdf_url" :href="sip_pdf_url" target="_blank" class="sip-tut">SIP Tutorial</a>
         </div>
-        <div v-if="plan && plan != 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2">
-            <button v-if="step == 2" id="sip-planner-ic-submit" class="btn mr-2 btn-green" @click="step = 3">How much should I start saving now?</button>
-            <button id="sip-planner-ic-submit" class="btn mr-2 btn-green" :disabled="!var_1 || !var_2 || !var_3 || (plan == 1 &&  !var_4)" @click="calculate_sip(plan)">Calculate</button>
+        <div v-if="plan && plan != 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
+            <!-- <button v-if="step == 2" id="sip-planner-ic-submit" class="btn mr-2 btn-green" @click="step = 3">How much should I start saving now?</button> -->
+            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!var_1 || !var_2 || !var_3 || (plan == 1 &&  !var_4)" @click="calculate_sip(plan)">Calculate</button>
             <button class="btn" @click="var_1='';var_2='';var_3='';var_4='';var_5='';step = 1">Reset</button>
         </div>
-        <div v-if="plan && plan == 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2">
-            <button id="sip-planner-ic-submit" class="btn mr-2 btn-green" :disabled="!inflationrate || !goalrateofreturn || !goalinvestmentduration" @click="calculate_goal_sip(plan)">Calculate</button>
+        <div v-if="plan && plan == 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
+            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!inflationrate || !goalrateofreturn || !goalinvestmentduration" @click="calculate_goal_sip(plan)">Calculate</button>
             <button class="btn" @click="inflationrate='';goalrateofreturn='';goalinvestmentduration='';goalsipamount='';final_goal_amt='';goal_sip_investments='';goal_sip_amt='';">Reset</button>
         </div>
 
         <div v-if="step == 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
-            <button id="sip-planner-ic-submit" class="btn mr-2 btn-green" :disabled="!var_5 || !var_6 || !var_7 || !var_8" @click="Calculate_Next">Caculate</button>
+            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!var_5 || !var_6 || !var_7 || !var_8" @click="Calculate_Next">Caculate</button>
             <button class="btn" @click="var_6='';var_7='';var_8='';var_9=''">Reset</button>
+        </div>
+    </div>
+    <div class="row">
+        <div id="screen_capture" class="mt-3 w-100">
+            <div class="col-md-12">
+                <div class="graph_div" ref="printMe">
+                    <div id="chartContainerGOAL" style="width: 100%;" :class="{'height_370':showchart}"></div>
+                    <div v-show="showchart" style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom:0" id="myplexusC"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="plan_faq">
