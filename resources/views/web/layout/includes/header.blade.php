@@ -4,10 +4,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="trade_details_result">
-                    <div class="single_trade_info">
+                    {{-- <div class="single_trade_info">
                         RELIANCE 2,576.10 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
-                    </div>
-                    <div class="single_trade_info">
+                    </div> --}}
+                    {{-- <div class="single_trade_info">
                         SBIN 540.40 <span class="down_trade"><i class="ph-caret-down-fill"></i> 0.05%</span>
                     </div>
                     <div class="single_trade_info">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="single_trade_info">
                         HDFC BANK 1425.25 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
