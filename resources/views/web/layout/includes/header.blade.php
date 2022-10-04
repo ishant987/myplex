@@ -95,7 +95,7 @@
                                  <a class="nav-link" href="/fund-watch">Fund Watch</a>
                                 <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>
-                                <a class="nav-link" href="/about">Company</a>
+                                {{-- <a class="nav-link" href="/about">Company</a> --}}
                                 <a class="cta_header_link" href="#">Ask Your Experts</a>
                             </div>
                         </div>

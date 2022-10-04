@@ -70,8 +70,8 @@
                             <div class="datatable_ll main_trer">
                                 <div class="table-responsive">
 
-                                    <table class="table table-striped" style="width:100%" role="grid" >
-                                        <thead class="tb-head">
+                                    <table id="example" class="table table-striped" style="width:100%" role="grid" >
+                                        <thead class="">
                                             <tr role="row">
                                                 <th class="top_th" colspan="4" rowspan="1">&nbsp;</th>
                                                 <th class="top_th with_border text-center" colspan="4" rowspan="1"> Equity</th>

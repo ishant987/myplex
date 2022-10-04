@@ -27,7 +27,7 @@
                         <div class="monthly_ranking_table">
                             <div class="datatable_ll main_trer">
                                 <div class="table-responsive">
-                                    <CustomTable id="fund-portfolio" :columns="columns" :rows="portfolio" default_sort_key="script_name" :order_ascending="true" tabindex="1"></CustomTable>
+                                    <CustomTable  :id="'example'" :columns="columns" :rows="portfolio" default_sort_key="script_name" :order_ascending="true" tabindex="1"></CustomTable>
                                     <div class="table-total text-right" v-if="totalAmount">
                                         <p>Total Amount (Rs. in lacs) <span class="total-amount">{{totalAmount}}/-</span></p>
                                     </div>
