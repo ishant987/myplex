@@ -12,6 +12,7 @@ return [
 
     'setting_dir_name' => 'setting',
     'media_dir_name' => 'media',
+    'blog_dir_name' => 'media',
     'user_dir_name' => 'user',
     'pdf_dir_name' => 'pdf',
     'raw_dir_name' => 'raw',
