@@ -80,7 +80,7 @@
                                         <li><a class="dropdown-item" href="/weekly-snapshot">Weekly Snapshot</a></li>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
+                                <li class="nav-item dropdown d-none">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Paathshaala
                                     </a>
