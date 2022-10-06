@@ -71,8 +71,6 @@ class BlogController extends BaseController
           $published_time = $curTime->format("Y-m-d H:i:s");
           $params['published_by'] = $isActivated;
           $params['published_date'] = !is_null($isActivated) ? $published_time : null;
-          $params['image_thumb'] = "header";
-          $params['image_banner'] = "header";
           $params['created_by'] = Auth::guard('admin')->user()['first_name'];
           $params['heading'] = SELF::cleanUrl($params['heading']);
           
