@@ -40,43 +40,8 @@
 <section class="info_monitor_sec">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-12">
-				<div class="info_monitor_inner">
-					<div class="info_monitor_inner_wrapper mb-3">
-						<div class="dictionary_search_area d-block d-sm-flex align-items-center">
-							<div class="dictionary_entity_row d-flex align-items-center">
-								<label>Show</label>
-								<select class="dictionary_entity_select">
-									<option>100</option>
-									<option>100</option>
-									<option>100</option>
-								</select>
-								<span>entries</span>
-							</div>
-							<div class="dictionary_search">
-								<div class="search_dictionary d-flex">
-									<input type="text" placeholder="Search" class="dictionary_search_fiel"/>
-									<button>Show All</button>
-								</div>
-							</div>
-						</div>
-						<div class="dictionary_table">
-							<div class="datatable_ll main_trer">
-								<div class="table-responsive">
-									<table id='mutualFundDictionaryTable'  class="table table-striped" style="width:100%">
-										<thead>
-											<tr>
-												<th>{{ __('web.mutualfunddictionary.col1_txt') }}</th>
-												<th>{{ __('web.mutualfunddictionary.col2_txt') }}</th>
-											</tr>
-										</thead>
-										
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="col-md-12" id="vue-app">
+					<mutual-fund-lib></mutual-fund-lib>
 			</div>
 		</div>
 	</div>
@@ -84,7 +49,7 @@
 <div class="mutual-fund-table d-none">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12">
+			<div class="col-lg-12 col-md-12 col-sm-12 search_dictionary ">
 				<table id='mutualFundDictionaryTable' class="box-shadow">
 					<thead>
 						<tr>
@@ -99,25 +64,27 @@
 </div>
 @stop
 @push('scripts')
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$('#mutualFundDictionaryTable').DataTable({
-			processing: true,
-			serverSide: true,
-			"aLengthMenu": [
-				[50, 100, 200, 500, 1000],
-				[50, 100, 200, 500, 1000]
-			],
-			"iDisplayLength": 50,
-			ajax: "{{route('web.mutualfunddictionary.list')}}",
-			columns: [{
-					data: 'title'
-				},
-				{
-					data: 'description'
-				},
-			]
-		});
+		// $('#mutualFundDictionaryTable').DataTable({
+		// 	processing: true,
+		// 	serverSide: true,
+		// 	"aLengthMenu": [
+		// 		[50, 100, 200, 500, 1000],
+		// 		[50, 100, 200, 500, 1000]
+		// 	],
+		// 	"iDisplayLength": 50,
+		// 	ajax: "{{route('web.mutualfunddictionary.list')}}",
+		// 	columns: [{
+		// 			data: 'title'
+		// 		},
+		// 		{
+		// 			data: 'description'
+		// 		},
+		// 	]
+		// });
 	});
 </script>
 @endpush

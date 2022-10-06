@@ -24,13 +24,6 @@
 @section('cur-url'){{$dataArr['full_url']}}@stop
 @endif
 @section('content')
-<div class="custom-banner no-bg know-ratios-banner">
-    <div class="container">
-        @if(isset($dataArr['custom_fields']['textarea_29']))
-        <h1 class="f-b">{!! nl2br($dataArr['custom_fields']['textarea_29']['value']) !!}</h1>
-        @endif
-    </div>
-</div>
 <section class="inner_banner_section">
         <div class="container">
             <div class="row">

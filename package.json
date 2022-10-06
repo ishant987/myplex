@@ -25,6 +25,7 @@
         "dotenv": "^16.0.2",
         "html2canvas": "^1.4.1",
         "jquery": "^3.6.0",
+        "laravel-vue-pagination": "^3.0.0",
         "moment": "^2.29.4",
         "vue": "^3.2.31",
         "vue-html2canvas": "0.0.4",
