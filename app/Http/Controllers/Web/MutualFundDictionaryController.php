@@ -84,6 +84,7 @@ class MutualFundDictionaryController extends BaseController
             "recordsTotal" => $totalRecords,
             "recordsFiltered" => $totalRecordswithFilter,
             "data" => $data_arr,
+            'text'=>$columnIndex_arr
         );
 
         echo json_encode($response);

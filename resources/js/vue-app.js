@@ -14,6 +14,7 @@ import PerformanceSnapshot from './components/PerformanceSnapshot.vue'
 import Calculators from './components/Calculators.vue'
 import CompareSchemeHome from './components/CompareSchemeHome.vue'
 import SelectionsHome from './components/SelectionsHome.vue'
+import MutualFundDirectory from './components/MutualFundDirectory.vue'
 import VueHtml2Canvas from 'vue-html2canvas';
 //global.jQuery = require('jquery');
 //var $ = global.jQuery;
@@ -25,6 +26,7 @@ const app = createApp({ })
 
 app.component('know-your-scheme', KnowYourScheme)
 app.component('fund-portfolio', FundPortfolio)
+app.component('mutual-fund-lib', MutualFundDirectory)
 app.component('fund-composition-snapshot', FundCompositionSnapshot)
 app.component('weekly-snapshot', WeeklySnapshot)
 app.component('monthly-snapshot', MonthlySnapshot)

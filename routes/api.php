@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\FrontDataController;
 use App\Http\Controllers\API\CompareSchemeController;
+use App\Http\Controllers\API\MutualFundController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,7 @@ Route::group([
 Route::group([
   'prefix' => 'v2'
 ], function () {
+    Route::get('mutual-fund-directory', [MutualFundController::class, 'getDirectory']);
     Route::get('fund-houses', [FrontDataController::class, 'getFundHouses']);
     Route::get('indices', [FrontDataController::class, 'getIndices']);
     Route::get('currencies', [FrontDataController::class, 'getCurrencies']);
