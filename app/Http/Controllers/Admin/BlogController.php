@@ -11,8 +11,9 @@ use App\Models\MediaModel;
 use Validator;
 use App\Lib\Core\Core;
 use App\Lib\Admin\App;
+use Illuminate\Database\QueryException;
 
-class BlogController extends Controller
+class BlogController extends BaseController
 {
 
      public function __construct()
@@ -103,4 +104,28 @@ class BlogController extends Controller
           $path      = $file->storeAs($upldDirName, $filename);
           return $filename;
      }
+
+     public function delete(Request $request){
+
+          
+        $loginAdminId = self::getLoggedInAdminId();
+        $commonconstants = Config('commonconstants');
+        try {
+             $checkboxArr = $request->get('checkbox');
+             if (count($checkboxArr)) {
+                  BlogModel::whereIn('id', $checkboxArr)->delete();
+            }
+        } catch (QueryException $exception) {
+            if ($loginAdminId == $commonconstants['def_super_admin_id']) {
+                return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', $exception->getMessage())->with('title', __('admin.error_ttl'))->withInput();
+            } else {
+                return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', __('message.error.delete'))->with('title', __('admin.error_ttl'));
+            }
+        }
+
+        return back()->with('alert', Config('adminconstants.alert_css.1'))->with('message', __('message.success.delete'))->with('title', __('admin.success_ttl'));
+          
+     }
+     
+     
 }
