@@ -9,6 +9,15 @@ class MutualFundController extends BaseController
 {
     public function getDirectory(Request $request){
         $searchValue=$request->get('text');
+        if($request->get('showAll')=='true'){
+            $records['data']=FundDictionary::orderBy('title', 'asc')
+            ->where('fund_dictionary.title', 'like', '%' . $searchValue . '%')
+            ->orWhere('fund_dictionary.description', 'like', '%' . $searchValue . '%')
+            ->select('fund_dictionary.*')
+            ->get();
+            $responseArr['table_data'] = $records;
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+        }
         $records = FundDictionary::orderBy('title', 'asc')
             ->where('fund_dictionary.title', 'like', '%' . $searchValue . '%')
             ->orWhere('fund_dictionary.description', 'like', '%' . $searchValue . '%')

@@ -4,7 +4,7 @@
 						<div class="dictionary_search_area d-block d-sm-flex align-items-center">
 							<div class="dictionary_entity_row d-flex align-items-center">
 								<label>Show</label>
-								<select class="dictionary_entity_select" v-model="limit">
+								<select class="dictionary_entity_select" v-model="limit" :disabled="limitDisabled">
 									<option v-for="limit in limits" :value="limit">{{limit}}</option>
 								</select>
 								<span>entries</span>
@@ -12,13 +12,14 @@
 							<div class="dictionary_search">
 								<div class="search_dictionary d-flex">
 									<input type="text" placeholder="Search" class="dictionary_search_fiel" v-model="search_text"/>
-									<button>Show All</button>
+									<button v-if="!showAll" @click="showAllData(true)">Show All</button>
+									<button v-else @click="showAllData(false)">Paginate</button>
 								</div>
 							</div>
 						</div>
-						<div class="dictionary_table">
-              <div class="mb-3">
-                <pagination class="pull-right" :data="fund_directory" @pagination-change-page="list"></pagination>
+						<div class="dictionary_table"> 
+              <div class="mb-3 pull-right"  v-if="showAll!=true">
+                <pagination  class="" :data="fund_directory" @pagination-change-page="list"></pagination>
               </div>
 							<div class="datatable_ll main_trer">
 								<div class="table-responsive">
@@ -83,6 +84,8 @@
                     search_text:'',
                     page:0,
                     data:{},
+                    showAll:false,
+                    limitDisabled:false,
                 }
       },
       methods: {
@@ -93,9 +96,15 @@
         this.page=page,
         this.getFundDirectory();
        },
+       showAllData(type){
+        this.limitDisabled=type;
+        this.showAll=type;
+        this.getFundDirectory();
+       }, 
        async getFundDirectory(){
         this.data.limit =this.limit;
         this.data.text =this.search_text;
+        this.data.showAll =this.showAll;
         if(this.data.text!=''){
           this.data.page ='';
         }else{
