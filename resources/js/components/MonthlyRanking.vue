@@ -7,7 +7,7 @@
                         <div class="info_monitor_inner_wrapper mb-3">
                             <div class="monthly_ranking_title d-block d-sm-flex align-items-center justify-content-between mb-3">
                                 <div class="monthly_ranking_text">
-                                    <h4>Monthly Ranking</h4>
+                                    <h4>Monthly Ranking page</h4>
                                     <p v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
                                 </div>
                                 <div class="monthly_ranking_share d-block d-sm-flex">

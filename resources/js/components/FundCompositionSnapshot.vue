@@ -99,16 +99,16 @@
                                             </tr> 
                                         </tbody>                            
                                         <tbody v-if="!process">                            
-                                            <tr class="odd" role="row" v-for="(composition,index) in composition_snapshot" :key="index">
-                                            <td class="sorting_1">{{ composition.fund_name }}</td>
-                                            <td >{{ composition.cash }}</td>
-                                            <td >{{ composition.sov }}</td>
-                                            <td >{{ composition.debt }}</td>
-                                            <td class="left_border">{{ composition.eq_small }}</td>
-                                            <td >{{ composition.eq_mid }}</td>
-                                            <td >{{ composition.eq_large }}</td>
-                                            <td class="right_border">{{ composition.eq_very_large }}</td>
-                                            <td >{{ composition.wt_pe }}</td>
+                                            <tr  class="odd" role="row" v-for="(composition,index) in composition_snapshot" :key="index">
+                                            <td data-label="Name of the Fund" class="sorting_1">{{ composition.fund_name }}</td>
+                                            <td data-label="Cash %" >{{ composition.cash }}</td>
+                                            <td data-label="Sov %" >{{ composition.sov }}</td>
+                                            <td data-label="Corp Debt %">{{ composition.debt }}</td>
+                                            <td data-label="Small Cap %">{{ composition.eq_small }}</td>
+                                            <td data-label="Mid Cap %" >{{ composition.eq_mid }}</td>
+                                            <td data-label="Large Cap %" >{{ composition.eq_large }}</td>
+                                            <td data-label="Very Large Cap %" >{{ composition.eq_very_large }}</td>
+                                            <td data-label="Wt . PE" >{{ composition.wt_pe }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
