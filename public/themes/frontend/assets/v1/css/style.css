@@ -35,16 +35,19 @@ h6 {
     font-family: "Roboto Condensed", sans-serif;
 }
 
-.dark_bg{
+.dark_bg {
     background-color: #313131 !important;
 }
-.color_white{
+
+.color_white {
     color: #fff !important;
 }
-.darkgreen_bg{
+
+.darkgreen_bg {
     background-color: var(--darkgreen) !important;
 }
-.green_bg{
+
+.green_bg {
     background-color: var(--green) !important;
 }
 
@@ -62,6 +65,10 @@ li {
 }
 
 a {
+    text-decoration: none;
+}
+
+a:hover {
     text-decoration: none;
 }
 
@@ -118,7 +125,8 @@ ul {
     background-color: var(--darker);
     padding: 5px
 }
-.single_trade_info{
+
+.single_trade_info {
     color: #fff
 }
 
@@ -605,9 +613,12 @@ ul {
     border: none;
     width: 100%;
     margin-top: 30px;
-    transition: ease-in all 0.3s
+    transition: ease-in all 0.3s;
+    display: block;
+    text-align: center
 }
-.compare_scheme_btn:hover{
+
+.compare_scheme_btn:hover {
     background-color: var(--darker);
     transition: ease-in all 0.3s
 }
@@ -1512,7 +1523,8 @@ ul {
 .hashtag_wrapper .single_hasgtag {
     float: left
 }
-.single_hasgtag a{
+
+.single_hasgtag a {
     color: var(--darker)
 }
 
@@ -2382,7 +2394,8 @@ ul {
 .fund_watch_left_main img {
     padding: 15px;
 }
-.fund_watch_table{
+
+.fund_watch_table {
     background: #fff;
     padding: 15px
 }
@@ -2557,7 +2570,8 @@ ul {
     align-items: center;
     font-family: var(--body-font);
 }
-.tab_snap_shot .nav-pills .nav-link img{
+
+.tab_snap_shot .nav-pills .nav-link img {
     width: 35px
 }
 
@@ -3263,34 +3277,35 @@ ul {
     margin-bottom: 15px
 }
 
-.single_other_fund p{
+.single_other_fund p {
     margin-bottom: 0;
-    display:flex;
+    display: flex;
     align-items: center
 }
 
-.single_other_fund{
+.single_other_fund {
     background-color: #e1eae5;
     padding: 15px;
     border-radius: 10px;
 }
 
-.single_other_fund p i{
+.single_other_fund p i {
     font-size: 25px;
     color: var(--green);
     margin-right: 5px
 }
 
-.single_other_fund span{
+.single_other_fund span {
     height: 30px;
     width: 30px;
     border-radius: 50px;
     background-color: var(--green);
     color: #fff;
     text-align: center;
-    line-height: 35px;    
+    line-height: 35px;
 }
-.single_other_fund span a{
+
+.single_other_fund span a {
     color: #fff
 }
 
@@ -3299,59 +3314,66 @@ ul {
 
 /*************Fund watch second**************/
 
-.fund_watch_2_table table tr td{
+.fund_watch_2_table table tr td {
     border: none;
     font-weight: 600
 }
 
-.fund_watch_title ul li{
+.fund_watch_title ul li {
     color: #fff;
     margin-left: 35px
 }
 
-.r_team_member_left.investment{
+.r_team_member_left.investment {
     background-color: var(--green)
 }
-.r_team_member_left.investment h4, .r_team_member_left.investment p{
+
+.r_team_member_left.investment h4,
+.r_team_member_left.investment p {
     color: #fff
 }
 
-.r_team_member_left{
+.r_team_member_left {
     padding: 20px;
     border-radius: 10px
 }
-.r_team_member_left h4{
+
+.r_team_member_left h4 {
     font-family: var(--heading-font);
     font-size: 30px;
     margin-bottom: 10px
 }
 
-.performance_parameter_table table tbody tr td:first-child{
+.performance_parameter_table table tbody tr td:first-child {
     background-color: var(--darkgreen);
     box-shadow: none;
     color: #fff
 }
-.fund_watch_parameter_wrapper h2{
+
+.fund_watch_parameter_wrapper h2 {
     font-family: var(--heading-font);
     font-size: 40px;
     padding: 20px;
     margin-bottom: 0
 }
 
-.parametaer_cta_section{
+.parametaer_cta_section {
     background-color: var(--darkgreen);
     padding: 80px 0;
 }
-.cta_prameter_content{
+
+.cta_prameter_content {
     background-color: var(--green);
     padding: 25px;
 }
-.cta_prameter_content p{
+
+.cta_prameter_content p {
     font-size: 15px;
     color: #fff;
     line-height: 30px
 }
-.cta_parameter_graph{
+
+.cta_parameter_graph {
     border-radius: 15px;
     overflow: hidden;
 }
@@ -3360,14 +3382,16 @@ ul {
 
 /********Fund Performance********/
 
-.fund_performance_table{
+.fund_performance_table {
     margin-top: 30px;
 }
-.fund_performance_table h4{
+
+.fund_performance_table h4 {
     font-size: 25px;
     color: var(--green);
 }
-.fund_per_heading{
+
+.fund_per_heading {
     margin-bottom: 15px
 }
 
@@ -3525,107 +3549,139 @@ ul {
 
 @media (max-width: 767px) {
     .footer_menu ul li a {
-    font-size: 14px;
-    line-height: 27px;
-}
-    .pagination a{
+        font-size: 14px;
+        line-height: 27px;
+    }
+
+    .pagination a {
         display: none
     }
-    .nav-wrapper .dropdown button{
+
+    .nav-wrapper .dropdown button {
         background-color: var(--green);
-    padding: 12px 25px;
-    color: #fff;
+        padding: 12px 25px;
+        color: #fff;
     }
-    .single_faq_calc{
+
+    .single_faq_calc {
         padding: 0
     }
-    .dictionary_search{
+
+    .dictionary_search {
         width: 100%
     }
+
     .dictionary_entity_row {
         justify-content: space-between;
         margin-bottom: 10px;
         width: 100%
     }
-    .dictionary_search_area{
+
+    .dictionary_search_area {
         padding: 10px
     }
+
     .single_scheme_dna {
-    background-color: #fff;
-    padding: 30px 20px;
-    border-radius: 10px;
-    width: 100%;
-    margin: 0;
-    text-align: center;
-    margin-bottom: 10px;
-}
-    .dot_dot_text span{
+        background-color: #fff;
+        padding: 30px 20px;
+        border-radius: 10px;
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .dot_dot_text span {
         margin-right: 0
     }
-    .return_text{
+
+    .return_text {
         top: 50px;
         transform: none;
         left: 30px
     }
-    .return_btm_text{
+
+    .return_btm_text {
         display: none
     }
-    .dot_dot_text p{
+
+    .dot_dot_text p {
         padding: 10px
     }
-    .return_box_main:before, .return_box_main:after, .dotted_border:before{
+
+    .return_box_main:before,
+    .return_box_main:after,
+    .dotted_border:before {
         content: none
     }
-    .dot_dot_text{
+
+    .dot_dot_text {
         width: 100%
     }
-    .dot_box{
-       display: none
+
+    .dot_box {
+        display: none
     }
-    .return_box_main{
+
+    .return_box_main {
         padding: 0;
         border-left: 0;
         border-bottom: 0
     }
-    .dash_border{
+
+    .dash_border {
         display: none
     }
-    .return_box{
+
+    .return_box {
         padding-left: 20px;
         padding-right: 10px
     }
-    .slider_inerr{
+
+    .slider_inerr {
         padding-bottom: 0px
     }
-   
-    .header_section nav .navbar-nav a.nav-link{
+
+    .header_section nav .navbar-nav a.nav-link {
         color: #fff !important
     }
-    .nav-wrapper{
+
+    .nav-wrapper {
         padding: 15px 0;
     }
-    .inner_banner_section{
+
+    .inner_banner_section {
         padding: 30px 0
     }
-    .compare_scheme, .abt_page_section, .interview_sec, .recent_interview{
+
+    .compare_scheme,
+    .abt_page_section,
+    .interview_sec,
+    .recent_interview {
         padding: 40px 0
     }
-    .interview_sec h4, .recent_interview h4{
+
+    .interview_sec h4,
+    .recent_interview h4 {
         font-size: 35px
     }
 
-    .range-slider-wrapper .slider{
+    .range-slider-wrapper .slider {
         width: 90%
     }
-    .sip_calc_input .cal_form_select{
+
+    .sip_calc_input .cal_form_select {
         width: 100%
     }
-    .single_other_fund{
-    margin-bottom: 10px
-}
-    .single_other_fund p{
+
+    .single_other_fund {
+        margin-bottom: 10px
+    }
+
+    .single_other_fund p {
         width: 80%
     }
+
     .monthly_ranking_share a.share_btn {
         margin-bottom: 10px
     }
@@ -3766,11 +3822,12 @@ ul {
         background-color: #2d2d2d;
         margin-top: 10px;
     }
+
     .navbar-collapse {
-    position: absolute;
-    top: 40px;
-    width: 100%;
-}
+        position: absolute;
+        top: 40px;
+        width: 100%;
+    }
 
     .header_section nav .navbar-nav a.nav-link {
         padding: 15px
@@ -3843,7 +3900,10 @@ ul {
     .must_read_blog,
     .mission_section,
     .monthly_snapshop_sec,
-    .faq_section, .page_abt_second_sec, .our_vision_sec, .info_monitor_sec {
+    .faq_section,
+    .page_abt_second_sec,
+    .our_vision_sec,
+    .info_monitor_sec {
         padding: 50px 0
     }
 
@@ -3855,11 +3915,13 @@ ul {
         padding-left: 0;
         margin-top: 30px
     }
-    .single_classification{
+
+    .single_classification {
         min-height: auto;
         padding: 20px
     }
-    .taxation_top_section_single{
+
+    .taxation_top_section_single {
         min-height: auto
     }
 
@@ -3929,10 +3991,12 @@ ul {
     .faq_inner .accordion .accordion-item .accordion-button:not(.collapsed) {
         font-size: 20px;
     }
-    .copyright_inner{
+
+    .copyright_inner {
         padding: 10px 0
     }
-    .pagination ul{
+
+    .pagination ul {
         justify-content: center;
         padding-left: 0
     }

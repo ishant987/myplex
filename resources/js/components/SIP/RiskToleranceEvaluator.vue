@@ -3,21 +3,26 @@
     <div class="s_renge risk_tolarance_evaliator">
         <div class="row">
             <template v-if="!Object.keys(calculatedValues).length">
-                <div class="row m-0 invst-fields invst-field-1 justify-content-between" v-if="!start">
-                    <div class="risk-tol-eval-common risk-tol-eval-email">
+                <div class="row m-0 invst-fields invst-field-1 justify-content-between mb-3" v-if="!start">
+                <div class="col-md-6">
+                    <div class="risk-tol-eval-common risk-tol-eval-email cal_form_select">
                         <label>Email Address</label>
-                        <input type="email" id="risk-tolerance-user-email" v-model="email" readonly placeholder="Enter Email" />
+                        <input class="form-text" type="email" id="risk-tolerance-user-email" v-model="email" readonly placeholder="Enter Email" />
                     </div>
-                    <div class="risk-tol-eval-common risk-tol-eval-name">
+                </div>
+                 <div class="col-md-6">
+                     <div class="risk-tol-eval-common risk-tol-eval-name cal_form_select">
                         <label>Enter Name</label>
-                        <input type="text" id="risk-tolerance-username" v-model="name" placeholder="Enter Name" />
+                        <input class="form-text" type="text" id="risk-tolerance-username" v-model="name" placeholder="Enter Name" />
                     </div>
+                 </div>                   
+                   
                 </div>
 
                 <div class="invst-fields-action-buttons" v-if="!start">
                     <div class="row m-0 justify-content-end">
                         <div class="action-common action-btn-1">
-                            <button id="next-step" class="btn btn-green" href="javascript:void(0);" @click="start=true">Next Step</button>
+                            <button id="next-step" class="btn btn-green reserch_discover_btn" href="javascript:void(0);" @click="start=true">Next Step</button>
                         </div>
                     </div>
                 </div>
@@ -25,7 +30,7 @@
                 <div class="risk-tol-choose-age" v-if="start">
                     <div class="risk-tol-age-wrap">
                         <div v-for="(question,index) in questions" :key="index">
-                            <div v-if="index == activeIndex" class="row align-items-center risk-tol-age-wrap-in">
+                            <div v-if="index == activeIndex" class="row align-items-center risk-tol-age-wrap-in mb-3">
                                 <div class="risk-tol-age-lft">
                                     <h5 v-html="question.q"></h5>
                                 </div>
@@ -41,11 +46,10 @@
                         <div class="invst-fields-action-buttons">
                             <div class="row m-0">
                                 <div class="action-common action-btn-1 col-md-2 ">
-                                    <button id="back" class="btn btn-dark" @click="previous">Back</button>
-                                </div>
-                                <div class="action-common action-btn-2 col-md-3">
-                                    <button :disabled="!questions[activeIndex].a" id="next" class="btn btn-green" @click="next" v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
-                                    <button :disabled="!questions[activeIndex].a || process" id="next" class="btn btn-green" @click="submitForm" v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
+                                    <button id="back" class="btn btn-dark reserch_discover_btn dark_bg color_white me-3" @click="previous">Back</button>
+                                    
+                                    <button :disabled="!questions[activeIndex].a" id="next" class="btn btn-green reserch_discover_btn" @click="next" v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
+                                    <button :disabled="!questions[activeIndex].a || process" id="next" class="btn btn-green reserch_discover_btn" @click="submitForm" v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
                                 </div>
                             </div>
                         </div>

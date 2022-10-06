@@ -1,5 +1,6 @@
 <template>
-<div class=" investing-tools perform-snapshot-tabs select2-styles mt-5">
+<div class="performance_shanpshot_page section">
+<div class=" investing-tools perform-snapshot-tabs select2-styles">
     <section class="">
         <div class="container">
             <div class="comp_schem_bdr">
@@ -201,6 +202,7 @@
             </div>
         </div>
     </section>
+</div>
 </div>
 </template>
 

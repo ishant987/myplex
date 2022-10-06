@@ -1,13 +1,12 @@
-
- <section class="trade_detais_sec">
+<section class="trade_detais_sec">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="trade_details_result">
-                    <div class="single_trade_info">
+                    {{-- <div class="single_trade_info">
                         RELIANCE 2,576.10 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
-                    </div>
-                    <div class="single_trade_info">
+                    </div> --}}
+                    {{-- <div class="single_trade_info">
                         SBIN 540.40 <span class="down_trade"><i class="ph-caret-down-fill"></i> 0.05%</span>
                     </div>
                     <div class="single_trade_info">
@@ -39,7 +38,7 @@
                     </div>
                     <div class="single_trade_info">
                         HDFC BANK 1425.25 <span class="up_trade"><i class="ph-caret-up-fill"></i> 0.05%</span>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -50,7 +49,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="navbar_section">
-                    <nav class="navbar navbar-expand-lg">
+                    <nav class="navbar navbar-expand-lg p-0">
 
                         <a class="navbar-brand" href="{{url('/')}}">
                             <img src="{{asset('themes/frontend/assets/v1/img/logo.png')}}" />
@@ -92,7 +91,7 @@
                                         <li><a class="dropdown-item" href="/mutual-fund-dictionary">Mutual Fund Dictionary</a></li>
                                     </ul>
                                 </li>
-                                 <a class="nav-link" href="/fund-watch">Fund Watch</a>
+                                <a class="nav-link" href="/fund-watch">Fund Watch</a>
                                 <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>
                                 {{-- <a class="nav-link" href="/about">Company</a> --}}
@@ -105,4 +104,3 @@
         </div>
     </div>
 </section>
-
