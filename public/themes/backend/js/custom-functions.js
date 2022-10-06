@@ -16,7 +16,7 @@ function changeStatus(id_name, id, table, status, msg_type, url = '') {
             jQuery("#msg_id").html(data['msg']);
             jQuery("#change_status" + id).replaceWith(data['content']);
         },
-        error: function() {
+        error: function(data) {
             alert(data);
             jQuery("#msg_id").html('There is error while submit');
         }

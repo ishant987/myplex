@@ -22,6 +22,16 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
     Route::get('/logout', 'AuthController@logout')->name('logout');
 
     Route::group(['middleware' => ['admin']], function () {
+
+        Route::group(['prefix'=>'blog'], function(){
+            Route::get('/','BlogController@index')->name('blog.index');
+            Route::get('/create', 'BlogController@create')->name('blog.create');
+            Route::post('/store/{id?}', 'BlogController@store')->name('blog.store');
+            Route::get('/store/{id?}', 'BlogController@edit')->name('blog.edit');
+            Route::post('/delete', 'BlogController@delete')->name('blog.delete');
+            
+        });
+        
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
