@@ -87,7 +87,7 @@
 <section class="abt_section">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-12 col-lg-6">
+            <div class="col-md-12 col-lg-5">
                 <div class="abt_img">
                     <h2 data-aos="fade-up" data-aos-duration="1000">Powerful Tools For <br>Mutual Fund Research</h2>
                     <img data-aos="fade-up" data-aos-duration="1500" src="{{asset('themes/frontend/assets/v1/img/abt-image.jpg')}}" class="img-fluid" />
@@ -100,9 +100,9 @@
                             <img src="{{asset('themes/frontend/assets/v1/img/fund-icon.png')}}" />
                         </div>
                         <div class="single_abt_content">
-                            <h4>Fund Performance</h4>
+                            <h4>Categorywise return</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                            <a href="/fund-performance">Go to Fund Performance <i class="ph-arrow-right"></i></a>
+                            <a href="/fund-performance">Go to Categorywise return <i class="ph-arrow-right"></i></a>
                         </div>
                     </div>
                     <div class="single_abt_item d-flex align-items-start mb-5" data-aos="fade-up" data-aos-duration="1500">
@@ -110,9 +110,9 @@
                             <img src="{{asset('themes/frontend/assets/v1/img/performance-icon.png')}}" />
                         </div>
                         <div class="single_abt_content">
-                            <h4>Performance Snapshot</h4>
+                            <h4>Category performance</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                            <a href="/performance-snapshot">Go to Performance Snapshot <i class="ph-arrow-right"></i></a>
+                            <a href="/performance-snapshot">Go to Category performance<i class="ph-arrow-right"></i></a>
                         </div>
                     </div>
                     <div class="single_abt_item d-flex align-items-start" data-aos="fade-up" data-aos-duration="1500">
@@ -120,9 +120,9 @@
                             <img src="{{asset('themes/frontend/assets/v1/img/ranking-icon.png')}}" />
                         </div>
                         <div class="single_abt_content">
-                            <h4>Monthly Ranking</h4>
+                            <h4>Scheme performance</h4>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                            <a href="/monthly-ranking">Go to Monthly Ranking <i class="ph-arrow-right"></i></a>
+                            <a href="/monthly-ranking">Scheme performance<i class="ph-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
