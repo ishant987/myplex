@@ -73,8 +73,6 @@ class BlogController extends BaseController
           $params['published_date'] = !is_null($isActivated) ? $published_time : null;
           $params['created_by'] = Auth::guard('admin')->user()['first_name'];
           $params['heading'] = SELF::cleanUrl($params['heading']);
-          
-          
           $params['image_thumb'] = SELF::fileUpload($request->file('image_thumb'));
           $params['image_banner'] = SELF::fileUpload($request->file('image_banner'));
 
