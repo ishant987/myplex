@@ -18,11 +18,25 @@
                                 </div>
                             </div>
                             <div class="monthly_ranking_Search_part mb-1">
-                                <select class="monthly_ranking_select"  v-model="selectedFundClassification" :disabled="loading || process">
-                                    <option value="">Select Fund Classification</option>
-                                    <option v-for="fund in fundClassifications" :value="fund">{{fund.name}}</option>
-                                </select>       
-                                <p v-if="snapshotText">Type of Fund : {{snapshotText}}</p>
+                                <multiselect 
+                                    :disabled="loading || process"
+                                    class=""
+                                    label="name" 
+                                    track-by="ft_id"
+                                    v-model="selectedFundClassification" 
+                                    tag-placeholder=""
+                                    placeholder="Select Fund Classification" 
+                                    :options="fundClassifications" 
+                                    :multiple="false" 
+                                    :taggable="false" 
+                                    selectLabel=""
+                                    :searchable="true"
+                                    :block-keys="['Tab', 'Enter', 'backspace']"
+                                    :max-height="200"
+                                    :showNoResults="true"
+                                    >
+                                </multiselect>
+                                <p class="mt-3" v-if="snapshotText">Type of Fund : {{snapshotText}}</p>
                             </div>
                             <div class="monthly_ranking_table">
                                 <div class="datatable_ll main_trer">

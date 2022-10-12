@@ -14,7 +14,7 @@ function initialState() {
         monthly_best_funds:[],
         indices:[],
         currencies:[],
-        apiURL:'https://beta.myplexus.com',
+        apiURL:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
     }
 }
 

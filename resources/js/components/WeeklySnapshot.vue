@@ -313,7 +313,6 @@ export default {
   methods: {
       async getWeeklyChangesFundType() {
         this.process = true
-        return false;
         await axios.get(this.app_url+'/api/v1/weekly-changes-fund-type')
             .then(response => {
                 this.per_changes =  response.data.data.changes_fund_type

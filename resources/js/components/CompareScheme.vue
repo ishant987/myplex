@@ -44,12 +44,13 @@
                                             <td colspan="3">
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedScheme1"
-                                                        :disabled="compare_price_process"
-                                                        aria-label="Default select example" id="scheme_one">
-                                                        <option v-for="fund in funds" :value="fund"
-                                                            :key="fund.fund_name">{{fund.fund_name}}</option>
-                                                    </select>
+                                                    <multiselect :disabled="compare_price_process" class=""
+                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme1"
+                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                                        :multiple="false" :taggable="false" selectLabel=""
+                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="300" :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td class="bg_222">
@@ -71,43 +72,49 @@
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedScheme2" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect :disabled="compare_price_process" class=""
+                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme2"
+                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                                        :multiple="false" :taggable="false" selectLabel=""
+                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="300" :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedScheme3" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect :disabled="compare_price_process" class=""
+                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme3"
+                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                                        :multiple="false" :taggable="false" selectLabel=""
+                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="300" :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select v-model="selectedScheme4" class="form-select"
-                                                        aria-label="Default select example"
-                                                        :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect :disabled="compare_price_process" class=""
+                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme4"
+                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                                        :multiple="false" :taggable="false" selectLabel=""
+                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="300" :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select v-model="selectedScheme5" class="form-select"
-                                                        aria-label="Default select example"
-                                                        :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect :disabled="compare_price_process" class=""
+                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme5"
+                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                                        :multiple="false" :taggable="false" selectLabel=""
+                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="300" :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
@@ -163,9 +170,12 @@
                                 <div class="col-lg-6 col-md-5 col-sm-12">
                                     <div id="chartContainer" style="height: 360px;"></div>
                                 </div>
-                                <div class="col-lg-6 col-md-5 col-sm-12">
+                                <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph2">
                                     <div id="dataPriceChatTwo" style="height: 360px;"></div>
                                 </div>
+                            </div>
+                            <div class="row d-none">
+
                             </div>
                             <div class="row  mt-5">
                                 <div class="col-lg-6 col-md-5 col-sm-12" v-show="show_graph3">
@@ -197,11 +207,15 @@
                                             <td colspan="3">
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund1Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund1Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
+
                                                 </div>
                                             </td>
                                             <td class="bg_222">
@@ -223,51 +237,66 @@
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund2Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund2Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund3Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund3Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund4Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund4Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund5Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund5Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" aria-label="Default select example"
-                                                        v-model="selectedFund6Ratio" :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund6Ratio" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :disabled="compare_price_process"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                         </tr>
@@ -333,12 +362,13 @@
                                             <td colspan="2">
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund1Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund1Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
@@ -365,56 +395,61 @@
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund2Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund2Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund3Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund3Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund4Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund4Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund5Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund5Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="form_select">
                                                     <label for="">Schemes</label>
-                                                    <select class="form-select" v-model="selectedFund6Composition"
-                                                        aria-label="Default select example">
-                                                        <option value="">Select</option>
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
+                                                    <multiselect class="" label="fund_name" track-by="fund_id"
+                                                        v-model="selectedFund6Composition" tag-placeholder=""
+                                                        placeholder="Select Fund" :options="funds" :multiple="false"
+                                                        :taggable="false" selectLabel="" :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                                                        :showNoResults="true">
+                                                    </multiselect>
                                                 </div>
                                             </td>
                                         </tr>
@@ -432,9 +467,12 @@
                                 </div>
                             </div>
                         </div>
-                        <p  v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_comp}}</p>
-                        <p  v-if="compositionTypeValidationError" class="text-warning mt-3 text-center w-100 mb-0">{{compositionTypeValidationError}}</p>
-                        <p  v-if="compositionValidationError" class="text-warning mt-3 text-center w-100 mb-0">{{compositionValidationError}}</p>
+                        <p v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_comp}}
+                        </p>
+                        <p v-if="compositionTypeValidationError" class="text-warning mt-3 text-center w-100 mb-0">
+                            {{compositionTypeValidationError}}</p>
+                        <p v-if="compositionValidationError" class="text-warning mt-3 text-center w-100 mb-0">
+                            {{compositionValidationError}}</p>
                         <div class="compsition-tables" v-show="show_comp">
                             <div class="row main_trer mt-5" v-if="compare_comp_script.length">
                                 <div class="col-lg-6 col-md-12" v-for="(com_data,index) in compare_comp_script">
@@ -447,8 +485,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="script in com_data.data"
-                                                :key="script.scrip_name">
+                                            <tr v-for="script in com_data.data" :key="script.scrip_name">
                                                 <td class="modal-td">{{ script.scrip_name }}</td>
                                                 <td>{{ script.content_per.toFixed(2) }}</td>
                                             </tr>
@@ -473,8 +510,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="industry in com_industry.data"
-                                                :key="industry.industry">
+                                            <tr v-for="industry in com_industry.data" :key="industry.industry">
                                                 <td class="grey">{{ industry.industry }}</td>
                                                 <td>{{ industry.industry_content_per.toFixed(2) }}</td>
                                             </tr>
@@ -482,14 +518,16 @@
                                         </tbody>
                                         <tfoot>
                                             <th>Total Of Top 10</th>
-                                            <th>{{  com_industry.top_industry_sum !=0 ? com_industry.top_industry_sum.toFixed(2) :  com_industry.top_industry_sum }}</th>
+                                            <th>{{ com_industry.top_industry_sum !=0 ?
+                                            com_industry.top_industry_sum.toFixed(2) : com_industry.top_industry_sum
+                                            }}</th>
                                         </tfoot>
                                     </table>
                                 </div>
                                 <hr :if="index%2">
                             </div>
                             <div class="row main_trer mt-5" v-if="Object.keys(compare_comp_aaum).length">
-                                <div class="col-lg-6 col-md-12" >
+                                <div class="col-lg-6 col-md-12">
                                     <table class="table table-borderless table-striped">
                                         <thead>
                                             <tr>
@@ -498,10 +536,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(ammu_data,index) in compare_comp_aaum" :key="index" >
-                                                    <td class="modal-td">{{ ammu_data.fund_name }}</td>
-                                                    <td>{{ ammu_data.corpus_entry.toFixed(2)}}</td>
-                                                </tr>
+                                            <tr v-for="(ammu_data,index) in compare_comp_aaum" :key="index">
+                                                <td class="modal-td">{{ ammu_data.fund_name }}</td>
+                                                <td>{{ ammu_data.corpus_entry.toFixed(2)}}</td>
+                                            </tr>
 
                                         </tbody>
                                     </table>
@@ -637,8 +675,8 @@ export default {
             app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
             loadingStatus: false,
             notice_text_comp: '',
-            compositionValidationError:'',
-            compositionTypeValidationError:''
+            compositionValidationError: '',
+            compositionTypeValidationError: ''
         }
     },
     methods: {
@@ -659,6 +697,7 @@ export default {
 
         },
         priceCompare() {
+            console.log(this.selectedScheme4.fund_name);
             let that = this
             this.loadingStatus = true
             this.nodata_text = '';
@@ -693,7 +732,6 @@ export default {
                 data.value1 = encodeURIComponent(this.selectedIndex1.name)
                 title1 = this.selectedIndex1.name
             }
-            console.log(data);
             if ((this.selectedComparePriceType == 'index_index' || this.selectedComparePriceType == 'scheme_index')) {
                 data.value2 = encodeURIComponent(this.selectedIndex2.name)
                 title2 = this.selectedIndex2.name
@@ -735,86 +773,65 @@ export default {
                     that.chart.options.data[0].dataPoints = []
 
                     that.chart.options.data[0].name = title1;
-                    that.chart.options.axisY[0].title = title1;
+                    // that.chart.options.axisY[0].title = title1;
 
                     graph_data[0].forEach(function (item, index) {
 
-                        that.chart.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
-                        });
+                        that.chart.options.data[0].dataPoints.push({ y: item.VALUE, label: item.DATE });
                     });
-                    that.chart.render();
-                    // chart 2 
-                    that.chart2.options.data[0].dataPoints = []
+                    that.chart.options.data[1].dataPoints = []
 
-                    that.chart2.options.data[0].name = title2;
-                    that.chart2.options.axisY[0].title = title2;
+                    that.chart.options.data[1].name = title2;
+                    // that.chart.options.axisY2.title = title2;
 
                     graph_data[1].forEach(function (item, index) {
 
-                        that.chart2.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
-                        });
+                        that.chart.options.data[1].dataPoints.push({ y: item.VALUE, label: item.DATE });
                     });
-                    that.chart2.render();
+                    that.chart.render();
                     that.show_graph = true
                     // chart 3 
-                    that.chart3.options.data[0].dataPoints = []
 
-                    that.chart3.options.data[0].name = title3;
-                    that.chart3.options.axisY[0].title = title3;
-
-                    graph_data[2].forEach(function (item, index) {
-
-                        that.chart3.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
+                    if (data.value3 != 'undefined') {
+                        that.chart2.options.data[0].name = title1;
+                        that.chart2.options.data[1].name = title3;
+                        let NewChatArray2 = [graph_data[0], graph_data[2]];
+                        NewChatArray2.forEach(function (item, index) {
+                            that.chart2.options.data[index].dataPoints = []
+                            item.forEach(function (val) {
+                                that.chart2.options.data[index].dataPoints.push({ y: val.VALUE, label: item.DATE });
+                            });
                         });
-                    });
-                    data.value3 != 'undefined' ? that.show_graph3 = true : that.show_graph3 = false
-                    that.chart3.render();
-
-                    // chart 4
-                    that.chart4.options.data[0].dataPoints = []
-                    that.chart4.options.data[0].name = title4;
-                    that.chart4.options.axisY[0].title = title4;
-
-                    graph_data[3].forEach(function (item, index) {
-                        that.chart4.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
+                        that.chart2.render();
+                        that.show_graph2 = true
+                    }
+                    if (data.value4 != 'undefined') {
+                        that.chart3.options.data[0].name = title1;
+                        that.chart3.options.data[1].name = title4;
+                        let NewChatArray3 = [graph_data[0], graph_data[3]];
+                        NewChatArray3.forEach(function (item, index) {
+                            that.chart3.options.data[index].dataPoints = []
+                            item.forEach(function (val) {
+                                that.chart3.options.data[index].dataPoints.push({ y: val.VALUE, label: item.DATE });
+                            });
                         });
-                    });
-                    that.chart4.render();
-                    data.value4 != 'undefined' ? that.show_graph4 = true : that.show_graph4 = false
-                    // chart 5
-                    that.chart5.options.data[0].dataPoints = []
-                    that.chart5.options.data[0].name = title5;
-                    that.chart5.options.axisY[0].title = title5;
-
-                    graph_data[4].forEach(function (item, index) {
-                        that.chart5.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
+                        that.chart3.render();
+                        that.show_graph3 = true
+                    }
+                    if (data.value5 != 'undefined') {
+                        that.chart4.options.data[0].name = title1;
+                        that.chart4.options.data[1].name = title4;
+                        let NewChatArray4 = [graph_data[0], graph_data[4]];
+                        NewChatArray4.forEach(function (item, index) {
+                            that.chart4.options.data[index].dataPoints = []
+                            item.forEach(function (val) {
+                                that.chart4.options.data[index].dataPoints.push({ y: val.VALUE, label: item.DATE });
+                            });
                         });
-                    });
-                    that.chart5.render();
-                    data.value5 != 'undefined' ? that.show_graph5 = true : that.show_graph5 = false
-                    // chart 6
-                    that.chart6.options.data[0].dataPoints = []
-                    that.chart6.options.data[0].name = title6;
-                    that.chart6.options.axisY[0].title = title6;
+                        that.chart4.render();
+                        that.show_graph4 = true
+                    }
 
-                    graph_data[5].forEach(function (item, index) {
-                        that.chart6.options.data[0].dataPoints.push({
-                            y: item.VALUE,
-                            label: item.DATE
-                        });
-                    });
-                    that.chart6.render();
-                    data.value6 != 'undefined' ? that.show_graph6 = true : that.show_graph6 = false
                 })
                 .catch(error => {
                     //var message = error.response.data.message || error.message
@@ -908,7 +925,7 @@ export default {
         },
         compositionCompare() {
             let that = this
-            
+
             let data = {}
             let title1 = ''
             let title2 = ''
@@ -917,16 +934,16 @@ export default {
             that.comp_scheme1_text = this.selectedFund1Composition.fund_name
             data.value2 = encodeURIComponent(this.selectedFund2Composition.fund_code)
             that.comp_scheme2_text = this.selectedFund2Composition.fund_name
-            if(data.comapre_type==''){
-                that.compositionTypeValidationError='Please select compare type'
+            if (data.comapre_type == '') {
+                that.compositionTypeValidationError = 'Please select compare type'
                 return false;
             }
-            if(data.value1=='' && data.value2==''){
-                that.compositionValidationError='Please select least 2 schems to compare'
+            if (data.value1 == '' && data.value2 == '') {
+                that.compositionValidationError = 'Please select least 2 schems to compare'
                 return false;
             }
             that.show_comp = true
-            
+
             if (this.selectedFund3Composition.fund_id) {
                 data.value3 = encodeURIComponent(this.selectedFund3Composition.fund_code)
                 that.comp_scheme3_text = this.selectedFund3Composition.fund_name
@@ -964,23 +981,23 @@ export default {
                         that.notice_text_comp = (response.data.data.notice_value_type == 1) ? title1 + ' ' + notice_text : title2 + ' ' + notice_text
                     }
 
-                        if (data.compare_type == 'top_script') {
-                            that.compare_comp_script = graph_data
-                        }
-                        if (data.compare_type == 'top_industry') {
-                            that.compare_comp_industry = graph_data
-                        }
-                        if (data.compare_type == 'aaum') {
-                            that.compare_comp_aaum = graph_data
-                        }
-                        that.compare_comp_process = false
-                        	
+                    if (data.compare_type == 'top_script') {
+                        that.compare_comp_script = graph_data
+                    }
+                    if (data.compare_type == 'top_industry') {
+                        that.compare_comp_industry = graph_data
+                    }
+                    if (data.compare_type == 'aaum') {
+                        that.compare_comp_aaum = graph_data
+                    }
+                    that.compare_comp_process = false
+
                 })
                 .catch(error => {
                     // var message = error.response.data.message || error.message
                     that.show_comp = false
                     that.notice_text_comp = 'No data Found'
-                    that.notice_text_comp = 'No data Found'
+                    that.compare_comp_process = false
                 })
                 .finally(() => {
                     that.compare_comp_process = false
@@ -1196,7 +1213,7 @@ export default {
                 type: "line",
                 name: "Revenue",
                 yValueFormatString: "##.00",
-                color: "#fff",
+                color: "#cdaa44",
                 axisYType: "secondary",
                 showInLegend: true,
                 dataPoints: []
@@ -1259,11 +1276,28 @@ export default {
 }
 
 .multiselect__content-wrapper {
-    width: auto;
+    width: 100%;
+}
+
+.multiselect__tags,
+.multiselect__single {
+    background: none !important;
+}
+
+.multiselect__single {
+    color: #adadad !important
+}
+
+.multiselect__input {
+    background: none !important;
 }
 
 .dp__input_icon_pad {
     padding-left: 35px !important;
+}
+
+.table-responsive {
+    overflow-x: visible !important;
 }
 
 .compare-btn {
