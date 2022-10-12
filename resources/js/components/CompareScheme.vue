@@ -997,7 +997,7 @@ export default {
                     // var message = error.response.data.message || error.message
                     that.show_comp = false
                     that.notice_text_comp = 'No data Found'
-                    that.notice_text_comp = 'No data Found'
+                    that.compare_comp_process = false
                 })
                 .finally(() => {
                     that.compare_comp_process = false
