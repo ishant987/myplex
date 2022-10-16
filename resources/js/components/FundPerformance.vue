@@ -644,7 +644,7 @@ export default {
             industry_modal: '',
             modalClasses: ['modal', 'fade'],
             modalClasses1: ['modal', 'fade'],
-            app_url: 'https://beta.myplexus.com'
+            app_url:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
         }
     },
     methods: {

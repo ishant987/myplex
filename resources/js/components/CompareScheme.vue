@@ -975,6 +975,12 @@ export default {
                 .then(response => {
                     that.compare_comp_process = false
                     let graph_data = that.compare_ratio_data = response.data.data.composition_data
+                    if(typeof graph_data[0].data.length ==0){
+                        that.show_comp = false
+                        that.notice_text_comp = 'No data Found'
+                        that.compare_comp_process = false
+                        return false;
+                    }
 
                     let notice_text = response.data.data.notice_text
                     if (notice_text) {
