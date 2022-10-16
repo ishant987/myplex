@@ -36,8 +36,8 @@ class PDFDataController extends BaseController
         $dataArr['type_data'] = FundType::select(['name','ft_id'])->where('ft_id', $type_id)->first();
         $dataArr['type_data'] = json_decode(json_encode($dataArr['type_data']), true);
 
-        // $response = Http::get(url('api/v1/monthly-ranking/'.$type_id));
-        $response = Http::get('https://beta.myplexus.com/api/v1/monthly-ranking/'.$type_id);
+        $response = Http::get(url('api/v1/monthly-ranking/'.$type_id));
+        // $response = Http::get('https://beta.myplexus.com/api/v1/monthly-ranking/'.$type_id);
         $dataArrRatios = $response->json();
 
         if (count($dataArrRatios['data']['monthly_ranking'])) {
