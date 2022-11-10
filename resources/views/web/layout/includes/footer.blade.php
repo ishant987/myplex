@@ -7,11 +7,14 @@
                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
 
                     <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-4">
-                        <div class="newsletter_input_group">
-                            <input type="text" placeholder="Enter Your Email" />
-                            <span><img src="{{asset('themes/frontend/assets/v1/img/newslatter_icon.png')}}" /></span>
-                        </div>
-                        <button class="subsribe_btn money_title_btn"><i class="ph-arrow-right-light"></i></button>
+                        <form action="{{ route('web.newsletter.save') }}" name="newsletterFrm" id="newsletterFrm" method="post">
+                            </form>
+                            <div class="newsletter_input_group">
+                                <input type="email" name="email" id="email" placeholder="Enter Your Email" />
+                                <span><img src="{{asset('themes/frontend/assets/v1/img/newslatter_icon.png')}}" /></span>
+                            </div>
+                            <button class="subsribe_btn money_title_btn"  ><i class="ph-arrow-right-light"></i></button>
+                        <div id="msg_id"></div>
                     </div>
 
                     <div class="footer_social">
