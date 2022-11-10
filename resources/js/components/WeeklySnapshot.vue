@@ -127,42 +127,74 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
-                                        </div>
-                                        <h4>Weekly Percentage Changes (By Category of Funds)</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
-                                        </div>
-                                        <h4>10 Best Performing Schemes for the Month</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
-                                        </div>
-                                        <h4>10 Worst Performing Schemes for The Month</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                            <div class="col-md-12">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>Weekly Percentage Changes (By Category of Funds)</h4>
+                                        </div>
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped" style="width:100%">
+                                            <thead>
+                                                
+                                                <tr>
+                                                    <th>Fund Category</th>
+                                                    <th>% Change</th>
+                                                    <th>Median</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="fund_type in per_changes" :key="fund_type.FUNDTYPE">
+                                                        <td><div class="cursor-pointer" @click="selectedFundType = fund_type.FundTypeID;">{{ fund_type.FUNDTYPE }}</div></td>
+                                                        <td>{{ fund_type.CHANGEVALUE.toFixed(2) }}</td>
+                                                        <td>{{ fund_type.MEDIANVAL.toFixed(2) }}</td>
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+            </div>
+            <div class="row">
+                            <div class="col-md-12">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>10 Best Performing Schemes for The Month</h4>
+                                        </div>
+                                    <div class="table-responsive">
+                                        <CustomTable
+                                            v-if="showTable2"
+                                            id="best-funds"
+                                            :columns="[
+                                                {name:'Scheme Name', key:'fund_name'}, 
+                                                {name:'Category', key:'name'},
+                                                {name:'Return %', key:'weekly_change',decimalplaces:2}
+                                            ]"
+                                            :rows="weekly_best_funds.filter(function(el) { return true })"
+                                            default_sort_key="fund_name"
+                                            :order_ascending="true"
+                                            tabindex="2"
+                                            ></CustomTable>
+                                    </div>
+                                </div>
+
+                            </div>
+                             <div class="col-md-6 d-none">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>10 Worst Performing Schemes for The Month</h4>
+                                        </div>
+                                    <div class="table-responsive">
+                                       
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
         </div>
     </section>
     <div class="fund-c-analysis m-t-30 custom-sort-table monthly-snap-full weekly-snapshot-blocks d-none">
@@ -226,6 +258,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
     <div >
    <div :class="modalClasses" class="fade" id="reject" role="dialog">
@@ -301,7 +334,7 @@ export default {
                 ascending: true,
                 process:false,
                 showTable1:false,
-                showTable2:false,
+                showTable2:true,
                 showModal: false,
                 modalClasses: ['modal','fade'],
                 per_changes:[],

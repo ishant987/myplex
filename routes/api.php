@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\FrontDataController;
+use App\Http\Controllers\API\SnapShotController;
 use App\Http\Controllers\API\CompareSchemeController;
 use App\Http\Controllers\API\MutualFundController;
 
@@ -82,7 +83,8 @@ Route::group([
     Route::get('weekly-changes-fund-type', [FrontDataController::class, 'getWeeklyChangesFundType']);
     Route::get('monthly-changes-fund-type', [FrontDataController::class, 'getMonthlyChangesFundType']);
     Route::get('weekly-best-funds', [FrontDataController::class, 'getWeeklyBestFunds']);
-    Route::get('monthly-best-funds', [FrontDataController::class, 'getMonthlyBestFunds']);
+    Route::get('monthly-best-funds', [SnapShotController::class, 'getMonthlyBestFunds']);
+    Route::get('monthly-bad-funds', [SnapShotController::class, 'getMonthlyBadFunds']);
     Route::get('changes-fund', [FrontDataController::class, 'getChangesFund']);
     Route::get('changes-index', [FrontDataController::class, 'getChangesIndex']);
     Route::get('changes-currency', [FrontDataController::class, 'getChangesCurrency']);

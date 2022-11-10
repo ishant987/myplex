@@ -128,36 +128,79 @@
                             </div>
                         </div>
 
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>Monthly Percentage Changes (By Category of Funds)</h4>
                                         </div>
-                                        <h4>Monthly Percentage Changes (By Category of Funds)</h4>
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped" style="width:100%" >
+                                            <thead>
+                                                
+                                                <tr>
+                                                    <th>Fund Category</th>
+                                                    <th>% Change</th>
+                                                    <th>Median</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="fund_type in per_changes" :key="fund_type.FUNDTYPE">
+                                                        <td><div class="cursor-pointer" @click="selectedFundType = fund_type.FundTypeID;">{{ fund_type.FUNDTYPE }}</div></td>
+                                                        <td>{{ fund_type.CHANGEVALUE.toFixed(2) }}</td>
+                                                        <td>{{ fund_type.MEDIANVAL.toFixed(2) }}</td>
+                                                    </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+
                             </div>
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6" v-if="monthly_best_funds.length>0">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>10 Best Performing Schemes for The Month</h4>
                                         </div>
-                                        <h4>10 Best Performing Schemes for the Month</h4>
+                                    <div class="table-responsive">
+                                        <CustomTable
+                                            id="best-funds"
+                                            :columns="[
+                                                {name:'Scheme Name', key:'fund_name'}, 
+                                                {name:'Category', key:'name'},
+                                                {name:'Return %', key:'monthly_change',decimalplaces:2}
+                                            ]"
+                                            :rows="monthly_best_funds.filter(function(el) { return true })"
+                                            default_sort_key="fund_name"
+                                            :order_ascending="true"
+                                            tabindex="2"
+                                            ></CustomTable>
                                     </div>
                                 </div>
+
                             </div>
-                            <div class="col-md-4">
-                                <div class="snapshopt_download_single">
-                                    <div class="snapshopt_download_single_inner d-block d-sm-flex align-items-center">
-                                        <div class="download_snapshot_pdf_icon">
-                                            <img :src="image_path+'/download_pdf_icon.png'" />
+                             <div class="col-md-6">
+                                <div class="main_trer monthly_snap_shot_table">
+                                    <div class="pentatech_filter_title mb-1">
+                                    <h4>10 Worst Performing Schemes for The Month</h4>
                                         </div>
-                                        <h4>10 Worst Performing Schemes for The Month</h4>
+                                    <div class="table-responsive">
+                                        <CustomTable
+                                            id="best-funds"
+                                            :columns="[
+                                                {name:'Scheme Name', key:'fund_name'}, 
+                                                {name:'Category', key:'name'},
+                                                {name:'Return %', key:'monthly_change',decimalplaces:2}
+                                            ]"
+                                            :rows="monthly_bad_funds.filter(function(el) { return true })"
+                                            default_sort_key="fund_name"
+                                            :order_ascending="true"
+                                            tabindex="2"
+                                            ></CustomTable>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -370,7 +413,7 @@ export default {
     getYear(date){
        return moment(date, 'DD/MM/YYYY').format('YYYY')
     },
-   ...mapActions('InputData', ['getSnapshotDates','getIndexChanges','getCurrencyChanges','getCommodityChanges','getMonthlyBestFunds','getFundChanges']),
+   ...mapActions('InputData', ['getSnapshotDates','getIndexChanges','getCurrencyChanges','getCommodityChanges','getMonthlyBestFunds','getFundChanges','getMonthlyBadFunds']),
   },
   watch: {
       selectedFundType(value){
@@ -381,7 +424,7 @@ export default {
       }
     },
   computed: {
-    ...mapGetters('InputData', ['loading','index_change','currency_change','commodity_change','from_date','to_date','monthly_best_funds','fund_change']),
+    ...mapGetters('InputData', ['loading','index_change','currency_change','commodity_change','from_date','to_date','monthly_best_funds','fund_change','monthly_bad_funds']),
   },
   mounted() {
     this.getSnapshotDates({type:'monthly'})
@@ -390,6 +433,7 @@ export default {
     this.getCommodityChanges({type:'monthly'})
     this.getMonthlyChangesFundType()
     this.getMonthlyBestFunds()
+    this.getMonthlyBadFunds()
   },
 }
 </script>
