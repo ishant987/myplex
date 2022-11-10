@@ -1085,6 +1085,12 @@ export default {
         let compare_price_type = that.getURLParams("compare_price_type")
         let compare_ratio_type = that.getURLParams("compare_ratio_type")
         let compare_composition_type = that.getURLParams("compare_composition_type")
+        if(compare_composition_type=='top_industry'){
+            this.currentTab = 'composition'
+        }
+        if(compare_ratio_type=='information_ratio'){
+            this.currentTab = 'ratios'
+        }
         let val1 = that.getURLParams("val1")
         let val2 = that.getURLParams("val2")
 

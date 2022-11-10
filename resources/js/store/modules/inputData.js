@@ -12,6 +12,7 @@ function initialState() {
         to_date: '',
         weekly_best_funds:[],
         monthly_best_funds:[],
+        monthly_bad_funds:[],
         indices:[],
         currencies:[],
         apiURL:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
@@ -31,6 +32,7 @@ const getters = {
     to_date: state => state.to_date,
     weekly_best_funds: state => state.weekly_best_funds,
     monthly_best_funds: state => state.monthly_best_funds,
+    monthly_bad_funds: state => state.monthly_bad_funds,
     indices: state => state.indices,
     currencies: state => state.currencies,
 }
@@ -251,9 +253,29 @@ const actions = {
     },
     async getMonthlyBestFunds({ commit, state }) {
         commit('setLoading', true)
-        await axios.get(state.apiURL+'/api/v1/monthly-best-funds')
+        await axios.get(state.apiURL+'/api/v2/monthly-best-funds')
             .then(response => {
                 commit('setMonthlyBestFunds', response.data.data.monthly_best_funds)
+            })
+            .catch(error => {
+                var message = error.response.data.message || error.message
+                this.dispatch('Alert/setAlert', {
+                    message: message,
+                    color: 'warning',
+                },
+                {
+                    root: true
+                })
+            })
+            .finally(() => {
+                commit('setLoading', false)
+            })
+    },
+    async getMonthlyBadFunds({ commit, state }) {
+        commit('setLoading', true)
+        await axios.get(state.apiURL+'/api/v2/monthly-bad-funds')
+            .then(response => {
+                commit('setMonthlyBadFunds', response.data.data.monthly_bad_funds)
             })
             .catch(error => {
                 var message = error.response.data.message || error.message
@@ -308,6 +330,9 @@ const mutations = {
     },
     setMonthlyBestFunds(state, monthly_best_funds) {
         state.monthly_best_funds = monthly_best_funds
+    },
+    setMonthlyBadFunds(state, monthly_bad_funds) {
+        state.monthly_bad_funds = monthly_bad_funds
     },
     setIndices(state, indices) {
         state.indices = indices

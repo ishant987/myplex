@@ -180,7 +180,75 @@ $('.recent_interview_slider').slick({
 //   $('#example').DataTable({searching: false, paging: false, info: false});
 // });
 
-
+$('.her_banner_left_slide').slick({
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplaySpeed: 5000,
+  arrows: true,
+  prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+  nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
+  dots: false,
+  autoplay: true,
+  responsive: [
+      {
+          breakpoint: 1024,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+          }
+  },
+      {
+          breakpoint: 600,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  },
+      {
+          breakpoint: 480,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  }
+]
+});
+$('.testimonial_slider').slick({
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplaySpeed: 5000,
+  arrows: true,
+  prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+  nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
+  dots: false,
+  autoplay: true,
+  fade:true,
+  responsive: [
+      {
+          breakpoint: 1024,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+          }
+  },
+      {
+          breakpoint: 600,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  },
+      {
+          breakpoint: 480,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  }
+]
+});
 
 
 /*--- range slider ---------*/

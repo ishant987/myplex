@@ -18,8 +18,8 @@ font-family: 'Roboto Condensed', sans-serif; */
 :root {
     --darker: #222222;
     --lightgreen: #46ca77;
-    --green: #31aa66;
-    --darkgreen: #2e6446;
+    --green: #46ca77;
+    --darkgreen: #00665e;
     --darkblue: #083964;
     --golden: #cdaa44;
     --body-font: "bodyfont", sans-serif;
@@ -220,6 +220,57 @@ ul {
     max-height: 500px;
 }
 
+.single_slider_for {
+    position: relative
+}
+
+.left_slider_sec {
+    background-image: url(../img/left_hero_slider_bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 500px;
+    padding: 100px 150px 100px 50px
+}
+
+.left_slider_sec h4 {
+    color: #fff;
+    font-family: var(--heading-font);
+    font-size: 30px
+}
+
+.single_slider_nav p {
+    color: #fff;
+    font-size: 16px
+}
+
+.her_banner_left_slide .slide-arrow {
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    line-height: 37px;
+    border: none;
+    border-radius: 50px;
+    font-size: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.her_banner_left_slide .slide-arrow:hover {
+    background-color: #fff;
+    color: #000
+}
+
+.her_banner_left_slide .prev-arrow {
+    right: -60px;
+    top: 50px
+}
+
+.her_banner_left_slide .next-arrow {
+    right: -60px;
+    top: 100px;
+}
+
+
 .single_slider_nav img {
     height: 500px;
     object-fit: cover;
@@ -229,14 +280,16 @@ ul {
 .slider_caption {
     position: absolute;
     top: 50%;
+    width: 40%;
+    z-index: 99;
     left: 7%;
-    width: 60%;
-    transform: translate(-0%, -50%)
+    transform: translate(0%, -50%)
 }
 
 .single_slider_for img {
     height: 500px;
-    width: 100%
+    width: 100%;
+    object-fit: cover
 }
 
 .slider_caption h2 {
@@ -256,7 +309,7 @@ ul {
     top: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(32, 87, 56, 0.85) 0%, rgba(255, 255, 255, 0) 174.29%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(255, 255, 255, 0) 174.29%);
 }
 
 .single_slider_seen img {
@@ -274,10 +327,17 @@ ul {
 }
 
 .latest_inner_sec {
-    background-color: #c6f6ca;
+    background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    position: relative
+    position: relative;
+    box-shadow: 3px 12px 34px rgb(0 0 0 / 5%);
+}
+
+.latest_inner_sec_title {
+    font-size: 20px;
+    font-family: var(--heading-font);
+    margin-bottom: 10px
 }
 
 .latest_inner_sec .fund_ballon {
@@ -286,16 +346,29 @@ ul {
     bottom: 0
 }
 
-
+.single_rserach {
+    background-color: #00665e;
+    border-radius: 15px;
+    padding: 15px
+}
 
 .latest_header {
-    background-color: #adf0bd;
-    color: var(--green);
+    background-color: #0d6e66;
+    color: #fff;
     padding: 10px;
-    font-size: 18px;
+    font-size: 16px;
     border-radius: 7px;
     margin-bottom: 10px;
-    border: 2px solid #ccfad0
+    font-weight: 300
+}
+
+.single_rserach h2 {
+    font-size: 24px;
+    font-family: var(--heading-font);
+    color: #fff;
+    margin-bottom: 0;
+    padding: 10px;
+    letter-spacing: 0.5px
 }
 
 .tag_latest h4 {
@@ -425,29 +498,29 @@ ul {
 /****About Section Start************/
 .abt_section {
     background-color: #fbfbfb;
-    padding: 60px 0
-}
-
-.abt_icon {
-    height: 115px;
-    width: 115px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 15px 22px 22px rgb(0 0 0 / 7%);
-    padding: 20px;
-    margin-right: 35px;
-    border: 1px solid #dfdfdf;
-    display: flex;
-    align-items: center;
-    justify-content: center
 }
 
 .abt_icon img {
-    width: 100%
+    width: 70px;
+    margin-right: 20px
 }
 
-.single_abt_content h4 {
-    font-size: 28px;
+.abt_icon {
+    margin-right: 35px;
+    margin-bottom: 20px
+}
+
+.single_abt_item {
+    background-color: #fff;
+    padding: 30px;
+    border: 2px solid #e4e4e4;
+    border-radius: 10px
+}
+
+
+.single_abt_content h4,
+.abt_icon h4 {
+    font-size: 25px;
     color: var(--darkgreen);
     font-family: var(--heading-font);
     margin-bottom: 5px
@@ -479,7 +552,7 @@ ul {
 
 .single_abt_content p {
     font-size: 16px;
-    margin-bottom: 5px
+    margin-bottom: 10px
 }
 
 .abt_content {
@@ -506,10 +579,99 @@ ul {
     margin-bottom: 30px
 }
 
+.single_team_img {
+    height: 300px;
+    width: 100%;
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 15px
+}
+
+.single_team_img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover
+}
+
+.single_team_wrapper ul {
+    position: absolute;
+    top: 10px;
+    right: 10px
+}
+
+.single_team_wrapper {
+    position: relative
+}
+
+.single_team {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 7px;
+    margin: 0px 20px
+}
+
+.single_team_wrapper ul li {
+    height: 35px;
+    width: 35px;
+    background-color: var(--lightgreen);
+    border-radius: 50px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.single_team_wrapper ul li a {
+    color: #fff;
+    font-size: 20px
+}
+
+.single_team_content h4 {
+    font-size: 24px;
+    color: var(--darkgreen);
+    font-family: var(--heading-font)
+}
 
 /**********Compare Section Start**************/
-.compare_section {
-    padding: 60px 0
+
+.single_right_compare {
+    background-color: #f4f4f4;
+    border-radius: 15px;
+    padding: 20px;
+    border: 2px solid transparent;
+    transition: ease-in all 0.3s
+}
+
+.single_right_compare:hover {
+    background-color: #fff;
+    border-color: var(--green);
+    transition: ease-in all 0.3s
+}
+
+.righ_compare_content a {
+    font-size: 18px;
+    font-family: var(--heading);
+    color: var(--green);
+    font-weight: 600;
+    position: relative
+}
+
+.righ_compare_content a::before {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: var(--green);
+}
+
+.righ_compare_content p {
+    font-weight: 500;
+    margin-bottom: 7px
+}
+
+.righ_compare_content h4 {
+    color: #205738;
 }
 
 .compare_titile h2 {
@@ -629,35 +791,21 @@ ul {
 }
 
 .compare_left_sction {
-    margin-right: 50px;
     position: relative
 }
 
-.compare_left_sction::before {
-    content: '';
-    height: 85%;
-    width: 85%;
-    position: absolute;
-    top: 50%;
-    left: -50px;
-    background-color: #ebebeb;
-    border-radius: 30px;
-    transform: translate(10px, -50%);
-    z-index: -1;
+
+.nfo_monitor_home_section {
+    background-color: #fbfbfb !important
 }
 
-.compare_left_sction::after {
-    content: '';
-    height: 80%;
-    width: 80%;
-    position: absolute;
-    top: 50%;
-    left: -80px;
-    background-color: #ebebeb;
-    border-radius: 30px;
-    transform: translate(10px, -50%);
-    z-index: -1;
-    opacity: 0.3
+.nfo_monitor_home_section .money_seriously_title h4,
+.nfo_monitor_home_section .money_seriously_title p {
+    color: #000
+}
+
+.nfo_monitor_home_section .money_seriously_title h4 {
+    border-color: #ccc
 }
 
 /************Money Serious Section*****************/
@@ -667,18 +815,23 @@ ul {
 }
 
 .money_seriously_section {
-    background-color: var(--darkgreen);
-    padding: 80px 0
+    background-color: #00665e;
 }
 
 .money_seriously_title h4 {
     font-size: 50px;
     color: #fff;
     font-family: var(--heading-font);
+    margin-right: 40px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    padding-right: 80px;
+    line-height: 50px;
+    width: 25%
 }
 
 .money_seriously_title p {
     color: #fff;
+    width: 75%
 }
 
 .money_title_btn {
@@ -697,40 +850,210 @@ ul {
     color: #fff
 }
 
-.reserch_discover_btn:hover {}
+
 
 .money_right_section {
-    padding: 60px 60px 60px 90px
+    padding: 50px 20px 20px 20px
 }
 
 .money_right_section h4 {
-    font-size: 40px;
+    font-size: 30px;
     color: #fff;
     font-family: var(--heading-font);
 }
 
 .money_right_section p {
-    color: #fff
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 10px
 }
 
 .money_right_section a {
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: underline;
 }
 
 .money_left_sec {
-    margin-right: -85px;
+    margin: 0px auto;
+    margin-bottom: -30px;
     z-index: 9;
     position: relative;
-    border: 9px solid var(--darkgreen);
     border-radius: 25px;
     overflow: hidden;
+    width: 95%
+}
+
+
+
+
+
+/**********************Fund expert man*********************/
+
+.fund_expert_section {
+    position: relative;
+    background: url(../img/fund_expert_bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fund_expert_man {
+    position: absolute;
+    right: 0;
+    bottom: 0
+}
+
+.fund_man_expert_home h2 {
+    font-size: 50px;
+    color: #fff;
+    font-family: var(--heading-font);
+}
+
+.fund_man_expert_home h4 {
+    color: #fff;
+    font-size: 30px;
+    font-family: var(--heading-font);
+}
+
+.fund_man_expert_home p {
+    color: #fff
+}
+
+
+
+
+
+
+/********Testimonial Section jome********************/
+
+.user_img_group {
+    height: 70px;
+    width: 70px;
+    border-radius: 50px;
+    overflow: hidden;
+
+}
+
+.user_img_group img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.single_testimonila_slide {
+    background-color: #002f2b;
+    padding: 50px;
+    border-radius: 20px
+}
+
+.user_details_group {
+    margin-left: 25px;
+    padding-left: 25px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2)
+}
+
+.single_slider_message {
+    margin-bottom: 60px
+}
+
+.single_testimonila_slide p,
+.user_details_group p,
+.user_details_group h4 {
+    color: #fff
+}
+
+.user_details_group p {
+    margin-bottom: 0;
+    font-size: 14px
+}
+
+.user_details_group h4 {
+    font-size: 20px;
+}
+
+.single_slider_message p {
+    font-size: 22px;
+    text-align: center;
+    font-style: italic;
+    line-height: 40px
+}
+
+.single_slider_message {
+    text-align: center
+}
+
+.single_slider_message img {
+    margin-bottom: 20px;
+    margin: 0px auto
+}
+
+.testimonial_slider .slide-arrow {
+    background-color: #fff;
+    border-radius: 10px;
+    color: #000;
+    height: 44px;
+    width: 44px;
+    text-align: center;
+    line-height: 49px;
+    border: none;
+    position: absolute;
+    top: 50%;
+    font-size: 23px;
+    transform: translate(-20px, -50%);
+    z-index: 99
+}
+
+.testimonial_slider .next-arrow {
+    right: -40px;
+}
+
+.testimonial_inner {
+    position: relative
+}
+
+.testimonial_inner::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 85%;
+    width: 105%;
+    background-color: rgb(0 47 43 / 25%);
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+}
+
+.testimonial_inner::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 70%;
+    width: 110%;
+    background-color: rgb(0 47 43 / 3%);
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
 }
 
 /*********Calculator Section***************/
-.calulator_section {
-    padding: 60px 0
+
+.calculator_nav_pills li button {
+    font-size: 30px;
+    font-family: var(--heading-font);
+    background-color: transparent !important;
+    color: #000;
+    padding: 10px 30px;
+    border-bottom: 1px solid #e5e5e5 !important;
+    border-radius: 0px !important;
+}
+
+.calculator_nav_pills li:first-child {
+    border-right: 1px solid #e5e5e5
+}
+
+.calculator_nav_pills li button.active {
+    color: var(--darkgreen) !important;
+    border-bottom: 3px solid var(--darkgreen) !important;
 }
 
 .calculator_title h4 {
@@ -739,7 +1062,7 @@ ul {
 }
 
 .single_calculator {
-    width: 275px;
+    width: 24%;
     height: 245px;
     border: 2px solid #f1f1f1;
     margin: 0px 15px;
@@ -802,10 +1125,40 @@ ul {
     left: -33px;
 }
 
+
+
+.fund_watch_setion_home .money_left_sec {
+    width: 70%;
+    margin-left: 30px;
+    border-radius: 10px
+}
+
+.fund_watch_home_sec_single_img {
+    background-color: #fff;
+    border: 1px solid #f1f1f1
+}
+
 /********Research Section*************/
 .research_section {
-    padding: 100px 0;
-    background-color: var(--darkgreen);
+    background: url(../img/research_bg.jpg) #00665e;
+    background-blend-mode: color-burn;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center
+}
+
+.cta_section {
+    background: url(../img/cta_bg.jpg) #00665e;
+    background-blend-mode: color-burn;
+    background-size: cover;
+    background-repeat: no-repeat
+}
+
+.scheme_cta {
+    background: url(../img/scheme_bg.jpg) #00665e;
+    background-blend-mode: color-burn;
+    background-size: cover;
+    background-repeat: no-repeat
 }
 
 .research_titile h4 {
@@ -847,7 +1200,7 @@ ul {
 .research_icon {
     width: 125px;
     height: 125px;
-    background-color: #327850;
+    background-color: #077061;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -876,6 +1229,41 @@ ul {
     transform: translate(-50%, -50%);
 }
 
+
+
+/**************Ask the Expert Section****************/
+.single_ask_footer span {
+    display: block;
+    height: 50px;
+    width: 50px;
+    background-color: #000;
+    border-radius: 50px;
+    margin-right: 15px
+}
+
+.single_ask_footer h4 {
+    margin-bottom: 0
+}
+
+.single_ask_expert {
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 15px
+}
+
+.single_ask_expert img {
+    margin-bottom: 15px
+}
+
+.single_ask_expert p {
+    line-height: 35px;
+    font-style: italic
+}
+
+.single_ask_footer h4 {
+    font-size: 20px;
+    font-family: var(--heading-font);
+}
 
 
 /**************Investor Section*************/
@@ -1030,7 +1418,6 @@ ul {
 /************Faq Section**********/
 .faq_section {
     background-color: #fbfbfb;
-    padding: 60px 0
 }
 
 .faq_inner .accordion .accordion-item {
@@ -1232,7 +1619,7 @@ ul {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5)
+    background-color: rgba(0, 0, 0, 0.2)
 }
 
 
@@ -1532,13 +1919,59 @@ ul {
     padding: 100px 0
 }
 
+/************Newsletter*************/
+.newsletter_input_group {
+    position: relative;
+    width: 100%;
+    margin-right: 20px
+}
+.newsletter_input_group span img{
+    margin-bottom: 0 !important
+}
+.neswlatter_inner{
+    position: relative
+}
 
+.newsletter_input_group input {
+    height: 50px;
+    border: 2px solid #f3f3f3;
+    border-radius: 50px;
+    width: 100%;
+    padding: 10px 50px;
+    font-size: 15px;
+}
 
+.newsletter_input_group input:focus-visible {
+    outline: none
+}
+
+.newsletter_input_group span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(20px, -50%);
+    opacity: 0.2;
+}
+
+.subsribe_btn {
+    border: none;
+    height: 40px;
+    line-height: 40px;
+    font-size: 24px;
+    position: absolute;
+    right: 26px;
+    padding: 5px 15px;
+    top: 5px
+}
 
 /**************Footer Section*********/
 
 .footer_section {
-    background-color: #205738;
+    background-color: #00665e;
+}
+
+.color_inverse {
+    background-color: #004d47
 }
 
 .copyright_inner p {
@@ -1562,17 +1995,26 @@ ul {
 }
 
 .footer_social ul li {
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border-radius: 50px;
-    background-color: var(--green);
-    line-height: 35px;
+    background-color: #004e47;
+    line-height: 45px;
     text-align: center;
     margin: 0px 5px
 }
 
 .footer_social ul li a {
-    color: #fff
+    color: #fff;
+    font-size: 20px
+}
+
+
+.footer_menu {
+    padding-left: 25px;
+    height: 100%;
+    padding-top: 100px;
+    padding-bottom: 100px
 }
 
 .footer_menu h4 {
@@ -1584,7 +2026,7 @@ ul {
 
 .footer_menu ul li a {
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 35px;
     transition: ease-in all 0.3s
 }
@@ -1679,6 +2121,11 @@ ul {
     background-color: #f0f0f0;
     z-index: -2;
     border-radius: 5px;
+}
+
+.monthly_snap_shot_table thead tr th {
+    background-color: var(--darker) !important;
+    color: #fff
 }
 
 .snopshot_changes_box_header.index_changes_header::before {
@@ -1807,7 +2254,8 @@ ul {
     margin-bottom: 0;
     font-family: var(--body-font);
     text-transform: uppercase;
-    font-size: 25px
+    font-size: 30px;
+    font-weight: 600
 }
 
 .single_pentatect_item_wrapper {
@@ -1915,7 +2363,7 @@ ul {
 }
 
 .finel_img img {
-    width: 50%;
+    width: 65%;
     margin: 0px auto
 }
 
@@ -2012,6 +2460,7 @@ ul {
 
 .founder_about .page_abt_inner h5 {
     margin-bottom: 10px;
+    font-family: var(--heading-font)
 }
 
 .interview_sec h4,
@@ -2034,6 +2483,7 @@ ul {
     border-bottom: 1px solid rgb(0 0 0 / 20%);
     margin-bottom: 10px;
     padding-bottom: 15px;
+     font-family: var(--heading-font)
 }
 
 .interview_sec h6 {
@@ -2233,8 +2683,8 @@ ul {
 
 .main_trer table tbody tr td {
     color: #000;
-    font-weight: 600;
     font-size: 14px;
+    border: none
 }
 
 .main_trer table tfoot tr th {
@@ -2310,6 +2760,17 @@ ul {
 
 .single_circle_tearm p {
     margin-bottom: 0
+}
+
+.start_sving_now_text h4 a {
+    color: #000;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.evalution_resupt_table table thead tr th {
+    background-color: var(--darkgreen) !important;
+    color: #fff
 }
 
 .single_circle_tearm_wrapper .outline {
@@ -2478,17 +2939,16 @@ ul {
 }
 
 .single_facts h4 {
-    font-size: 20px;
+    font-size: 18px;
     margin-right: 15px;
     white-space: nowrap
 }
 
 .single_facts label {
     font-size: 16px;
-    background-color: #e1eae5;
     border-radius: 10px;
     width: 100%;
-    padding: 15px 20px
+    padding: 10px 20px
 }
 
 .fund_fact_wrapper {
@@ -2500,11 +2960,25 @@ ul {
 .asset_aloocate .single_facts label {
     margin: 0px 10px;
     margin-bottom: 0;
-    text-align: center
+    text-align: center;
+    color: #fff
 }
 
-.asset_aloocate .single_facts label span {
-    color: #f00
+.asset_aloocate {
+    background-color: var(--darkgreen);
+    padding: 30px 30px 50px 30px;
+    height: 30vh
+}
+
+.asset_aloocate .single_facts label {
+    text-align: left;
+    padding: 0;
+    margin: 0
+}
+
+.asset_aloocate h4 {
+    color: #fff;
+    margin-bottom: 20px
 }
 
 .Comparable_facts .single_facts label span {
@@ -2572,7 +3046,8 @@ ul {
 }
 
 .tab_snap_shot .nav-pills .nav-link img {
-    width: 35px
+    width: 30px;
+    margin-right: 7px
 }
 
 .tab_snap_shot .nav-pills .nav-link i {
@@ -2708,6 +3183,9 @@ ul {
     text-align: center;
     border: none
 }
+.monthly_ranking_table table tbody tr td{
+    border-radius: 10px !important
+}
 
 .monthly_ranking_table table thead tr th {
     background-color: var(--green) !important
@@ -2722,7 +3200,20 @@ ul {
 .return_quality_td i {
     font-size: 23px;
     margin: 0px 2px;
-    color: #fff;
+    color: #ccc;
+}
+.performance_compare_top_table table tbody tr td{
+    padding: 12px 10px;
+}
+.performance_compare_top_table h4{
+    font-size: 20px;
+}
+.performance_compare_top_table p{
+    background-color: #eaefec;
+    padding: 12px;
+    border-radius: 7px;
+    margin-bottom: 0;
+    width: fit-content
 }
 
 .return_quality_td i.active {
@@ -3364,7 +3855,7 @@ ul {
 
 .cta_prameter_content {
     background-color: var(--green);
-    padding: 25px;
+    padding: 30px 80px 30px 30px;
 }
 
 .cta_prameter_content p {
@@ -3377,8 +3868,26 @@ ul {
     border-radius: 15px;
     overflow: hidden;
 }
+.cta_parameter_graph img{
+    width: 100%
+}
 
+.fund_watch_feedback {
+    padding: 25px;
+    border-radius: 10px;
+    background-color: var(--lightgreen);
+}
 
+.fund_watch_feedback h4 {
+    color: #fff;
+    font-family: var(--heading-font);
+    font-size: 24px;
+}
+
+.fund_watch_feedback p {
+    color: #fff;
+    margin-bottom: 0
+}
 
 /********Fund Performance********/
 
@@ -3396,11 +3905,394 @@ ul {
 }
 
 
+/*--- Contact Us -------*/
+
+.inner_contact_us {
+    padding: 100px 0;
+    background: #fbfbfb;
+}
+
+.Contact_heading h4 {
+    font-size: 50px;
+    font-family: var(--heading-font);
+}
+
+.main_contact_bg {
+    padding: 30px;
+    background: #fff;
+    border: 2px solid rgb(0 0 0 / 3%);
+    box-shadow: 9px 15px 50px rgb(0 0 0 / 2%);
+    border-radius: 20px;
+}
+
+.contact_icon {
+    padding: 10px;
+    background: #fff;
+    border: 1px solid rgb(0 0 0 / 3%);
+    box-shadow: 9px 15px 50px rgb(0 0 0 / 2%);
+    border-radius: 10px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.light_bg_contact {
+    background: rgb(237 237 237 / 24%);
+    border-radius: 12px;
+}
+
+.contact_text span {
+    display: block;
+    color: #000;
+}
+
+.contact_text {
+    padding-left: 15px;
+}
+
+.contact_text p {
+    margin-bottom: 0;
+    color: #000;
+}
+
+.contact_text a {
+    color: #000;
+}
+
+.get_in_touch_text h4 {
+    font-size: 30px;
+    font-family: var(--heading-font);
+}
+
+.contat_form .form-control {
+    background: #ededed;
+    padding: 15px 20px;
+    border-radius: 35px;
+}
+
+.contat_form textarea.form-control {
+    border-radius: 15px;
+    resize: none;
+}
+
+.box_need_help {
+    padding: 30px;
+    background: url(../img/contact_bg_tr.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.need_help h3 {
+    font-size: 30px;
+    font-family: var(--heading-font);
+    color: #fff;
+}
+
+.need_help p {
+    color: #fff;
+}
+
+.call_back_btn:hover {
+    color: #fff;
+}
+
+.contact_icon {
+    width: 80px;
+    height: 80px;
+}
+
+@media (max-width: 768px) {
+    .light_bg_contact {
+        margin-bottom: 15px;
+    }
+
+    .contat_form {
+        margin-bottom: 30px;
+    }
+
+    .Contact_heading h4 {
+        font-size: 35px;
+    }
+}
 
 
 
+/*--- Contact Us -------*/
+
+/*********************Know your Scheme******************/
+
+.single_scheme__fund {
+    padding: 15px;
+    background-color: #eaefec;
+    border-radius: 10px
+}
+
+.single_scheme__fund a {
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+    display: block
+}
+
+.single_scheme__fund #collapseExample {
+    margin-top: 10px
+}
+
+.single_comparee_fund_cont li h4 {
+    font-size: 16px;
+    font-weight: 600
+}
+
+.single_comparee_fund_cont li p {
+    font-size: 14px
+}
+
+.single_comparee_fund_cont li {
+    text-align: center;
+    width: 12.5%;
+    padding: 10px
+}
+
+/**********************************************/
+
+.colorful__heading {
+    background: linear-gradient(97deg, rgba(225, 48, 42, 1) 0%, rgba(85, 198, 47, 1) 76%, rgba(116, 165, 46, 1) 88%);
+    border-radius: 10px
+}
+
+.colorful__heading2 {
+    background: linear-gradient(270deg, rgba(225, 48, 42, 1) 29%, rgba(85, 198, 47, 1) 86%, rgba(116, 165, 46, 1) 100%);
+    border-radius: 10px
+}
+
+.colorful__heading h4,
+.colorful__heading2 h4 {
+    margin-bottom: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600
+}
+
+.risk_calculator_table table tbody tr td {
+    font-weight: 600
+}
+
+.risk_calculator_table table tbody tr:nth-child(1) td {
+    background-color: #00b050 !important;
+}
+
+.risk_calculator_table table tbody tr:nth-child(2) td {
+    background-color: #92d050 !important;
+}
+
+.risk_calculator_table table tbody tr:nth-child(3) td {
+    background-color: #ffff66 !important;
+}
+
+.risk_calculator_table table tbody tr:nth-child(4) td {
+    background-color: #ff7c80 !important;
+}
+
+.risk_calculator_table table tbody tr:nth-child(5) td {
+    background-color: #ff3300 !important;
+}
 
 
+/************Popup Style**************************/
+
+.popup_section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #e9eeeb;
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.quartile_return_pop {
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 200px 100px;
+    box-shadow: 10px 12px 64px #f1f1f1;
+    transition: ease-in all 0.3s
+}
+
+.quartile_return_pop img {
+    margin-bottom: 20px
+}
+
+.quartile_return_pop h4 {
+    font-size: 30px;
+    color: var(--darkgreen);
+    font-family: var(--heading-font)
+}
+
+.quartile_return_pop:hover{
+    background-color: #eaefec;
+    transition: ease-in all 0.3s
+}
+
+.ratio_improvement_table table thead tr th {
+    font-size: 14px;
+    font-weight: 400 !important;
+    text-align: center;
+    background-color: var(--darkgreen);
+    padding: 15px !important;
+    border-radius: 7px;
+    width: 65px !important;
+    word-break: break-word;
+    vertical-align: middle
+}
+.ratio_improvement_table table thead tr th:first-child{
+    width: 200px !important
+}
+
+.ratio_improvement_table table tbody tr td{
+    font-size: 14px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    padding: 15px 10px;
+    vertical-align: middle
+    
+}
+.ratio_improvement_table table tbody tr td.improvement_up{
+    color: var(--lightgreen)
+}
+.ratio_improvement_table table tbody tr td.improvement_down{
+    color:#d62313
+}
+
+.ratio_improvement_table table tbody tr td:first-child{
+    text-align: left !important;
+}
+
+.table__green{
+   background-color: #548235 !important;
+}
+.table__blue{
+    background-color: #305496 !important; 
+}
+.table__yellow{
+     background-color: #bf8f00 !important;
+}
+.table__gray{
+     background-color: #7b7b7b !important;
+}
+.table__orange{
+     background-color: #c65911 !important;
+}
+
+
+.color_heading_th th{
+    padding: 25px 10px !important
+}
+
+.ratio_improvement_table .table-striped > tbody > tr:nth-of-type(even) {
+    background: #eaefec !important;
+}
+
+.select_month_drop select{
+    font-size: 30px ;
+    color: #fff;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    cursor: pointer
+}
+.select_month_drop select:focus{
+    outline: none
+}
+.select_month_drop select option{
+    background: var(--darkgreen);
+    font-size: 17px;
+    padding: 15px;
+}
+
+.ration_improvement__house_table table tbody tr td a{
+    color: var(--darker);
+}
+
+.quartile_return_table table thead tr th{
+    vertical-align: middle
+}
+
+
+/****************Sk your Expert********************/
+.question_search_panel{
+    position: relative
+}
+.question_search_panel input{
+    height: 50px;
+    border-radius: 50px;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px 50px
+}
+.question_search_panel input:focus{
+    outline: none
+}
+
+.question_search_panel i{
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translate(0px, -50%);    
+}
+.question_listing_sec h4{
+    font-size: 50px;
+    font-family: var(--heading-font)
+}
+.ask_question_section{
+    background-color: #f5f5f5
+}
+.single_question p{
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 5px
+}
+.answer_count{
+    display: grid
+}
+.ask_question_form input{
+    height: 55px;
+    background-color: #f3f7f5;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: none;
+    width: 100%;
+    padding: 10px 20px
+}
+.ask_question_form textarea{
+    height: 100px;
+    background-color: #f3f7f5;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: none;
+    width: 100%;
+    padding: 10px 20px
+}
+.ask_question_form input:focus, .ask_question_form textarea:focus{
+    outline: none
+}
+.ask_question_form{
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #eff2f0
+}
 
 
 
@@ -3430,6 +4322,29 @@ ul {
 
 
 @media (max-width: 1400px) {
+
+    .single_abt_content h4,
+    .abt_icon h4 {
+        font-size: 20px
+    }
+
+    .abt_icon img {
+        width: 50px
+    }
+
+    .single_rserach h2 {
+        padding: 5px;
+        font-size: 18px
+    }
+
+    .slider_caption {
+        width: 60%
+    }
+
+    .left_slider_sec {
+        padding: 80px 80px 80px 40px;
+    }
+
     .here_section .carousel-caption {
         width: 40%;
         padding: 70px 50px
@@ -3448,7 +4363,7 @@ ul {
     }
 
     .money_right_section {
-        padding: 50px 100px
+        padding: 50px 40px
     }
 
     .money_right_section h4 {
@@ -3461,6 +4376,10 @@ ul {
 
     .compare_left_sction {
         padding-right: 10px
+    }
+
+    .money_seriously_title h4 {
+        width: 33%
     }
 }
 
@@ -3513,9 +4432,7 @@ ul {
         background-size: 45% !important
     }
 
-    .money_left_sec {
-        margin-right: 0px
-    }
+
 
     .compare_left_sction {
         margin-right: 0
@@ -3548,6 +4465,75 @@ ul {
 }
 
 @media (max-width: 767px) {
+    .subsribe_btn{
+        right: 6px
+    }
+    .footer_section {
+        padding-top: 50px
+    }
+
+    .newsletter_input_group {
+        width: 100%;
+        margin-bottom: 15px
+    }
+
+    .single_ask_expert {
+        margin-bottom: 30px
+    }
+
+    .testimonial_inner::before,
+    .testimonial_inner::after {
+        display: none
+    }
+
+    .testimonial_slider .slide-arrow {
+        display: none !important
+    }
+
+    .single_testimonila_slide {
+        padding: 30px
+    }
+
+    .single_slider_message p {
+        font-size: 15px;
+        line-height: 27px;
+    }
+
+    .fund_man_expert_home h2 {
+        font-size: 30px;
+    }
+
+    .fund_man_expert_home h4 {
+        font-size: 20px
+    }
+
+    .fund_man_expert_home {
+        text-align: center
+    }
+
+    .fund_expert_man {
+        width: 220px;
+        border-radius: 290px;
+        border: 1px solid #ccc;
+        margin: 0px auto;
+        display: block;
+        margin-bottom: 30px;
+        position: inherit
+    }
+
+    .calculator_nav_pills li button {
+        font-size: 20px;
+        padding: 10px 20px
+    }
+
+    .single_abt_content {
+        width: 100%
+    }
+
+    .single_rserach {
+        margin-bottom: 15px
+    }
+
     .footer_menu ul li a {
         font-size: 14px;
         line-height: 27px;
@@ -3837,9 +4823,6 @@ ul {
         width: 60%
     }
 
-    .money_left_sec {
-        margin-right: 0
-    }
 
     .navbar-brand img {
         width: 160px
@@ -3930,10 +4913,28 @@ ul {
     }
 
     .abt_icon {
-        height: 65px;
-        width: 65px;
+        width: 100%;
         margin-right: 10px;
-        padding: 10px;
+        padding: 7px;
+    }
+
+    .abt_icon img {
+        width: 50px
+    }
+
+    .money_seriously_title p {
+        width: 100%
+    }
+
+    .money_seriously_title h4 {
+        width: 100%;
+        border: none;
+        padding-right: 0
+    }
+
+    .single_abt_content h4,
+    .abt_icon h4 {
+        font-size: 18px
     }
 
     .single_abt_content p,
@@ -4015,6 +5016,10 @@ ul {
 
     .footer_menu {
         margin-bottom: 30px;
+        padding: 0
+    }
+    .color_inverse{
+        background-color: transparent
     }
 
     .footer_menu h4 {
