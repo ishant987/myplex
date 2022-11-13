@@ -22,6 +22,7 @@ class AskExpertController extends BaseController
   public function __construct()
   {
     $this->defDataArr = self::getDefData();
+    $this->page_path =env('PAGE_PATHS','web.pages');
   }
 
   public function askExpertData(Request $request)
@@ -76,7 +77,7 @@ class AskExpertController extends BaseController
 
       $defDataArr = array("media_folder" => Core::getUploadedURL($commonconstants['aeq_dir_name']), "user_media_folder" => $commonconstants['user_dir_name'], "askexpert_lang" => __('askexpert'), "other_topic_id" => $commonconstants['other_aet_id'], 'q_like_type' => $commonconstants['like_type']['value'][0], 'a_like_type' => $commonconstants['like_type']['value'][1], "video_type" => $commonconstants['video_type']['value']);
 
-      return view('themes.frontend.pages.ask-expert', compact('dataArr', 'defDataArr', 'dataList', 'countArr', 'topicsModel', 'expertUsersArr'));
+      return view($this->page_path.'.ask-expert', compact('dataArr', 'defDataArr', 'dataList', 'countArr', 'topicsModel', 'expertUsersArr'));
     }
     return abort(404);
   }

@@ -7,13 +7,13 @@
             <div class="tab_snap_shot">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-Return-tab" data-bs-toggle="pill" data-bs-target="#pills-Return" type="button" role="tab" aria-controls="pills-Return" aria-selected="true"><i class="ph-calendar-check"></i> Return</button>
+                        <button class="nav-link active" id="pills-Return-tab" data-bs-toggle="pill" data-bs-target="#pills-Return" type="button" role="tab" aria-controls="pills-Return" aria-selected="true" @click="currentTab='returns'"><i class="ph-calendar-check"></i> Return</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-Ratio-tab" data-bs-toggle="pill" data-bs-target="#pills-Ratio" type="button" role="tab" aria-controls="pills-Ratio" aria-selected="false"><i class="ph-calendar"></i> Ratio</button>
+                        <button class="nav-link" id="pills-Ratio-tab" data-bs-toggle="pill" data-bs-target="#pills-Ratio" type="button" role="tab" aria-controls="pills-Ratio" aria-selected="false" @click="currentTab='ratios'"><i class="ph-calendar"></i> Ratio</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-Portfolio-tab" data-bs-toggle="pill" data-bs-target="#pills-Portfolio" type="button" role="tab" aria-controls="pills-Portfolio" aria-selected="false"><i class="ph-calendar"></i> Portfolio</button>
+                        <button class="nav-link" id="pills-Portfolio-tab" data-bs-toggle="pill" data-bs-target="#pills-Portfolio" type="button" role="tab" aria-controls="pills-Portfolio" aria-selected="false" @click="currentTab='portfolios'"><i class="ph-calendar"></i> Portfolio</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -30,25 +30,23 @@
                         </div>
                         <div class="datatable_ll main_trer">
                             <div class="table-responsive" v-if="Object.keys(fund_details).length">
-                                <table id="example" class="table table-striped" style="width:100%">
+                                <table id="example" class="" style="width:100%">
                                     <tbody>
                                         <tr>
-                                            <td><b>Seheme Name:</b> {{selectedFundReturns.fund_name}}</td>
-                                            <td><b>NAV:</b> {{ fund_details.nav }}</td>
-                                            <td><b>Date:</b>{{ fund_details.nav_entry_date }}</td>
-                                            <td><b>Category:</b>{{ fund_details.no_of_schemes }}</td>
+                                            <td><b>NAV: {{ fund_details.nav }}</b></td>
+                                            <td><b>NAV Date : {{ fund_details.nav_entry_date }}</b></td>
+                                            <td><b>Category:{{ fund_details.no_of_schemes }}</b></td>
+                                            <td><b>AAUM: (LAC) {{ fund_details.aaum }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Scheme Commencement Date:</b>{{ fund_details.fund_opened }}</td>
-                                            <td><b>Fund Manager:</b> {{ fund_details.fund_man }}</td>
-                                            <td><b>Date:</b> 21/05/2022</td>
-                                            <td><b>Schemes in Category (No.):</b> {{ fund_details.no_of_schemes }}</td>
+                                            <td><b>Scheme Commencement Date:{{ fund_details.fund_opened }}</b></td>
+                                            <td><b>Fund Manager: {{ fund_details.fund_man }}</b></td>
+                                            <td><b>Schemes in Category (No.): {{ fund_details.no_of_schemes }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Benchmark:</b> {{ fund_details.benchmark }}</td>
-                                            <td><b>Value:</b> 1652</td>
-                                            <td><b>Date:</b> 21/05/2022</td>
-                                            <td><b>AAUM:</b> (LAC) {{ fund_details.aaum }}</td>
+                                            <td><b>Benchmark: {{ fund_details.benchmark }}</b></td>
+                                            <td><b>Benchmark  Value: {{ fund_details.benchmark_closing_value }}</b></td>
+                                            <td><b>Benchmark  Date: {{ fund_details.benchmark_entry_date }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -279,38 +277,36 @@
                             <div class="col-lg-5 col-md-5 col-sm-12 invst-wrap select2-styles">
                                 <div class="invst-fields mt-0">
                                     <label>Scheme name</label>
-                                    <multiselect :disabled="process" class="" label="fund_name" track-by="fund_id" v-model="selectedFundRatios" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
+                                    <multiselect :disabled="processRatios" class="" label="fund_name" track-by="fund_id" v-model="selectedFundRatios" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
                                     </multiselect>
                                 </div>
                             </div>
                         </div>
                         <div class="datatable_ll main_trer" v-if="Object.keys(fund_details_ratios).length">
                             <div class="table-responsive">
-                                <table id="example" class="table table-striped" style="width:100%">
+                                <table id="example" class="" style="width:100%">
                                     <tbody>
                                         <tr>
-                                            <td><b>Seheme Name:</b>{{selectedFundRatios.name}}</td>
-                                            <td><b>NAV:</b> {{ fund_details_ratios.nav }}</td>
-                                            <td><b>Scheme Commencement Date</b> : <span>{{ fund_details_ratios.fund_opened }}</span></td>
-                                            <td><b>Benchmark</b>: <span>{{ fund_details_ratios.benchmark }}</span></td>
+                                            <td><b>NAV: {{ fund_details_ratios.nav }}</b></td>
+                                            <td><b>NAV Date : {{ fund_details_ratios.nav_entry_date }}</b></td>
+                                            <td><b>Category:{{ fund_details_ratios.no_of_schemes }}</b></td>
+                                            <td><b>AAUM: (LAC) {{ fund_details_ratios.aaum }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td><b>NAV Date </b> : <span>{{ fund_details_ratios.nav_entry_date }}</span></td>
-                                            <td><b>Fund Manager:</b> {{ fund_details_ratios.fund_man }}</td>
-                                            <td><b>Benchmark </b> : <span>{{ fund_details_ratios.benchmark_closing_value }}</span></td>
-                                            <td><b>Schemes in Category (No.):</b> {{ fund_details_ratios.no_of_schemes }}</td>
+                                            <td><b>Scheme Commencement Date:{{ fund_details_ratios.fund_opened }}</b></td>
+                                            <td><b>Fund Manager: {{ fund_details_ratios.fund_man }}</b></td>
+                                            <td><b>Schemes in Category (No.): {{ fund_details_ratios.no_of_schemes }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Category:</b>{{ fund_details_ratios.category }}</td>
-                                            <td><b>Benchmark Date:</b> {{ fund_details_ratios.benchmark_entry_date }}</td>
-                                            <!-- <td><b>Date:</b> 21/05/2022</td> -->
-                                            <td>AAUM : <span>(LAC) {{ fund_details_ratios.aaum }}</span></td>
+                                            <td><b>Benchmark: {{ fund_details_ratios.benchmark }}</b></td>
+                                            <td><b>Benchmark  Value: {{ fund_details_ratios.benchmark_closing_value }}</b></td>
+                                            <td><b>Benchmark  Date: {{ fund_details_ratios.benchmark_entry_date }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="datatable_ll main_trer fund_performance_table">
+                        <div class="datatable_ll main_trer fund_performance_table" v-if="selectedFundRatios">
                             <div class="table-responsive">
 
                                 <table id="example" class="table table-striped" style="width:100%">
@@ -345,7 +341,7 @@
                                         <tr v-else>
                                             <td colspan="10">
                                                 <div class="text-center mt-3">
-                                                    <LoadingBar :status="process"></LoadingBar>
+                                                    <LoadingBar :status="processRatios"></LoadingBar>
                                                 </div>
                                             </td>
                                         </tr>
@@ -379,7 +375,7 @@
                                         <tr v-else>
                                             <td colspan="10">
                                                 <div class="text-center mt-3">
-                                                    <LoadingBar :status="true"></LoadingBar>
+                                                    <LoadingBar :status="processRatios"></LoadingBar>
                                                 </div>
                                             </td>
                                         </tr>
@@ -399,29 +395,29 @@
                                 <div class="col-lg-5 col-md-5 col-sm-12 invst-wrap select2-styles">
                                     <div class="invst-fields mt-0">
                                         <label>Scheme name</label>
-                                        <multiselect :disabled="process" class="" label="fund_name" track-by="fund_id" v-model="selectedFundPortFolios" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
+                                        <multiselect :disabled="processPortfolios" class="" label="fund_name" track-by="fund_id" v-model="selectedFundPortFolios" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
                                         </multiselect>
                                     </div>
                                 </div>
                             </div>
                             <div class="table-responsive" v-if="Object.keys(fund_details_portfolios).length">
-                                <table id="example" class="table table-striped" style="width:100%">
+                                <table id="example" class="" style="width:100%">
                                     <tbody>
                                         <tr>
-                                            <td>NAV : <span>{{ fund_details_portfolios.nav }}</span></td>
-                                            <td>Scheme Commencement Date : <span>{{ fund_details_portfolios.fund_opened }}</span></td>
-                                            <td>Benchmark : <span>{{ fund_details_portfolios.benchmark }}</span></td>
-                                            <td>AAUM : <span>(LAC) {{ fund_details_portfolios.aaum }}</span></td>
+                                            <td><b>NAV: {{ fund_details_portfolios.nav }}</b></td>
+                                            <td><b>NAV Date : {{ fund_details_portfolios.nav_entry_date }}</b></td>
+                                            <td><b>Category:{{ fund_details_portfolios.no_of_schemes }}</b></td>
+                                            <td><b>AAUM: (LAC) {{ fund_details_portfolios.aaum }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td>NAV Date : <span>{{ fund_details_portfolios.nav_entry_date }}</span></td>
-                                            <td>Fund Manager : <span>{{ fund_details_portfolios.fund_man }}</span></td>
-                                            <td>Benchmark Value : <span>{{ fund_details_portfolios.benchmark_closing_value }}</span></td>
+                                            <td><b>Scheme Commencement Date:{{ fund_details_portfolios.fund_opened }}</b></td>
+                                            <td><b>Fund Manager: {{ fund_details_portfolios.fund_man }}</b></td>
+                                            <td><b>Schemes in Category (No.): {{ fund_details_portfolios.no_of_schemes }}</b></td>
                                         </tr>
                                         <tr>
-                                            <td>Category : <span>{{ fund_details_portfolios.category }}</span></td>
-                                            <td>Schemes in Category (No.) : <span>{{ fund_details_portfolios.no_of_schemes }}</span></td>
-                                            <td>Benchmark Date : <span>{{ fund_details_portfolios.benchmark_entry_date }}</span></td>
+                                            <td><b>Benchmark: {{ fund_details_portfolios.benchmark }}</b></td>
+                                            <td><b>Benchmark  Value: {{ fund_details_portfolios.benchmark_closing_value }}</b></td>
+                                            <td><b>Benchmark  Date: {{ fund_details_portfolios.benchmark_entry_date }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -463,31 +459,19 @@
                                         <tr v-else>
                                             <td colspan="10">
                                                 <div class="text-center mt-3">
-                                                    <LoadingBar :status="true"></LoadingBar>
+                                                    <LoadingBar :status="processPortfolios"></LoadingBar>
                                                 </div>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="fund-perform-return-compare fund-perform-portfolio-compare" v-if="selectedFundPortFolios">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <div class="comapre-actions">
-                                            <div class="row justify-content-end">
-                                                <div class="col-md-2">
-                                                    <button class="compare_scheme_btn btn-block" @click="getTopTenScripts">Top 10 Scripts</button>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button class="compare_scheme_btn btn-block" @click="getTopIndustries(10)">Top 10 Industries</button>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button class="compare_scheme_btn btn-block" @click="getTopIndustries(100)">All Industries</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="" v-if="selectedFundPortFolios">
+                                    <div class="col-lg-12 col-md-12 col-sm-12  text-center">
+                                        <a href="javascript://" class="money_title_btn " @click="getTopTenScripts">Top 10 Scripts</a>&nbsp;&nbsp;
+                                        <a href="javascript://" class="money_title_btn " @click="getTopIndustries(10)">Top 10 Industries</a>&nbsp;&nbsp;
+                                        <a href="javascript://" class="money_title_btn " @click="getTopIndustries(100)">All Industries</a>&nbsp;&nbsp;
                                     </div>
-                                </div>
                             </div>
                         </div>
 
@@ -624,6 +608,7 @@ export default {
             return_benchmark: [],
             nav_graph_data: [],
             process: false,
+            pprocess: false,
             ratio_type: '',
             selectedNavDays: 365,
             graphProcess: false,
@@ -724,6 +709,7 @@ export default {
 
             } else if (that.currentTab == 'portfolios') {
                 that.processPortfolios = true
+                that.pprocess = true
                 var fund_code = that.selectedFundPortFolios.fund_code
             }
 
@@ -1092,6 +1078,7 @@ export default {
         async schemePortfolio() {
             let that = this
             that.portfolio_data = []
+            that.processPortfolios=true
             await axios.get(this.app_url + '/api/v1/fund-portfolio-details', {
                     params: {
                         fund_code: that.selectedFundPortFolios.fund_code
@@ -1099,6 +1086,7 @@ export default {
                 })
                 .then(response => {
                     that.portfolio_data = response.data.data.portfolio_data
+                    that.processPortfolios=false
                 })
                 .catch(error => {
                     //var message = error.response.data.message || error.message
@@ -1106,6 +1094,7 @@ export default {
                 })
                 .finally(() => {
                     // that.process = false
+                    that.processPortfolios=false
                 })
         },
         async schemePortfolioTopTenScripts() {

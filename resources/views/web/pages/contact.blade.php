@@ -1,0 +1,233 @@
+@extends('web.layout.app')
+@section('vue-js') @stop
+@section('captcha') @stop
+@if (isset($dataArr['meta_title']))
+@section('page-title'){{ $dataArr['meta_title'] }}@stop
+@else
+@section('page-title'){{ $dataArr['title'] }}@stop
+@endif
+@if (isset($dataArr['meta_key']))
+@section('meta-keywords'){{ $dataArr['meta_key'] }}@stop
+@endif
+@if (isset($dataArr['meta_descp']))
+@section('meta-description'){{ $dataArr['meta_descp'] }}@stop
+@endif
+@if (isset($dataArr['image_path']))
+@section('meta-image'){{ $dataArr['image_path'] }}@stop
+@endif
+@if ($dataArr['full_url'])
+@section('cur-url'){{ $dataArr['full_url'] }}@stop
+@endif
+@section('content')
+<section class="inner_banner_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inner_section_banner">
+                    <h4>Contact Us</h4>
+                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  
+<section class="inner_contact_us">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="Contact_heading text-center">
+                    <h4>Plexus Managment Service</h4>
+                    <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves. The vessels may be blood vessels (veins, capillaries) or lymphatic vessels.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+                <div class="main_contact_bg">
+                    <div class="row mb-4">
+                        <div class="col-lg-4">
+                            <div class="light_bg_contact">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="contact_icon">
+                                        <img src="{{asset('themes/frontend/assets/v1/img/contact_call.png')}}"/>
+                                    </div>
+                                    <div class="contact_text">
+                                        <span>INDIA - <a href="">09073977460</a></span>
+                                        <span>INDIA - <a href="">033-40646145</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="light_bg_contact">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="contact_icon">
+                                        <img src="{{asset('themes/frontend/assets/v1/img/contact_mail.png')}}"/>
+                                    </div>
+                                    <div class="contact_text">
+                                        <a href="">contact@myplexus.com</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="light_bg_contact">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="contact_icon">
+                                        <img src="{{asset('themes/frontend/assets/v1/img/contact_map.png')}}"/>
+                                    </div>
+                                    <div class="contact_text">
+                                        <p>11/5, 75C Park Street.
+                                            Kolkata-700016</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="get_in_touch_text">
+                        <h4>Get in touch with us</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="contat_form">
+                                <form action="{{ route('web.contact.save') }}" name="cntctFrm" id="cntctFrm" method="post">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="recaptcha_v3" id="recaptcha_v3" >
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-4">
+                                                <input type="text" class="form-control"  placeholder="First Name" name="first_name" id="first_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-4">
+                                                <input type="text" class="form-control"  placeholder="Last Name" name="last_name" id="last_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-4">
+                                                <input type="text" class="form-control"  placeholder="Email ID" name="email" id="email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-4">
+                                                <input type="text" class="form-control"  placeholder="Contact" name="mobile" id="mobile">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <textarea class="form-control"  placeholder="Enter message..." rows="10" name="message" id="message"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input type="submit" class="compare_scheme_btn btn-block" id="sendCntctFrm" name="sendCntctFrm" value="Submit information"/>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div id="cmsg_id"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="box_need_help">
+                                <div class="need_help">
+                                    <h3>Need any help?</h3>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+                                    <a href="" class="call_back_btn compare_scheme_btn d-inline-block w-auto">Get a call back</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>   
+
+@stop
+@push('scripts')
+<script>
+  $(function() {
+    $("#cntctFrm").validate({
+        rules: {
+          first_name: {
+            required: true
+          },
+          last_name: {
+            required: true
+          },
+          email: {
+            required: true,
+            email: true
+          },
+          mobile: {
+            required: false,
+            number: true
+          },
+          message: {
+            required: true
+          }
+        },
+        messages: {
+          first_name: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('contact.first_name_txt')) }}",
+          last_name: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('contact.last_name_txt')) }}",
+          email: {
+            required: "{{ $defDataArr['web_lang']['jq_validate']['enter_an_txt'].strtolower(__('contact.email_txt')) }}",
+            email: "{{ $defDataArr['web_lang']['jq_validate']['enter_valid_txt'].strtolower(__('contact.email_txt')) }}"
+          },
+          mobile: {
+            number: "{{ $defDataArr['web_lang']['jq_validate']['enter_valid_txt'].strtolower(__('common.mobile_txt')) }}"
+          },
+          message: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('contact.message_txt')) }}"
+        }
+      }),
+      $("#sendCntctFrm").click(function(e) {
+        e.preventDefault();
+        grecaptcha.ready(function() {
+          grecaptcha.execute("{{ Config('commonconstants.recaptcha.site_key') }}", {
+            action: 'contact_form'
+          }).then(function(token) {
+            var a = $("#cntctFrm");
+            if (1 == a.valid()) {
+              if (token) {
+                $("#recaptcha_v3").val(token);
+                var formData = {
+                  "_token": $('meta[name="csrf-token"]').attr('content'),
+                  first_name: $("#cntctFrm #first_name").val(),
+                  last_name: $("#cntctFrm #last_name").val(),
+                  email: $("#cntctFrm #email").val(),
+                  mobile: $("#cntctFrm #mobile").val(),
+                  message: $("#cntctFrm #message").val(),
+                  recaptcha_v3: $("#cntctFrm #recaptcha_v3").val()
+                };
+                $.ajax({
+                  url: "{{ route('web.contact.save') }}",
+                  type: "post",
+                  data: formData,
+                  dataType: 'json',
+                  beforeSend: function() {
+                    $('#sendCntctFrm').prop('disabled', true);
+                    $("#sendCntctFrm").text("{{ $defDataArr['web_lang']['processing_txt'] }}");
+                  },
+                  success: function(data) {
+                    console.log(data);
+                    // alert(data['msg']);
+                    $('#sendCntctFrm').prop('disabled', false);
+                    $("#sendCntctFrm").text("{{ $defDataArr['web_lang']['submit_query_txt'] }}");
+                    $("#cmsg_id").html(data['msg']);
+                    if (data['url'] != '') {
+                      window.location.href = data['url'];
+                    }
+                  },
+                  error: function(e) {
+                    console.log(e);
+                    $("#cmsg_id").html('There is error while submit');
+                  }
+                });
+              }
+            }
+          });
+        });
+      });
+  });
+</script>
+@endpush

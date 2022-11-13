@@ -95,7 +95,7 @@
                                 <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>
                                 {{-- <a class="nav-link" href="/about">Company</a> --}}
-                                <a class="cta_header_link" href="#">Ask Your Experts</a>
+                                <a class="cta_header_link" href="/ask-an-expert">Ask Your Experts</a>
                             </div>
                         </div>
                     </nav>

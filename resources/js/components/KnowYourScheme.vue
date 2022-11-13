@@ -1,166 +1,177 @@
 <template>
-<div class="compare-scemes-sec investing-tools perform-snapshot-tabs know-scheme-tabs select2-styles mt-5">
-<div class="container">
-    <ul class="nav nav-tabs border-0">
-        <li><a class="" :class="{'active show':!getURLParams('fund_classification')}" data-toggle="tab" href="#tab-by-fund-house">By Fund House</a></li>
-        <li><a class="" :class="{'active show':getURLParams('fund_classification')}" data-toggle="tab" href="#tab-by-classification">By Classification</a></li>
-    </ul>
-</div>
-<div class="tab-wrapper">
-    <div class="container">
-        <div class="tab-content">
-
-            <!-- KNOW YOUR SCHEME BY FUND HOUSE TAB START -->
-
-            <div id="tab-by-fund-house" class="tab-pane fade in " :class="{'active show':!getURLParams('fund_classification')}">
-                <form action="#" method="get">
-                    <div class="invst-wrap">
-                        <div class="row align-items-center">
-                            <div class="col-lg-9 col-md-9 col-sm-12">
-                                <multiselect 
-                                class=""
-                                label="fund_house" 
-                                track-by="fund_house"
-                                v-model="selectedFundHouse" 
-                                tag-placeholder="" 
-                                placeholder="Select Fund House" 
-                                :options="fundHouses" 
-                                :multiple="false" 
-                                :taggable="false" 
-                                selectLabel=""
-                                :searchable="true"
-                                :block-keys="['Tab', 'Enter', 'backspace']"
-                                :max-height="150"
-                                :showNoResults="true"
-                                >
-                                </multiselect>
+    <section class="compare_scheme">
+        <div class="container">
+            <div class="comp_schem_bdr">
+    <div class="tab_snap_shot">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link " :class="{'active show':!getURLParams('fund_classification')}" id="pills-weekly-tab" data-bs-toggle="pill" data-bs-target="#pills-weekly" type="button" role="tab" aria-controls="pills-weekly" aria-selected="true"><i class="ph-calendar-check"></i> By Fund House</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" :class="{'active show':getURLParams('fund_classification')}" id="pills-monthly-tab" data-bs-toggle="pill" data-bs-target="#pills-monthly" type="button" role="tab" aria-controls="pills-monthly" aria-selected="false"><i class="ph-calendar"></i> By Classification</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab" >
+                            <div class="top_table_bg_color mb-3">
+                                <div class="row align-items-end">
+                                    <div class="col-lg-10">
+                                        <div class="row align-items-end">
+                                            <div class="col-lg-8">
+                                                <div class="form_select">
+                                                    <multiselect 
+                                                        class=""
+                                                        label="fund_house" 
+                                                        track-by="fund_house"
+                                                        v-model="selectedFundHouse" 
+                                                        tag-placeholder="" 
+                                                        placeholder="Select Fund House" 
+                                                        :options="fundHouses" 
+                                                        :multiple="false" 
+                                                        :taggable="false" 
+                                                        selectLabel=""
+                                                        :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="150"
+                                                        :showNoResults="true"
+                                                        >
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="getURLParams('fund_house')">
+                            <h4 class="heading_opt mb-3">Name of the Fund</h4>
+                            <div class="single_scheme__fund mb-2" v-for="fund in funds" :key="fund.fund_id">
+                                <a class="" data-bs-toggle="collapse" @click="showFundHouse(fund.fund_id)" :href="'#collapseExample'+fund.fund_id" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    {{ fund.fund_name }}
+                                </a>
+                                <div class="collapse" :class="{'show':fh_code ==fund.fund_id}" :id="'#collapseExample'+fund.fund_id">
+                                    <div class="card card-body">
+                                        <div class="single_comparee_fund_cont d-block d-sm-flex w-100">
+                                            <li>
+                                                <h4>Fund Manager</h4>
+                                                <p>{{ fund.fund_manager }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Opening Date</h4>
+                                                <p>{{ fund.opening_date }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Type Name</h4>
+                                                <p>{{ fund.fundtype.name }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Term Name</h4>
+                                                <p>{{ fund.fundterm.term }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Face Value</h4>
+                                                <p>{{ fund.face_value }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Risk Free Return</h4>
+                                                <p>{{ fund.risk_free_return }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Indices Name</h4>
+                                                <p>{{ fund.indices_name }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Classification</h4>
+                                                <p>{{ fund.classification }}</p>
+                                            </li>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-
-                <div class="accordion-table border-w br-5" v-if="getURLParams('fund_house')">
-                    <h6>Name of the Fund</h6>
-                    <div id="accordion">
-                        <div class="card" v-for="fund in funds" :key="fund.fund_id">
-                            <div class="card-header" id="headingOne">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link" data-toggle="collapse" :data-target="'#collapse'+fund.fund_id" aria-expanded="true" aria-controls="collapseOne">{{ fund.fund_name }}</button>
-                                </h5>
+                        <div class="tab-pane fade" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab" :class="{'active show':getURLParams('fund_classification')}">
+                            <div class="top_table_bg_color mb-3">
+                                <div class="row align-items-end">
+                                    <div class="col-lg-10">
+                                        <div class="row align-items-end">
+                                            <div class="col-lg-8">
+                                                <div class="form_select">
+                                                    <multiselect 
+                                                        class=""
+                                                        label="name" 
+                                                        track-by="ft_id"
+                                                        v-model="selectedFundClassification" 
+                                                        tag-placeholder="" 
+                                                        placeholder="Select Fund Classification" 
+                                                        :options="fundClassifications" 
+                                                        :multiple="false" 
+                                                        :taggable="false" 
+                                                        selectLabel=""
+                                                        :searchable="true"
+                                                        :block-keys="['Tab', 'Enter', 'backspace']"
+                                                        :max-height="150"
+                                                        :showNoResults="true"
+                                                        >
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div :id="'collapse'+fund.fund_id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                <div class="card-body">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>FundManager</th>
-                                                <th>Opening Date</th>
-                                                <th>Type Name</th>
-                                                <th>Term Name</th>
-                                                <th>Facevalue</th>
-                                                <th>Risk Free Return</th>
-                                                <th>Indices Name</th>
-                                                <th>Classification</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{ fund.fund_manager }}</td>
-                                                <td>{{ fund.opening_date }}</td>
-                                                <td>{{ fund.fundtype.name }}</td>
-                                                <td>{{ fund.fundterm.term }}</td>
-                                                <td>{{ fund.face_value }}</td>
-                                                <td>{{ fund.risk_free_return }}</td>
-                                                <td>{{ fund.indices_name }}</td>
-                                                <td>{{ fund.classification }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div v-if="getURLParams('fund_classification')">
+                            <h4 class="heading_opt mb-3">Name of the Fund</h4>
+                            <div class="single_scheme__fund mb-2" v-for="fund in funds" :key="fund.fund_id">
+                                <a class="" data-bs-toggle="collapse" @click="showFundClass(fund.fund_id)" :href="'#collapseExample'+fund.fund_id" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    {{ fund.fund_name }}
+                                </a>
+                                <div class="collapse" :class="{'show':fc_code ==fund.fund_id}" :id="'#collapseExample'+fund.fund_id">
+                                    <div class="card card-body">
+                                        <div class="single_comparee_fund_cont d-block d-sm-flex w-100">
+                                            <li>
+                                                <h4>Fund Manager</h4>
+                                                <p>{{ fund.fund_manager }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Opening Date</h4>
+                                                <p>{{ fund.opening_date }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Type Name</h4>
+                                                <p>{{ fund.fundtype.name }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Term Name</h4>
+                                                <p>{{ fund.fundterm.term }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Face Value</h4>
+                                                <p>{{ fund.face_value }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Risk Free Return</h4>
+                                                <p>{{ fund.risk_free_return }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Indices Name</h4>
+                                                <p>{{ fund.indices_name }}</p>
+                                            </li>
+                                            <li>
+                                                <h4>Classification</h4>
+                                                <p>{{ fund.classification }}</p>
+                                            </li>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         </div>
-                </div>
-
-            </div>
-
-            <!-- KNOW YOUR SCHEME BY FUND HOUSE TAB END -->
-
-            <!-- KNOW YOUR SCHEME BY CLASSIFICATION TAB START -->
-
-            <div id="tab-by-classification" class="tab-pane fade" :class="{'active show':getURLParams('fund_classification')}">
-                    <div class="invst-wrap">
-                        <div class="row align-items-center">
-                            <div class="col-lg-9 col-md-9 col-sm-12">
-                                <multiselect 
-                                class=""
-                                label="name" 
-                                track-by="ft_id"
-                                v-model="selectedFundClassification" 
-                                tag-placeholder="" 
-                                placeholder="Select Fund Classification" 
-                                :options="fundClassifications" 
-                                :multiple="false" 
-                                :taggable="false" 
-                                selectLabel=""
-                                :searchable="true"
-                                :block-keys="['Tab', 'Enter', 'backspace']"
-                                :max-height="150"
-                                :showNoResults="true"
-                                >
-                                </multiselect>
-                            </div>
-                        </div>
                     </div>
-
-                <div class="accordion-table border-w br-5" v-if="getURLParams('fund_classification')">
-                    <h6>Name of the Fund</h6>
-                    <div id="accordion" >
-                        <div class="card" v-for="fund in funds" :key="fund.fund_id">
-                            <div class="card-header" id="headingOne">
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link" data-toggle="collapse" :data-target="'#collapse'+fund.fund_id" aria-expanded="true" aria-controls="collapseOnee">{{ fund.fund_name }}</button>
-                                </h5>
-                            </div>
-                            <div :id="'collapse'+fund.fund_id" class="collapse" aria-labelledby="headingOnee" data-parent="#accordion">
-                                <div class="card-body">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>FundManager</th>
-                                                <th>Opening Date</th>
-                                                <th>Type Name</th>
-                                                <th>Term Name</th>
-                                                <th>Facevalue</th>
-                                                <th>Risk Free Return</th>
-                                                <th>Indices Name</th>
-                                                <th>Classification</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{ fund.fund_manager }}</td>
-                                                <td>{{ fund.opening_date }}</td>
-                                                <td>{{ fund.fundtype.name }}</td>
-                                                <td>{{ fund.fundterm.term }}</td>
-                                                <td>{{ fund.face_value }}</td>
-                                                <td>{{ fund.risk_free_return }}</td>
-                                                <td>{{ fund.indices_name }}</td>
-                                                <td>{{ fund.classification }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
                 </div>
             </div>
-            <!-- KNOW YOUR SCHEME BY CLASSIFICATION TAB END -->
         </div>
-    </div>
-</div>
-</div>
+    </section>
+
 </template>
 <style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>
 <script>
@@ -189,10 +200,18 @@ export default {
                 portfolio: [],
                 totalAmount: null,
                 process:false,
+                fh_code:'',
+                fc_code:'',
             }
   },
   methods: {
    ...mapActions('InputData', ['getFundHouses','getFundClassifications','getFunds']),
+   showFundHouse(fundcode){
+    this.fh_code=fundcode;
+   },
+   showFundClass(fundcode){
+    this.fc_code=fundcode;
+   }
   },
   watch: {
     selectedFundHouse(value) {

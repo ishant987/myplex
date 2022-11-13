@@ -278,7 +278,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.thank-you', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.thank-you', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
@@ -353,7 +353,7 @@ class PageController extends BaseController
 
             $defDataArr = $this->defDataArr;
 
-            return view('themes.frontend.pages.know-your-scheme', compact('defDataArr', 'dataArr'));
+            return view($this->page_path.'.know-your-scheme', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }

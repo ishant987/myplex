@@ -477,7 +477,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     ]);
 
     Route::get('/', 'PageController@homeData')->name('home');
-    Route::post('newsletter-signup', 'PageController@storeNewsletter')->name('newsletter.save');
+    Route::post('newsletter-signup', 'NesletterController@StoreNewsLetter')->name('newsletter.save');
 
     Route::get('page/{slug?}', 'PageController@pageData')->name('page');
     Route::get('about', 'PageController@aboutData')->name('about');
@@ -517,7 +517,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('nfo-monitor-list/{year?}', 'NfoMonitorController@index')->name('nfomonitor.list');
     Route::get('nfo-monitor/{id}', 'NfoMonitorController@show')->name('nfomonitor');
-    Route::get('nfo-monitor', 'NfoMonitorController@html')->name('nfomonitor.html');
+    Route::get('nfo-monitor', 'NfoMonitorController@index')->name('nfomonitor.html');
 
     Route::get('ask-an-expert', 'AskExpertController@askExpertData')->name('ask-expert');
     Route::get('ask-an-expert/topic/{slug}', 'AskExpertController@askExpertTopicData')->name('ask-expert.topic');
@@ -553,6 +553,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::post('forgot-reset-password-process/{code}', 'AuthController@forgotResetPasswordSave')->name('forgot.reset.password.save');
     #== END:Manage by AuthController only ==#
 
+    Route::get('ask-question', 'AskExpertController@askQuestionData')->name('ask-question');
     #==Auth dependent pages ==#
     Route::group(['middleware' => ['auth']], function () {
         Route::get('myaccount', 'UserController@myAccountData')->name('myaccount');
@@ -561,7 +562,6 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::get('reset-password', 'UserController@resetPasswordData')->name('reset.password');
         Route::post('reset-password', 'UserController@resetPassword')->name('reset.password.save');
 
-        Route::get('ask-question', 'AskExpertController@askQuestionData')->name('ask-question');
         Route::post('ask-question', 'AskExpertController@askQuestionSave')->name('ask-question.save');
         Route::get('add-answer/{aeq_id}', 'AskExpertController@addAnswerData')->name('add-answer');
         Route::post('add-answer/{aeq_id}', 'AskExpertController@answerSave')->name('add-answer.save');
