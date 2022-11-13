@@ -8,7 +8,9 @@
 <script src="{{asset('themes/frontend/assets/v1/js/stock_header.js')}}"></script>
 <script src="{{asset('themes/frontend/assets/v1/js/custom.js')}}"></script>
 <script src="{{ asset('themes/assets/js/jquery.validate.min.js') }}"></script>
-<script src="{{asset('themes/frontend/assets/v1/js/newsletter.js')}}"></script>
+@if(View::hasSection('captcha'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ Config('commonconstants.recaptcha.site_key') }}"></script>
+@endif
 {{-- @if(View::hasSection('moneycontrol'))
 <script src="https://stat2.moneycontrol.com/mcjs/common/jquery-1.7.2.min.js"></script>
 <script>
@@ -20,5 +22,36 @@
 <script src=" https://stat.moneycontrol.co.in/mcjs/portfolio_plus/datepicker.js?"></script>
 <script src="https://stat.moneycontrol.co.in/mcjs/mcradar/jquery.webticker.js"></script>
 @endif --}}
-
+<script>
+$(".subsribe_btn").click(function(e) {
+    $("#msg_id").html('');
+    e.preventDefault();
+    var formData = {
+        "_token": $('meta[name="csrf-token"]').attr('content'),
+        email: $("#email").val(),
+        recaptcha_v3: $("#recaptcha_v3").val()
+    };
+    $.ajax({
+        url: $('.subsribe_btn').attr('data-url'),
+        type: "post",
+        data: formData,
+        dataType: 'json',
+        beforeSend: function() {
+            $('#sendNewsletterFrm').prop('disabled', true);
+        },
+        success: function(data) {
+            // alert(data['msg']);
+            $('#sendNewsletterFrm').prop('disabled', false);
+            $("#msg_id").removeClass('text-danger');
+            $("#msg_id").html(data['msg']);
+            $('#newsletterFrm')[0].reset();
+            return false;
+        },
+        error: function(error) {
+            $("#msg_id").addClass('text-danger');
+            $("#msg_id").html(error.responseJSON);
+        }
+    });
+});
+</script>
 @stack('scripts')

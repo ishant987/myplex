@@ -25,8 +25,8 @@
 @endif
 @section('content')
 <div class="custom-banner no-bg nfo-monitor-banner">
-	<div class="container">
-		<h1 class="f-b">{{ $dataArr['title'] }}</h1>
+<div class="container">
+			<h1 class="f-b">{{ $dataArr['title'] }}</h1>
 		@if($reqYear > 0)
 		<h3 class="f-sb text-green">{{ 'NFO From '.$reqYear }}</h1>
 		@endif

@@ -49,6 +49,7 @@ $("#sendNewsletterFrm").click(function(e) {
             $("#sendNewsletterFrm").attr('value', "{{ $defDataArr['web_lang']['submit_txt'] }}");
             $("#msg_id").html(data['msg']);
             $('#newsletterFrm')[0].reset();
+            return false;
         },
         error: function() {
             $("#msg_id").html('There is error while submit');

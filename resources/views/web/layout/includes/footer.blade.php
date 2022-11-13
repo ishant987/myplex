@@ -6,16 +6,15 @@
                     <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" alt='myplex-logo'/>
                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
 
-                    <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-4">
-                        <form action="{{ route('web.newsletter.save') }}" name="newsletterFrm" id="newsletterFrm" method="post">
-                            </form>
+                    <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-2">
+                            <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />
                             <div class="newsletter_input_group">
                                 <input type="email" name="email" id="email" placeholder="Enter Your Email" />
                                 <span><img src="{{asset('themes/frontend/assets/v1/img/newslatter_icon.png')}}" /></span>
                             </div>
-                            <button class="subsribe_btn money_title_btn"  ><i class="ph-arrow-right-light"></i></button>
-                        <div id="msg_id"></div>
-                    </div>
+                            <button type="submit" data-url="{{ route('web.newsletter.save') }}" class="subsribe_btn money_title_btn"  ><i class="ph-arrow-right-light"></i></button>
+                        </div>
+                        <div id="msg_id" class="text-danger"></div>
 
                     <div class="footer_social">
                         @if( isset( $optsDbArr['facebook'] ) || isset( $optsDbArr['twitter'] ) || isset( $optsDbArr['linkedin'] ) )
@@ -27,7 +26,7 @@
                             <li><a href="{{$optsDbArr['twitter'] }}"><i class="ph-twitter-logo-light" target="_blank"></i></a></li>
                         @endif
                         @if( isset( $optsDbArr['linkedin'] ) )
-                        <li><a href="{{$optsDbArr['linkedin']}}"><i class="ph-instagram-logo-light" target="_blank"></i></a></li>
+                        <li><a href="{{$optsDbArr['linkedin']}}"><i class="ph-linkedin-logo-light" target="_blank"></i></a></li>
                         @endif
                         </ul>
                         @endif
@@ -43,7 +42,6 @@
                                 <li><a href="/">Home Page</a></li>
                                 <li><a href="/compare-scheme">Compare Scheme</a></li>
                                 <li><a href="/calculator">Calculator</a></li>
-                                <li><a href="#">Paathshaala</a></li>
                                 <li><a href="#">Money Seriously</a></li>
                             </ul>
                         </div>
@@ -57,7 +55,7 @@
                                 <li><a href="/fund-performance">Fund Performance</a></li>
                                 <li><a href="/fund-watch">Fund Watch</a></li>
                                 <li><a href="/nfo-monitor">NFO Monitor</a></li>
-                                <li><a href="#">Know Your Scheme</a></li>
+                                <li><a href="/know-your-scheme?fund_house=">Know Your Scheme</a></li>
                             </ul>
                         </div>
                     </div>
@@ -78,7 +76,7 @@
                             <h4>Company</h4>
                             <ul>
                                 <li><a href="/about">About Us</a></li>
-                            <li><a href="#">Contact Us</a></li>                                    
+                            <li><a href="/contact">Contact Us</a></li>                                    
                             <li><a href="#">In The News</a></li>
                             <li><a href="/faq">FAQs</a></li>
                             <li><a href="/founder">Meet The Fund Man</a></li>

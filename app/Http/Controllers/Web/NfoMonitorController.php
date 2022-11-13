@@ -28,7 +28,7 @@ class NfoMonitorController extends BaseController
             $meta_descp = $dataArr['meta_descp'];
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
         }
-        return view($this->page_path.'.nof-monitor',compact('dataArr'));
+        return view($this->page_path.'.nfo.list',compact('dataArr'));
     }
     public function index(Request $request, $reqYear = 0)
     {
@@ -69,7 +69,7 @@ class NfoMonitorController extends BaseController
             $defDataArr = $this->defDataArr;
             $dateFormat = $commonconstants['d_m_y_frmt2'];
 
-            return view('themes.frontend.pages.nfo-monitor-list', compact('defDataArr', 'dataArr', 'dataListModel', 'dateFormat', 'reqYear'));
+            return view($this->page_path.'.nfo.list', compact('defDataArr', 'dataArr', 'dataListModel', 'dateFormat', 'reqYear'));
         }
         return abort(404);
     }
@@ -100,7 +100,7 @@ class NfoMonitorController extends BaseController
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
             $dateFormat = $commonconstants['dt_frmt'];
 
-            return view('themes.frontend.pages.nfo-monitor', compact('defDataArr', 'dataArr', 'dateFormat'));
+            return view($this->page_path.'.nfo.details', compact('defDataArr', 'dataArr', 'dateFormat'));
         }
         return abort(404);
     }

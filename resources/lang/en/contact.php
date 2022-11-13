@@ -24,6 +24,8 @@ return [
     'mail_sbjct' => "Contact us enquiry" . __('common.mail_sbjct_sfx'),
 
     'name_txt' => 'Name',
+    'first_name_txt' => 'First Name',
+    'last_name_txt' => 'last Name',
     'email_txt' => 'Email ID',
     'mobile_txt' => 'Phone No.',
     'message_txt' => 'Message',

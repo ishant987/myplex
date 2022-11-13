@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<link rel="icon" type="image/x-icon" href="{{asset('favicon.png')}}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="csrf-token" content="{{csrf_token()}}">
@@ -17,6 +18,7 @@
 <link href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/phosphor-icons"></script>
+@stack('style')
 <style>
     
 .live-market-data .live-market-wrap {

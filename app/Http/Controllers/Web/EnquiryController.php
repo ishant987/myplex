@@ -19,6 +19,7 @@ class EnquiryController extends BaseController
   public function __construct()
   {
     $this->defDataArr = self::getDefData();
+    $this->page_path = env('PAGE_PATHS', 'web.pages');
   }
 
   public function contactData(Request $request, $slug = false)
@@ -42,7 +43,7 @@ class EnquiryController extends BaseController
 
       $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "web_lang" => __('web')));
 
-      return view('themes.frontend.pages.contact', compact('dataArr', 'defDataArr'));
+      return view($this->page_path . '.contact', compact('dataArr', 'defDataArr'));
     }
     return abort(404);
   }
@@ -79,7 +80,8 @@ class EnquiryController extends BaseController
     // return json_encode($resArr);
     if ($response['success'] && $response['action'] == 'contact_form' && $response['score'] > $commonconstants['recaptcha']['score']) {
       $vldtrRules = [
-        'name' => 'required',
+        'first_name' => 'required',
+        'last_name' => 'required',
         'email' => 'required|email',
         'mobile' => 'nullable|numeric',
         'message' => 'required'
@@ -93,7 +95,6 @@ class EnquiryController extends BaseController
         // $resArr['msg'] = $validator->getMessageBag();
         // return json_encode($resArr);
         $html = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                         <strong>' . $webLang['error_ttl'] . '&nbsp;</strong>';
         if ($validator->getMessageBag()->toArray()) {
           $html .= '<ul>';
@@ -111,12 +112,15 @@ class EnquiryController extends BaseController
 
       try {
         $input = $request->except('_token', 'submit');
-
+        $fullname = $input['first_name'] . ' ' . $input['last_name'];
+        unset($input['first_name']);
+        unset($input['last_name']);
+        $input['name'] = $fullname;
         $store = new EnquiryModel($input);
 
         $store->u_id = self::getLoggedInUserId();
         if ($store->save()) {
-          $fullname = $input['name'];
+
           $mailArr = ["fullname" => rtrim($fullname)];
 
           $mailPSObj = new MailPS();
@@ -134,9 +138,8 @@ class EnquiryController extends BaseController
           $fromName = $contactLang['mail_f_name'];
 
           $mailResp = $mailPSObj->sendMail($toEmail, $subject, $content, '', $fromName);
-          if ($mailResp) {
+          // if ($mailResp) {
             $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                             <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
                             ' . $message['success']['contact_form_send'] . '
                         </div>';
@@ -149,17 +152,15 @@ class EnquiryController extends BaseController
                 $resArr['url'] = route('web.thankyou', $slug);
               }
             }
-          } else {
-            $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
-                ' . $message['error']['email_send'] . '
-            </div>';
-          }
+          // } else {
+          //   $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+          //       <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
+          //       ' . $message['error']['email_send'] . '
+          //   </div>';
+          // }
         }
       } catch (QueryException $exception) {
         $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
             <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
             ' . $message['error']['data_saved'] . '
         </div>';
@@ -170,7 +171,6 @@ class EnquiryController extends BaseController
       //score check value of 0.5 you can set which you want form 0 to 1
       //score 1 is probably human score 0 is probably bot
       $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
           <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
           ' . $message['error']['recaptcha'] . '
       </div>';
