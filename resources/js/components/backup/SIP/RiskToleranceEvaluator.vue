@@ -153,60 +153,66 @@
                 </tbody>
             </table>
         </div>
-        <div class="risk-tol-eval-risk-profile br-5" >
-            <div class="row risk-profile-titles">
-                <div class="col-lg-6 col-md-6 col-sm-6 title-1"><h3>Your Overall Risk Profile</h3></div>
-                <div class="col-lg-6 col-md-6 col-sm-6 title-2"><h3>{{ calculatedValues.capacity_to_take_risk_for_total }}</h3></div>
-            </div>
-            <table id="overall-risk-profile" class="br-5 box-shadow">
-                <thead>
-                    <tr>
-                        <th>Score</th>
-                        <th>Tolerance level</th>
-                        <th>Preferable Equity holding</th>
-                        <th>Preferable Debt holding</th>
-                        <th>Type of Investor</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="table-very-high">
-                        <td>4-5</td>
-                        <td>Very High</td>
-                        <td>100%</td>
-                        <td>0%</td>
-                        <td>Highly Aggresive</td>
-                    </tr>
-                    <tr class="table-moderate">
-                        <td>3-4</td>
-                        <td>Moderate</td>
-                        <td>80%</td>
-                        <td>20%</td>
-                        <td>HAggresive</td>
-                    </tr>
-                    <tr class="table-high">
-                        <td>3-2</td>
-                        <td>High</td>
-                        <td>60%</td>
-                        <td>40%</td>
-                        <td>Moderate</td>
-                    </tr>
-                    <tr class="table-low">
-                        <td>1-2</td>
-                        <td>Low</td>
-                        <td>40%</td>
-                        <td>60%</td>
-                        <td>Conservative</td>
-                    </tr>
-                    <tr class="table-very-low">
-                        <td>0-1</td>
-                        <td>Very Low</td>
-                        <td>20%</td>
-                        <td>80%</td>
-                        <td>Highly Conservative</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="s_renge">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="main_trer evalution_resupt_table risk_calculator_table mt-2">
+                                            <div class="">
+                                                <table id="example" class="table table-responsive">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Score</th>
+                                                            <th>Tolerance Level</th>
+                                                            <th>Preferable Equity holding</th>
+                                                            <th>Preferable Debt holding</th>
+                                                            <th>Type of Investor</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>4-5</td>
+                                                            <td>Very High</td>
+                                                            <td>100%</td>
+                                                            <td>0%</td>
+                                                            <td>Highly Aggresive</td>
+                                                        </tr>
+                                                         <tr>
+                                                            <td>4-5</td>
+                                                            <td>80%</td>
+                                                            <td>3-4</td>
+                                                            <td>20%</td>
+                                                            <td> Aggresive</td>
+                                                        </tr>
+                                                         <tr>
+                                                            <td>4-5</td>
+                                                            <td>80%</td>
+                                                            <td>3-4</td>
+                                                            <td>20%</td>
+                                                            <td>Moderate</td>
+                                                        </tr>
+                                                         <tr>
+                                                            <td>4-5</td>
+                                                            <td>80%</td>
+                                                            <td>3-4</td>
+                                                            <td>20%</td>
+                                                            <td>Conservation</td>
+                                                        </tr>
+                                                         <tr>
+                                                            <td>4-5</td>
+                                                            <td>80%</td>
+                                                            <td>3-4</td>
+                                                            <td>20%</td>
+                                                            <td>Highly Conservation</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>                                       
+
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 ps-4">Best wishes, myplexus</p>
     </div>
 </div>    
 </template>
@@ -447,7 +453,22 @@ export default {
 },
 ],
 activeIndex:0,
-calculatedValues:[],
+calculatedValues:{
+	"accor1": "3.286",
+	"accor2": "2.500",
+	"accor3": "2.444",
+	"tot_avg": "2.743",
+	"tolerance_level": "Moderate",
+	"equity": "60",
+	"debt": "40",
+	"capacity_to_take_risk_for_total": "Moderate",
+	"capacity_to_take_risk_for_accor1": "Conservative",
+	"capacity_to_take_risk_for_accor2": "Moderate",
+	"capacity_to_take_risk_for_accor3": "Moderate",
+	"accor1_star": "2",
+	"accor2_star": "3",
+	"accor3_star": "3"
+},
 process:false
             }
   },
