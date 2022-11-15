@@ -1,89 +1,63 @@
 <template>
     <div class="comp_schem_bdr">
-                           <div class="s_renge">
-                                <div class="row mb-3">
-                                    <div class="col-lg-6 col-md-12 mb-4">
-                                        <div class="cal_form_select">
-                                            <label>What is the present cost of such educaton ? (in Rs.)</label>
-                                            <input class="form-text" type="text" placeholder=""  v-model="var_1" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 mb-4">
-                                        <div class="cal_form_select">
-                                            <label for="">After how many years is your child likely to go for higher education ? (Max. 50 years)</label>
-                                            <input class="form-text" type="text" placeholder=""  v-model="var_2" />
-                                        </div>
-                                    </div>
-									 <div class="col-lg-6 col-md-12 mb-4">
-                                        <div class="cal_form_select">
-                                            <label for="">Assume a rate of inflation (in %)</label>
-                                            <input class="form-text" type="text" placeholder="" v-model="var_3" />
-                                        </div>
-                                    </div>
-									<div class="col-md-12">
-											<a href="#" class="money_title_btn" :disabled="!var_1 || !var_2 || !var_3 " @click="calculate_sip(plan)">Calculate</a>
-											<a href="#" class="money_title_btn" @click="var_1='';var_2='';var_3='';var_4='';var_5=''">Reset</a>
-									</div>
-									 </div>
-									<hr>
-									
-									<div class="row pt-4"  v-if="var_5">                                    
-                                    <div class="col-lg-12 col-md-12">
-                                        <div class="cal_form_select">
-                                            <label for="">The amount you would require for yor child's higher education (in Rs.)</label>
-											<div class="row">
-											<div class="col-md-8">
-                                            <input class="form-text" type="number" placeholder="" disabled v-model="var_5"  />
-											</div>
-											<div class="col-md-4">
-												<div class="start_sving_now_text">
-													<h4><a :href="sip_pdf_url" target="_blank">How much should I start saving now?</a></h4>
-												</div>
-											</div>
-											
-											</div>
-                                        </div>
-                                    </div>
+        <div class="s_renge">
+            <div class="row mb-3">
+                <div class="col-lg-6 col-md-12 mb-4">
+                    <div class="cal_form_select">
+                        <label>What is the present cost of such educaton ? (in Rs.)</label>
+                        <input class="form-text" type="text" placeholder="" v-model="var_1" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4">
+                    <div class="cal_form_select">
+                        <label for="">After how many years is your child likely to go for higher education ? (Max. 50
+                            years)</label>
+                        <input class="form-text" type="text" placeholder="" v-model="var_2" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4">
+                    <div class="cal_form_select">
+                        <label for="">Assume a rate of inflation (in %)</label>
+                        <input class="form-text" type="text" placeholder="" v-model="var_3" />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <a href="#" class="money_title_btn" :disabled="!var_1 || !var_2 || !var_3"
+                        @click="calculate_sip(plan)">Calculate</a>
+                    <a href="#" class="money_title_btn" @click="var_1 = ''; var_2 = ''; var_3 = ''; var_4 = ''; var_5 = ''">Reset</a>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row pt-4" v-if="var_5">
+                <div class="col-lg-12 col-md-12">
+                    <div class="cal_form_select">
+                        <label for="">The amount you would require for yor child's higher education (in Rs.)</label>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input class="form-text" type="number" placeholder="" disabled v-model="var_5" />
+                            </div>
+                            <div class="col-md-4">
+                                <div class="start_sving_now_text">
+                                    <h4><a :href="sip_pdf_url" target="_blank">How much should I start saving now?</a>
+                                    </h4>
                                 </div>
                             </div>
-    <div class="row mx-0 invst-fields invst-field-1 justify-content-between align-items-center sip-planner-ic-action">
-        <div class="sip-planner-ic-action-cm sip-planner-ic-action-1">
-            <a v-if="sip_pdf_url" :href="sip_pdf_url" target="_blank" class="sip-tut">SIP Tutorial</a>
-        </div>
-        <div v-if="plan && plan != 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
-            <!-- <button v-if="step == 2" id="sip-planner-ic-submit" class="btn mr-2 btn-green" @click="step = 3">How much should I start saving now?</button> -->
-            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!var_1 || !var_2 || !var_3 || (plan == 1 &&  !var_4)" @click="calculate_sip(plan)">Calculate</button>
-            <button class="btn" @click="var_1='';var_2='';var_3='';var_4='';var_5='';step = 1">Reset</button>
-        </div>
-        <div v-if="plan && plan == 5 && step != 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
-            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!inflationrate || !goalrateofreturn || !goalinvestmentduration" @click="calculate_goal_sip(plan)">Calculate</button>
-            <button class="btn" @click="inflationrate='';goalrateofreturn='';goalinvestmentduration='';goalsipamount='';final_goal_amt='';goal_sip_investments='';goal_sip_amt='';">Reset</button>
-        </div>
 
-        <div v-if="step == 3" class="sip-planner-ic-action-cm sip-planner-ic-action-2 mt-4">
-            <button id="sip-planner-ic-submit" class="money_title_btn" :disabled="!var_5 || !var_6 || !var_7 || !var_8" @click="Calculate_Next">Caculate</button>
-            <button class="btn" @click="var_6='';var_7='';var_8='';var_9=''">Reset</button>
-        </div>
-    </div>
-    <div class="row">
-        <div id="screen_capture" class="mt-3 w-100">
-            <div class="col-md-12">
-                <div class="graph_div" ref="printMe">
-                    <div id="chartContainerGOAL" style="width: 100%;" :class="{'height_370':showchart}"></div>
-                    <div v-show="showchart" style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom:0" id="myplexusC"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
-    
-</div>
 </template>
 
 <script>
 import mixin from '../../mixin';
 var CanvasJS = require('../../canvasjs.min.js');
 export default {
-    name:'child_education',
+    name: 'child_education',
     props: {
         username: {
             type: String,
@@ -564,21 +538,21 @@ export default {
                     content: this.toolTipFormatter
                 },
                 data: [{
-                        type: "column",
-                        showInLegend: true,
-                        name: "Invested Amount",
-                        color: '#6ab130',
-                        yValueFormatString: "##.00",
-                        dataPoints: dataPoints1
-                    },
-                    {
-                        type: "column",
-                        showInLegend: true,
-                        name: "Return",
-                        color: "#000",
-                        yValueFormatString: "##.00",
-                        dataPoints: dataPoints2
-                    }
+                    type: "column",
+                    showInLegend: true,
+                    name: "Invested Amount",
+                    color: '#6ab130',
+                    yValueFormatString: "##.00",
+                    dataPoints: dataPoints1
+                },
+                {
+                    type: "column",
+                    showInLegend: true,
+                    name: "Return",
+                    color: "#000",
+                    yValueFormatString: "##.00",
+                    dataPoints: dataPoints2
+                }
                 ]
             }
             CanvasJS.addColorSet("greenShades", ['#6ab130']);

@@ -50,19 +50,20 @@
                                     <input class="form-text" type="text" placeholder="" disabled  v-model="final_goal_amt"/>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="goal_sip_investments">
                                 <div class="cal_form_select">
                                     <label for="">Your Total Investment (Rs.)</label>
                                     <input class="form-text" type="text" placeholder="" disabled  v-model="goal_sip_investments" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="goal_sip_amt">
                                 <div class="cal_form_select">
                                     <label for="">Monthly SIP Amount (Rs.)</label>
                                     <input class="form-text" type="text" placeholder="" disabled  v-model="goal_sip_amt"/>
                                 </div>
                             </div>
                         </div>
+                        <p class="text-danger" v-if="error_msg">{{error_msg}}</p>
                     </div>
                 </div>
             </div>
