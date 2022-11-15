@@ -122,23 +122,24 @@ ul {
 
 /****************Header Section Start********************/
 .trade_detais_sec {
-    background-color: var(--darker);
+    background-color: #fff;
     padding: 5px
 }
 
 .single_trade_info {
-    color: #fff
+    color: #222222
 }
 
 .header_section {
-    background-color: #fff;
+    background-color: var(--darker);
     position: sticky;
     top: 0;
     z-index: 999;
+    border-bottom: 2px solid #fff
 }
 
 .header_section nav .navbar-nav a.nav-link {
-    color: var(--darker) !important;
+    color: #fff !important;
     font-family: var(--bodyfont-font);
     font-weight: 500;
     padding: 20px 10px;
@@ -580,7 +581,7 @@ ul {
 }
 
 .single_team_img {
-    height: 300px;
+    height: 250px;
     width: 100%;
     border-radius: 7px;
     overflow: hidden;
@@ -607,7 +608,7 @@ ul {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 7px;
-    margin: 0px 20px
+    margin-right:40px
 }
 
 .single_team_wrapper ul li {
@@ -672,6 +673,7 @@ ul {
 
 .righ_compare_content h4 {
     color: #205738;
+    font-size: 20px
 }
 
 .compare_titile h2 {
@@ -1061,16 +1063,24 @@ ul {
     font-family: var(--heading-font);
 }
 
+.single_calculator_img_icon{
+    height: 80px;
+    width: 80px;
+    margin: 0px auto;
+    margin-bottom: 15px
+}
+.single_calculator_img_icon img{
+    height: 100%;
+    object-fit: contain;
+}
+
 .single_calculator {
     width: 24%;
-    height: 245px;
+    min-height: 215px;
     border: 2px solid #f1f1f1;
     margin: 0px 15px;
     text-align: center;
-    padding: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 45px 30px; 
     border-radius: 10px;
     box-shadow: 10px 12px 12px rgb(0 0 0 / 5%);
     position: relative;
@@ -1257,7 +1267,8 @@ ul {
 
 .single_ask_expert p {
     line-height: 35px;
-    font-style: italic
+    font-style: italic;
+    font-weight: 600
 }
 
 .single_ask_footer h4 {
@@ -1801,7 +1812,6 @@ ul {
 
 .editor_pics_blog {
     background-color: #fbfbfb;
-    padding: 50px 0
 }
 
 .blog_title h4 {
@@ -1812,7 +1822,6 @@ ul {
 
 .must_read_blog {
     background-color: #fff;
-    padding: 50px 0
 }
 
 .pagination ul li a {
@@ -2507,11 +2516,11 @@ ul {
 }
 
 .inter_seen img {
-    width: 100%;
-    height: 375px;
-    object-fit: cover;
     border: 1px solid rgb(0 0 0 / 10%);
     border-radius: 10px;
+}
+.inter_seen{
+    min-height: 420px
 }
 
 .inter_seen h5 {
@@ -2519,6 +2528,14 @@ ul {
     font-size: 28px;
     margin-top: 15px;
     margin-bottom: 5px;
+}
+.inter_seen_img{
+    height: 250px
+}
+.inter_seen_img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover
 }
 
 .inter_seen p {
@@ -2619,10 +2636,10 @@ ul {
 }
 
 .bg_green select {
-    background: #437459 url(../img/drop_down_arrow1.png);
+    background: #004e47  url(../img/drop_down_arrow1.png);
     background-repeat: no-repeat;
     background-position: right 3% center;
-    border: 2px solid rgb(0 0 0 / 20%);
+    border: 2px solid rgb(0 0 0 / 10%);
     color: #fff;
 }
 
@@ -2704,8 +2721,9 @@ ul {
     background: #222222;
 }
 
-.top_bg_right_black .form-date {
+.top_bg_right_black .form-date, .top_bg_right_black .bg_222 select {
     background: #393939;
+    color: #fff
 }
 
 .top_bg_right_black .bg_222 label {
@@ -2739,6 +2757,7 @@ ul {
 
 .taxation_top_section_single p {
     font-size: 16px;
+    margin-bottom: 0
 }
 
 .taxation_top_section_single img {
@@ -2941,7 +2960,8 @@ ul {
 .single_facts h4 {
     font-size: 18px;
     margin-right: 15px;
-    white-space: nowrap
+    white-space: nowrap;
+    width: 350px
 }
 
 .single_facts label {
@@ -4321,7 +4341,29 @@ ul {
 
 
 
-@media (max-width: 1400px) {
+@media (max-width: 1600px) {
+    .second_abt_cont h4{
+        font-size: 35px
+    }
+    .big_post_cont_wrpper h4 {
+        font-size: 35px
+    }
+    .hightlight_post_listing h2{
+        margin-bottom: 20px
+    }
+    .single_highlight_post{
+        padding: 15px 0
+    }
+    .footer_menu{
+        padding-top: 60px;
+        padding-bottom: 60px
+    }
+    .long_tearm_sec{
+        margin: 100px 40px
+    }
+    .taxation_top_section_single h4{
+        font-size: 25px
+    }
 
     .single_abt_content h4,
     .abt_icon h4 {
@@ -4367,7 +4409,7 @@ ul {
     }
 
     .money_right_section h4 {
-        font-size: 30px
+        font-size: 22px
     }
 
     .money_right_section p {
@@ -4381,6 +4423,31 @@ ul {
     .money_seriously_title h4 {
         width: 33%
     }
+    .righ_compare_content h4{
+        font-size: 20px
+    }
+    .righ_compare_content p{
+        font-size: 14px
+    }
+    .single_right_compare{
+        padding: 15px
+    }
+    .righ_compare_content a{
+        font-size: 15px
+    }
+    .page_abt_inner h4{
+        font-size: 35px
+    }
+    .page_abt_inner p{
+        font-size: 14px
+    }
+    .founder_about .page_abt_inner h5{
+        font-size: 17px
+    }
+    .inter_seen h5{
+        font-size: 20px
+    }
+    
 }
 
 @media (max-width: 1199px) {
@@ -4465,6 +4532,9 @@ ul {
 }
 
 @media (max-width: 767px) {
+    .single_abt_item {
+        margin-bottom: 15px
+    }
     .subsribe_btn{
         right: 6px
     }

@@ -197,7 +197,7 @@
                             <a href="/compare-scheme?compare_composition_type=top_industry">Compare Now!</a>
                         </div>
                     </div>
-                    <button data-aos="fade-up" data-aos-duration="1000" class="compare_scheme_btn btn-block">Compare</button>
+                    <a href="{{route('web.compare.scheme')}}" data-aos="fade-up" data-aos-duration="1000" class="compare_scheme_btn btn-block">Compare</a>
                 </div>
             </div>
         </div>
@@ -283,7 +283,7 @@
                                     <div class="single_calculator">
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="500">
-                                            <a href="{{ route('web.calculators') }}?tab=inf-calc">
+                                            <a href="{{ route('web.calculators.inflation') }}">
                                                 <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon1.png')}}" />
                                                 <h4>Inflation calculator</h4>
                                             </a>
@@ -293,7 +293,7 @@
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="1000">
-                                            <a href="{{ route('web.calculators') }}?tab=retire-calc">
+                                            <a href="{{ route('web.calculators.retirement') }}?tab=retire-calc">
                                                 <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon2.png')}}" />
                                                 <h4>Retirement calculator</h4>
                                             </a>
@@ -303,7 +303,7 @@
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="1500">
-                                            <a href="objective-calculator.html">
+                                            <a href="{{route('web.calculators.objective')}}">
                                                 <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon3.png')}}" />
                                                 <h4>other objectives*</h4>
                                             </a>
@@ -313,7 +313,7 @@
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="2000">
-                                            <a href="{{ route('web.calculators') }}?tab=risk-tol-eval">
+                                            <a href="{{ route('web.calculators.risk') }}?tab=risk-tol-eval">
                                                 <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon4.png')}}" />
                                                 <h4>Risk appetite evaluator</h4>
                                             </a>
@@ -322,7 +322,7 @@
                                     <div class="single_calculator have_before">
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="2000">
-                                            <a href="future-value-calculator.html">
+                                            <a href="#">
                                                 <img src="{{asset('themes/frontend/assets/v1/img/calculator-icon6.png')}}" />
                                                 <h4>Future Value</h4>
                                             </a>
@@ -448,7 +448,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-12 text-center">
-                <a href="#" class="money_title_btn">View All Monitor</a>
+                <a href="{{route('web.nfomonitor.list')}}" class="money_title_btn">View All Monitor</a>
             </div>
         </div>
     </div>
@@ -615,7 +615,7 @@
         </div>
         <div class="row mt-5">
             <div class="col-md-12 text-center">
-                <a href="#" class="money_title_btn">Ask An Expert</a>
+                <a href="{{route('web.ask-expert')}}" class="money_title_btn">Ask An Expert</a>
             </div>
         </div>
     </div>
@@ -644,7 +644,7 @@
                 <div class="fund_man_expert_home" data-aos="fade-up" data-aos-duration="500">
                     <h2>Know Your Scheme</h2>
                     <p>Pro membership brings exclusive and timely data at your fingertips. Discover your next great investment idea quicker and easier</p>
-                    <a href="#" class="money_title_btn me-3">Get Started</a>
+                    <a href="{{route('web.know.your.scheme')}}" class="money_title_btn me-3">Get Started</a>
                 </div>
             </div>
         </div>

@@ -1,216 +1,237 @@
 <template>
-    <div class="comp_schem_bdr">
-        <div class="s_renge risk_tolarance_evaliator">
-            <div class="row">
-                <template v-if="!Object.keys(calculatedValues).length">
-                    <div class="row m-0 invst-fields invst-field-1 justify-content-between mb-3" v-if="!start">
-                        <div class="col-md-6">
-                            <div class="risk-tol-eval-common risk-tol-eval-email cal_form_select">
-                                <label>Email Address</label>
-                                <input class="form-text" type="email" id="risk-tolerance-user-email" v-model="email"
-                                    readonly placeholder="Enter Email" />
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="risk-tol-eval-common risk-tol-eval-name cal_form_select">
-                                <label>Enter Name</label>
-                                <input class="form-text" type="text" id="risk-tolerance-username" v-model="name"
-                                    placeholder="Enter Name" />
-                            </div>
-                        </div>
+    <section class="compare_scheme" v-if="currentTab != ''">
+        <div class="container">
+            <div class="tab_snap_shot">
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="comp_schem_bdr">
+                        <div class="s_renge risk_tolarance_evaliator">
+                            <div class="row">
+                                <template v-if="!Object.keys(calculatedValues).length">
+                                    <div class="row m-0 invst-fields invst-field-1 justify-content-between mb-3"
+                                        v-if="!start">
+                                        <div class="col-md-6">
+                                            <div class="risk-tol-eval-common risk-tol-eval-email cal_form_select">
+                                                <label>Email Address</label>
+                                                <input class="form-text" type="email" id="risk-tolerance-user-email"
+                                                    v-model="email" readonly placeholder="Enter Email" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="risk-tol-eval-common risk-tol-eval-name cal_form_select">
+                                                <label>Enter Name</label>
+                                                <input class="form-text" type="text" id="risk-tolerance-username"
+                                                    v-model="name" placeholder="Enter Name" />
+                                            </div>
+                                        </div>
 
-                    </div>
-
-                    <div class="invst-fields-action-buttons" v-if="!start">
-                        <div class="row m-0 justify-content-end">
-                            <div class="action-common action-btn-1">
-                                <button id="next-step" class="btn btn-green reserch_discover_btn"
-                                    href="javascript:void(0);" @click="start = true">Next Step</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="risk-tol-choose-age" v-if="start">
-                        <div class="risk-tol-age-wrap">
-                            <div v-for="(question, index) in questions" :key="index">
-                                <div v-if="index == activeIndex"
-                                    class="row align-items-center risk-tol-age-wrap-in mb-3">
-                                    <div class="risk-tol-age-lft">
-                                        <h5 v-html="question.q"></h5>
                                     </div>
-                                    <div class="risk-tol-age-rgt">
-                                        <div class="form-check" v-for="(option, key) in question.o" :key="key">
-                                            <label class="form-check-label" :for="'optradio' + key" v-if="option">
-                                                <input :id="'optradio' + key" type="radio" class="form-check-input"
-                                                    name="optradio" :value="key" v-model="question.a" /> {{ option }}
-                                            </label>
+
+                                    <div class="invst-fields-action-buttons" v-if="!start">
+                                        <div class="row m-0 justify-content-end">
+                                            <div class="action-common action-btn-1">
+                                                <button id="next-step" class="btn btn-green reserch_discover_btn"
+                                                    href="javascript:void(0);" @click="start = true">Next Step</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="risk-tol-choose-age" v-if="start">
+                                        <div class="risk-tol-age-wrap">
+                                            <div v-for="(question, index) in questions" :key="index">
+                                                <div v-if="index == activeIndex"
+                                                    class="row align-items-center risk-tol-age-wrap-in mb-3">
+                                                    <div class="risk-tol-age-lft">
+                                                        <h5 v-html="question.q"></h5>
+                                                    </div>
+                                                    <div class="risk-tol-age-rgt">
+                                                        <div class="form-check" v-for="(option, key) in question.o"
+                                                            :key="key">
+                                                            <label class="form-check-label" :for="'optradio' + key"
+                                                                v-if="option">
+                                                                <input :id="'optradio' + key" type="radio"
+                                                                    class="form-check-input" name="optradio"
+                                                                    :value="key" v-model="question.a" /> {{ option }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="invst-fields-action-buttons">
+                                                <div class="row m-0">
+                                                    <div class="action-common action-btn-1 col-md-2 ">
+                                                        <button id="back"
+                                                            class="btn btn-dark reserch_discover_btn dark_bg color_white me-3"
+                                                            @click="previous">Back</button>
+
+                                                        <button :disabled="!questions[activeIndex].a" id="next"
+                                                            class="btn btn-green reserch_discover_btn" @click="next"
+                                                            v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
+                                                        <button :disabled="!questions[activeIndex].a || process"
+                                                            id="next" class="btn btn-green reserch_discover_btn"
+                                                            @click="submitForm"
+                                                            v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="invst-wrap invst-risk-tol-calc">
+                                <div class="w-100 text-center" v-if="process">
+                                    <div class="text-center mt-3">
+                                        <LoadingBar :status="process"></LoadingBar>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="risk-result" v-if="Object.keys(calculatedValues).length">
+                                <div class="">
+                                    <h4 class="mn_h4 mb-1">Evaluation Results</h4>
+                                    <p>Hello {{ name }}, Here is summary of your Risk Profile that you just filled.</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="main_trer evalution_resupt_table mt-2">
+                                                <div class="">
+                                                    <table id="example" class="table table-striped table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Parameter</th>
+                                                                <th>Type of investor</th>
+                                                                <th>Score</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Capacity to take risk</td>
+                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor1
+                                                                }}</td>
+                                                                <td>
+                                                                    <div
+                                                                        class="star_wrape d-flex align-items-center justify-content-center">
+                                                                        <i v-for="count in parseInt(calculatedValues.accor1_star)"
+                                                                            class="ph-star-fill active" :id="count"></i>
+                                                                        <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor1_star)"
+                                                                            class="ph-star-fill"></i>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Risk appetite</td>
+                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor2
+                                                                }}</td>
+                                                                <td>
+                                                                    <div
+                                                                        class="star_wrape d-flex align-items-center justify-content-center">
+                                                                        <i v-for="count in parseInt(calculatedValues.accor2_star)"
+                                                                            class="ph-star-fill active" :id="count"></i>
+                                                                        <i v-for="countStart in defaultStart - calculatedValues.accor2_star"
+                                                                            class="ph-star-fill grey"></i>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Need to take Risk</td>
+                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor3
+                                                                }}</td>
+                                                                <td>
+                                                                    <div
+                                                                        class="star_wrape d-flex align-items-center justify-content-center">
+                                                                        <i v-for="count in parseInt(calculatedValues.accor3_star)"
+                                                                            class="ph-star-fill active" :id="count"></i>
+                                                                        <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor3_star)"
+                                                                            class="ph-star-fill"></i>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="invst-fields-action-buttons">
-                                <div class="row m-0">
-                                    <div class="action-common action-btn-1 col-md-2 ">
-                                        <button id="back"
-                                            class="btn btn-dark reserch_discover_btn dark_bg color_white me-3"
-                                            @click="previous">Back</button>
-
-                                        <button :disabled="!questions[activeIndex].a" id="next"
-                                            class="btn btn-green reserch_discover_btn" @click="next"
-                                            v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
-                                        <button :disabled="!questions[activeIndex].a || process" id="next"
-                                            class="btn btn-green reserch_discover_btn" @click="submitForm"
-                                            v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
+                                <div class="row mt-4 mb-4">
+                                    <div class="col-lg-8 col-md-12">
+                                        <div class="colorful__heading text-center p-4">
+                                            <h4>Your Overall Risk Profile</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="colorful__heading2 text-center p-4">
+                                            <h4>Conservative</h4>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-            <div class="invst-wrap invst-risk-tol-calc">
-            <div class="w-100 text-center" v-if="process">
-                <div class="text-center mt-3">
-                    <LoadingBar :status="process"></LoadingBar>
-                </div>
-            </div>
-            </div>
-            <div id="risk-result" v-if="Object.keys(calculatedValues).length">
-            <div class="">
-                <h4 class="mn_h4 mb-1">Evaluation Results</h4>
-                <p>Hello {{ name }}, Here is summary of your Risk Profile that you just filled.</p>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="main_trer evalution_resupt_table mt-2">
-                            <div class="">
-                                <table id="example" class="table table-striped table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>Parameter</th>
-                                            <th>Type of investor</th>
-                                            <th>Score</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Capacity to take risk</td>
-                                            <td>{{ calculatedValues.capacity_to_take_risk_for_accor1 }}</td>
-                                            <td>
-                                                <div
-                                                    class="star_wrape d-flex align-items-center justify-content-center">
-                                                    <i v-for="count in parseInt(calculatedValues.accor1_star)" class="ph-star-fill active" :id="count"></i>
-                                                    <i  v-for="countStart in defaultStart-parseInt(calculatedValues.accor1_star)" class="ph-star-fill"  ></i>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="main_trer evalution_resupt_table risk_calculator_table mt-2">
+                                                <div class="">
+                                                    <table id="example" class="table table-responsive">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Score</th>
+                                                                <th>Tolerance Level</th>
+                                                                <th>Preferable Equity holding</th>
+                                                                <th>Preferable Debt holding</th>
+                                                                <th>Type of Investor</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>4-5</td>
+                                                                <td>Very High</td>
+                                                                <td>100%</td>
+                                                                <td>0%</td>
+                                                                <td>Highly Aggresive</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4-5</td>
+                                                                <td>80%</td>
+                                                                <td>3-4</td>
+                                                                <td>20%</td>
+                                                                <td> Aggresive</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4-5</td>
+                                                                <td>80%</td>
+                                                                <td>3-4</td>
+                                                                <td>20%</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4-5</td>
+                                                                <td>80%</td>
+                                                                <td>3-4</td>
+                                                                <td>20%</td>
+                                                                <td>Conservation</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4-5</td>
+                                                                <td>80%</td>
+                                                                <td>3-4</td>
+                                                                <td>20%</td>
+                                                                <td>Highly Conservation</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                            </div>
 
-                                        <tr>
-                                            <td>Risk appetite</td>
-                                            <td>{{ calculatedValues.capacity_to_take_risk_for_accor2 }}</td>
-                                            <td>
-                                                <div
-                                                    class="star_wrape d-flex align-items-center justify-content-center">
-                                                    <i v-for="count in parseInt(calculatedValues.accor2_star)" class="ph-star-fill active" :id="count"></i>
-                                                    <i  v-for="countStart in defaultStart-calculatedValues.accor2_star" class="ph-star-fill grey"></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Need to take Risk</td>
-                                            <td>{{ calculatedValues.capacity_to_take_risk_for_accor3 }}</td>
-                                            <td>
-                                                <div
-                                                    class="star_wrape d-flex align-items-center justify-content-center">
-                                                    <i v-for="count in parseInt(calculatedValues.accor3_star)" class="ph-star-fill active" :id="count"></i>
-                                                    <i  v-for="countStart in defaultStart-parseInt(calculatedValues.accor3_star)" class="ph-star-fill"  ></i>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3 ps-4">Best wishes, myplexus</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div>
-            <div class="row mt-4 mb-4">
-                <div class="col-lg-8 col-md-12">
-                    <div class="colorful__heading text-center p-4">
-                        <h4>Your Overall Risk Profile</h4>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-12">
-                    <div class="colorful__heading2 text-center p-4">
-                        <h4>Conservative</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="main_trer evalution_resupt_table risk_calculator_table mt-2">
-                            <div class="">
-                                <table id="example" class="table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th>Score</th>
-                                            <th>Tolerance Level</th>
-                                            <th>Preferable Equity holding</th>
-                                            <th>Preferable Debt holding</th>
-                                            <th>Type of Investor</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>4-5</td>
-                                            <td>Very High</td>
-                                            <td>100%</td>
-                                            <td>0%</td>
-                                            <td>Highly Aggresive</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4-5</td>
-                                            <td>80%</td>
-                                            <td>3-4</td>
-                                            <td>20%</td>
-                                            <td> Aggresive</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4-5</td>
-                                            <td>80%</td>
-                                            <td>3-4</td>
-                                            <td>20%</td>
-                                            <td>Moderate</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4-5</td>
-                                            <td>80%</td>
-                                            <td>3-4</td>
-                                            <td>20%</td>
-                                            <td>Conservation</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4-5</td>
-                                            <td>80%</td>
-                                            <td>3-4</td>
-                                            <td>20%</td>
-                                            <td>Highly Conservation</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <p class="mt-3 ps-4">Best wishes, myplexus</p>
             </div>
         </div>
-    </div>
-
+    </section>
 </template>
 
 <script>
@@ -453,7 +474,7 @@ export default {
             activeIndex: 0,
             calculatedValues: [],
             process: false,
-            defaultStart:5,
+            defaultStart: 5,
         }
     },
     methods: {

@@ -1,55 +1,68 @@
 <template>
-<div class="comp_schem_bdr">
-    <div class="s_renge">
-        <h4 class="mn_h4">Inflation Calculator</h4>
-        <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="range-slider-wrapper">
-                    <span class="slider-heading">Value of Current Expenses (Rs.)</span>
-                    <div id="slider-bedrooms" class="slider" data-min="0" data-max="10000" data-value="" data-step="100"></div>
-                    <input class="vue-value" data-from="infCalucaltor" type="hidden" ref="currentExpenses" value="0" />
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12">
-                <div class="range-slider-wrapper">
-                    <span class="slider-heading">Annual Inflation Rate (%)</span>
-                    <div id="slider-price" class="slider" data-min="2" data-max="8" data-value="2" data-step="1"></div>
-                    <input class="vue-value" data-from="infCalucaltor" type="hidden" ref="inflationRate" value="0" />
-                </div>
-            </div>
-            <a href="javascript://" id="infCalucaltor-jquery-click" class="money_title_btn d-none" @click="UpdateDataFromJquery"></a>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-12">
-                <div class="cal_form_select">
-                    <label for="">Time Period (Y)</label>
-                    <input class="form-text" type="number" v-model="period" />
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-12" v-if="inflation_wealth">
-                <div class="cal_form_select">
-                    <label for="">Inflation Adjusted Amount</label>
-                    <input class="form-text" readonly v-model="inflation_wealth" type="number" />
-                </div>
-            </div>
-        </div>
-    </div>
+    <section class="compare_scheme" v-if="currentTab != ''">
+        <div class="container">
+            <div class="tab_snap_shot">
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="comp_schem_bdr">
+                        <div class="s_renge">
+                            <!-- <h4 class="mn_h4">Inflation Calculator</h4> -->
+                            <div class="row">
+                                <div class="col-lg-4 col-md-12 pe-5">
+                                    <div class="cal_form_select">
+                                        <label for="">Value of Current Expenses (Rs.)</label>
+                                        <input class="form-text" type="number" v-model="current_expenses" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="range-slider-wrapper">
+                                        <span class="slider-heading">Annual Inflation Rate (%)</span>
+                                        <div id="slider-price" class="slider" data-min="2" data-max="8" data-value="2"
+                                            data-step="1"></div>
+                                        <input class="vue-value" data-from="infCalucaltor" type="hidden"
+                                            ref="inflationRate" value="0" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="cal_form_select">
+                                        <label for="">Time Period (Y)</label>
+                                        <input class="form-text" type="number" v-model="period" />
+                                    </div>
+                                </div>
+                                <a href="javascript://" id="infCalucaltor-jquery-click" class="money_title_btn d-none"
+                                    @click="UpdateDataFromJquery"></a>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12" v-if="inflation_wealth">
+                                    <div class="cal_form_select">
+                                        <label for="">Inflation Adjusted Amount</label>
+                                        <input class="form-text" readonly v-model="inflation_wealth" type="number" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-</div>
-<div class="invst-wrap inst-inflation-calc">
+                    </div>
+                    <div class="invst-wrap inst-inflation-calc">
 
-    <div class="row mt-5">
-        <div id="screen_capture" class="mt-3 w-100">
-            <div class="col-md-12">
-                <div class="graph_div" ref="printMe">
-                    <div id="chartContainer" style="width: 100%;" :class="{'height_370':showchart}"></div>
-                    <div v-show="showchart" style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom: 0;" id="myplexusC"></div>
+                        <div class="row mt-5">
+                            <div id="screen_capture" class="mt-3 w-100">
+                                <div class="col-md-12">
+                                    <div class="graph_div" ref="printMe">
+                                        <div id="chartContainer" style="width: 100%;" :class="{ 'height_370': showchart }">
+                                        </div>
+                                        <div v-show="showchart"
+                                            style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom: 0;"
+                                            id="myplexusC"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-</div>
+    </section>
 </template>
 
 <script>
@@ -183,7 +196,7 @@ export default {
             return true;
         },
         UpdateDataFromJquery() {
-            this.current_expenses = this.$refs.currentExpenses.value;
+            // this.current_expenses = this.$refs.currentExpenses.value;
             this.inflation_rate = this.$refs.inflationRate.value;
             if (this.current_expenses && this.inflation_rate && this.period) {
                 clearTimeout(this.searchTimeout);

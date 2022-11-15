@@ -1,8 +1,62 @@
 <template>
 <div class="comp_schem_bdr">
     <div class="s_renge sip_calc_range_grop">
-        <h4>SIP Performance Calculator</h4>
-        <div class="row">
+        <div class="row mb-4 pb-4">
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Name</label>
+                                            <input class="form-text" type="text" placeholder="Enter Full Name" v-model="name" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Email</label>
+                                            <input class="form-text" type="text" placeholder="Enter Your Email" v-model="email"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Phone</label>
+                                            <input class="form-text" type="text" placeholder="Enter Phone Number" v-model="phone"  />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <hr>
+                                  <div class="row mb-4 pb-4">
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">SIP Amount (Rs.)</label>
+                                            <input class="form-text" type="text" placeholder="" v-model="sip_amount" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Duration (months)</label>
+                                            <input class="form-text" type="text" placeholder="12" v-model="duration_months"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Days</label>
+                                            <select  class="form-text"  @change="sipCalculations" :disabled="process" v-model="sip_day" id="sip_day" >
+                                                <option disabled value="">Select</option>
+                                                <option :value="index" v-for="index in 31" :key="index">{{index}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div class="col-lg-3 col-md-12">
+                                        <div class="cal_form_select">
+                                            <label for="">Select Fund</label>
+                                            <select class="form-text" id="sip_fund_performance" v-model="selectedFund" @change="sipCalculations" :disabled="process">
+                                                <option value="">Select Fund</option>
+                                                <option v-for="fund in funds" :value="fund">{{fund.fund_name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+        <div class="row d-none">
             <div class="col-lg-3 col-md-12">
                 <div class="range-slider-wrapper">
                     <span class="slider-heading">SIP Amount (Rs.)</span>
@@ -78,21 +132,21 @@
                 </div>
             </div>
             <div>&nbsp;</div>
-            <div class="invst-fields-action-buttons" v-if="Object.keys(sipCalculatedData).length ">
-                <div class="row m-0 justify-content-end">
+            <div class="invst-fields-action-buttons" v-if="Object.keys(sipCalculatedData).length " attr-d="justify-content-end">
+                <div class="row m-0 ">
                     <div class="col-md-3 action-common action-btn-1">
-                        <a href="javascript://" id="show-table" class="money_title_btn" @click="showTable = true">Show In Table</a>
+                        <a href="javascript://" id="show-table" class="money_title_btn" @click="showTableFunction">Show In Table</a>
                     </div>
-                    <div class="col-md-3 action-common action-btn-2">
+                    <div class="col-md-3 action-common action-btn-2 d-none">
                         <a href="javascript://" id="send-email" class="money_title_btn" :disabled="processEmail" @click="send_graph_result">Send Results In Email</a>
                     </div>
                 </div>
             </div>
         </div>
         <div>&nbsp;</div>
-        <!-- SIP CALCULATOR GRAPH DIV START -->
+        <!-- SIP CALCULATOR GRAPH DIV START v-show="showTable && !process" -->
 
-        <div id="sip-performance-calc-data" class="monthly_ranking_table" v-show="showTable && !process" v-if="Object.keys(sipCalculatedData).length">
+        <div id="sip-performance-calc-data" class="monthly_ranking_table"  v-if="Object.keys(sipCalculatedData).length && showTable">
             <div class="datatable_ll main_trer">
                 <div class="table-responsive">
                     <table class="table table-striped" style="width:100%">
@@ -160,6 +214,7 @@ export default {
         return {
             name: this.username,
             email: this.useremail,
+            phone:'',
             process: false,
             showchart: false,
             chart: null,
@@ -189,6 +244,11 @@ export default {
 
             var inflatedValue = currentValue * Math.pow((1 + annualInflationRate / 100), period);
             return inflatedValue;
+        },
+        showTableFunction(){
+            alert(this.process)
+            this.process=false;
+            this.showTable = true
         },
         get_sip_graph() {
             var graph_data = this.sipCalculatedData.graph_table_data;
@@ -311,9 +371,9 @@ export default {
             return true;
         },
         sipCalculations() {
-            this.sip_amount = this.$refs.sipAmount.value;
-            this.duration_months = this.$refs.sipDuration.value;
-            this.sip_day = this.$refs.sipDay.value;
+            // this.sip_amount = this.$refs.sipAmount.value;
+            // this.duration_months = this.$refs.sipDuration.value;
+            // this.sip_day = this.$refs.sipDay.value;
             if (this.sip_amount && Object.keys(this.selectedFund).length && this.duration_months && this.sip_day) {
                 let data = {
                     name: this.name,
@@ -329,15 +389,19 @@ export default {
                 axios.post(this.app_url + '/api/v1/sip-performance-calculator', data)
                     .then(response => {
                         this.sipCalculatedData = response.data.data
+                        this.process = false
                     })
                     .then(response => {
                         this.sipCalculatedData.sip_return = this.calculate_sip(JSON.parse(this.sipCalculatedData.sip_data.ALLDATES), JSON.parse(this.sipCalculatedData.sip_data.ALLVALUES))
+                        this.process = false
                     })
                     .then(response => {
                         this.get_sip_graph()
+                        this.process = false
                     })
                     .catch(error => {
                         console.log(error);
+                        this.process = false
                     })
                     .finally(() => {
                         this.process = false
