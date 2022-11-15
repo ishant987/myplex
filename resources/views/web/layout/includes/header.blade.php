@@ -52,7 +52,7 @@
                     <nav class="navbar navbar-expand-lg p-0">
 
                         <a class="navbar-brand" href="{{url('/')}}">
-                            <img src="{{asset('themes/frontend/assets/v1/img/logo.png')}}" />
+                            <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" />
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="ph-list-light"></i>
@@ -92,10 +92,9 @@
                                     </ul>
                                 </li>
                                 <a class="nav-link" href="/fund-watch">Fund Watch</a>
-                                <a class="nav-link" href="/calculator">Calculator</a>
                                 <a class="nav-link" href="#">Blog</a>
                                 {{-- <a class="nav-link" href="/about">Company</a> --}}
-                                <a class="cta_header_link" href="/ask-an-expert">Ask Your Experts</a>
+                                <a class="cta_header_link" href="/ask-an-expert">Ask our Experts</a>
                             </div>
                         </div>
                     </nav>

@@ -45,4 +45,108 @@ class CalculatorController extends BaseController
         }
         return abort(404);
     }
+    public function ObjectiveCalculator(Request $request, $slug = false){
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 44;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+            $defDataArr = $this->defDataArr;
+            if ($request->isMethod('post')) {
+                // session()->put('useremail', $request->useremail);
+                // session()->put('username', $request->username);
+                session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            }
+            session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            return view($this->page_path.'.calulators.objective_calculator', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+    }
+    public function InflationCalculator(Request $request, $slug = false){
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 44;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+            $defDataArr = $this->defDataArr;
+            if ($request->isMethod('post')) {
+                // session()->put('useremail', $request->useremail);
+                // session()->put('username', $request->username);
+                session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            }
+            session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            return view($this->page_path.'.calulators.inflation_calculator', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+    }
+    public function RetirementCalculator(Request $request, $slug = false){
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 44;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+            $defDataArr = $this->defDataArr;
+            if ($request->isMethod('post')) {
+                // session()->put('useremail', $request->useremail);
+                // session()->put('username', $request->username);
+                session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            }
+            session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            return view($this->page_path.'.calulators.retirement_calulator', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+    }
+    public function RiskCalculator(Request $request, $slug = false){
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 44;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+            $defDataArr = $this->defDataArr;
+            if ($request->isMethod('post')) {
+                // session()->put('useremail', $request->useremail);
+                // session()->put('username', $request->username);
+                session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            }
+            session()->put('useremail','sandyec01@gmail.com');
+                session()->put('username', 'sandeep');
+            return view($this->page_path.'.calulators.risk_evaluation', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+    }
 }

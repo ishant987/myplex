@@ -11,7 +11,11 @@ import MonthlyRanking from './components/MonthlyRanking.vue'
 import FundPerformance from './components/FundPerformance.vue'
 import CompareScheme from './components/CompareScheme.vue'
 import PerformanceSnapshot from './components/PerformanceSnapshot.vue'
+import InflationCalculator from './components/SIP/InflationCalculator.vue'
+import RetirementCalulator from './components/SIP/RetirementCalulator.vue'
+import RiskCalulator from './components/SIP/RiskToleranceEvaluator.vue'
 import Calculators from './components/Calculators.vue'
+import objective_calualtor from './components/other_objective_calulator.vue'
 import CompareSchemeHome from './components/CompareSchemeHome.vue'
 import SelectionsHome from './components/SelectionsHome.vue'
 import MutualFundDirectory from './components/MutualFundDirectory.vue'
@@ -35,6 +39,10 @@ app.component('fund-performance', FundPerformance)
 app.component('compare-scheme', CompareScheme)
 app.component('performance-snapshot', PerformanceSnapshot)
 app.component('calculators', Calculators)
+app.component('objective_calualtor', objective_calualtor)
+app.component('inflation-calculator', InflationCalculator)
+app.component('retirement-calculator', RetirementCalulator)
+app.component('risk-evaluation-calculator', RiskCalulator)
 //app.component('compare-scheme-home', CompareSchemeHome)
 app.use(store)
 app.use(VueHtml2Canvas)

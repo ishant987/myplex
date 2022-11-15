@@ -496,6 +496,10 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('performance-snapshot', 'PageController@performanceSnapshotData')->name('performance.snapshot');
     // Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
     Route::any('calculator', 'CalculatorController@calculatorsPageData')->name('calculators');
+    Route::any('objective-calculator', 'CalculatorController@ObjectiveCalculator')->name('calculators.objective');
+    Route::any('inflation_calculator', 'CalculatorController@InflationCalculator')->name('calculators.inflation');
+    Route::any('retirement_calualtor', 'CalculatorController@RetirementCalculator')->name('calculators.retirement');
+    Route::any('risk_evaluation', 'CalculatorController@RiskCalculator')->name('calculators.risk');
 
     Route::get('calculator-login/{provider}', 'PageController@redirectCalculator')->name('calculators.social.login');
     Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
