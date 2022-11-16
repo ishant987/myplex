@@ -6,50 +6,67 @@
                 <div class="tab_comp">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" :class="{'active':currentTab == 'daily_price'}" id="pills-home-tab"
+                            <button class="nav-link" :class="{ 'active': currentTab == 'daily_price' }" id="pills-home-tab"
                                 data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
                                 aria-controls="pills-home" aria-selected="true">
-                                <img :src="this.image_path+'/tab_icon.png'" alt="" />
+                                <img :src="this.image_path + '/tab_icon.png'" alt="" />
                                 Daily Price
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" :class="{'active show':currentTab == 'ratios'}"
-                                @click="currentTab='ratios'" id="pills-profile-tab" data-bs-toggle="pill"
+                            <button class="nav-link" :class="{ 'active show': currentTab == 'ratios' }"
+                                @click="currentTab = 'ratios'" id="pills-profile-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
                                 aria-selected="false">
-                                <img :src="this.image_path+'/tab_icon1.png'" alt="" />
+                                <img :src="this.image_path + '/tab_icon1.png'" alt="" />
                                 Ratio
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" :class="{'active show':currentTab == 'composition'}"
-                                @click="currentTab='composition'" id="pills-contact-tab" data-bs-toggle="pill"
+                            <button class="nav-link" :class="{ 'active show': currentTab == 'composition' }"
+                                @click="currentTab = 'composition'" id="pills-contact-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact"
                                 aria-selected="false">
-                                <img :src="this.image_path+'/tab_icon2.png'" alt="" />
+                                <img :src="this.image_path + '/tab_icon2.png'" alt="" />
                                 Composition
                             </button>
                         </li>
                     </ul>
                 </div>
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade" :class="{'active show':currentTab == 'daily_price'}" id="pills-home"
+                    <div class="tab-pane fade" :class="{ 'active show': currentTab == 'daily_price' }" id="pills-home"
                         role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="three_btn">
+                            <div class="row align-items-center justify-content-end">
+                                <div class="col-lg-4 mb-2">
+                                    <div
+                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                        <a href="javascript://" @click="selectedDuration = 1"
+                                            :class="selectedDuration == 1 ? 'active' : ''">1M</a>
+                                        <a href="javascript://" @click="selectedDuration = 3"
+                                            :class="selectedDuration == 3 ? 'active' : ''">3M</a>
+                                        <a href="javascript://" @click="selectedDuration = 6"
+                                            :class="selectedDuration == 6 ? 'active' : ''">6M</a>
+                                        <a href="javascript://" @click="selectedDuration = 12"
+                                            :class="selectedDuration == 12 ? 'active' : ''">1Y</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table_scc">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr class="bg_top top_bg_right_black">
-                                            <td colspan="3">
+                                            <td colspan="2">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect :disabled="compare_price_process" class=""
                                                         label="fund_name" track-by="fund_id" v-model="selectedScheme1"
                                                         tag-placeholder="" placeholder="Select Fund" :options="funds"
                                                         :multiple="false" :taggable="false" selectLabel=""
                                                         :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true">
+                                                        :max-height="300" :showNoResults="true" :width="100">
                                                     </multiselect>
                                                 </div>
                                             </td>
@@ -69,21 +86,21 @@
                                             </td>
                                         </tr>
                                         <tr class="bg_green">
-                                            <td>
+                                            <td width="300px">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect :disabled="compare_price_process" class=""
                                                         label="fund_name" track-by="fund_id" v-model="selectedScheme2"
                                                         tag-placeholder="" placeholder="Select Fund" :options="funds"
                                                         :multiple="false" :taggable="false" selectLabel=""
                                                         :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true">
+                                                        :max-height="300" :showNoResults="true" :width="100">
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300px">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect :disabled="compare_price_process" class=""
                                                         label="fund_name" track-by="fund_id" v-model="selectedScheme3"
                                                         tag-placeholder="" placeholder="Select Fund" :options="funds"
@@ -93,9 +110,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300px">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect :disabled="compare_price_process" class=""
                                                         label="fund_name" track-by="fund_id" v-model="selectedScheme4"
                                                         tag-placeholder="" placeholder="Select Fund" :options="funds"
@@ -105,9 +122,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300px">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect :disabled="compare_price_process" class=""
                                                         label="fund_name" track-by="fund_id" v-model="selectedScheme5"
                                                         tag-placeholder="" placeholder="Select Fund" :options="funds"
@@ -117,23 +134,12 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <div class="form_select">
-                                                    <label for="">Schemes</label>
-                                                    <select v-model="selectedScheme6" class="form-select"
-                                                        aria-label="Default select example"
-                                                        :disabled="compare_price_process">
-                                                        <option v-for="fund in funds" :value="fund">{{fund.fund_name}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="three_btn">
+                        <div class="three_btn mt-3">
                             <div class="row align-items-center">
                                 <div class="col-lg-4">
                                     <div class="middle_left">
@@ -146,25 +152,12 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div
-                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
-                                        <a href="javascript://" @click="selectedDuration=1"
-                                            :class="selectedDuration==1 ? 'active' :''">1M</a>
-                                        <a href="javascript://" @click="selectedDuration=3"
-                                            :class="selectedDuration==3 ? 'active' :''">3M</a>
-                                        <a href="javascript://" @click="selectedDuration=6"
-                                            :class="selectedDuration==6 ? 'active' :''">6M</a>
-                                        <a href="javascript://" @click="selectedDuration=12"
-                                            :class="selectedDuration==12 ? 'active' :''">1Y</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="text-center mt-3">
                             <LoadingBar :status="loadingStatus"></LoadingBar>
                         </div>
-                        <p v-if="notice_text" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text}}</p>
+                        <p v-if="notice_text" class="text-warning mt-3 text-center w-100 mb-0">{{ notice_text }}</p>
                         <div class="mt-5 " style="width: 100%;" v-show="show_graph">
                             <div class="row">
                                 <div class="col-lg-6 col-md-5 col-sm-12">
@@ -194,19 +187,36 @@
                                 </div>
                             </div>
                         </div>
-                        <p v-if="nodata_text" class="text-warning mt-3 text-center w-100 mb-0">{{nodata_text}}</p>
+                        <p v-if="nodata_text" class="text-warning mt-3 text-center w-100 mb-0">{{ nodata_text }}</p>
                     </div>
                     <!-- ratio calulation -->
-                    <div class="tab-pane fade" :class="{'active show':currentTab == 'ratios'}" id="pills-profile"
+                    <div class="tab-pane fade" :class="{ 'active show': currentTab == 'ratios' }" id="pills-profile"
                         role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="three_btn mb-2">
+                            <div class="row align-items-center justify-content-end">
+                                <div class="col-lg-4">
+                                    <div
+                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
+                                        <a href="javascript://" @click="selectedRatioDuration = 1"
+                                            :class="selectedRatioDuration == 1 ? 'active' : ''">1M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration = 3"
+                                            :class="selectedRatioDuration == 3 ? 'active' : ''">3M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration = 6"
+                                            :class="selectedRatioDuration == 6 ? 'active' : ''">6M</a>
+                                        <a href="javascript://" @click="selectedRatioDuration = 12"
+                                            :class="selectedRatioDuration == 12 ? 'active' : ''">1Y</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table_scc">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr class="bg_top top_bg_right_black">
-                                            <td colspan="3">
+                                            <td colspan="2">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund1Ratio" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -217,6 +227,43 @@
                                                     </multiselect>
 
                                                 </div>
+                                            </td>
+                                            <td colspan="">
+                                                <table class="table">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="form_select">
+                                                                <label for="">Return Ratio</label>
+                                                                <select class="" v-model="selectedRatioReturn"
+                                                                    :disabled="selectedRatioRisk !== ''"
+                                                                    style="width:123px">
+                                                                    <option value="">Select</option>
+                                                                    <option value="cagr">Returns</option>
+                                                                    <option value="jensen_alpha">Jensen</option>
+                                                                    <option value="information_ratio">Information Ratio
+                                                                    </option>
+                                                                    <option value="rolling_return">Rolling Return
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form_select">
+                                                                <label for="">Risk Ratio</label>
+                                                                <select class="form-select" v-model="selectedRatioRisk"
+                                                                    :disabled="selectedRatioReturn !== ''">
+                                                                    <option value="">Select</option>
+                                                                    <option value="beta">Beta</option>
+                                                                    <option value="tracking_error">Tracking Error
+                                                                    </option>
+                                                                    <option value="volatality">Volatility</option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+
                                             </td>
                                             <td class="bg_222">
                                                 <div class="form_select">
@@ -234,9 +281,9 @@
                                             </td>
                                         </tr>
                                         <tr class="bg_green">
-                                            <td>
+                                            <td width="450" colspan="2">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund2Ratio" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -247,9 +294,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="350">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund3Ratio" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -260,9 +307,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="350">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund4Ratio" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -273,24 +320,11 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="350">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund5Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form_select">
-                                                    <label for="">Schemes</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund6Ratio" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
                                                         :taggable="false" selectLabel="" :searchable="true"
                                                         :disabled="compare_price_process"
@@ -304,7 +338,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="three_btn">
+                        <div class="three_btn mt-3">
                             <div class="row align-items-center">
                                 <div class="col-lg-2">
                                     <div class="middle_left">
@@ -312,7 +346,7 @@
                                             @click="ratioCompare">Compare</a>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <!-- <div class="col-lg-6">
                                     <div class="middle_a d-flex align-items-center justify-content-center">
                                         <a href="javascript://" @click="selectedRatioReturn='cagr'"
                                             :class="selectedRatioReturn=='cagr' ? 'active' :''">Returns</a>
@@ -325,43 +359,30 @@
                                             :class="selectedRatioReturn=='rolling_return' ? 'active' :''">Rolling
                                             Return</a>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div
-                                        class="middle_a d-flex align-items-center justify-content-md-end justify-content-center">
-                                        <a href="javascript://" @click="selectedRatioDuration=1"
-                                            :class="selectedRatioDuration==1 ? 'active' :''">1M</a>
-                                        <a href="javascript://" @click="selectedRatioDuration=3"
-                                            :class="selectedRatioDuration==3 ? 'active' :''">3M</a>
-                                        <a href="javascript://" @click="selectedRatioDuration=6"
-                                            :class="selectedRatioDuration==6 ? 'active' :''">6M</a>
-                                        <a href="javascript://" @click="selectedRatioDuration=12"
-                                            :class="selectedRatioDuration==12 ? 'active' :''">1Y</a>
-                                    </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="text-center mt-3">
                             <LoadingBar :status="loadingStatus"></LoadingBar>
                         </div>
                         <p v-if="notice_text_ratio" class="text-warning mt-3 text-center w-100 mb-0">
-                            {{notice_text_ratio}}</p>
+                            {{ notice_text_ratio }}</p>
                         <div class="mt-5 " style="width: 100%;" v-show="show_ratio_graph">
                             <div id="chartContainerRatio" style="height: 360px; width: 100%;"></div>
                         </div>
                     </div>
                     <!-- ratio calulation end-->
                     <!-- composition  -->
-                    <div class="tab-pane fade" :class="{'active show':currentTab == 'composition'}" id="pills-contact"
+                    <div class="tab-pane fade" :class="{ 'active show': currentTab == 'composition' }" id="pills-contact"
                         role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="table_scc">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <tbody>
-                                        <tr class="bg_top">
+                                        <tr class="bg_top top_bg_right_black">
                                             <td colspan="2">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund1Composition" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -382,7 +403,7 @@
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td colspan="2">
+                                            <td colspan="2" class="bg_222">
                                                 <div class="form_select">
                                                     <label for="">Month/Year</label>
                                                     <Datepicker v-model="selectedCompositionDate" :format="'MM/yyyy'"
@@ -392,9 +413,9 @@
                                             </td>
                                         </tr>
                                         <tr class="bg_green">
-                                            <td>
+                                            <td width="300">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund2Composition" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -404,9 +425,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund3Composition" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -416,9 +437,9 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund4Composition" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
@@ -428,23 +449,11 @@
                                                     </multiselect>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="300">
                                                 <div class="form_select">
-                                                    <label for="">Schemes</label>
+                                                    <label for="">Schemes, Index, Currency, Commodity</label>
                                                     <multiselect class="" label="fund_name" track-by="fund_id"
                                                         v-model="selectedFund5Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form_select">
-                                                    <label for="">Schemes</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund6Composition" tag-placeholder=""
                                                         placeholder="Select Fund" :options="funds" :multiple="false"
                                                         :taggable="false" selectLabel="" :searchable="true"
                                                         :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
@@ -457,7 +466,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="three_btn">
+                        <div class="three_btn mt-3">
                             <div class="row align-items-center">
                                 <div class="col-lg-4">
                                     <div class="middle_left">
@@ -467,16 +476,16 @@
                                 </div>
                             </div>
                         </div>
-                        <p v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{notice_text_comp}}
+                        <p v-if="notice_text_comp" class="text-warning mt-3 text-center w-100 mb-0">{{ notice_text_comp }}
                         </p>
                         <p v-if="compositionTypeValidationError" class="text-warning mt-3 text-center w-100 mb-0">
-                            {{compositionTypeValidationError}}</p>
+                            {{ compositionTypeValidationError }}</p>
                         <p v-if="compositionValidationError" class="text-warning mt-3 text-center w-100 mb-0">
-                            {{compositionValidationError}}</p>
+                            {{ compositionValidationError }}</p>
                         <div class="compsition-tables" v-show="show_comp">
                             <div class="row main_trer mt-5" v-if="compare_comp_script.length">
-                                <div class="col-lg-6 col-md-12" v-for="(com_data,index) in compare_comp_script">
-                                    <p>{{com_data.fund_name}}</p>
+                                <div class="col-lg-6 col-md-12" v-for="(com_data, index) in compare_comp_script">
+                                    <p>{{ com_data.fund_name }}</p>
                                     <table class="table table-borderless table-striped">
                                         <thead>
                                             <tr>
@@ -497,11 +506,11 @@
                                         </tfoot>
                                     </table>
                                 </div>
-                                <hr :if="index%2">
+                                <hr :if="index % 2">
                             </div>
                             <div class="row main_trer mt-5" v-if="compare_comp_industry.length">
-                                <div class="col-lg-6 col-md-12" v-for="(com_industry,index) in compare_comp_industry">
-                                    <p>{{com_industry.fund_name}}</p>
+                                <div class="col-lg-6 col-md-12" v-for="(com_industry, index) in compare_comp_industry">
+                                    <p>{{ com_industry.fund_name }}</p>
                                     <table class="table table-borderless table-striped">
                                         <thead>
                                             <tr>
@@ -518,13 +527,13 @@
                                         </tbody>
                                         <tfoot>
                                             <th>Total Of Top 10</th>
-                                            <th>{{ com_industry.top_industry_sum !=0 ?
-                                            com_industry.top_industry_sum.toFixed(2) : com_industry.top_industry_sum
+                                            <th>{{ com_industry.top_industry_sum != 0 ?
+                                                    com_industry.top_industry_sum.toFixed(2) : com_industry.top_industry_sum
                                             }}</th>
                                         </tfoot>
                                     </table>
                                 </div>
-                                <hr :if="index%2">
+                                <hr :if="index % 2">
                             </div>
                             <div class="row main_trer mt-5" v-if="Object.keys(compare_comp_aaum).length">
                                 <div class="col-lg-6 col-md-12">
@@ -536,9 +545,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(ammu_data,index) in compare_comp_aaum" :key="index">
+                                            <tr v-for="(ammu_data, index) in compare_comp_aaum" :key="index">
                                                 <td class="modal-td">{{ ammu_data.fund_name }}</td>
-                                                <td>{{ ammu_data.corpus_entry.toFixed(2)}}</td>
+                                                <td>{{ ammu_data.corpus_entry.toFixed(2) }}</td>
                                             </tr>
 
                                         </tbody>
@@ -643,7 +652,7 @@ export default {
             selectedFund4Ratio: [],
             selectedFund5Ratio: [],
             selectedFund6Ratio: [],
-            selectedRatioReturn: 'cagr',
+            selectedRatioReturn: '',
             selectedRatioRisk: '',
             selectedRatioDuration: '12',
             enableRatioCustomDates: false,
@@ -975,7 +984,7 @@ export default {
                 .then(response => {
                     that.compare_comp_process = false
                     let graph_data = that.compare_ratio_data = response.data.data.composition_data
-                    if(typeof graph_data[0].data.length ==0){
+                    if (typeof graph_data[0].data.length == 0) {
                         that.show_comp = false
                         that.notice_text_comp = 'No data Found'
                         that.compare_comp_process = false
@@ -1023,11 +1032,11 @@ export default {
                 this.ratioCompare();
             }
         },
-        selectedRatioReturn(value) {
-            if (value) {
-                this.ratioCompare();
-            }
-        }
+        // selectedRatioReturn(value) {
+        //     if (value) {
+        //         this.ratioCompare();
+        //     }
+        // }
     },
     computed: {
         ...mapGetters('InputData', ['loading', 'funds', 'indices', 'currencies']),
@@ -1085,10 +1094,10 @@ export default {
         let compare_price_type = that.getURLParams("compare_price_type")
         let compare_ratio_type = that.getURLParams("compare_ratio_type")
         let compare_composition_type = that.getURLParams("compare_composition_type")
-        if(compare_composition_type=='top_industry'){
+        if (compare_composition_type == 'top_industry') {
             this.currentTab = 'composition'
         }
-        if(compare_ratio_type=='information_ratio'){
+        if (compare_ratio_type == 'information_ratio') {
             this.currentTab = 'ratios'
         }
         let val1 = that.getURLParams("val1")
@@ -1289,6 +1298,10 @@ export default {
 
 .multiselect__content-wrapper {
     width: 100%;
+}
+
+.multiselect--above {
+    width: 300px !important;
 }
 
 .multiselect__tags,
