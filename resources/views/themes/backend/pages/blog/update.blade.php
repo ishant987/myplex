@@ -26,9 +26,11 @@
           
           <x-form.group_lyt1_2_10 label="{{ __('blog.image_banner') }}" for="image_banner" error="{{ $errors->first('image_banner') }}" required="true">
             <x-form.field.file id="image_banner" name="image_banner" value="{{$blog->image_banner}}" />
+            <a href="{{asset('/storage/media/'.$blog->image_banner)}}" target="_blank">View Banner Image</a>
           </x-form.group_lyt1_2_10>
           <x-form.group_lyt1_2_10 label="{{ __('blog.image_thumb') }}" for="image_thumb" error="{{ $errors->first('image_thumb') }}" required="true">
             <x-form.field.file id="image_thumb" name="image_thumb" value="{{$blog->image_thumb}}" />
+            <a href="{{asset('/storage/media/'.$blog->image_thumb)}}" target="_blank">View Thumb Image</a>
           </x-form.group_lyt1_2_10>
 
           <x-form.group_lyt1_2_10 label="{{ __('blog.author') }}" for="author" error="{{ $errors->first('author') }}" required="true">

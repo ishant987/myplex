@@ -9,9 +9,15 @@
             <div class="card-header">
                 <h5>All Blogs</h5>
                 <!-- Add New -->
+
+                @if($roleRights['add'])
                 <x-link_add_new url="{{ route('admin.blog.create') }}" />
+                @endif
                 <!-- Multi Delete -->
+
+                @if($roleRights['delete'])
                 <x-form.btn_multi_delete />
+                @endif
                 &nbsp;
             </div>
             <div class="card-block">
@@ -26,16 +32,19 @@
                                         <x-form.field.checkbox style="default" name="check_all" id="check_all" />
                                     </th>
                                     <th>
-                                        Title
+                                        {{__('blog.title_txt')}}
                                     </th>
                                     <th>
-                                        Tags
+                                        {{__('blog.tags')}}
                                     </th>
                                     <th>
-                                        Status
+                                        {{__('blog.status')}}
                                     </th>
                                     <th>
                                         Created By
+                                    </th>
+                                    <th>
+                                        Comments
                                     </th>
                                     <th>
                                         Published By
@@ -46,24 +55,36 @@
                                 @foreach($blogs as $blog)
                                 <tr role="row" class="">
                                     <td class="id">
-                                        <x-form.field.checkbox style="default" name="checkbox[]" value="{{$blog['id']}}" fldclass="del-chkbx" />
+                                        <x-form.field.checkbox style="default" name="checkbox[]" value="{{$blog->id}}" fldclass="del-chkbx" />
                                     </td>
                                     <td>
-                                        <x-link_tooltip url="{{ route('admin.blog.edit', $blog['id']) }}" title="Edit">
-                                            {{$blog['heading']}}
+                                        @if($roleRights['edit'])
+                                        <x-link_tooltip url="{{ route('admin.blog.edit', $blog->id) }}" title="Edit">
+                                            {{$blog->heading}}
                                         </x-link_tooltip>
                                     </td>
+                                    @else
+                                    {{$blog->heading}}
+                                    @endif
                                     <td>
-                                        {{$blog['tags']}}
+                                        {{$blog->tags}}
                                     </td>
                                     <td>
-                                        <label id="change_status{{ $blog['id'] }}" onclick="return changeStatus('id', {{ $blog['id'] }}, 'blog', {{ $blog['is_active'] }}, '{{ $statusAtrArr['status_type'] }}');" class="label btn-{{ $listDataAtrArr['alert_css'][$blog['is_active']] }}">{{ $statusAtrArr['label'][$blog['is_active']] }}</label>
+
+                                        <label id="change_status{{ $blog->id }}" onclick="return changeStatus('id', {{ $blog->id }}, 'blog', {{ $blog->status }}, '{{ $statusAtrArr['status_type'] }}');" class="label btn-{{ $listDataAtrArr['alert_css'][$blog->status] }}">{{ $statusAtrArr['label'][$blog->status] }}</label>
                                     </td>
                                     <td>
-                                        {{$blog['created_by']}}
+                                        {{$blog->creator->first_name}}
                                     </td>
                                     <td>
-                                        {{$blog['published_date']}}
+                                        @if($blog->comments->count())
+                                        <a href="{{route('admin.blog.comments', $blog->id)}}">View Comments ({{$blog->comments->count()}})</a>
+                                        @else
+                                        No comments
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{$blog->published_date}}
                                     </td>
                                 </tr>
                                 @endforeach

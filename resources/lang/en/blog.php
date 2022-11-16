@@ -12,6 +12,7 @@ return [
     */
     'url' => 'Blog URL',
     'heading' => 'Heading',
+    'sub_heading' => 'Sub heading',
     'image_banner' => 'Image banner',
     'image_thumb' => 'Image Thumbnail',
     'author' =>'Author',
@@ -155,6 +156,8 @@ return [
 
     'id_txt' => 'ID',
     'title_txt' => 'Title',
+    'status' => 'Status',
+    'tags' => 'Tags',
     'slug_txt' => 'Slug',
     'description_txt' => 'Description',
     'parent_txt' => 'Parent',
