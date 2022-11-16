@@ -18,18 +18,22 @@ class BlogController extends BaseController
 
      public function __construct()
      {
-
+          
+          $classNameArr = explode('\\', __CLASS__);
+          $this->className = end($classNameArr);
           $this->admin = Auth::guard('admin')->user();
      }
 
      public function index()
      {
 
-          $blogs = BlogModel::get()->toArray();
+          $blogs = BlogModel::with('creator')->get();
           $coreObj = new App();
           $listDataAtrArr = $coreObj->getListDataAtr();
           $statusAtrArr = $coreObj->getStatusLblTyp2Atr();
-          return view("themes.backend.pages.blog.index", compact('blogs', 'statusAtrArr', 'listDataAtrArr'));
+          
+        $roleRights = ['add' => App::hasAccessToMethod($this->className, 'admin.blog.create'), 'edit' => App::hasAccessToMethod($this->className, 'admin.blog.edit'), 'delete' => App::hasAccessToMethod($this->className, 'admin.blog.delete')];
+          return view("themes.backend.pages.blog.index", compact('blogs', 'statusAtrArr', 'listDataAtrArr','roleRights'));
      }
 
      public function create()
@@ -71,8 +75,9 @@ class BlogController extends BaseController
           $published_time = $curTime->format("Y-m-d H:i:s");
           $params['published_by'] = $isActivated;
           $params['published_date'] = !is_null($isActivated) ? $published_time : null;
-          $params['created_by'] = Auth::guard('admin')->user()['first_name'];
-          $params['heading'] = SELF::cleanUrl($params['heading']);
+          $params['created_by'] = $params['updated_id'] = Auth::guard('admin')->user()['admin_id'];
+          $params['heading'] = $params['heading'];
+          $params['unique_url'] = SELF::cleanUrl($params['heading']);
           $params['image_thumb'] = SELF::fileUpload($request->file('image_thumb'));
           $params['image_banner'] = SELF::fileUpload($request->file('image_banner'));
 
@@ -120,6 +125,15 @@ class BlogController extends BaseController
         }
 
         return back()->with('alert', Config('adminconstants.alert_css.1'))->with('message', __('message.success.delete'))->with('title', __('admin.success_ttl'));
+          
+     }
+
+     public function comments($id){
+          $blogComments = BlogModel::with('comments')->find($id)->toArray();
+          $coreObj = new App();
+          $listDataAtrArr = $coreObj->getListDataAtr();
+          $statusAtrArr = $coreObj->getStatusLblTyp2Atr();
+          return view("themes.backend.pages.blogComments.index", compact('blogComments', 'statusAtrArr', 'listDataAtrArr'));
           
      }
      

@@ -29,6 +29,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
             Route::post('/store/{id?}', 'BlogController@store')->name('blog.store');
             Route::get('/store/{id?}', 'BlogController@edit')->name('blog.edit');
             Route::post('/delete', 'BlogController@delete')->name('blog.delete');
+            Route::get('/comments/{id}', 'BlogController@comments')->name('blog.comments');
             
         });
         
@@ -570,4 +571,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::get('draft-answer/{aeqa_id}', 'AskExpertController@draftAnswerData')->name('draft-answer');
         Route::post('draft-answer/{aeqa_id}', 'AskExpertController@draftAnswerSave')->name('draft-answer.save');
     });
+
+    Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
+    Route::get('money_seriously_detail/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
+    
 });

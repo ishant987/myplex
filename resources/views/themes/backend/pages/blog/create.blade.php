@@ -16,16 +16,31 @@
         <form name="aeDataFrm" id="aeDataFrm" action="{{ route('admin.blog.store')}}" method="POST" enctype="multipart/form-data">
           {{ csrf_field() }}
           <input type="text" name="created_by" id="" value="{{$data['adminID']}}" hidden>
+          <input type="text" name="updated_id" id="" value="{{$data['adminID']}}" hidden>
           <x-form.group_lyt1_2_10 label="{{ __('blog.title_txt') }}" for="category" error="{{ $errors->first('category') }}" required="true">
             <x-form.field.text id="category" name="category" value="{{ old('category') }}" />
           </x-form.group_lyt1_2_10>
           <x-form.group_lyt1_2_10 label="{{ __('blog.heading') }}" for="heading" error="{{ $errors->first('heading') }}" required="true">
             <x-form.field.text id="heading" name="heading" value="{{ old('heading') }}" />
           </x-form.group_lyt1_2_10>
-          
-          <x-form.group_lyt1_2_10 label="{{ __('blog.description_txt') }}" for="description" error="{{ $errors->first('description') }}" info="{!! __('admin.info.description') !!}">
-            <x-form.field.textarea id="description" name="description" value="{!! old('description') !!}" rows="8" />
+          <x-form.group_lyt1_2_10 label="{{ __('blog.sub_heading') }}" for="sub_heading" error="{{ $errors->first('sub_heading') }}" required="true">
+            <x-form.field.text id="sub_heading" name="sub_heading" value="{{ old('sub_heading') }}" />
           </x-form.group_lyt1_2_10>
+          
+          <x-form.group_lyt1_2_10 label="{{ __('blog.description_txt') }}" for="description" error="{{ $errors->first('description') }}" info="{!! __('admin.info.description') !!}" required="true">
+            <x-form.field.textarea id="description" name="description" value="{!! old('description') !!}" class="editor_full"/>
+          </x-form.group_lyt1_2_10>
+          
+          <x-form.group_lyt1_2_10 label="Select sub category" for="sub_category" 
+                error="{{ $errors->first('sub_category') }}" required="true">
+            <select id="sub_category" class="form-control" name="sub_category">
+                <option value="">--Select--</option>
+                @foreach( ['highlighted_posts' => 'Highlighted Posts', 'editors_pick' => 'Editor picks', 'must_read'=> 'Must Read'] as  $key=>$value )
+                <option value="{{ $key }}"> {{$value}}</option>
+                @endforeach
+            </select>
+            </x-form.group_lyt1_2_10>
+          
           
           <x-form.group_lyt1_2_10 label="{{ __('blog.image_banner') }}" for="image_banner" error="{{ $errors->first('image_banner') }}" required="true">
             <x-form.field.file id="image_banner" name="image_banner" value="{{ old('image_banner') }}" />
