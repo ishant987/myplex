@@ -14,10 +14,10 @@ class AddColumnsBlogTable extends Migration
     public function up()
     {
         
-        Schema::table('blog', function (Blueprint $table) {
-            $table->softDeletes();
-            $table->integer('transactions_from')->after('type')->nullable();
-        });
+        // Schema::table('blog', function (Blueprint $table) {
+        //     $table->softDeletes();
+        //     $table->integer('transactions_from')->after('type')->nullable();
+        // });
     
     }
 
