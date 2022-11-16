@@ -577,6 +577,6 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     });
 
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
-    Route::get('money_seriously_detail/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
+    Route::get('money_seriously/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
     
 });

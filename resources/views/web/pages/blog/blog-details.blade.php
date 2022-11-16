@@ -7,7 +7,7 @@
                 <div class="col-md-12">
                     <div class="blog_details">
                         <div class="blog_details_img">
-                            <img src="img/blog-details.jpg" />
+                            <img src="{{$ImagePath.$blog_details['image_banner']}}" />
                         </div>
                         <div class="blog_details_cont">
                             <h4>{{$blog_details['category']}}</h4>
@@ -35,75 +35,7 @@
     </section>
 
 
-
-    <section class="hightlight_post_sec section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="latest_blog_title">
-                        <h4>Latest Blog</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="single_big_post">
-                        <div class="big_post_img_wrapper">
-                            <img src="img/blog.jpg" class="img-fluid" />
-                        </div>
-                        <div class=big_post_cont_wrpper>
-                            <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="hightlight_post_listing">
-                        <h2>Read like this one</h2>
-                        <li class="single_highlight_post">
-                            <h4>Will i invest now! is it the right time?</h4>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </li>
-                        <li class="single_highlight_post">
-                            <h4>The second stage of co-vid and your investments plan</h4>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </li>
-                        <li class="single_highlight_post">
-                            <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </li>
-                        <li class="single_highlight_post">
-                            <h4>Are the small cap funds expensive?</h4>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </li>
-                        <li class="single_highlight_post">
-                            <h4>What, when, who anud were they successful?</h4>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </li>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    @include('web.pages.blog.latest_blogs',['heading'=>'Lates blog','sub_heading'=>'Read like this one'])
     
 
     <section class="editor_pics_blog">
