@@ -1,17 +1,33 @@
 @extends('web.layout.app')
+
+@if(isset($dataArr['meta_title']))
+@section('page-title'){{$dataArr['meta_title']}}@stop
+@else
+@section('page-title'){{$dataArr['title']}}@stop
+@endif
+@if(isset($dataArr['meta_key']))
+@section('meta-keywords'){{$dataArr['meta_key']}}@stop
+@endif
+@if(isset($dataArr['meta_descp']))
+@section('meta-description'){{$dataArr['meta_descp']}}@stop
+@endif
+@if(isset($dataArr['image_path']))
+@section('meta-image'){{$dataArr['image_path']}}@stop
+@endif
 @section('content')
 <section class="inner_banner_section">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4>Recent News</h4>
-                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
+                    <h4>{{$dataArr['title']}}</h4>
+                    <p>{{$dataArr['meta_descp']}}</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
+@include('web.pages.blog.about')
 @include('web.pages.blog.latest_blogs',['heading'=>'','sub_heading'=>'Highlighted Posts'])
 
 @if(!empty($data['editors_pick']))
@@ -31,8 +47,12 @@
                     <div class="single_blog_img">
                         <img src="{{$ImagePath.$value['image_thumb']}}" class="img-fluid" />
                     </div>
-                    <div class="blog_content">
-                        <h4>{{$value['heading']}}</h4>
+                    <div class="blog_content single_highlight_post1">
+                        <h4>
+                            <a href="{{url('money_seriously').'/'.$value['unique_url']}}">
+                                {{$value['heading']}}
+                            </a>
+                        </h4>
                         <p>{{$value['sub_heading']}}</p>
                         <div class="post_author d-flex align-items-enter">
                             <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i>{{$value['author']}}</div>

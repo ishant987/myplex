@@ -37,6 +37,16 @@ class BaseController extends Controller
 
 			$whereFldArr = array($idName => $id);
 			$updFldArr   = array('status' => $newstatus, 'updated_id' => auth()->guard('admin')->user()->admin_id, 'updated_at' => now());
+			if($table=='blog'){
+				$curTime = new \DateTime();
+          		$published_time = $curTime->format("Y-m-d H:i:s");
+				if($newstatus==1)
+				{
+					$blogArray['published_date']=$published_time;
+				}
+				$blogArray['is_active']=$newstatus;
+				$updFldArr=array_merge($updFldArr,$blogArray);
+			}
 			$res = UsefulSql::updateSingleRecord($table, $whereFldArr, $updFldArr);
 			if($res){
 				$newbtnClass = $alertCss[$newstatus];

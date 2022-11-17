@@ -216,40 +216,24 @@
             </div>
         </div>
         <div class="row align-items-center">
-            <div class="col-md-4 mb-4">
-                <div class="money_left_sec" data-aos="fade-up" data-aos-duration="1000">
-                    <img src="{{asset('themes/frontend/assets/v1/img/money-seriusly-img.jpg')}}" class="img-fluid" />
+            @foreach ($blogPosts as $key=>$value)
+                <div class="col-md-4 mb-4">
+                    <div class="money_left_sec" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{$BlogImagePath.$value->image_thumb}}" class="img-fluid" />
+                    </div>
+                    <div class="money_right_section" data-aos="fade-up" data-aos-duration="1000">
+                        <h4>{{$value['sub_heading']}}</h4>
+                        <p>
+                            {{ Str::limit(strip_tags($value->description), 200, '...') }}
+                        </p>
+                        <a href="{{url('money_seriously').'/'.$value['unique_url']}}">Read More</a>
+                    </div>
                 </div>
-                <div class="money_right_section" data-aos="fade-up" data-aos-duration="1000">
-                    <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    <a href="#">Read More</a>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="money_left_sec" data-aos="fade-up" data-aos-duration="1000">
-                    <img src="{{asset('themes/frontend/assets/v1/img/money-seriusly-img.jpg')}}" class="img-fluid" />
-                </div>
-                <div class="money_right_section" data-aos="fade-up" data-aos-duration="1000">
-                    <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    <a href="#">Read More</a>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="money_left_sec" data-aos="fade-up" data-aos-duration="1000">
-                    <img src="{{asset('themes/frontend/assets/v1/img/money-seriusly-img.jpg')}}" class="img-fluid" />
-                </div>
-                <div class="money_right_section" data-aos="fade-up" data-aos-duration="1000">
-                    <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    <a href="#">Read More</a>
-                </div>
-            </div>
+            @endforeach
         </div>
         <div class="row mt-5">
             <div class="col-md-12 text-center">
-                <a href="#" class="money_title_btn">View All Articles</a>
+                <a href="{{route('web.get-blogs')}}" class="money_title_btn">View All Articles</a>
             </div>
         </div>
     </div>

@@ -15,8 +15,12 @@
                     <div class="single_blog_img">
                         <img src="{{$ImagePath.$value['image_thumb']}}" class="img-fluid" />
                     </div>
-                        <div class="blog_content">
-                            <h4>{{$value['heading']}}</h4>
+                        <div class="blog_content single_highlight_post1">
+                            <h4>
+                                <a href="{{url('money_seriously').'/'.$value['unique_url']}}">
+                                    {{$value['heading']}}
+                                </a>
+                            </h4>
                             <p>{{$value['sub_heading']}}</p>
                             <div class="post_author d-flex align-items-enter">
                                 <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> {{$value['author']}}</div>
@@ -30,7 +34,7 @@
             </div>
             @endforeach
         </div>
-        <div class="row">
+        <div class="row d-none">
             <div class="col-md-12">
                 <div class="pagination d-block d-sm-flex align-items-center justify-content-center">
                     <a href="#" class="navigation"><i class="ph-arrow-left-light"></i> Prev</a>

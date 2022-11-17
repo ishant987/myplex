@@ -27,6 +27,7 @@ use App\Models\NfoOffer;
 // use App\Plans;
 use App\Models\SettingsModel;
 use App\Models\Teams;
+use App\Models\BlogModel;
 use Session;
 use Socialite;
 
@@ -42,6 +43,7 @@ class PageController extends BaseController
         $this->class_id = self::getClassIdByname($this->className);
         $this->page_path =env('PAGE_PATHS','web.pages');
         $this->defDataArr = self::getDefData();
+        $this->BlogImagePath = url('/') . '/' . Config('commonconstants.blog_dir_name_front_end');
     }
 
     public function getNewsApi()
@@ -110,6 +112,10 @@ class PageController extends BaseController
             // $plansMdl = Plans::list(['status' => $status, 'show_on_wa' => $commonconstants['y_n_val'][1]], ['p_id', 'plan_name', 'amount', 'duration_name'], 'c_order', 'ASC');
 
             // $blogPosts = json_decode(file_get_contents(env('BLOG_URL') . '/wp-json/wp/v2/posts/?_embed&per_page=3'), true);
+            $blogPosts=BlogModel::where('status', 1)
+            ->orderBy('updated_at', 'desc')
+            ->limit(3)
+            ->get();
             $nwsListMdl = News::list(['status' => $commonconstants['status_val']['1']], ['title', 'slug', 'media_type', 'image', 'video_from', 'video_data', 'video_image', 'news_source_link'], '', '', 3);
 
             $aeQuesMdl = AskExpertQuestion::list(['status' => $status], '', 'created_at', 'DESC', 1);
@@ -120,7 +126,8 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "news_folder" => Core::getUploadedURL($commonconstants['news_dir_name']), "user_media_folder" => $commonconstants['user_dir_name'], "payment_lang" => __('payment'), "yes_no_txt" => __('common.yes_no_txt'), "web_lang" => __('web')));
             // dd($defDataArr);
-            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr','blogPosts', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl'));
+            $BlogImagePath=$this->BlogImagePath;
+            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr','blogPosts','BlogImagePath', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl'));
         }
         return abort(404);
     }

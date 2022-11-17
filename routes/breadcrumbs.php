@@ -259,7 +259,13 @@ Breadcrumbs::for('faq.edit', function ($trail, $dataArr) {
     $trail->push(__('faq.edit_txt'), route('admin.faq.edit', $dataArr->faq_id));
 });
 
-
+Breadcrumbs::for('blog.create', function ($trail) {
+    $trail->parent('blog.index');
+    $trail->push(__('blog.add_new_txt'), route('admin.blog.create'));
+});
+Breadcrumbs::for('blog.index', function ($trail) {
+    $trail->push(__('blog.list_txt'), route('admin.blog.index'));
+});
 Breadcrumbs::for('menu.index', function ($trail) {
     $trail->parent('dashboard');
     $trail->push(__('admin.menu.all_txt'), route('admin.menu.index.custom'));

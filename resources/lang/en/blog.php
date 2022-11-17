@@ -123,9 +123,10 @@ return [
     'mdfy_by_def_spr_admn_txt' => 'Super Admin',
 
     'action_txt' => 'Action',
-    'list_txt' => 'List',
+    'list_txt' => 'Blog List',
     'add_new_txt' => 'Add New',
-    'edit_txt' => 'Edit',
+    'add_txt' => 'Add blog',
+    'edit_txt' => 'Edit blog',
     'view_txt' => 'View',
     'delete_txt' => 'Delete',
     'remove_txt' => 'Remove',

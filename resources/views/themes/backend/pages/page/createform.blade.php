@@ -52,6 +52,7 @@
               <x-form.group_lyt1_2_10 label="{{ __('admin.description_txt') }}" for="descp" error="{{ $errors->first('descp') }}">
                   <x-form.field.textarea id="descp" name="descp" value="{!! old('descp') !!}" class="editor_full" />
               </x-form.group_lyt1_2_10>
+              
 
               @if( $moduleAtrArr['flds_hide']['image'] == $moduleAtrArr['bool_false'] )
                 <x-form.group_lyt1_2_10 label="{{ __('admin.featured_img_txt') }}" for="media_id" error="{{ $errors->first('media_id') }}" info="{!! __('admin.info.featured_img') !!}">

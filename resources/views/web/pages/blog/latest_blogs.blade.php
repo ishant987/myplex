@@ -17,7 +17,11 @@
                         <img src="{{$ImagePath.$data['highlighted_posts'][0]['image_thumb']}}" class="img-fluid" />
                     </div>
                     <div class=big_post_cont_wrpper>
-                        <h4><a href="{{url('money_seriously').'/'.$data['highlighted_posts'][0]['unique_url']}}">{{$data['highlighted_posts'][0]['heading']}}</a></h4>
+                        <h4>
+                            <a href="{{url('money_seriously').'/'.$data['highlighted_posts'][0]['unique_url']}}">
+                                {{$data['highlighted_posts'][0]['heading']}}
+                            </a>
+                        </h4>
                         <p>{{$data['highlighted_posts'][0]['sub_heading']}}</p>
                         <div class="post_author d-flex align-items-enter">
                             <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i>{{$data['highlighted_posts'][0]['author']}}</div>

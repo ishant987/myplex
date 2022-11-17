@@ -1762,6 +1762,20 @@ ul {
     color: var(--green);
     transition: ease-in all 0.3s
 }
+.single_highlight_post1 h4 {
+    font-size: 24px;
+    font-family: var(--heading-font);
+}
+
+.single_highlight_post1 h4 a {
+    color: #000;
+    transition: ease-in all 0.3s
+}
+
+.single_highlight_post1 h4 a:hover {
+    color: var(--green);
+    transition: ease-in all 0.3s
+}
 
 .single_highlight_post {
     padding: 25px 0;

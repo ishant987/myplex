@@ -1,4 +1,13 @@
 @extends('web.layout.app')
+@if(isset($blog_details['sub_heading']))
+@section('page-title'){{$blog_details['sub_heading']}}@stop
+@else
+@section('page-title'){{$blog_details['heading']}}@stop
+@endif
+@if(isset($blog_details['description']))
+@section('meta-description'){{$blog_details['description']}}@stop
+@endif 
+@section('cur-url'){{ Request::fullUrl()}}@stop
 @section('content')
 
     <section class="blog_details_section">
@@ -10,14 +19,16 @@
                             <img src="{{$ImagePath.$blog_details['image_banner']}}" />
                         </div>
                         <div class="blog_details_cont">
-                            <h4>{{$blog_details['category']}}</h4>
-                            <p>{{$blog_details['description']}}</p>
+                            <h4>
+                                {{$blog_details['heading']}}
+                            </h4>
+                            <p>{!!$blog_details['description']!!}</p>
                             <div class="post_author d-flex align-items-enter">
                                 <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i>{{$blog_details['author']}}</div>
                                 @php
-                                $date = explode("-",explode("T", $blog_details['created_at'])[0]);
+                                    $date = date('d.m.Y',strtotime($blog_details['created_at']));
                                 @endphp
-                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> {{$date[2].'.'.$date[1].'.'.$date[0]}}</div>
+                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> {{$date}}</div>
                                 <div class="post_share d-flex align-items-enter"><i class="ph-share-network-light"></i> Share</div>
                             </div>
                         </div>
