@@ -35,67 +35,12 @@
     </section>
 
 
-    @include('web.pages.blog.latest_blogs',['heading'=>'Lates blog','sub_heading'=>'Read like this one'])
+    @include('web.pages.blog.latest_blogs',['heading'=>'Latest blog','sub_heading'=>'Read like this one'])
     
-
-    <section class="editor_pics_blog">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="blog_title">
-                        <h4>Populer Read</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="single_blog">
-                        <div class="single_blog_img">
-                            <img src="img/blog.jpg" class="img-fluid" />
-                        </div>
-                        <div class="blog_content">
-                            <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="single_blog">
-                        <div class="single_blog_img">
-                            <img src="img/blog.jpg" class="img-fluid" />
-                        </div>
-                        <div class="blog_content">
-                            <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="single_blog">
-                        <div class="single_blog_img">
-                            <img src="img/blog.jpg" class="img-fluid" />
-                        </div>
-                        <div class="blog_content">
-                            <h4>Growth v/s Value Investing: Which One to Choose?</h4>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-                            <div class="post_author d-flex align-items-enter">
-                                <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> Anubh Jain</div>
-                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> 01.01.2020</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
+    @if(!empty($data['must_read']))
+        @include('web.pages.blog.must_read_blogs',['heading'=>'Popular Read'])
+    @endif
     
     <section class="hastag_section">
         <div class="container">
