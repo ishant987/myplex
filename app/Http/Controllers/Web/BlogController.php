@@ -13,6 +13,7 @@ class BlogController extends Controller
         $this->page_path =env('PAGE_PATHS','web.pages');
         $this->ImagePath = url('/').'/'. Config('commonconstants.blog_dir_name_front_end');
         $this->selectCoulums =['unique_url','author','created_at','image_banner','description','heading','sub_category','sub_heading','image_thumb'];
+        $this->specificBlogLength = ["must_read"=> 6, "highlighted_posts"=>5, "editors_pick"=> 3];
     }
     
 
@@ -28,7 +29,6 @@ class BlogController extends Controller
 
         $blog_details = BlogModel::where('unique_url', $uniqueUrl)->first()->toArray();
         $data =SELF::getdata();
-        
         return view($this->page_path.'.blog.blog-details',  ['blog_details'=>$blog_details,'ImagePath'=>$this->ImagePath,'data'=>$data,]);
 
     }
@@ -40,7 +40,7 @@ class BlogController extends Controller
         $data = [];
         foreach ($blogs as $key => $value) {
             if(!isset($data[$value['sub_category']])) $data[$value['sub_category']] = [];
-            array_push($data[$value['sub_category']], $value);
+            if(count($data[$value['sub_category']]) < $this->specificBlogLength[$value['sub_category']]) array_push($data[$value['sub_category']], $value);
         }
         return $data;
     }
