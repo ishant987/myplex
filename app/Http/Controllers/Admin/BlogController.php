@@ -27,7 +27,7 @@ class BlogController extends BaseController
      public function index()
      {
 
-          $blogs = BlogModel::with('creator')->get();
+          $blogs = BlogModel::with('creator')->orderBy('created_at','desc')->get();
           $coreObj = new App();
           $listDataAtrArr = $coreObj->getListDataAtr();
           $statusAtrArr = $coreObj->getStatusLblTyp2Atr();
@@ -67,7 +67,7 @@ class BlogController extends BaseController
      }
 
 
-     public function store(Request $request, $id = '')
+     public function store(blogCreate $request, $id = '')
      {
           $params = $request->input();
           $isActivated = $params['is_active'] == '1' ? 1 : null;
@@ -76,10 +76,10 @@ class BlogController extends BaseController
           $params['published_by'] = $isActivated;
           $params['published_date'] = !is_null($isActivated) ? $published_time : null;
           $params['created_by'] = $params['updated_id'] = Auth::guard('admin')->user()['admin_id'];
-          $params['heading'] = $params['heading'];
+          $params['status'] = $params['is_active'];
           $params['unique_url'] = SELF::cleanUrl($params['heading']);
-          $params['image_thumb'] = SELF::fileUpload($request->file('image_thumb'));
-          $params['image_banner'] = SELF::fileUpload($request->file('image_banner'));
+          $params['image_thumb'] = SELF::getImage($request->file('image_thumb'),$request->input('image_thumb_old'));
+          $params['image_banner'] = SELF::getImage($request->file('image_banner'),$request->input('image_banner_old'));
 
 
           BlogModel::updateOrCreate(
@@ -94,16 +94,28 @@ class BlogController extends BaseController
 
           return redirect(route('admin.blog.index'));
      }
-
+     private function getImage($file,$old_image){
+          $name =SELF::fileUpload($file);
+          if($name ==null ){
+              return  $old_image !='' ? $old_image : null;
+          }else{
+              return $name;
+          }
+          
+      }
      private function fileUpload($file)
      {
-
-          $upldDirName = Config('commonconstants.blog_dir_name');
-          $title     = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-          $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
-          $filename  = time() . '-' . Core::removeSpecialChars($title) . '.' . $extension;
-          $path      = $file->storeAs($upldDirName, $filename);
-          return $filename;
+          if(isset($file)){
+               $upldDirName = Config('commonconstants.blog_dir_name');
+               $title     = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+               $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+               $filename  = time() . '-' . Core::removeSpecialChars($title) . '.' . $extension;
+               $path      = $file->storeAs($upldDirName, $filename);
+               return $filename;
+          }
+         else{
+               return null;
+         }
      }
 
      public function delete(Request $request){

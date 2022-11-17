@@ -1,7 +1,8 @@
 @extends('themes.backend.layouts.app')
-
+@section('editor') @stop
+@section('fancybox') @stop
 @section('breadcrumb')
-{{ Breadcrumbs::render('faq.create') }}
+{{ Breadcrumbs::render('blog.create') }}
 @endsection
 
 @section('content')
@@ -9,12 +10,14 @@
   <div class="col-sm-12">
     <div class="card m-b-0">
       <div class="card-header">
-        <h5 class="card-header-text">{{ __('faq.add_txt') }}</h5>
+        <h5 class="card-header-text">{{ __('blog.add_txt') }}</h5>
       </div>
       <div class="card-block">
 
         <form name="aeDataFrm" id="aeDataFrm" action="{{ route('admin.blog.store')}}" method="POST" enctype="multipart/form-data">
           {{ csrf_field() }}
+          <input type="hidden" name="image_banner_old" value="" >
+          <input type="hidden" name="image_thumb_old" value="" >
           <input type="text" name="created_by" id="" value="{{$data['adminID']}}" hidden>
           <input type="text" name="updated_id" id="" value="{{$data['adminID']}}" hidden>
           <x-form.group_lyt1_2_10 label="{{ __('blog.title_txt') }}" for="category" error="{{ $errors->first('category') }}" required="true">
@@ -59,6 +62,7 @@
 
           <x-form.group_lyt1_2_10 label="{{ __('blog.status_txt') }}" for="is_active" error="{{ $errors->first('is_active') }}" required="true">
             <select id="is_active" class="form-control" name="is_active">
+              <option value="">Select</option>
               @foreach( [1 => 'Enable', 2=> 'Disable'] as $id => $status )
               <option value="{{ $id }}" {{ ( $id == old('is_active') ) ? 'selected' : '' }}>{{ $status }}</option>
               @endforeach

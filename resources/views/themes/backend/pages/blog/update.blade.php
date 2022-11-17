@@ -1,17 +1,20 @@
 @extends('themes.backend.layouts.app')
-
+@section('editor') @stop
+@section('fancybox') @stop
 @section('content')
 
 <div class="row">
   <div class="col-sm-12">
     <div class="card m-b-0">
       <div class="card-header">
-        <h5 class="card-header-text">{{ __('faq.add_txt') }}</h5>
+        <h5 class="card-header-text">{{ __('blog.edit_txt') }}</h5>
       </div>
       <div class="card-block">
 
         <form name="aeDataFrm" id="aeDataFrm" action="{{ route('admin.blog.store', $blog['id']) }}" method="POST" enctype="multipart/form-data">
           {{ csrf_field() }}
+          <input type="hidden" name="image_banner_old" value="{{$blog->image_banner}}" >
+          <input type="hidden" name="image_thumb_old" value="{{$blog->image_thumb}}" >
           <input type="text" name="id" id="" value="{{$blog->id}}" hidden>
           <x-form.group_lyt1_2_10 label="{{ __('blog.title_txt') }}" for="category" error="{{ $errors->first('category') }}" required="true">
             <x-form.field.text id="category" name="category" value="{{$blog->category}}" />
@@ -21,7 +24,7 @@
           </x-form.group_lyt1_2_10>
           
           <x-form.group_lyt1_2_10 label="{{ __('blog.description_txt') }}" for="description" error="{{ $errors->first('description') }}" info="{!! __('admin.info.description') !!}">
-            <x-form.field.textarea id="description" name="description" value="{{$blog->description}}" rows="8" />
+            <x-form.field.textarea id="description" name="description" value="{!!$blog->description!!}" rows="8"   class="editor_full"/>
           </x-form.group_lyt1_2_10>
           
           <x-form.group_lyt1_2_10 label="{{ __('blog.image_banner') }}" for="image_banner" error="{{ $errors->first('image_banner') }}" required="true">
