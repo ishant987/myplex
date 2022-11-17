@@ -41,8 +41,9 @@
                             <ul>
                                 <li><a href="/">Home Page</a></li>
                                 <li><a href="/compare-scheme">Compare Scheme</a></li>
-                                <li><a href="/calculator">Calculator</a></li>
-                                <li><a href="#">Money Seriously</a></li>
+                                {{-- <li><a href="/calculator">Calculator</a></li> --}}
+                                <li><a href="{{route('web.get-blogs')}}">Money Seriously</a></li>
+                                <li><a href="/monthly-ranking">Monthly Rankings</a></li>
                             </ul>
                         </div>
                     </div>
