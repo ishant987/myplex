@@ -53,6 +53,7 @@ class NfoMonitorController extends BaseController
             else{
                 $curYear = date("Y");
                 $archiveListModel = $dtMdl->archiveGroupList();
+                dd($archiveListModel);
                 if($archiveListModel){
                     foreach ($archiveListModel as $key => $record) {
                         $year = $record->year;
@@ -68,7 +69,6 @@ class NfoMonitorController extends BaseController
 
             $defDataArr = $this->defDataArr;
             $dateFormat = $commonconstants['d_m_y_frmt2'];
-
             return view($this->page_path.'.nfo.list', compact('defDataArr', 'dataArr', 'dataListModel', 'dateFormat', 'reqYear'));
         }
         return abort(404);

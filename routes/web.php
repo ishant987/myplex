@@ -522,7 +522,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('nfo-monitor-list/{year?}', 'NfoMonitorController@index')->name('nfomonitor.list');
     Route::get('nfo-monitor/{id}', 'NfoMonitorController@show')->name('nfomonitor');
-    Route::get('nfo-monitor', 'NfoMonitorController@index')->name('nfomonitor.html');
+    // Route::get('nfo-monitor', 'NfoMonitorController@index')->name('nfomonitor.html');
 
     Route::get('ask-an-expert', 'AskExpertController@askExpertData')->name('ask-expert');
     Route::get('ask-an-expert/topic/{slug}', 'AskExpertController@askExpertTopicData')->name('ask-expert.topic');

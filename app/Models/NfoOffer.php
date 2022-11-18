@@ -189,15 +189,14 @@ class NfoOffer extends Model
         $commonconstants = Config('commonconstants');
 
         if ($fields == false) {
-            $fields = ['no_id','fund_name','objective','post_date'];
+            $fields = ['no_id','fund_name','objective','post_date','media_id'];
         }
         $query = NfoOffer::select($fields)->where(['status' => $commonconstants['status_val'][1], 'type' => $commonconstants['nfo_monitor_type']['value'][2]]);
-
         $fund_name = isset($filterArr['fund_name']) ? $filterArr['fund_name'] : null;
         if($fund_name != null){
             $query->where('fund_name', '=', $fund_name);
         }
-
+        
         $year = isset($filterArr['year']) ? $filterArr['year'] : null;
         if($year != null){
             $query->whereRaw('DATE_FORMAT(post_date, "%Y") ='.$year);
@@ -209,6 +208,7 @@ class NfoOffer extends Model
         }
 
         $query->orderBy($orderBy, $order);
+        $query->with('media');
         $dtListArr = $perPage ? $query->paginate($perPage) : $query->get();
 
         $random = isset($filterArr['random']) ? intval($filterArr['random']) : 0;
