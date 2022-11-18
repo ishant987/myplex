@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BlogModel;
 use App\Models\PageModel;
+use App\Models\BlogComments;
 
 class BlogController extends BaseController
 {
@@ -57,4 +58,25 @@ class BlogController extends BaseController
         }
         return $data;
     }
+
+    public function postBlogDetails(Request $request){
+
+        $params = $request->input();
+        
+        // dd($params);
+        
+        $something = BlogComments::updateOrCreate(
+            [
+                 //  check data with the existing db data (e.g) id
+                 'id' => '',
+            ],
+
+            $params
+
+       );
+       
+       return redirect()->back()->with('success', 'Your comment has been added successfully');
+        
+    }
+    
 }

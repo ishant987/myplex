@@ -15,6 +15,7 @@ class BlogComments extends Model
         'blog_id',
         'email',
         'name',
+        'comment',
         'client_ip_address'
     ];
 
