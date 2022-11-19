@@ -118,10 +118,11 @@
                     <x-form.field.text id="link" name="link" value="{{ old('link') }}" />
                     <span id="link_e" class="text-danger"></span>
                   </x-form.group_lyt1_2_10>
-                  <div class="alert alert-success add_new d-none" role="alert">
-                        Successfully created.
-                  </div>
+                  
             </form>
+            <div class="alert alert-success add_new d-none" role="alert">
+                Successfully created.
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary save_latest">Submit</button>
@@ -130,11 +131,30 @@
       </div>
     </div>
   </div>
+  <div id="spinner-div" class="pt-5">
+    <div class="spinner-border text-primary" role="status">
+    </div>
+</div>
 @stop
+@push('styles')
+<style>
+    #spinner-div {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+</style>
+@endpush
 @push('scripts')
 <script>
     $('.save_latest').click(function(){
-        $(this).attr('disabled',true);
+        $('span[id$=\'_e\']').text('');
      jQuery.ajax({
         url: $('.latest_add_forn').attr('action'),
         type: "post",
@@ -147,9 +167,10 @@
                     window.location.reload();
             }, 3000);
         },
+        complete:function(){
+            $('#spinner-div').hide();
+        },
         error: function(data) {
-            $(this).attr('disabled',false);
-            console.log(data.responseJSON.errors)
             var err = data.responseJSON;
 			if (err) {
 				$.each(err.errors, function (k, v) {
