@@ -4,7 +4,7 @@
             <div class="col-md-4 col-lg-3">
                 <div class="footer_logo_sec">
                     <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" alt='myplex-logo'/>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's</p>
+                    <p>We provide a range of tools and financial know-how that  can help you make the most of your short-term and long-term investment goals.</p>
 
                     <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-2">
                             <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />

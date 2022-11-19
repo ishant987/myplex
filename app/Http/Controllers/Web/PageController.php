@@ -122,8 +122,8 @@ class PageController extends BaseController
 
             $fndWtchMdl = FundWatch::frontList([], '', '', '', 1);
 
-            $nfoMdl = NfoOffer::frontList([], '', '', '', 1);
-
+            $nfoMdl = NfoOffer::frontList([], '', '', '',2);
+            // dd($nfoMdl->toArray());
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "news_folder" => Core::getUploadedURL($commonconstants['news_dir_name']), "user_media_folder" => $commonconstants['user_dir_name'], "payment_lang" => __('payment'), "yes_no_txt" => __('common.yes_no_txt'), "web_lang" => __('web')));
             // dd($defDataArr);
             $BlogImagePath=$this->BlogImagePath;

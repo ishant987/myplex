@@ -26,17 +26,13 @@
 @section('cur-url'){{$dataArr['full_url']}}@stop
 @endif
 @section('content')
-<section class="here_section">
-    <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="slider_img">
-                    <img src="{{asset('themes/frontend/assets/v1/img/faq-banner.jpg')}}" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-caption">
-                    <h2 class="animate__animated animate__fadeInUp">FAQ <span>-Frequently Asked Question</span></h2>
-                    <p class="animate__animated animate__fadeInLeft">The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
-                    <div class="caption_bg "></div>
+<section class="inner_banner_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inner_section_banner">
+                    <h4>FAQ</h4>
+                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
                 </div>
             </div>
         </div>
@@ -44,7 +40,7 @@
 </section>
 
 
-<section class="faq_section">
+<section class="faq_section section">
     <div class="container">
 
         <div class="row">
@@ -69,7 +65,7 @@
                 </div>
             </div>
             <div class="col-md-8">
-                        @include('web.common.faq_list')
+                    @include('web.common.faq_list')
             </div>
         </div>
     </div>

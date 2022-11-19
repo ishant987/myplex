@@ -92,8 +92,8 @@
                                     </ul>
                                 </li>
                                 <a class="nav-link" href="/fund-watch">Fund Watch</a>
-                                <a class="nav-link" href="{{route('web.get-blogs')}}">Blog</a>
-                                {{-- <a class="nav-link" href="/about">Company</a> --}}
+                                <a class="nav-link" href="{{route('web.get-blogs')}}">Money Seriously</a>
+                                <a class="nav-link" href="/about">About Us</a>
                                 <a class="cta_header_link" href="/ask-an-expert">Ask our Experts</a>
                             </div>
                         </div>

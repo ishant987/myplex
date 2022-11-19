@@ -1306,7 +1306,7 @@ export default {
 
 .multiselect__tags,
 .multiselect__single {
-    background: none !important;
+    /* background: none !important; */
 }
 
 .multiselect__single {

@@ -87,40 +87,6 @@ $('.slider-nav').slick({
   autoplaySpeed: 2000,
 });
 
-$('.meet_team_slider').slick({
-  infinite: true,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  autoplaySpeed: 5000,
-  arrows: false,
-  prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
-  nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
-  dots: false,
-  autoplay: true,
-  responsive: [
-      {
-          breakpoint: 1024,
-          settings: {
-              slidesToShow: 4,
-              slidesToScroll: 1,
-          }
-  },
-      {
-          breakpoint: 600,
-          settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1
-          }
-  },
-      {
-          breakpoint: 480,
-          settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1
-          }
-  }
-]
-});
 
 
 AOS.init();
@@ -213,6 +179,41 @@ $('.recent_interview_slider').slick({
 // $(document).ready(function () {
 //   $('#example').DataTable({searching: false, paging: false, info: false});
 // });
+$('.meet_team_slider').slick({
+  infinite: true,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  autoplaySpeed: 5000,
+  arrows: false,
+  prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+  nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
+  dots: false,
+  autoplay: true,
+  responsive: [
+      {
+          breakpoint: 1024,
+          settings: {
+              slidesToShow: 4,
+              slidesToScroll: 1,
+          }
+  },
+      {
+          breakpoint: 600,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  },
+      {
+          breakpoint: 480,
+          settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+          }
+  }
+]
+});
+
 
 $('.her_banner_left_slide').slick({
   infinite: true,
