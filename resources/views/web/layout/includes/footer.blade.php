@@ -55,7 +55,7 @@
                                 <li><a href="/fund-portfolio">Fund Portfolio</a></li>
                                 <li><a href="/fund-performance">Fund Performance</a></li>
                                 <li><a href="/fund-watch">Fund Watch</a></li>
-                                <li><a href="/nfo-monitor">NFO Monitor</a></li>
+                                <li><a href="/nfo-monitor-list">NFO Monitor</a></li>
                                 <li><a href="/know-your-scheme?fund_house=">Know Your Scheme</a></li>
                             </ul>
                         </div>

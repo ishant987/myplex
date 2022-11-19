@@ -30,9 +30,12 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
             Route::get('/store/{id?}', 'BlogController@edit')->name('blog.edit');
             Route::post('/delete', 'BlogController@delete')->name('blog.delete');
             Route::get('/comments/{id}', 'BlogController@comments')->name('blog.comments');
-            
+           
         });
-        
+        Route::group(['prefix'=>'latest_update'],function(){
+            Route::get('/','HomeLatestController@index')->name('latest.index');
+            Route::post('/create','HomeLatestController@create')->name('latest.create');
+        });
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
