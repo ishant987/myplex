@@ -155,6 +155,7 @@
 <script>
     $('.save_latest').click(function(){
         $('span[id$=\'_e\']').text('');
+        $('#spinner-div').show();
      jQuery.ajax({
         url: $('.latest_add_forn').attr('action'),
         type: "post",
