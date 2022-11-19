@@ -31,7 +31,7 @@
 @include('web.pages.blog.latest_blogs',['heading'=>'','sub_heading'=>'Highlighted Posts'])
 
 @if(!empty($data['editors_pick']))
-<section class="editor_pics_blog">
+<section class="editor_pics_blog section">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

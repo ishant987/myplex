@@ -53,7 +53,6 @@ class NfoMonitorController extends BaseController
             else{
                 $curYear = date("Y");
                 $archiveListModel = $dtMdl->archiveGroupList();
-                dd($archiveListModel);
                 if($archiveListModel){
                     foreach ($archiveListModel as $key => $record) {
                         $year = $record->year;

@@ -25,7 +25,7 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>Contact Us</h4>
-                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
+                    <p>We are always here to help you make the best decisions for your finances.</p>
                 </div>
             </div>
         </div>
@@ -37,7 +37,9 @@
             <div class="col-lg-7">
                 <div class="Contact_heading text-center">
                     <h4>Plexus Managment Service</h4>
-                    <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves. The vessels may be blood vessels (veins, capillaries) or lymphatic vessels.</p>
+                    <p>
+                        We are here to show you a better way of investment using the tools that will help you make the best decisions for your wealth.
+                    </p>
                 </div>
             </div>
         </div>
@@ -131,7 +133,7 @@
                             <div class="box_need_help">
                                 <div class="need_help">
                                     <h3>Need any help?</h3>
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p>
+                                    <p>If you have any questions or need help understanding anything, please don't hesitate to contact us. We would be more than happy to assist you in making the best choices for your financial future. </p>
                                     <a href="" class="call_back_btn compare_scheme_btn d-inline-block w-auto">Get a call back</a>
                                 </div>
                             </div>

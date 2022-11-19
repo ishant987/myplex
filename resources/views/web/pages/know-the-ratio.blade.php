@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="inner_section_banner">
-                        <h4>Ratio</h4>
+                        <h4>know the ratio</h4>
                         <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
                     </div>
                 </div>

@@ -141,30 +141,7 @@
                     </div>
 
                 </div>
-                <div class="comp_schem_bdr mb-4">
-                    <div class="plan_faq mt-0">
-                        <div class="faq_title">
-                            <h4>Other Mutual Funds</h4>
-                        </div>
-                        <div class="single_faq_calc">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="single_other_fund d-flex align-items-center justify-content-between">
-                                        <p><i class="ph-file-pdf"></i> Hybrids Funds</p>
-                                        <span><a href="#"><i class="ph-download-simple"></i></a></span>
-                                    </div>
-                                </div>
-                                 <div class="col-md-6">
-                                    <div class="single_other_fund d-flex align-items-center justify-content-between">
-                                        <p><i class="ph-file-pdf"></i> Mahindra Manulife Flexi Cap Yojana</p>
-                                        <span><a href="#"><i class="ph-download-simple"></i></a></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                
             </div>
         </div>
     </div>
