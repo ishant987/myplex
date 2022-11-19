@@ -7,7 +7,7 @@
   <body>
 
   {{-- Pre-loader start --}}
-  {{-- @include('themes.backend.includes.preloader') --}}
+  @include('themes.backend.includes.preloader')
   {{-- Pre-loader end --}}
 
   <div id="pcoded" class="pcoded">
