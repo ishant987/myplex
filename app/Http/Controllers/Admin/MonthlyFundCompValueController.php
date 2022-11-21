@@ -132,7 +132,7 @@ class MonthlyFundCompValueController extends BaseController
                             if ($row > 0) {
                                 // dd($srcDataRow);
                                 if (!empty($srcDataRow)) {
-                                    $sdFundCode = is_numeric($srcDataRow[0])? '0'.$srcDataRow[0] : $srcDataRow[0];
+                                    $sdFundCode = is_numeric($srcDataRow[0])?  SELF::addLeadingZeros($srcDataRow[0]) : $srcDataRow[0];
                                     $sdScrip = $srcDataRow[2];
                                     $sdCategory = $srcDataRow[3];
                                     $sdIndustry = $srcDataRow[4];
@@ -282,5 +282,12 @@ class MonthlyFundCompValueController extends BaseController
         if (Storage::exists($filePath)) {
             Storage::delete($filePath);
         }
+    }
+    public function addLeadingZeros($value){
+        if($value<=99){
+            return str_pad($value, 3, '0', STR_PAD_LEFT);
+        }
+        return $value;
+        // is_numeric($value)? '0'.$value : $value;
     }
 }
