@@ -311,7 +311,6 @@ class PageController extends BaseController
             if ($fundManMdl) {
                 $fundManListMdl = FundMan::list(['data_id_not_in' => $fundManMdl->fm_id, 'status' => $status], ['fm_id', 'name', 'slug', 'designation', 'company_name', 'media_id']);
             }
-
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
 
             return view($this->page_path.'.fund-man', compact('defDataArr', 'dataArr', 'fundManMdl', 'fundManListMdl'));

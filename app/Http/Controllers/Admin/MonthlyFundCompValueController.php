@@ -132,7 +132,7 @@ class MonthlyFundCompValueController extends BaseController
                             if ($row > 0) {
                                 // dd($srcDataRow);
                                 if (!empty($srcDataRow)) {
-                                    $sdFundCode = $srcDataRow[0];
+                                    $sdFundCode = is_numeric($srcDataRow[0])? '0'.$srcDataRow[0] : $srcDataRow[0];
                                     $sdScrip = $srcDataRow[2];
                                     $sdCategory = $srcDataRow[3];
                                     $sdIndustry = $srcDataRow[4];
