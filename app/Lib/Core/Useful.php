@@ -183,7 +183,6 @@ class Useful
     }
     public static function get_last_month_quatery($s_date,$param)
     {
-        $param= $param==0 ? $param : 3;
         $last_month_sd =  date('Y-m-d', strtotime("-".$param." months", strtotime($s_date)));
         $last_month_ed = date("Y-m-t", strtotime($last_month_sd));
 

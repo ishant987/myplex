@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Lib\Core\Core;
 use App\Lib\Core\Useful;
 use App\Lib\App\Common;
+use App\Models\CorpusEntry;
 use App\Models\FundDetail;
 use App\Models\PageModel;
 use App\Models\FundWatch;
@@ -121,24 +122,24 @@ class FundWatchController extends BaseController
         }
         return abort(404);
     }
-    public function newIndex(){
+     public function newIndex(){
         $fundMaster =FundMaster::where("fund_code",'007')->first();
         // $lumbsum=SELF::getLumnsubData($fundMaster->fund_code);
 		$AAUMValue=SELF::AAUMValue($fundMaster->fund_code);
-        dd($AAUMValue);
+        return response()->json(['AAUM'=>$AAUMValue],200);
     }
 	private function AAUMValue($fund_code){
-        $numberOfGrapBar =6;
+        $numberOfGrapBar =6;$mothsGap=3;
         $flastMonthDate =$this->Useful->get_last_month();
-        $lastMonthDate=$FUnddata=[]; 
+        $FUnddata=[]; 
         for($i=0;$i<=$numberOfGrapBar;$i++){
-            $s_date =!empty($lastMonthDate) ? $lastMonthDate[$i-1][0] : $flastMonthDate[0];
-            $getLastMonthDate =$this->Useful->get_last_month_quatery($s_date,$i);
-            $LastMonthDate[$i] =$getLastMonthDate;
-            $FUnddata[] =FundDetail::where("fund_code",$fund_code)->whereBetween('entry_date', [$getLastMonthDate[0],$getLastMonthDate[1]])->get()->toArray();
+            $s_date = $flastMonthDate[0];
+            $dates =$this->Useful->get_last_month_quatery($s_date,$i*$mothsGap);
+            $LastMonthDate[]=$dates;
+            $FUnddata[] =CorpusEntry::where("fund_code",$fund_code)->where('entry_date',$dates[1])->get(['corpus_entry','entry_date'])->toArray();
         }
         
-        return $FUnddata;
+        return [$LastMonthDate,$FUnddata];
 	}   
     private function getLumnsubData($fund_code){
         $deatultLumsumAmount =100000;
