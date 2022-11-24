@@ -536,7 +536,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
     Route::get('fund-watch/{id}', 'FundWatchController@show')->name('fundwatch');
-    Route::get('fund-watch', 'FundWatchController@watch')->name('fundwatch.index');
+    Route::get('fund-watch', 'FundWatchController@newIndex')->name('fundwatch.index');
 
     //  added by pixel
     Route::get('mf-taxation','MfTaxationController@index')->name('mf.index');
