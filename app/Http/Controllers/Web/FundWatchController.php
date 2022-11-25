@@ -4,26 +4,29 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Web\BaseController as BaseController;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Http;
+use App\Models\FundComposition;
 use App\Lib\Core\Core;
 use App\Lib\Core\Useful;
-use App\Lib\App\Common;
-use App\Models\CorpusEntry;
 use App\Models\FundDetail;
+use App\Models\CorpusEntry;
 use App\Models\PageModel;
 use App\Models\FundWatch;
 use App\Models\FundMaster;
+use App\Modles\SettingsModel;
+use DB;
 
 class FundWatchController extends BaseController
 {
     public function __construct()
     {
         $this->defDataArr = self::getDefData();
-        $this->page_path =env('PAGE_PATHS','web.pages');
-        $this->Useful =new Useful;
+        $this->page_path = env('PAGE_PATHS', 'web.pages');
+        $this->Useful = new Useful;
     }
 
-    public function watch(Request $request){
+    public function watch(Request $request)
+    {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 31);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
@@ -41,12 +44,12 @@ class FundWatchController extends BaseController
 
             // $dataListModel = $dtMdl->frontList(['year' => $reqYear]);
 
-            $rcntDataListModel = $dtMdl->frontList([], '', '', '',10);
+            $rcntDataListModel = $dtMdl->frontList([], '', '', '', 10);
             $defDataArr = $this->defDataArr;
             $dateFormat = $commonconstants['d_m_y_frmt2'];
-            $media_folder=Core::getUploadedURL($commonconstants['pdf_dir_name']);
+            $media_folder = Core::getUploadedURL($commonconstants['pdf_dir_name']);
         }
-        return view($this->page_path.'.fund-watch',compact('dataArr', 'rcntDataListModel', 'archiveListModel','media_folder' ));
+        return view($this->page_path . '.fund-watch', compact('dataArr', 'rcntDataListModel', 'archiveListModel', 'media_folder'));
     }
     public function index(Request $request, $reqYear = 0)
     {
@@ -122,52 +125,128 @@ class FundWatchController extends BaseController
         }
         return abort(404);
     }
-     public function newIndex(){
-        $fundMaster =FundMaster::where("fund_code",'007')->first();
-        // $lumbsum=SELF::getLumnsubData($fundMaster->fund_code);
-		$AAUMValue=SELF::AAUMValue($fundMaster->fund_code);
-        return response()->json(['AAUM'=>$AAUMValue],200);
-    }
-	private function AAUMValue($fund_code){
-        $numberOfGrapBar =6;$mothsGap=3;
-        $flastMonthDate =$this->Useful->get_last_month();
-        $FUnddata=[]; 
-        for($i=0;$i<=$numberOfGrapBar;$i++){
-            $s_date = $flastMonthDate[0];
-            $dates =$this->Useful->get_last_month_quatery($s_date,$i*$mothsGap);
-            $LastMonthDate[]=$dates;
-            $FUnddata[] =CorpusEntry::where("fund_code",$fund_code)->where('entry_date',$dates[1])->get(['corpus_entry','entry_date'])->toArray();
-        }
-        
-        return [$LastMonthDate,$FUnddata];
-	}   
-    private function getLumnsubData($fund_code){
-        $deatultLumsumAmount =100000;
-        $defaultYears=[1,2,3];
-        $yesterday=$this->Useful->get_yesterday();
-        
-		$fundDetails =FundDetail::where("fund_code",$fund_code);
-        $presetClosingNav =$fundDetails->where('entry_date',$yesterday)->first('closing_nav')->toArray();
-		$numberofUnits =round($deatultLumsumAmount/$presetClosingNav['closing_nav'],2);
-		$PreviewYearNavs =[];
-        foreach($defaultYears as $key=>$val)
-		{
-			$LastYeardate=$this->Useful->getYears($val,$yesterday);
-			$data =FundDetail::where("fund_code",$fund_code)->where('entry_date',$LastYeardate)->first('closing_nav');
-			if($data){
-				$PreviewYearNavs[$val.' Year'] =[
-					'amount'=>$this->Useful->currencyFormat(round($deatultLumsumAmount+($numberofUnits * $data->closing_nav))),
-					'last_date'=>$LastYeardate,
-					'last_date_nav_val'=>$data->closing_nav,
-					'start_date'=>$yesterday,
-					'start_date_nav_val'=>$presetClosingNav['closing_nav'],
-					'numer_of_units'=>$numberofUnits,
-				];
-			}else{
-				$PreviewYearNavs[$val.' Year'.$LastYeardate.$yesterday] =null;
-			}
-		}
-		return $PreviewYearNavs;
 
+    public function newIndex($fund_code)
+    {
+        $fundMaster = FundMaster::where("fund_code", $fund_code)->first();
+        $fund_code = $fundMaster->fund_code;
+        $sip = SELF::getSIPData($fund_code);
+        $fundCompAnalysis = SELF::fundCompAnalysis($fund_code);
+        $lumbsum = SELF::getLumnsubData($fundMaster->fund_code);
+        $AAUMValue = SELF::AAUMValue($fundMaster->fund_code);
+        $PortFoliBreakup = SELF::breakUP($fund_code);
+
+        return response()->json(['fund_code' => $fund_code, 'breakup' => $PortFoliBreakup, 'AAUM' => $AAUMValue, 'lumsum' => $lumbsum, 'sip' => $sip, 'fund_comp_analysis' => $fundCompAnalysis], 200); //
+    }
+    private function breakUP($fund_code)
+    {
+        $lastMonthDate = $lastSavedDate =  FundComposition::getPublishReadyDate();
+        $filterArray = ['Equity' => 0, 'Cash' => 0, 'Corporate Debt' => 0, 'SOV' => 0, 'Others' => 0];
+        $AllBreakUP = FundComposition::where(['fund_code' => $fund_code, 'entry_date' => $lastMonthDate])->get()->toArray();
+
+        foreach ($AllBreakUP as $key => $value) {
+            if (in_array($value['category'], array_keys($filterArray))) {
+                $filterArray[$value['category']] = $filterArray[$value['category']]+$value['content_per'];
+            } else {
+                $filterArray['Others'] = $filterArray['Others'] + $value['content_per'];
+            }
+        }
+
+        return $filterArray;
+    }
+    private function getSIPData($fund_code)
+    {
+        $deatultSIPAmount = 10000;
+        $defaultYears = ['ONEYEAR' => 1, 'TWOYEAR' => 2, 'THREEYEAR' => 3];
+        $dataArr['ONEYEAR'] = DB::select('CALL sp_SIP_calc(12,"' . $fund_code . '",10000)');
+        $dataArr['TWOYEAR'] = DB::select('CALL sp_SIP_calc(24,"' . $fund_code . '",10000)');
+        $dataArr['THREEYEAR'] = DB::select('CALL sp_SIP_calc(36,"' . $fund_code . '",10000)');
+        // $response =Http::get('api/v1/fund-performance-scheme-sip?fund_code='.$fund_code)->json();
+        return $dataArr;
+    }
+    private function AAUMValue($fund_code)
+    {
+        $numberOfGrapBar = 6;
+        $mothsGap = 3;
+        $flastMonthDate = $this->Useful->get_last_month();
+        $FUnddata = [];
+        for ($i = 0; $i <= $numberOfGrapBar; $i++) {
+            $s_date = $flastMonthDate[0];
+            $dates = $this->Useful->get_last_month_quatery($s_date, $i * $mothsGap);
+            $LastMonthDate[] = $dates;
+            $FUnddata[] = CorpusEntry::where("fund_code", $fund_code)->where('entry_date', $dates[1])->get(['corpus_entry', 'entry_date'])->toArray();
+        }
+
+        return $FUnddata;
+    }
+    private function getLumnsubData($fund_code)
+    {
+        $deatultLumsumAmount = 100000;
+        $defaultYears = ['ONEYEAR' => 1, 'TWOYEAR' => 2, 'THREEYEAR' => 3];
+        $yesterday = $this->Useful->get_yesterday();
+        //$yesterday='2022-11-01';
+        $fundDetails = FundDetail::where("fund_code", $fund_code);
+        $presentClosingNav = $fundDetails->where('entry_date', $yesterday)->first('closing_nav');
+        if ($presentClosingNav) {
+            $PreviewYearNavs = [];
+            $response = Http::get(url('api/v1/fund-return-scheme?fund_code=' . $fund_code))->json();
+            $percentege = $response['data']['return_scheme'];
+            foreach ($defaultYears as $key => $val) {
+                $LastYeardate = $this->Useful->getYears($val, $yesterday);
+                $data = FundDetail::where("fund_code", $fund_code)->where('entry_date', $LastYeardate)->first('closing_nav');
+
+                if ($data) {
+                    $numberofUnits = round($deatultLumsumAmount / $data->closing_nav, 3);
+                    $PreviewYearNavs[$val . ' Year'] = [
+                        'amount' => $this->Useful->currencyFormat(round($numberofUnits * $presentClosingNav->closing_nav)),
+                        'last_date' => $LastYeardate,
+                        'last_date_nav_val' => $data->closing_nav,
+                        'start_date' => $yesterday,
+                        'start_date_nav_val' => $presentClosingNav['closing_nav'],
+                        'numer_of_units' => $numberofUnits,
+                        'percentage' => round($percentege[$key], 2),
+                    ];
+                } else {
+                    $PreviewYearNavs[$val . ' Year' . $LastYeardate . $yesterday] = null;
+                }
+            }
+            return $PreviewYearNavs;
+        }
+        return null;
+    }
+    private function fundCompAnalysis($fund_code)
+    {
+        $lastMonthDate = $lastSavedDate =  FundComposition::getPublishReadyDate();
+        $topScripts = FundComposition::where(['fund_code' => $fund_code, 'category' => 'Equity', 'entry_date' => $lastMonthDate])
+                                        ->orderBy('content_per', 'desc')
+                                        ->latest()
+                                        ->take(10)
+                                        ->pluck('scrip_name')
+                                        ->toArray();
+        $numberOfRecords = 5;
+        $mothsGap = 3;
+        $Headertemp = array();
+        for ($i = 0; $i < $numberOfRecords; $i++) {
+            $s_date = $lastMonthDate;
+            $dates = $this->Useful->get_last_month_quatery($s_date, $i * $mothsGap);
+            array_push($Headertemp, date("M'y", strtotime($dates[1])));
+            $top_10[$dates[1]] = FundComposition::where(['fund_code' => $fund_code, 'category' => 'Equity', 'entry_date' => $dates[1]])
+                                                    ->orderBy('content_per', 'desc')
+                                                    ->latest()
+                                                    ->take(10)
+                                                    ->pluck('content_per', 'scrip_name')
+                                                    ->toArray();
+        }
+        $headers['script'] = $Headertemp;
+        $result = [];
+        foreach ($topScripts as $key => $script) {
+            $temp = [];
+            foreach ($top_10 as $date => $values) {
+                $temp[] = isset($values[$script]) ? $values[$script] : 'NA';
+            }
+            $result[$script] = $temp;
+        }
+        $finalResult = array_merge($headers, $result);
+        return $finalResult;
     }
 }
