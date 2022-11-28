@@ -372,8 +372,8 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
 
         Route::get('/clear-cache', 'DashboardController@cleardata')->name('clearcache');
 
-        Route::resource('fund-watch', 'FundWatchController', ['except' => 'show', 'destroy']);
-        Route::post('/fund-watch/delete', 'FundWatchController@deletedata')->name('fund-watch.delete');
+        Route::resource('fund-watch', 'FundWatchV2Controller', ['except' => 'show', 'destroy']);
+        Route::post('/fund-watch/delete', 'FundWatchV2Controller@deletedata')->name('fund-watch.delete');
 
         Route::resource('fund-dictionary', 'FundDictionaryController', ['except' => 'show', 'destroy']);
         Route::post('/fund-dictionary/delete', 'FundDictionaryController@deletedata')->name('fund-dictionary.delete');
