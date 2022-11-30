@@ -13,6 +13,7 @@ use App\Lib\Core\Core;
 use App\Lib\Admin\App;
 
 use App\Models\FundWatch;
+use App\Models\FundMaster;
 
 class FundWatchController extends BaseController
 {
@@ -53,11 +54,11 @@ class FundWatchController extends BaseController
     public function create()
     {   
         $statusArr = App::getStatusLblTyp2Arr();
-
+        $fundMaster = FundMaster::where('status',1)->get();
         $fldsHide = __('admin.fundwatch.flds_hide');
         $boolFalse = Config('commonconstants.bool_false');
 
-        return view('themes.backend.pages.fundwatch.createform', compact('statusArr', 'fldsHide', 'boolFalse'));
+        return view('themes.backend.pages.fundwatch.create', compact('statusArr', 'fldsHide', 'boolFalse','fundMaster'));
     }
 
     /**

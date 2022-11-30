@@ -139,7 +139,9 @@ class Useful
     {
         return date("Y-m-d", strtotime("tomorrow"));
     }
-
+    public function getYears($year,$date){
+        return date('Y-m-d', strtotime('-'.$year.' year', strtotime($date)));
+    }
     public static function get_current_week()
     {
         $monday = strtotime("last monday");
@@ -176,6 +178,13 @@ class Useful
     {
         $last_month_sd = date("Y-m-d", strtotime(date('m', strtotime("last month")) . '/01/' . date('y', strtotime("last month")) . ' 00:00:00'));
         $last_month_ed = date("Y-m-d", strtotime('-1 second', strtotime('+1 month', strtotime(date('m', strtotime("last month")) . '/01/' . date('y', strtotime("last month")) . ' 00:00:00'))));
+
+        return array($last_month_sd, $last_month_ed);
+    }
+    public static function get_last_month_quatery($s_date,$param)
+    {
+        $last_month_sd =  date('Y-m-d', strtotime("-".$param." months", strtotime($s_date)));
+        $last_month_ed = date("Y-m-t", strtotime($last_month_sd));
 
         return array($last_month_sd, $last_month_ed);
     }
@@ -262,5 +271,10 @@ class Useful
     public static function hidePhone($phone)
     {
         return str_repeat("*", strlen($phone)-4) . substr($phone, -4);
+    }
+    public static function currencyFormat($number){
+        setlocale(LC_MONETARY,"en_IN");
+        return money_format('%!i',$number);
+
     }
 }
