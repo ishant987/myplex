@@ -12,6 +12,7 @@ use App\Models\FundDetail;
 use App\Models\CorpusEntry;
 use App\Models\PageModel;
 use App\Models\FundWatch;
+use App\Models\FundWatchNew;
 use App\Models\FundMaster;
 use App\Modles\SettingsModel;
 use DB;
@@ -128,15 +129,17 @@ class FundWatchController extends BaseController
 
     public function newIndex($fund_code)
     {
+        $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 31);
         $fundMaster = FundMaster::where("fund_code", $fund_code)->first();
+        $fundWatch = FundWatchNew::where("fund_code", $fund_code)->first();
         $fund_code = $fundMaster->fund_code;
         $sip = SELF::getSIPData($fund_code);
         $fundCompAnalysis = SELF::fundCompAnalysis($fund_code);
-        $lumbsum = SELF::getLumnsubData($fundMaster->fund_code);
-        $AAUMValue = SELF::AAUMValue($fundMaster->fund_code);
-        $PortFoliBreakup = SELF::breakUP($fund_code);
-
-        return response()->json(['fund_code' => $fund_code, 'breakup' => $PortFoliBreakup, 'AAUM' => $AAUMValue, 'lumsum' => $lumbsum, 'sip' => $sip, 'fund_comp_analysis' => $fundCompAnalysis], 200); //
+        $lumbsum = SELF::getLumnsubData($fund_code);
+        $AAUMValue = SELF::AAUMValue($fund_code);
+        $PortFoliBreakup = SELF::breakUP($fund_code); 
+        return view($this->page_path . '.fund_watch.details',compact('lumbsum','fundMaster','fundWatch','lumbsum','PortFoliBreakup','fundCompAnalysis'));
+        // return response()->json(['fund_code' => $fund_code, 'breakup' => $PortFoliBreakup, 'AAUM' => $AAUMValue, 'lumsum' => $lumbsum, 'sip' => $sip, 'fund_comp_analysis' => $fundCompAnalysis], 200); //
     }
     private function breakUP($fund_code)
     {
@@ -207,7 +210,7 @@ class FundWatchController extends BaseController
                         'percentage' => round($percentege[$key], 2),
                     ];
                 } else {
-                    $PreviewYearNavs[$val . ' Year' . $LastYeardate . $yesterday] = null;
+                    $PreviewYearNavs[$val . ' Year' . $LastYeardate . $yesterday] = [];
                 }
             }
             return $PreviewYearNavs;
@@ -237,7 +240,7 @@ class FundWatchController extends BaseController
                                                     ->pluck('content_per', 'scrip_name')
                                                     ->toArray();
         }
-        $headers['script'] = $Headertemp;
+        $headers = array_merge(['script'],$Headertemp);
         $result = [];
         foreach ($topScripts as $key => $script) {
             $temp = [];
@@ -246,7 +249,6 @@ class FundWatchController extends BaseController
             }
             $result[$script] = $temp;
         }
-        $finalResult = array_merge($headers, $result);
-        return $finalResult;
+        return ['headers'=>$headers,'result'=>$result];
     }
 }
