@@ -537,6 +537,14 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
     // Route::get('fund-watch/{id}', 'FundWatchController@show')->name('fundwatch');
     Route::get('fund-watch-new/{fund_code}', 'FundWatchController@newIndex')->name('fundwatch.index');
+	Route::get('fund-watch/fund-compositon/{fund_code}', 'FundWatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
+	Route::get('fund-watch/fund-lumsum/{fund_code}', 'FundWatchController@getLumnsubData')->name('fundwatch.getLumnsubData');
+	Route::get('fund-watch/fund-risk-alpha/{fund_code}', 'FundWatchController@getRiskAplha')->name('fundwatch.getRiskAplha');
+	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'FundWatchController@breakUP')->name('fundwatch.breakUP');
+	Route::get('fund-watch/fund-return-continus/{fund_code}', 'FundWatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
+	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'FundWatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
+	Route::get('fund-watch/fund-sip/{fund_code}', 'FundWatchController@getSIPData')->name('fundwatch.getSIPData');
+
 
     //  added by pixel
     Route::get('mf-taxation','MfTaxationController@index')->name('mf.index');

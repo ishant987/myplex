@@ -1290,6 +1290,7 @@ class FrontDataController extends BaseController
         }
         if (count($dataArr)) {
             $responseArr['snapshot_data'] = $dataArr;
+			$responseArr['test']=$type_id;
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
