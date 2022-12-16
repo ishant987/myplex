@@ -534,8 +534,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('in-the-news', 'PageController@newsData')->name('news');
     Route::get('pentatec-filter', 'PageController@pentatecData')->name('pentatec');
 
-    Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
-    // Route::get('fund-watch/{id}', 'FundWatchController@show')->name('fundwatch');
+    // Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
+    Route::get('fund-watch', 'FundWatchController@index')->name('fundwatch');
     Route::get('fund-watch-new/{fund_code}', 'FundWatchController@newIndex')->name('fundwatch.index');
 	Route::get('fund-watch/fund-compositon/{fund_code}', 'FundWatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
 	Route::get('fund-watch/fund-lumsum/{fund_code}', 'FundWatchController@getLumnsubData')->name('fundwatch.getLumnsubData');

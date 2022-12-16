@@ -69,21 +69,16 @@ class FundWatchController extends BaseController
 
             $commonconstants = Config('commonconstants');
 
-            $dtMdl = new FundWatch();
+            $dtMdl = new FundWatchNew();
 
-            $archiveListModel = $dtMdl->archiveGroupList();
-            if ($archiveListModel && $reqYear == 0) {
-                $reqYear = $archiveListModel[0]->year;
-            }
+           
 
-            $dataListModel = $dtMdl->frontList(['year' => $reqYear]);
-
-            $rcntDataListModel = $dtMdl->frontList([], '', '', '', 3);
-
+            $WatchDataListModel = $dtMdl->list()->toArray();
+            // dd($WatchDataListModel);
             $defDataArr = $this->defDataArr;
             $dateFormat = $commonconstants['d_m_y_frmt2'];
 
-            return view('themes.frontend.pages.fund-watch-list', compact('defDataArr', 'dataArr', 'dataListModel', 'rcntDataListModel', 'archiveListModel', 'dateFormat', 'reqYear', 'reqId'));
+            return view($this->page_path . '.fund_watch.index', compact('defDataArr', 'dataArr', 'dataListModel', 'WatchDataListModel', 'archiveListModel', 'dateFormat', 'reqYear', 'reqId'));
         }
         return abort(404);
     }
@@ -130,6 +125,7 @@ class FundWatchController extends BaseController
 
     public function newIndex(Request $request, $fund_code)
     {
+        $fund_code =base64_decode($fund_code);
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 31);
         $dataArr['full_url'] = $request->fullUrl();
 

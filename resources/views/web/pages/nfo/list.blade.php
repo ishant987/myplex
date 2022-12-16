@@ -57,7 +57,7 @@
                     <div class="row m-0 justify-content-between align-items-center">
                         <div class="archive-title"><h3>{{ $key == 0 ? 'Recent NFO' : 'Archives From '.$record['archive']['year'] }} <span class="posts-count">({{ $record['archive']['tot'] }})</span></h3></div>
                         <div class="archive-view-all">
-                            <x-link url="{{ route('web.nfomonitor.list', $record['archive']['year']) }}">View All</x-link>
+                            {{-- <x-link url="{{ route('web.nfomonitor.list', $record['archive']['year']) }}">View All</x-link> --}}
                         </div>
                     </div>
                     <div class="archives-posts">
@@ -65,32 +65,23 @@
                             @if(count($record['items']) == 0)
                                 <p>{{ __('message.data_not_available') }}</p>
                             @else
-                            <table id="example" class="table table-striped dataTable no-footer" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name of Fund: activate to sort column descending" style="width: 273px;">
-                                            Name of Fund
-                                        </th>
-                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="AAUM (Lacs): activate to sort column ascending" style="width: 204px;">Date</th>
-                                        
-                                </thead>
-                                <tbody>  
+                           
                                 @foreach($record['items'] as $key => $record2)
-                                <tr class="odd">
-                                        <td data-label="Name of Fund" class="sorting_1">
-                                                <x-link url="{{ route('web.nfomonitor', $record2['no_id']) }}">{{ $record2['fund_name'] }}</x-link>
-                                        </td>
-                                        <td data-label="AAUM">
+                                <div class="col-md-4">
+                                    <div class="single_blog">
+                                        <div class="blog_content">
+                                            <h4><a href="{{ route('web.nfomonitor', $record2['no_id']) }}">{{ $record2['fund_name'] }}</a></h4>
                                             @if($record2['objective'] != '')
-                                            <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record2['objective']), 80) !!}</p>
+                                            <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record2['objective']), 200) !!}</p>
                                         @endif
-                                        <h6>Posted On <span class="archive-post-date">{{ date($dateFormat, strtotime($record2['post_date'])) }}</span></h6>
-                                        </td>
-                                    </tr>
+                                            <div class="post_author d-flex align-items-enter">
+                                                <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> {{$record2['fund_manager'] ? $record2['fund_manager'] : ''}}</div>
+                                                <div class="posted_date d-flex align-items-enter"><i class="ph-calendar-blank-light"></i> {{ date($dateFormat, strtotime($record2['post_date'])) }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                     @endforeach
-                                </tbody>
-                            </table>
                             @endif
                         </div>
                     </div>

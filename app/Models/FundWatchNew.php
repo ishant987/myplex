@@ -30,7 +30,8 @@ class FundWatchNew extends Model
         if ($fields == false) {
             $fields = ['*'];
         }
-        $query = FundWatch::select($fields);
+        $fields = ['id', 'fund_code', 'preamble', 'created_at','updated_at'];
+        $query = FundWatchNew::select($fields);
 
         $status = isset($filterArr['status']) ? intval($filterArr['status']) : 0;
         if ($status > 0) {
@@ -42,7 +43,7 @@ class FundWatchNew extends Model
             $order = 'DESC';
         }
 
-        $query->orderBy($orderBy, $order);
+        $query->orderBy($orderBy, $order)->with('fundDetails');
         return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

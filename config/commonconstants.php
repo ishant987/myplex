@@ -69,6 +69,7 @@ return [
     'y_m_d_frmt' => 'Y-m-d',
     'd_m_y_frmt' => 'd-m-Y',
     'd_m_y_frmt2' => 'd/m/Y',
+    'd_m_y_frmt3' => 'd.m.Y',
     'dt_tm_frmt' => 'd-m-Y-h-i-A',
     'dt_tm_frmt_dnld' => 'd-m-Y_h-i-s_A',
     'dt_tm_frmt2' => 'd-m-Y H:i:s',

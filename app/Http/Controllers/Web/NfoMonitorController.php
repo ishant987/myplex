@@ -67,7 +67,7 @@ class NfoMonitorController extends BaseController
             }
 
             $defDataArr = $this->defDataArr;
-            $dateFormat = $commonconstants['d_m_y_frmt2'];
+            $dateFormat = $commonconstants['d_m_y_frmt3'];
             return view($this->page_path.'.nfo.list', compact('defDataArr', 'dataArr', 'dataListModel', 'dateFormat', 'reqYear'));
         }
         return abort(404);
