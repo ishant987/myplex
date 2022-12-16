@@ -52,7 +52,7 @@
                                                                 </a>
                                                             </h4>
                                                             @if ($record['preamble'] != '')
-                                                                <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record['preamble']), 200) !!}</p>
+                                                                <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record['preamble']), 150) !!}</p>
                                                             @endif
                                                             <div class="post_author d-flex align-items-enter">
                                                                 <div class="posted_date d-flex align-items-enter"><i

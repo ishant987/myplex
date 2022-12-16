@@ -72,7 +72,7 @@
                                         <div class="blog_content">
                                             <h4><a href="{{ route('web.nfomonitor', $record2['no_id']) }}">{{ $record2['fund_name'] }}</a></h4>
                                             @if($record2['objective'] != '')
-                                            <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record2['objective']), 200) !!}</p>
+                                            <p>{!! \App\Lib\Core\Useful::getShortContent(strip_tags($record2['objective']), 150) !!}</p>
                                         @endif
                                             <div class="post_author d-flex align-items-enter">
                                                 <div class="post_admin d-flex align-items-enter"><i class="ph-user-light"></i> {{$record2['fund_manager'] ? $record2['fund_manager'] : ''}}</div>
