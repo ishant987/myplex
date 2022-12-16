@@ -6,7 +6,6 @@
                 <div class="col-md-12">
                     <div class="inner_section_banner">
                         <h4>{{ page_title }}</h4>
-                        <p>{{page_description}}</p>
                     </div>
                 </div>
             </div>
@@ -20,7 +19,6 @@
                 <div class="col-md-12">
                     <div class="snapshot_inner">
                         <div class="snapshot_header">
-                            <h4>Monthly Snapshot</h4>
                             <p v-if="from_date && to_date">Monthly Snapshot Report :{{ getMonth(from_date) }}, {{getYear(to_date)}}</p>
                         </div>
                         <div class="row">
@@ -226,9 +224,9 @@
                                             <table class="table dataTable no-footer" role="grid" v-if="showTable1">
                                                 <thead>
                                                     <tr>
-                                                        <th class="sorting" style="width: 47% !important;" v-on:click="sortTable('FUNDTYPE')" :class="{'sorting_asc':sortKey == 'FUNDTYPE' && ascending, 'sorting_desc': sortKey == 'FUNDTYPE' && !ascending}">Fund Category</th>
-                                                        <th class="sorting" v-on:click="sortTable('CHANGEVALUE')" :class="{'sorting_asc':sortKey == 'CHANGEVALUE' && ascending, 'sorting_desc': sortKey == 'CHANGEVALUE' && !ascending}">% Change</th>
-                                                        <th class="sorting" v-on:click="sortTable('MEDIANVAL')" :class="{'sorting_asc':sortKey == 'MEDIANVAL' && ascending, 'sorting_desc': sortKey == 'MEDIANVAL' && !ascending}">Median</th>
+                                                        <th class="sorting" style="width: 47% !important;" v-on:click="sortTable('FUNDTYPE')" :class="{'sorting_asc':sortKey == 'FUNDTYPE' && ascending, 'sorting_desc': sortKey == 'FUNDTYPE' && !ascending}">Fund Category<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                        <th class="sorting" v-on:click="sortTable('CHANGEVALUE')" :class="{'sorting_asc':sortKey == 'CHANGEVALUE' && ascending, 'sorting_desc': sortKey == 'CHANGEVALUE' && !ascending}">% Change<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                        <th class="sorting" v-on:click="sortTable('MEDIANVAL')" :class="{'sorting_asc':sortKey == 'MEDIANVAL' && ascending, 'sorting_desc': sortKey == 'MEDIANVAL' && !ascending}">Median<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody >                            
@@ -283,8 +281,8 @@
                             <div class="dy-table-block br-5">
                                 <table class="box-shadow">
                                     <tr>
-                                        <th style="width: 80% !important;">Fund Name</th>
-                                        <th style="min-width: 130px;">% Change</th>
+                                        <th style="width: 80% !important;">Fund Name<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                        <th style="min-width: 130px;">% Change<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                     </tr>
                                     <tbody v-if="fund_change.length && !loading">
                                         <tr v-for="index in fund_change" :key="index.fund_code">

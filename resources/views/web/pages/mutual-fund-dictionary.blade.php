@@ -31,7 +31,6 @@
 			<div class="col-md-12">
 				<div class="inner_section_banner">
 					<h4>{{$dataArr['title']}}</h4>
-					<p>{{$dataArr['meta_descp']}}</p>
 				</div>
 			</div>
 		</div>

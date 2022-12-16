@@ -24,7 +24,6 @@
                                     <div class="col-md-12">
                                         <div class="inner_section_banner">
                                             <h4>About Myplexus</h4>
-                                            <p>Choose, Evaluate Fund Performance In A Better Way!</p>
                                         </div>
                                     </div>
                                 </div>

@@ -1,7 +1,5 @@
 <template>
-    <div class="info_monitor_inner">
-					<div class="info_monitor_inner_wrapper mb-3">
-						<div class="dictionary_search_area d-block d-sm-flex align-items-center">
+<div class="dictionary_search_area d-block d-sm-flex align-items-center mb-4">
 							<div class="dictionary_entity_row d-flex align-items-center">
 								<label>Show</label>
 								<select class="dictionary_entity_select" v-model="limit" :disabled="limitDisabled">
@@ -17,6 +15,8 @@
 								</div>
 							</div>
 						</div>
+    <div class="info_monitor_inner">
+					<div class="info_monitor_inner_wrapper">						
 						<div class="dictionary_table"> 
               <div class="mb-3 pull-right"  v-if="showAll!=true">
                 <pagination  class="" :data="fund_directory" @pagination-change-page="list"></pagination>
@@ -26,7 +26,7 @@
 									<table id='mutualFundDictionaryTable'  class="table table-striped" style="width:100%">
 										<thead>
 											<tr>
-												<th>Abbreviation</th>
+												<th>Abbreviation<span class="filter__arrow"><a href="#"><i class="ph-arrows-down-up-bold"></i></a></span></th>
 												<th>Meaning</th>
 											</tr>
 										</thead>

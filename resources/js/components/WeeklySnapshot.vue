@@ -6,7 +6,6 @@
                 <div class="col-md-12">
                     <div class="inner_section_banner">
                         <h4>{{ page_title }}</h4>
-                        <p>{{page_description}}</p>
                     </div>
                 </div>
             </div>
@@ -20,7 +19,6 @@
                 <div class="col-md-12">
                     <div class="snapshot_inner">
                         <div class="snapshot_header">
-                            <h4>Weekly Snapshot</h4>
                             <p v-if="from_date && to_date">Weekly Snapshot Report :{{from_date}} to {{to_date}}</p>
                         </div>
                         <div class="row">

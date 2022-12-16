@@ -2,6 +2,7 @@ require('./bootstrap');
 
 import { createApp } from 'vue'
 import store from './store'
+import babelPolyfill from 'babel-polyfill'
 import KnowYourScheme from './components/KnowYourScheme.vue'
 import FundPortfolio from './components/FundPortfolio.vue'
 import FundCompositionSnapshot from './components/FundCompositionSnapshot.vue'

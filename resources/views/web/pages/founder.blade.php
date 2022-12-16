@@ -116,7 +116,9 @@
 		<div class="recent_interview_slider">
 			<div class="slider_inerr">
 				<div class="inter_seen">
+					<div class="inter_seen_img">
 					<img src="{{asset('themes/frontend/assets/v1/img/founder_1.jpg')}}" alt=""/>
+						</div>
 					<h5>Sanjay Chawla</h5>
 					<p>Fund Manager - Equity Investments</p>
 					<p>L&T Investment Management Limited</p>
@@ -124,7 +126,9 @@
 			</div>
 			<div class="slider_inerr">
 				<div class="inter_seen">
+					<div class="inter_seen_img">
 					<img src="{{asset('themes/frontend/assets/v1/img/founder_2.jpg')}}" alt=""/>
+					</div>
 					<h5>Shridatta Bhandwaldar</h5>
 					<p>Head Equities</p>
 					<p>Canara Robeco Mutual Fund</p>
@@ -132,7 +136,9 @@
 			</div>
 			<div class="slider_inerr">
 				<div class="inter_seen">
+					<div class="inter_seen_img">
 					<img src="{{asset('themes/frontend/assets/v1/img/founder_3.jpg')}}" alt=""/>
+					</div>
 					<h5>Aniruddha Naha</h5>
 					<p>Director & Senior Fund Manager</p>
 					<p>PGIM Investments</p>
@@ -140,7 +146,9 @@
 			</div>
 			<div class="slider_inerr">
 				<div class="inter_seen">
+					<div class="inter_seen_img">
 					<img src="{{asset('themes/frontend/assets/v1/img/founder_4.jpg')}}" alt=""/>
+					</div>
 					<h5>Shreyas Devalkar</h5>
 					<p>Fund Manager</p>
 					<p>Axis Mutual Fund</p>

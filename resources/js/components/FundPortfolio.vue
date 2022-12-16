@@ -1,29 +1,22 @@
 <template>
 <section class="info_monitor_sec">
     <div class="container">
+		<div class="row mb-4">
+			<div class="col-lg-6 col-md-6 col-sm-12">
+				<h6 class="text-green-2">Fund House Name</h6>
+				<multiselect class="" label="fund_house" track-by="fund_house" v-model="selectedFundHouse" tag-placeholder="" placeholder="Select Fund House" :options="fundHouses" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
+	</multiselect>
+	</div>
+			<div class="col-lg-6 col-md-6 col-sm-12">
+				<h6 class="text-green-2">Fund Name</h6>
+				<multiselect :disabled="!selectedFundHouse" class="" label="fund_name" track-by="fund_id" v-model="selectedFund" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
+	</multiselect>
+	</div>
+	</div>
         <div class="row">
             <div class="col-md-12">
                 <div class="info_monitor_inner">
-                    <div class="info_monitor_inner_wrapper mb-3">
-                        <div class="monthly_ranking_title d-block d-sm-flex align-items-center justify-content-between mb-3">
-                            <div class="monthly_ranking_text">
-                                <h4>Fund Portfolio</h4>
-                            </div>
-                        </div>
-                        <div class="monthly_ranking_Search_part mb-1">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <h6 class="text-green-2">Fund House Name</h6>
-                                    <multiselect class="" label="fund_house" track-by="fund_house" v-model="selectedFundHouse" tag-placeholder="" placeholder="Select Fund House" :options="fundHouses" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                    </multiselect>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <h6 class="text-green-2">Fund Name</h6>
-                                    <multiselect :disabled="!selectedFundHouse" class="" label="fund_name" track-by="fund_id" v-model="selectedFund" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
-                                    </multiselect>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="info_monitor_inner_wrapper">
                         <div class="monthly_ranking_table">
                             <div class="datatable_ll main_trer">
                                 <div class="table-responsive">

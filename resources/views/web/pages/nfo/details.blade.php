@@ -25,7 +25,6 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>{{ $dataArr['title'] }}</h4>
-                    <p>{{ $dataArr['item']['fund_name'] }}</p>
                 </div>
             </div>
         </div>
@@ -78,7 +77,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             <div class="info_monitor_inner_wrapper mb-3">
                                 <div class="info_title">
                                     <h4>Fund Stats</h4>
@@ -99,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="info_monitor_inner_wrapper mb-3">
                                 <div class="fund_fact_wrapper asset_aloocate">
                                     <h4>Asset Allocation</h4>
@@ -222,7 +221,7 @@
                         </div>
                     </div>
                     <div class="info_monitor_inner_wrapper mb-3">
-                        <div class="info_title green_bg_title">
+                        <div class="info_title">
                             <h4>Oomph Factor</h4>
                         </div>
                         <div class="fund_fact_wrapper">

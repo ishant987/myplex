@@ -6,7 +6,7 @@
                     <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" alt='myplex-logo'/>
                     <p>We provide a range of tools and financial know-how that  can help you make the most of your short-term and long-term investment goals.</p>
 
-                    <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-2">
+                    <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-4">
                             <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />
                             <div class="newsletter_input_group">
                                 <input type="email" name="email" id="email" placeholder="Enter Your Email" />
@@ -39,11 +39,9 @@
                         <div class="footer_menu color_inverse">
                             <h4>Important Links</h4>
                             <ul>
-                                <li><a href="/">Home Page</a></li>
-                                <li><a href="/compare-scheme">Compare Scheme</a></li>
-                                {{-- <li><a href="/calculator">Calculator</a></li> --}}
+                                <li><a href="/compare-scheme">Compare</a></li>
                                 <li><a href="{{route('web.get-blogs')}}">Money Seriously</a></li>
-                                <li><a href="/monthly-ranking">Monthly Rankings</a></li>
+                                <li><a href="/monthly-ranking">Category wise return & risk ratios</a></li>
                             </ul>
                         </div>
                     </div>
@@ -52,11 +50,11 @@
                             <h4>Fund</h4>
                             <ul>
 
-                                <li><a href="/fund-portfolio">Fund Portfolio</a></li>
                                 <li><a href="/fund-performance">Fund Performance</a></li>
                                 <li><a href="/fund-watch">Fund Watch</a></li>
                                 <li><a href="/nfo-monitor-list">NFO Monitor</a></li>
                                 <li><a href="/know-your-scheme?fund_house=">Know Your Scheme</a></li>
+								<li><a href="/know-the-ratio">Know Your Ratio</a></li>
                             </ul>
                         </div>
                     </div>
@@ -64,10 +62,10 @@
                         <div class="footer_menu color_inverse ">
                             <h4>Snapshot</h4>
                             <ul>
-                                <li><a href="/monthly-ranking">Rankings</a></li>
                                 <li><a href="/monthly-snapshot">Monthly Snapshot</a></li>
                                 <li><a href="/weekly-snapshot">Weekly Snapshot</a></li>
                                 <li><a href="/composition-snapshot">Composition Snapshot</a></li>
+								<li><a href="/performance-snapshot">Performance Snapshot</a></li>
                                 <li><a href="/pentatech">Pentatec</a></li>
                             </ul>
                         </div>
@@ -77,8 +75,7 @@
                             <h4>Company</h4>
                             <ul>
                                 <li><a href="/about">About Us</a></li>
-                            <li><a href="/contact">Contact Us</a></li>                                    
-                            <li><a href="#">In The News</a></li>
+                            <li><a href="/contact">Contact Us</a></li>
                             <li><a href="/faq">FAQs</a></li>
                             <li><a href="/founder">Meet The Fund Man</a></li>
                             </ul>

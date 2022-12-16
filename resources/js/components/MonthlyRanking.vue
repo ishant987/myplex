@@ -1,24 +1,22 @@
 <template>
      <section class="info_monitor_sec">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="info_monitor_inner">
-                        <div class="info_monitor_inner_wrapper mb-3">
-                            <div class="monthly_ranking_title d-block d-sm-flex align-items-center justify-content-between mb-3">
-                                <div class="monthly_ranking_text">
-                                    <h4>{{ page_title }}</h4>
-                                    <p v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
+			
+			<div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-block d-sm-flex align-items-center justify-content-between mb-3">
+                    <div class="monthly_ranking_text">
+                        <p v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
+                    </div>
+                     <div class="monthly_ranking_share d-block d-sm-flex">
+                                    <a  target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+currentURL()"  class="share_btn facebook"><i class="ph-facebook-logo"></i> Share</a>
+                                    <a  target="_blank" :href="'http://twitter.com/share?text='+shareText+'&url='+currentURL()" class="share_btn twitter"><i class="ph-twitter-logo"></i> Share</a>
+                                    <a target="_blank" :href="'https://www.linkedin.com/shareArticle?mini=true&url='+currentURL()+'&title='+shareText" class="share_btn linkedin"><i class="ph-linkedin-logo"></i> Share</a>
+                                    <a href="javascript://" class="share_btn pdf" @click="downloadPDF"><i class="ph-file-pdf"></i> Share</a>
                                 </div>
-                                <div class="monthly_ranking_share d-block d-sm-flex">
-                                    <a  target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+currentURL()"  class="share_btn facebook"><i class="ph-facebook-logo"></i> Facebook</a>
-                                    <a  target="_blank" :href="'http://twitter.com/share?text='+shareText+'&url='+currentURL()" class="share_btn twitter"><i class="ph-twitter-logo"></i> Twitter</a>
-                                    <a target="_blank" :href="'https://www.linkedin.com/shareArticle?mini=true&url='+currentURL()+'&title='+shareText" class="share_btn linkedin"><i class="ph-linkedin-logo"></i> Linkedin</a>
-                                    <a href="javascript://" class="share_btn pdf" @click="downloadPDF"><i class="ph-file-pdf"></i> Pdf</a>
-                                </div>
-                            </div>
-                            <div class="monthly_ranking_Search_part mb-1">
-                                <multiselect 
+                </div>
+                <div class="mb-2">
+                     <multiselect 
                                     :disabled="loading || process"
                                     class=""
                                     label="name" 
@@ -37,23 +35,31 @@
                                     >
                                 </multiselect>
                                 <p class="mt-3" v-if="snapshotText">Type of Fund : {{snapshotText}}</p>
-                            </div>
+                </div>
+            </div>
+        </div>
+			
+			
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="info_monitor_inner">
+                        <div class="info_monitor_inner_wrapper">
                             <div class="monthly_ranking_table">
                                 <div class="datatable_ll main_trer">
                                     <div class="table-responsive">
                                         <table id="example" class="table table-striped" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th style="background-color: #fff !important" colspan="3"></th>
+                                                    <th style="background-color: #00665e !important;" colspan="3"></th>
                                                     <th style="background-color: #222222 !important" colspan="3">Ranking</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Name of Fund</th>
-                                                    <th>AAUM (Lacs)</th>
-                                                    <th>Return %</th>
-                                                    <th>Return Quality</th>
-                                                    <th>Volitilty</th>
-                                                    <th>Market Risk</th>
+                                                    <th>Name of Fund <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th>AAUM (Lacs) <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th>Return % <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th>Return Quality <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th>Volitilty <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th>Market Risk <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                                 </tr>
                                             </thead>
                                             <tbody v-if="!process">

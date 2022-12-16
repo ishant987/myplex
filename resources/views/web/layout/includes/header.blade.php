@@ -60,7 +60,7 @@
                         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                             {{-- {!! $webtopquicklinkmenuNew ?? '' !!} --}}
                             <div class="navbar-nav">
-                                <a class="nav-link active" aria-current="page" href="/monthly-ranking">Monthly Ranking</a>
+                                <!---<a class="nav-link active" aria-current="page" href="/monthly-ranking">Monthly Ranking</a>--->
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Portfolio
@@ -91,10 +91,19 @@
                                         <li><a class="dropdown-item" href="/mutual-fund-dictionary">Mutual Fund Dictionary</a></li>
                                     </ul>
                                 </li>
-                                <a class="nav-link" href="/fund-watch">Fund Watch</a>
+                                <!-----<a class="nav-link" href="/fund-watch">Fund Watch</a>------>
                                 <a class="nav-link" href="{{route('web.get-blogs')}}">Money Seriously</a>
-                                <a class="nav-link" href="/about">About Us</a>
-                                <a class="cta_header_link" href="/ask-an-expert">Ask our Experts</a>
+								
+								<li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                       About Us
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="/about">About Us</a></li>
+                                        <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
+                                    </ul>
+                                </li>
+                                <a class="cta_header_link" href="/ask-an-expert">Ask Experts</a>
                             </div>
                         </div>
                     </nav>
@@ -103,3 +112,4 @@
         </div>
     </div>
 </section>
+

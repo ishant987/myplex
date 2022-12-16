@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th v-for="col in columns" :key="col.key" v-on:click="sortTable(col.key)" class="sorting" :style="col.hasOwnProperty('style')?col.style:{}" :class="{'sorting_asc':sortKey == col.key && ascending, 'sorting_desc': sortKey == col.key && !ascending}">
-                    {{col.name}}
+                    {{col.name}} <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                 </th>
             </tr>
         </thead>

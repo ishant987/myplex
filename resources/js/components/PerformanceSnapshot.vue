@@ -4,7 +4,6 @@
     <section class="">
         <div class="container">
             <div class="comp_schem_bdr">
-                <h4>Performance snapshot</h4>
                 <div class="tab_snap_shot">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -16,7 +15,7 @@
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade " :class="{'active show':currentTab == 'weekly'}" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab">
-                            <div class="top_table_bg_color">
+                            <div class="top_table_bg_color mb-3">
                                 <div class="row align-items-end">
                                     <div class="col-lg-10">
                                         <div class="row align-items-end">
@@ -59,12 +58,12 @@
                                     <table id="example" class="table table-striped" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th v-if="dataCategoryWeekly != 'indices'">Scrip Name</th>
-                                                <th v-if="dataCategoryWeekly == 'indices' || dataCategoryWeekly == 'return'">Index Name</th>
-                                                <th>7days</th>
-                                                <th>14days</th>
-                                                <th>30days</th>
-                                                <th>60days</th>
+                                                <th v-if="dataCategoryWeekly != 'indices'">Scrip Name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th v-if="dataCategoryWeekly == 'indices' || dataCategoryWeekly == 'return'">Index Name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>7days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>14days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>30days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>60days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -93,7 +92,7 @@
                         <!-- PERFORMANCE SNAPSHOT WEEKLY TAB END -->
                         <!-- PERFORMANCE SNAPSHOT MONTHLY TAB START -->
                         <div class="tab-pane fade" :class="{'active show':currentTab == 'monthly'}" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
-                            <div class="top_table_bg_color">
+                            <div class="top_table_bg_color mb-3">
                                 <div class="row align-items-end">
                                     <div class="col-lg-10">
                                         <div class="row align-items-end">
@@ -130,19 +129,19 @@
                                         <p>Term of Fund : Medium Term</p>
                                         <p>Type of Fund : <span>{{ selectedFundClassificationMonthly.name }}</span> for the Week Ended As On : <b>{{ formattedDate(selectedDateMonthly) }}</b></p>
                                     </div>
-                                </div>
-                                <div>&nbsp;</div>
-                                <div class="datatable_ll main_trer">
+                                </div>                                
+                            </div>
+							<div class="datatable_ll main_trer">
                                     <div class="table-responsive">
                                         <table id="example" class="table table-striped" style="width:100%" v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return' || dataCategoryMonthly == 'return_less_index'">
                                             <thead>
                                                 <tr>
-                                                    <th class="sorting" v-on:click="sortTableM('fund_name')" :class="{'sorting_asc':sortKeyM == 'fund_name' && ascendingM, 'sorting_desc': sortKeyM == 'fund_name' && !ascendingM}" v-if="dataCategoryMonthly != 'indices'">Fund name</th>
-                                                    <th class="sorting" v-on:click="sortTableM('indices_name')" :class="{'sorting_asc':sortKeyM == 'indices_name' && ascendingM, 'sorting_desc': sortKeyM == 'indices_name' && !ascendingM}" v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'">Index name</th>
-                                                    <th class="sorting" v-on:click="sortTableM('sixmonths')" :class="{'sorting_asc':sortKeyM == 'sixmonths' && ascendingM, 'sorting_desc': sortKeyM == 'sixmonths' && !ascendingM}">Six Months </th>
-                                                    <th class="sorting" v-on:click="sortTableM('oneyear')" :class="{'sorting_asc':sortKeyM == 'oneyear' && ascendingM, 'sorting_desc': sortKeyM == 'oneyear' && !ascendingM}">One Year</th>
-                                                    <th class="sorting" v-on:click="sortTableM('twoyear')" :class="{'sorting_asc':sortKeyM == 'twoyear' && ascendingM, 'sorting_desc': sortKeyM == 'twoyear' && !ascendingM}">Two Year</th>
-                                                    <th class="sorting" v-on:click="sortTableM('threeyear')" :class="{'sorting_asc':sortKeyM == 'threeyear' && ascendingM, 'sorting_desc': sortKeyM == 'threeyear' && !ascendingM}">Three Year</th>
+                                                    <th class="sorting" v-on:click="sortTableM('fund_name')" :class="{'sorting_asc':sortKeyM == 'fund_name' && ascendingM, 'sorting_desc': sortKeyM == 'fund_name' && !ascendingM}" v-if="dataCategoryMonthly != 'indices'">Fund name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('indices_name')" :class="{'sorting_asc':sortKeyM == 'indices_name' && ascendingM, 'sorting_desc': sortKeyM == 'indices_name' && !ascendingM}" v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'">Index name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('sixmonths')" :class="{'sorting_asc':sortKeyM == 'sixmonths' && ascendingM, 'sorting_desc': sortKeyM == 'sixmonths' && !ascendingM}">Six Months <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('oneyear')" :class="{'sorting_asc':sortKeyM == 'oneyear' && ascendingM, 'sorting_desc': sortKeyM == 'oneyear' && !ascendingM}">One Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('twoyear')" :class="{'sorting_asc':sortKeyM == 'twoyear' && ascendingM, 'sorting_desc': sortKeyM == 'twoyear' && !ascendingM}">Two Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('threeyear')" :class="{'sorting_asc':sortKeyM == 'threeyear' && ascendingM, 'sorting_desc': sortKeyM == 'threeyear' && !ascendingM}">Three Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -194,7 +193,6 @@
                                         <!-- corpus_change table result end -->
                                     </div>
                                 </div>
-                            </div>
 
                         </div>
                     </div>

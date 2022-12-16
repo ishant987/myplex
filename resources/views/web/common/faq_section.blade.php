@@ -12,4 +12,9 @@
             @include('web.common.faq_list')
         </div>
     </div>
+	<div class="row mt-2">
+									<div class="col-md-12 text-center">
+										<a href="/faq" class="money_title_btn">View All FAQ</a>
+									</div>
+								</div>
 </div>

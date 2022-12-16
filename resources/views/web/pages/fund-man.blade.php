@@ -80,9 +80,11 @@
 									@foreach ($fundManListMdl as $key => $record)
 									<div class="slider_inerr">
 										<div class="inter_seen">
+											<div class="inter_seen_img">
 											<img src="{{ $defDataArr['media_folder'] . $record->media->path }}"
 											alt="{{ $record->media->alt }}"
 											title="{{ $record->media->title }}" class="img-fluid" />
+											</div>
 											<x-link url="{{ route('web.fundman', $record->slug) }}">
 											<h5>
 													{{ $record->name }}
