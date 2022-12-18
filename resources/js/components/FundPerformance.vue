@@ -89,21 +89,21 @@
                                         v-if="ratio_type">
                                         <thead>
                                             <tr>
-                                                <td class="dark_bg color_white text-center" colspan="9">Performance
+                                                <td style="border-radius:7px" class="dark_bg color_white text-center" colspan="9">Performance
                                                     Compare To Category <span
                                                         v-if="ratio_type == 'to_category'">Category</span><span
                                                         v-if="ratio_type == 'to_benchmark'">Benchmark</span></td>
                                             </tr>
                                             <tr>
-                                                <th>Return</th>
-                                                <th>7 Days</th>
-                                                <th>30 Days</th>
-                                                <th>90 Days</th>
-                                                <th>180 Days</th>
-                                                <th>1 Year</th>
-                                                <th>2 Year</th>
-                                                <th>3 Year</th>
-                                                <th>5 Year</th>
+                                                <th>Return <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>7 Days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>30 Days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>90 Days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>180 Days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>1 Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>2 Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>3 Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>5 Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                             </tr>
                                         </thead>
                                         <tbody id="category_data">

@@ -4,6 +4,8 @@ $('.as_seen_slider').slick({
     slidesToScroll: 6,
     arrows: false,
     dots: false,
+    autoplay: true,
+     autoplaySpeed: 1000,
     responsive: [
         {
             breakpoint: 1024,
@@ -11,22 +13,22 @@ $('.as_seen_slider').slick({
                 slidesToShow: 3,
                 slidesToScroll: 3,
             }
-  },
+    },
         {
             breakpoint: 600,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
             }
-  },
+    },
         {
             breakpoint: 480,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
             }
-  }
-]
+    }
+  ]
 });
 $('.trade_details_result').slick({
     infinite: true,
@@ -46,54 +48,238 @@ $('.trade_details_result').slick({
                 slidesToShow: 5,
                 slidesToScroll: 5,
             }
-  },
+    },
         {
             breakpoint: 600,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
             }
-  },
+    },
         {
             breakpoint: 480,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
             }
-  }
-]
+    }
+  ]
 });
 
 
+(function ($) {
+	"use strict";
 
-$('.slider-for').slick({
+	// Testimonial Carousel
+	if ($(".testimonial-carousel").length) {
+		$(".testimonial-carousel").owlCarousel({
+			loop: false,
+			margin: 0,
+			nav: true,
+			smartSpeed: 300,
+			autoplay: false,
+            touchDrag  : true,
+            mouseDrag  : false,
+            dots:false,
+			navText: [
+				'<span class="ph-caret-right-bold"></span>',
+				'<span class="ph-caret-left-bold"></span>'
+			],
+			responsive: {
+				0: {
+					items: 1
+				},
+				600: {
+					items: 1
+				},
+				800: {
+					items: 1
+				},
+				1024: {
+					items: 1
+				}
+			}
+		});
+	}
+})(window.jQuery);
+
+
+
+
+$('.her_banner_left_slide').slick({
+    infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: '.slider-nav',
-    autoplay: true,
-    autoplaySpeed: 2000,
-});
-$('.slider-nav').slick({
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    asNavFor: '.slider-for',
+    autoplaySpeed: 5000,
+    arrows: true,
+    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
     dots: false,
-    arrows: false,
-    centerMode: false,
-    focusOnSelect: true,
     autoplay: true,
-    autoplaySpeed: 2000,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }
+    },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    }
+  ]
 });
+
+$('.testimonial_slider').slick({
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplaySpeed: 5000,
+    arrows: true,
+    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
+    dots: false,
+    autoplay: true,
+    fade:false,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }
+    },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    }
+  ]
+});
+
+
+$('.meet_team_slider').slick({
+    infinite: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplaySpeed: 5000,
+    arrows: false,
+	centerMode: false,
+    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
+    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
+    dots: false,
+    autoplay: true,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: 1,
+            }
+    },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    }
+  ]
+});
+
+
+
+$('.hero_banner_right_slider').slick({
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+     autoplaySpeed: 5000,
+    arrows: false,
+    dots: false,
+    autoplay: true,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }
+    },
+        {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+    }
+  ]
+});
+
+
+//
+//$('.slider-for').slick({
+//    slidesToShow: 1,
+//    slidesToScroll: 1,
+//    arrows: false,
+//    fade: true,
+//    asNavFor: '.slider-nav',
+//    autoplay: true,
+//    autoplaySpeed: 2000,
+//});
+//$('.slider-nav').slick({
+//    slidesToShow: 1,
+//    slidesToScroll: 1,
+//    asNavFor: '.slider-for',
+//    dots: false,
+//    arrows: false,
+//    centerMode: false,
+//    focusOnSelect: true,
+//    autoplay: true,
+//    autoplaySpeed: 2000,
+//});
+//
+//
+
+
+
 
 
 
 AOS.init();
-
-
-
-
 
 function accordion() {
     var Accordion = function (el, multiple) {
@@ -160,132 +346,69 @@ $('.recent_interview_slider').slick({
                 slidesToShow: 3,
                 slidesToScroll: 3,
             }
-  },
+    },
         {
             breakpoint: 600,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
             }
-  },
+    },
         {
             breakpoint: 480,
             settings: {
                 slidesToShow: 1,
                 slidesToScroll: 1
             }
-  }
-]
+    }
+  ]
 });
 
-// $(document).ready(function () {
-//   $('#example').DataTable({searching: false, paging: false, info: false});
-// });
-$('.meet_team_slider').slick({
+
+$('.ask_expert_slider').slick({
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: 3,
     slidesToScroll: 1,
-    autoplaySpeed: 5000,
     arrows: false,
-    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
-    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
     dots: false,
     autoplay: true,
     responsive: [
         {
             breakpoint: 1024,
             settings: {
-                slidesToShow: 4,
-                slidesToScroll: 1,
+                slidesToShow: 3,
+                slidesToScroll: 3,
             }
-  },
+    },
         {
             breakpoint: 600,
             settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
+                slidesToShow: 2,
+                slidesToScroll: 2
             }
-  },
+    },
         {
             breakpoint: 480,
             settings: {
                 slidesToShow: 1,
                 slidesToScroll: 1
             }
-  }
-]
+    }
+  ]
 });
 
 
-$('.her_banner_left_slide').slick({
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplaySpeed: 5000,
-    arrows: true,
-    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
-    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
-    dots: false,
-    autoplay: true,
-    responsive: [
-        {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-            }
-  },
-        {
-            breakpoint: 600,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-  },
-        {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-  }
-]
+
+$(document).ready(function () {
+    $('#example').DataTable({
+        searching: false,
+        paging: false,
+        info: false
+    });
 });
-$('.testimonial_slider').slick({
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplaySpeed: 5000,
-    arrows: true,
-    prevArrow: '<button class="slide-arrow prev-arrow"><i class="ph-caret-left"></i></button>',
-    nextArrow: '<button class="slide-arrow next-arrow"><i class="ph-caret-right"></i></button>',
-    dots: false,
-    autoplay: true,
-    fade: false,
-    responsive: [
-        {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-            }
-  },
-        {
-            breakpoint: 600,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-  },
-        {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-            }
-  }
-]
-});
+
+
+
 
 
 /*--- range slider ---------*/
@@ -332,11 +455,13 @@ $('body').on('click', '.toggle-filters', function () {
                 currentValueMin = currentValueMin / 1000 + 'k';
                 currentValueMax = currentValueMax / 1000 + 'k';
             }
+
             $this.find('span[tabindex]:first-of-type .value').html(currentValueMin).attr('data-selected-value', minValue);
             $this.find('span[tabindex]:last-of-type').append('<span class="value max-value" data-selected-value></span>').find('.value').html(currentValueMax).attr('data-selected-value', maxValue);
         });
 
     } else {
+
         $this.html('Show advanced filters');
         rangeWrapper.removeClass('filters-expanded');
         advancedFilters.slideUp();
@@ -366,7 +491,6 @@ $('.slider').each(function () {
         maxValue = Number($(this).attr('data-max')),
         value = Number($(this).attr('data-value')),
         step = Number($(this).attr('data-step')),
-        type = $(this).attr('data-type'),
         $this = $(this);
 
     $this.slider({
@@ -381,28 +505,20 @@ $('.slider').each(function () {
                 currentValue = currentValue / 1000 + 'k';
             }
             $(this).find('.value').html(currentValue).attr('data-selected-value', ui.value);
-        },
-        change: function (event, ui) {
-            const source = $(this).parent().find('.vue-value').attr('data-from');
-            $(this).parent().find('.vue-value').val(ui.value);
-            if (source == 'infCalucaltor') {
-                document.getElementById('infCalucaltor-jquery-click').click();
-            } else if (source == 'retirementCalculator') {
-                // document.getElementById('retirementCalulator-jquery-click').click();
-            } else {
-                document.getElementById('show-table-click').click();
-            }
         }
     });
 
     var sliderHandle = $this.find('.ui-slider-handle'),
         currentValue = sliderHandle.parent().attr('data-value');
-    sliderHandle.append('<span ref="sip" class="value min-value" data-type="' + type + '" data-selected-value="' + currentValue + '"></span>');
+    sliderHandle.append('<span class="value min-value" data-selected-value="' + currentValue + '"></span>');
 
     if (minValue > 999) {
         value = value / 1000 + 'k';
     }
-
     $this.find('.value').html(value);
 });
 /*--- range slider ---------*/
+
+
+
+

@@ -26,13 +26,13 @@
 									<table id='mutualFundDictionaryTable'  class="table table-striped" style="width:100%">
 										<thead>
 											<tr>
-												<th>Abbreviation<span class="filter__arrow"><a href="#"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+												<th style="150px !important">Abbreviation<span class="filter__arrow"><a href="#"><i class="ph-arrows-down-up-bold"></i></a></span></th>
 												<th>Meaning</th>
 											</tr>
 										</thead>
                     <tbody v-if="!process">
                         <tr v-for="directory in fund_directory.data">
-                          <td>{{directory.title}}</td>
+                          <td style="150px !important">{{directory.title}}</td>
                           <td>{{directory.description}}</td>
                         </tr>
                     </tbody>

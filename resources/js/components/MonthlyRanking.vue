@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="d-block d-sm-flex align-items-center justify-content-between mb-3">
                     <div class="monthly_ranking_text">
-                        <p v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
+                        <p class="sub_gren_title" v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
                     </div>
                      <div class="monthly_ranking_share d-block d-sm-flex">
                                     <a  target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+currentURL()"  class="share_btn facebook"><i class="ph-facebook-logo"></i> Share</a>

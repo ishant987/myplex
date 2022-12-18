@@ -118,6 +118,7 @@
                             aria-sort="ascending"
                             aria-label="Name of the Fund: activate to sort column descending"
                             width="20%"
+							style="text-align:left"
                           >
                             Name of the Fund
 							 <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
@@ -135,8 +136,9 @@
                             colspan="1"
                             aria-label="Cash&amp;nbsp;%: activate to sort column ascending"
                             width="9%"
+							style="text-align:left"
                           >
-                            Cash&nbsp;%
+                            Cash%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -152,8 +154,9 @@
                             colspan="1"
                             aria-label="Sov&amp;nbsp;%: activate to sort column ascending"
                             width="9%"
+							 style="text-align:left"
                           >
-                            Sov&nbsp;%
+                            Sov%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -168,8 +171,9 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Corp Debt&amp;nbsp;%: activate to sort column ascending"
+							  style="text-align:left"
                           >
-                            Corp Debt&nbsp;%
+                            Corp <br/>Debt%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -184,8 +188,9 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Small Cap&amp;nbsp;%: activate to sort column ascending"
+							  style="text-align:left"
                           >
-                            Small Cap&nbsp;%
+                            Small <br/>Cap%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -200,8 +205,9 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Mid Cap&amp;nbsp;%: activate to sort column ascending"
+							  style="text-align:left"
                           >
-                            Mid Cap&nbsp;%
+                            Mid <br/>Cap%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -216,8 +222,9 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Large Cap&amp;nbsp;%: activate to sort column ascending"
+							  style="text-align:left"
                           >
-                            Large Cap&nbsp;%
+                            Large<br/> Cap%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -234,8 +241,9 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Very  Large  Cap&amp;nbsp;%: activate to sort column ascending"
+							  style="text-align:left"
                           >
-                            Very Large Cap&nbsp;%
+                            Very Large<br/> Cap&nbsp;%
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                           <th
@@ -250,9 +258,10 @@
                             rowspan="1"
                             colspan="1"
                             aria-label="Wt&amp;nbsp;.&amp;nbsp;PE: activate to sort column ascending"
+							  style="text-align:left"
                             width="9%"
                           >
-                            Wt&nbsp;.&nbsp;PE
+                            Wt&nbsp;PE
 							  <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span>
                           </th>
                         </tr>

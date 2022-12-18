@@ -191,7 +191,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="vision_title mb-5">
-                    <h4 data-aos="fade-down" data-aos-duration="1000"><h5>{{ $defDataArr['askexpert_lang']['pnl_of_exprts_txt'] }}</h5></h4>
+                    <h4 data-aos="fade-down" data-aos-duration="1000">{{ $defDataArr['askexpert_lang']['pnl_of_exprts_txt'] }}</h4>
                     <p data-aos="fade-down" data-aos-duration="1500">We, at myplexus.com believe the financial intermediation and personal finance industry in India is going through the fastest evolutionary stage.</p>
                 </div>
             </div>
