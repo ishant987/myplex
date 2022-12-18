@@ -13,5 +13,4 @@
                 <td colspan="4">No data</td>
             </tr>
         @endforelse
-    </tbody>
-</table>
+  
