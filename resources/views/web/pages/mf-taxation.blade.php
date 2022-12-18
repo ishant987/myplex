@@ -6,7 +6,6 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>MF Taxation</h4>
-                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
                 </div>
             </div>
         </div>

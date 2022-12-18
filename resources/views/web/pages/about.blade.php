@@ -187,296 +187,92 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="meet_team_slider slick-initialized slick-slider">
-                                            <div class="slick-list draggable">
-                                                <div class="slick-track"
-                                                    style="opacity: 1; width: 5278px; transform: translate3d(-2262px, 0px, 0px);">
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="-4" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="-3" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="-2" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="-1" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide" data-slick-index="0" aria-hidden="true"
-                                                        tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide" data-slick-index="1" aria-hidden="true"
-                                                        tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-current slick-active" data-slick-index="2"
-                                                        aria-hidden="false" tabindex="0" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="0"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-active" data-slick-index="3"
-                                                        aria-hidden="false" tabindex="0" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="0"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-active" data-slick-index="4"
-                                                        aria-hidden="false" tabindex="0" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="0"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned slick-active" data-slick-index="5"
-                                                        id="" aria-hidden="false" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="0"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="0"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="6" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="img/founder.jpg">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="7" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="8" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single_team slick-slide slick-cloned" data-slick-index="9" id=""
-                                                        aria-hidden="true" tabindex="-1" style="width: 337px;">
-                                                        <div class="single_team_wrapper">
-                                                            <div class="single_team_img">
-                                                                <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}">
-                                                            </div>
-                                                            <ul>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-facebook-logo"></i></a>
-                                                                </li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-twitter-logo"></i></a></li>
-                                                                <li><a href="#" tabindex="-1"><i class="ph-instagram-logo"></i></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="single_team_content">
-                                                            <h4>Prasunjit</h4>
-                                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or
-                                                                nerves.</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-
-
-                                        </div>
+										
+										<div class="meet_team_slider">
+                        <div class="single_team">
+                            <div class="single_team_wrapper">
+                                <div class="single_team_img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}"/>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="ph-facebook-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-twitter-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-instagram-logo"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="single_team_content">
+                                <h4>Prasunjit</h4>
+                                <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves.</p>
+                            </div>
+                        </div>
+                        <div class="single_team">
+                            <div class="single_team_wrapper">
+                                <div class="single_team_img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}"/>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="ph-facebook-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-twitter-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-instagram-logo"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="single_team_content">
+                                <h4>Prasunjit</h4>
+                                <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves.</p>
+                            </div>
+                        </div>
+                        <div class="single_team">
+                            <div class="single_team_wrapper">
+                                <div class="single_team_img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}"/>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="ph-facebook-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-twitter-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-instagram-logo"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="single_team_content">
+                                <h4>Prasunjit</h4>
+                                <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves.</p>
+                            </div>
+                        </div>
+                        <div class="single_team">
+                            <div class="single_team_wrapper">
+                                <div class="single_team_img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}"/>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="ph-facebook-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-twitter-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-instagram-logo"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="single_team_content">
+                                <h4>Prasunjit</h4>
+                                <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves.</p>
+                            </div>
+                        </div>
+                        <div class="single_team">
+                            <div class="single_team_wrapper">
+                                <div class="single_team_img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/founder.jpg') }}"/>
+                                </div>
+                                <ul>
+                                    <li><a href="#"><i class="ph-facebook-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-twitter-logo"></i></a></li>
+                                    <li><a href="#"><i class="ph-instagram-logo"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="single_team_content">
+                                <h4>Prasunjit</h4>
+                                <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves.</p>
+                            </div>
+                        </div>
+                    </div>
+										
+										
+                                        
                                     </div>
                                 </div>
                             </div>

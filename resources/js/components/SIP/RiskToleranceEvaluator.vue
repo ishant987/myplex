@@ -58,7 +58,7 @@
                                             </div>
                                             <div class="invst-fields-action-buttons">
                                                 <div class="row m-0">
-                                                    <div class="action-common action-btn-1 col-md-2 ">
+                                                    <div class="action-common action-btn-1 col-md-4 ">
                                                         <button id="back"
                                                             class="btn btn-dark reserch_discover_btn dark_bg color_white me-3"
                                                             @click="previous">Back</button>

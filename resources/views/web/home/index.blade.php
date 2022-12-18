@@ -252,7 +252,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-md-12 text-center">
-                                        <a href="/money_seriously" class="money_title_btn">View All Articles</a>
+                                        <a href="/money_seriously" class="money_title_btn type2">View All Articles</a>
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +423,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                 </div>
                                 <div class="row mt-4" data-aos="fade-up" data-aos-duration="500">
                                     <div class="col-md-12 text-center">
-                                        <a href="#" class="money_title_btn">View All Funds</a>
+                                        <a href="#" class="money_title_btn type2">View All Funds</a>
                                     </div>
                                 </div>
                             </div>
@@ -460,7 +460,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-md-12 text-center">
-                                        <a href="{{ route('web.nfomonitor.list') }}" class="money_title_btn">View All Monitor</a>
+                                        <a href="{{ route('web.nfomonitor.list') }}" class="money_title_btn ">View All Monitor</a>
                                     </div>
                                 </div>
                             </div>
@@ -557,7 +557,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                             <p data-aos="fade-up" data-aos-duration="1000">We provide  a range of services for financial advisers, including access to our fund research, 
                                                 performance data and analytical tools that will  help you make the best investment decisions for your clients.</p>
                                             <a data-aos="fade-up" data-aos-duration="1500" href="#"
-                                                class="reserch_discover_btn">Discover</a>
+                                                class="money_title_btn  type2">Discover</a>
                                         </div>
                                     </div>
                                     <div class="col-md-1"></div>
@@ -613,8 +613,10 @@ However, merely tracking the historical returns and fund ranking will not help y
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4" data-aos="fade-up" data-aos-duration="500">
-                                        <div class="single_ask_expert">
+									
+									<div class="col-md-12">
+                						<div class="ask_expert_slider">
+											 <div class="single_ask_expert">
                                             <img src="{{ asset('themes/frontend/assets/v1/img/quote-green.png') }}" />
                                             <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
                                                 alteration in some form, by injected humour, or randomised words which don't look even slightly
@@ -624,9 +626,8 @@ However, merely tracking the historical returns and fund ranking will not help y
                                                 <h4>Vikash Kumar</h4>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4" data-aos="fade-up" data-aos-duration="500">
-                                        <div class="single_ask_expert">
+										
+										<div class="single_ask_expert">
                                             <img src="{{ asset('themes/frontend/assets/v1/img/quote-green.png') }}" />
                                             <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
                                                 alteration in some form, by injected humour, or randomised words which don't look even slightly
@@ -636,9 +637,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                                 <h4>Vikash Kumar</h4>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4" data-aos="fade-up" data-aos-duration="500">
-                                        <div class="single_ask_expert">
+										 <div class="single_ask_expert">
                                             <img src="{{ asset('themes/frontend/assets/v1/img/quote-green.png') }}" />
                                             <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered
                                                 alteration in some form, by injected humour, or randomised words which don't look even slightly
@@ -648,9 +647,10 @@ However, merely tracking the historical returns and fund ranking will not help y
                                                 <h4>Vikash Kumar</h4>
                                             </div>
                                         </div>
-                                    </div>
+											</div>
+									</div>
                                 </div>
-                                <div class="row mt-5">
+                                <div class="row mt-3">
                                     <div class="col-md-12 text-center">
                                         <a href="{{ route('web.ask-expert') }}" class="money_title_btn">Ask An Expert</a>
                                     </div>
@@ -665,8 +665,8 @@ However, merely tracking the historical returns and fund ranking will not help y
                                             <h2>Performance Synopsis</h2>
                                             <p>You can access performance data for all of our funds on our website. In addition,   
                                                 we also offer a range of analytical tools that can help you evaluate a fund's performance and choose the right one for your clients.</p>
-                                            <a href="#" class="money_title_btn me-3">Login</a>
-                                            <a href="#" class="money_title_btn">Register</a>
+                                            <a href="#" class="money_title_btn type2 me-3">Login</a>
+                                            <a href="#" class="money_title_btn type2">Register</a>
                                         </div>
                                     </div>
                                 </div>
@@ -683,7 +683,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                             <h2>Know Your Scheme</h2>
                                             <p>When it comes to investing in mutual funds, it is important to understand the scheme that you are investing in. 
                                             </p>
-                                            <a href="{{ route('web.know.your.scheme') }}" class="money_title_btn me-3">Get Started</a>
+                                            <a href="{{ route('web.know.your.scheme') }}" class="money_title_btn ms-0">Get Started</a>
                                         </div>
                                     </div>
                                 </div>
