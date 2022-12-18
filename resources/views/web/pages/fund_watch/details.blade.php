@@ -191,10 +191,11 @@
                                                                                                 style="width: 244px;">Percentage %</th>
                                                                                         </tr>
                                                                                     </thead>
-                                                                                </table>
-                                                                                <tbody class="lumsum_table_body">
+                                                                                    <tbody class="lumsum_table_body">
 
-                                                                                </tbody>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                                
                                                                             </div>
                                                                             </div>
                                                                         </div>
@@ -683,7 +684,7 @@
                             }
 
                             function getReturnLessRank() {
-                                $('.retunr_continus_table').html(loadingImage);
+                                $('.return_less_rank_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-return-less-rank/' + fund_code + '/' + fund_type + '/' + indices_name)
                                     .then(res => {
                                         if (res.data.status == 'success') {
@@ -692,6 +693,7 @@
                                     })
                             }
                             async function schemeSIP() {
+                                $('.sip_body').html(loadingImage);
                                 await axios.get('/fund-watch/fund-sip/' + fund_code)
                                     .then(response => {
                                         let sipDataArr = response.data.scheme_sip_data
@@ -716,7 +718,7 @@
                                             SIPHTML += '</tr>';
                                         });
                                         $('.sip_body').html(SIPHTML);
-                                        console.log(sipDataArr, SIPHTML);
+                                        // console.log(sipDataArr, SIPHTML);
                                     })
                                     .catch(error => {
                                         //var message = error.response.data.message || error.message
