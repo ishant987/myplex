@@ -169,7 +169,7 @@
                                                                         <div class="row">
                                                                             <div class="col-sm-12 ">
                                                                                 <table id="example"
-                                                                                    class="table table-striped dataTable no-footer"
+                                                                                    class="table table-striped no-footer"
                                                                                     style="width: 100%;">
                                                                                     <thead>
                                                                                         <tr>
@@ -357,7 +357,7 @@
                                                             <div class="datatable_ll main_trer">
                                                                 <div class="table-responsive ">
                                                                     <table id="example"
-                                                                        class="table table-striped dataTable no-footer"
+                                                                        class="table table-striped no-footer"
                                                                         style="width: 100%;">
                                                                         <thead>
                                                                             <tr>
