@@ -53,90 +53,84 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table_scc">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr class="bg_top top_bg_right_black">
-                                            <td colspan="2">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect :disabled="compare_price_process" class=""
-                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme1"
-                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
-                                                        :multiple="false" :taggable="false" selectLabel=""
-                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true" :width="100">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">From Date</label>
-                                                    <input class="form-date" type="date"
-                                                        v-model="selectedDateRangeFrom" />
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">To Date</label>
-                                                    <input class="form-date" type="date"
-                                                        v-model="selectedDateRangeTo" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg_green">
-                                            <td width="300px">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect :disabled="compare_price_process" class=""
-                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme2"
-                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
-                                                        :multiple="false" :taggable="false" selectLabel=""
-                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true" :width="100">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300px">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect :disabled="compare_price_process" class=""
-                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme3"
-                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
-                                                        :multiple="false" :taggable="false" selectLabel=""
-                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300px">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect :disabled="compare_price_process" class=""
-                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme4"
-                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
-                                                        :multiple="false" :taggable="false" selectLabel=""
-                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300px">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect :disabled="compare_price_process" class=""
-                                                        label="fund_name" track-by="fund_id" v-model="selectedScheme5"
-                                                        tag-placeholder="" placeholder="Select Fund" :options="funds"
-                                                        :multiple="false" :taggable="false" selectLabel=""
-                                                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
-                                                        :max-height="300" :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="table_scc compare_section_div_str">
+                            <div class="row mb-1">
+                                <div class="col-md-6 pe-sm-1">
+                                    <div class="form_select border_top_left">
+                                        <label for="">Schemes, Index, Currency, Commodity</label>
+                                        <multiselect :disabled="compare_price_process" class=""
+                                            label="fund_name" track-by="fund_id" v-model="selectedScheme1"
+                                            tag-placeholder="" placeholder="Select Fund" :options="funds"
+                                            :multiple="false" :taggable="false" selectLabel=""
+                                            :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                                            :max-height="300" :showNoResults="true" :width="100">
+                                        </multiselect>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pe-sm-1 ps-sm-0">
+                                    <div class="form_select top_bg_right_black">
+                                        <label for="">From Date</label>
+                                        <input class="form-date" type="date"
+                        v-model="selectedDateRangeFrom" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3 ps-sm-0">
+                                    <div class="form_select top_bg_right_black border_top_right">
+                                        <label for="">To Date</label>
+                                        <input class="form-date" type="date"
+                        v-model="selectedDateRangeTo" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 pe-sm-1 col-6 pe-1 mb-1">
+                                    <div class="form_select bg_green border_bottom_left">
+                                        <label for="">Schemes, Index, Currency, Commodity</label>
+                                        <multiselect :disabled="compare_price_process" class=""
+                        label="fund_name" track-by="fund_id" v-model="selectedScheme2"
+                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                        :multiple="false" :taggable="false" selectLabel=""
+                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                        :max-height="300" :showNoResults="true" :width="100">
+                    </multiselect>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 ps-sm-0 pe-sm-1 col-6 ps-0">
+                                    <div class="form_select bg_green">
+                                        <label for="">Schemes, Index, Currency, Commodity</label>
+                                        <multiselect :disabled="compare_price_process" class=""
+                        label="fund_name" track-by="fund_id" v-model="selectedScheme3"
+                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                        :multiple="false" :taggable="false" selectLabel=""
+                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                        :max-height="300" :showNoResults="true">
+                    </multiselect>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pe-sm-1 ps-sm-0 col-6 pe-1">
+                                    <div class="form_select bg_green">
+                                        <label for="">Schemes, Index, Currency, Commodity</label>
+                                        <multiselect :disabled="compare_price_process" class=""
+                        label="fund_name" track-by="fund_id" v-model="selectedScheme4"
+                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                        :multiple="false" :taggable="false" selectLabel=""
+                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                        :max-height="300" :showNoResults="true">
+                    </multiselect>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 ps-sm-0 col-6 ps-0">
+                                    <div class="form_select bg_green border_bottom_right">
+                                        <label for="">Schemes, Index, Currency, Commodity</label>
+                                        <multiselect :disabled="compare_price_process" class=""
+                        label="fund_name" track-by="fund_id" v-model="selectedScheme5"
+                        tag-placeholder="" placeholder="Select Fund" :options="funds"
+                        :multiple="false" :taggable="false" selectLabel=""
+                        :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']"
+                        :max-height="300" :showNoResults="true">
+                    </multiselect>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="three_btn mt-3">
@@ -209,134 +203,119 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="table_scc">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr class="bg_top top_bg_right_black">
-                                            <td colspan="2">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund1Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-
-                                                </div>
-                                            </td>
-                                            <td colspan="">
-                                                <table class="table">
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form_select">
-                                                                <label for="">Return Ratio</label>
-                                                                <select class="" v-model="selectedRatioReturn"
-                                                                    :disabled="selectedRatioRisk !== ''"
-                                                                    style="width:123px">
-                                                                    <option value="">Select</option>
-                                                                    <option value="cagr">Returns</option>
-                                                                    <option value="jensen_alpha">Jensen</option>
-                                                                    <option value="information_ratio">Information Ratio
-                                                                    </option>
-                                                                    <option value="rolling_return">Rolling Return
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="form_select">
-                                                                <label for="">Risk Ratio</label>
-                                                                <select class="form-select" v-model="selectedRatioRisk"
-                                                                    :disabled="selectedRatioReturn !== ''">
-                                                                    <option value="">Select</option>
-                                                                    <option value="beta">Beta</option>
-                                                                    <option value="tracking_error">Tracking Error
-                                                                    </option>
-                                                                    <option value="volatality">Volatility</option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-
-
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">From Date</label>
-                                                    <input class="form-date" type="date"
-                                                        v-model="selectedRatioDateFrom" />
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">To Date</label>
-                                                    <input class="form-date" type="date"
-                                                        v-model="selectedRatioDateTo" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg_green">
-                                            <td width="450" colspan="2">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund2Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="350">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund3Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="350">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund4Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="350">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund5Ratio" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :disabled="compare_price_process"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table_scc compare_section_div_str">
+                            <div class="row mb-1">
+                                    <div class="col-md-4 pe-sm-1">
+                                        <div class="form_select border_top_left">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                            v-model="selectedFund1Ratio" tag-placeholder=""
+                            placeholder="Select Fund" :options="funds" :multiple="false"
+                            :taggable="false" selectLabel="" :searchable="true"
+                            :disabled="compare_price_process"
+                            :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                            :showNoResults="true">
+                        </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                        <div class="form_select">
+                                            <label for="">Return Ratio</label>
+                                            <select class="" v-model="selectedRatioReturn"
+                                        :disabled="selectedRatioRisk !== ''"
+                                        style="width:123px">
+                                        <option value="">Select</option>
+                                        <option value="cagr">Returns</option>
+                                        <option value="jensen_alpha">Jensen</option>
+                                        <option value="information_ratio">Information Ratio
+                                        </option>
+                                        <option value="rolling_return">Rolling Return
+                                        </option>
+                                    </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                        <div class="form_select">
+                                            <label for="">Risk Ratio</label>
+                                            <select class="" v-model="selectedRatioRisk"
+                                        :disabled="selectedRatioReturn !== ''">
+                                        <option value="">Select</option>
+                                        <option value="beta">Beta</option>
+                                        <option value="tracking_error">Tracking Error
+                                        </option>
+                                        <option value="volatality">Volatility</option>
+                                    </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                        <div class="form_select top_bg_right_black">
+                                            <label for="">From Date</label>
+                                            <input class="form-date" type="date"
+                            v-model="selectedRatioDateFrom" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 ps-sm-0">
+                                        <div class="form_select top_bg_right_black border_top_right">
+                                            <label for="">To Date</label>
+                                            <input class="form-date" type="date"
+                            v-model="selectedRatioDateTo" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 pe-sm-1 col-6 pe-1 mb-1">
+                                        <div class="form_select bg_green border_bottom_left">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                            v-model="selectedFund2Ratio" tag-placeholder=""
+                            placeholder="Select Fund" :options="funds" :multiple="false"
+                            :taggable="false" selectLabel="" :searchable="true"
+                            :disabled="compare_price_process"
+                            :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                            :showNoResults="true">
+                        </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 ps-sm-0 pe-sm-1 col-6 ps-0">
+                                        <div class="form_select bg_green">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                            v-model="selectedFund3Ratio" tag-placeholder=""
+                            placeholder="Select Fund" :options="funds" :multiple="false"
+                            :taggable="false" selectLabel="" :searchable="true"
+                            :disabled="compare_price_process"
+                            :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                            :showNoResults="true">
+                        </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pe-sm-1 ps-sm-0 col-6 pe-1">
+                                        <div class="form_select bg_green">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                            v-model="selectedFund4Ratio" tag-placeholder=""
+                            placeholder="Select Fund" :options="funds" :multiple="false"
+                            :taggable="false" selectLabel="" :searchable="true"
+                            :disabled="compare_price_process"
+                            :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                            :showNoResults="true">
+                        </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 ps-sm-0 col-6 ps-0">
+                                        <div class="form_select bg_green border_bottom_right">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                            v-model="selectedFund5Ratio" tag-placeholder=""
+                            placeholder="Select Fund" :options="funds" :multiple="false"
+                            :taggable="false" selectLabel="" :searchable="true"
+                            :disabled="compare_price_process"
+                            :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                            :showNoResults="true">
+                        </multiselect>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                         <div class="three_btn mt-3">
                             <div class="row align-items-center">

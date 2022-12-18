@@ -33,7 +33,27 @@
         </div>
     </div>
 </section>
+@if(session()->has('username') && session()->has('useremail') )
+
 <div id="vue-app">
     <retirement-calculator image_path="{{asset('themes/frontend/assets/v1/img/')}}" sip_faqs="" sip_pdf_url="{{ isset($dataArr['custom_fields']['text_68'])?$dataArr['custom_fields']['text_68']['value']:'' }}" username="{{ session()->get('username') }}" useremail="{{ session()->get('useremail') }}"></retirement-calculator>
 </div>
+@else
+<section >
+    <div class="container">
+        <div class="row" style="display: flex;justify-content: center;align-items: center;">
+            <div class="col-md-4" > 
+                @include('web.common.login',['source'=>'calucator'])
+            </div>
+        </div>
+    </div>
+</section>
+@endif
 @stop
+@push('scripts')
+    <script>
+        $('.cal_sign_in').click(function(){
+            $('.login_form').submit();
+        });
+    </script>
+@endpush

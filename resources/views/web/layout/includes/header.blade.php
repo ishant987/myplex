@@ -52,7 +52,7 @@
                     <nav class="navbar navbar-expand-lg p-0">
 
                         <a class="navbar-brand" href="{{url('/')}}">
-                            <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" />
+                            <img src="{{asset('themes/frontend/assets/v1/img/logo-white-backup.png')}}" />
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="ph-list-light"></i>

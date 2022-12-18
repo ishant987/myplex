@@ -355,7 +355,7 @@ However, merely tracking the historical returns and fund ranking will not help y
                                                             <div class="single_calculator">
                                                                 <span class="right_circle d-none d-sm-block"></span>
                                                                 <div data-aos="zoom-in" data-aos-duration="500">
-                                                                    <a href="lumpsum-calculator.html">
+                                                                    <a href="/">
                                                                         <img src="{{ asset('themes/frontend/assets/v1/img/lumpsum.png') }}" />
                                                                         <h4>Lumpsum calculator</h4>
                                                                     </a>

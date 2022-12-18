@@ -499,7 +499,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('compare-scheme', 'PageController@compareSchemeData')->name('compare.scheme');
     Route::get('performance-snapshot', 'PageController@performanceSnapshotData')->name('performance.snapshot');
     // Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
-    Route::any('calculator', 'CalculatorController@calculatorsPageData')->name('calculators');
+    Route::any('calculator', 'CalculatorController@CalualotLogin')->name('calculators');
     Route::any('objective-calculator', 'CalculatorController@ObjectiveCalculator')->name('calculators.objective');
     Route::any('inflation_calculator', 'CalculatorController@InflationCalculator')->name('calculators.inflation');
     Route::any('retirement_calualtor', 'CalculatorController@RetirementCalculator')->name('calculators.retirement');

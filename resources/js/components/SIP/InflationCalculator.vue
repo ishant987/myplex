@@ -31,13 +31,17 @@
                                 <a href="javascript://" id="infCalucaltor-jquery-click" class="money_title_btn d-none"
                                     @click="UpdateDataFromJquery"></a>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12" v-if="inflation_wealth">
+                            <div class="row"  v-if="inflation_wealth">
+                                <div class="col-lg-12 col-md-12">
                                     <div class="cal_form_select">
                                         <label for="">Inflation Adjusted Amount</label>
                                         <input class="form-text" readonly v-model="inflation_wealth" type="number" />
                                     </div>
                                 </div>
+                                <!-- <div class="col-md-2 d-none">
+                                    <label>&nbsp;</label>
+                                    <button class="sign_in_btn money_title_btn" style="border:0px !important" @click="send_graph_result" :disabled="process">Send Mail</button>
+                                </div> -->
                             </div>
                         </div>
 
@@ -118,7 +122,6 @@ export default {
             return inflatedValue;
         },
         get_inflation_graph() {
-            console.log('dfvfb');
             var current_expenses = this.current_expenses;
             var inflation_rate = this.inflation_rate;
             var period = this.period;

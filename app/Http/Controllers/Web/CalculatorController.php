@@ -34,16 +34,16 @@ class CalculatorController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
             $defDataArr = $this->defDataArr;
             if ($request->isMethod('post')) {
-                // session()->put('useremail', $request->useremail);
-                // session()->put('username', $request->username);
-                session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
+                
             }
-            session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
             return view($this->page_path.'.calculators', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
+    }
+    public function CalualotLogin(Request $request){
+        session()->put('useremail', $request->useremail);
+        session()->put('username', $request->username);
+        return redirect()->back();
     }
     public function ObjectiveCalculator(Request $request, $slug = false){
         $dataId = 0;
@@ -59,19 +59,13 @@ class CalculatorController extends BaseController
             $meta_descp = $dataArr['meta_descp'];
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
             $defDataArr = $this->defDataArr;
-            if ($request->isMethod('post')) {
-                // session()->put('useremail', $request->useremail);
-                // session()->put('username', $request->username);
-                session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
-            }
-            session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
             return view($this->page_path.'.calulators.objective_calculator', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
     public function InflationCalculator(Request $request, $slug = false){
+        // session()->forget('useremail');
+        // session()->forget('username');
         $dataId = 0;
         if ($slug == false || $slug == '') {
             $dataId = 44;
@@ -86,13 +80,9 @@ class CalculatorController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
             $defDataArr = $this->defDataArr;
             if ($request->isMethod('post')) {
-                // session()->put('useremail', $request->useremail);
-                // session()->put('username', $request->username);
-                session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
+                session()->put('useremail', $request->useremail);
+                session()->put('username', $request->username);
             }
-            session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
             return view($this->page_path.'.calulators.inflation_calculator', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
@@ -111,14 +101,7 @@ class CalculatorController extends BaseController
             $meta_descp = $dataArr['meta_descp'];
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
             $defDataArr = $this->defDataArr;
-            if ($request->isMethod('post')) {
-                // session()->put('useremail', $request->useremail);
-                // session()->put('username', $request->username);
-                session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
-            }
-            session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
+           
             return view($this->page_path.'.calulators.retirement_calulator', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
@@ -137,14 +120,7 @@ class CalculatorController extends BaseController
             $meta_descp = $dataArr['meta_descp'];
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
             $defDataArr = $this->defDataArr;
-            if ($request->isMethod('post')) {
-                // session()->put('useremail', $request->useremail);
-                // session()->put('username', $request->username);
-                session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
-            }
-            session()->put('useremail','sandyec01@gmail.com');
-                session()->put('username', 'sandeep');
+            
             return view($this->page_path.'.calulators.risk_evaluation', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
