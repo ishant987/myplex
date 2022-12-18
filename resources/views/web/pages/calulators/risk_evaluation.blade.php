@@ -1,4 +1,5 @@
 @extends('web.layout.app')
+@section('captcha') @stop
 @if(isset($dataArr['meta_title']))
 @section('page-title'){{$dataArr['meta_title']}}@stop
 @else

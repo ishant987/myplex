@@ -70,15 +70,20 @@
                     </div>
                     <div class="separate_or text-center mb-4 mt-3"><span>or</span></div>
                     <div class="login_fomr">
-                        <input type="text" class="login_input" placeholder="Your Name" />
-                        <input type="text" class="login_input" placeholder="Phone Number" />
-                        <input type="email" class="login_input" placeholder="Email Address" />
+                        <form action="{{ route('web.signup.save') }}" name="signupFrm" id="signupFrm" method="post">
+                            {{ csrf_field() }}
+                            <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />
+                        <input type="text" class="login_input" placeholder="Your Name" name="f_name" id="f_name"/>
+                        <input type="text" class="login_input" placeholder="Phone Number" name="mobile" id="mobile"/>
+                        <input type="email" class="login_input" placeholder="Email Address" name="email" id="email"/>
+                        </form>
                         <div class="login_form_footer d-flex align-items-center justify-content-between mt-2 mb-3">
 
                             <div>
-                                <a href="#" class="sign_in_btn money_title_btn">Sign Up</a>
+                                <a href="javascript://" id="sendSignupFrm" class="sign_in_btn money_title_btn">Sign Up</a>
                             </div>
                         </div>
+                        <div id="msg_id"></div>
                     </div>
                 </div>
             </div>
