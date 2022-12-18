@@ -167,7 +167,7 @@
                                                                             <div class="col-sm-12 col-md-6"></div>
                                                                         </div>
                                                                         <div class="row">
-                                                                            <div class="col-sm-12 lumsum_table">
+                                                                            <div class="col-sm-12 ">
                                                                                 <table id="example"
                                                                                     class="table table-striped dataTable no-footer"
                                                                                     style="width: 100%;">
@@ -192,6 +192,9 @@
                                                                                         </tr>
                                                                                     </thead>
                                                                                 </table>
+                                                                                <tbody class="lumsum_table">
+
+                                                                                </tbody>
                                                                             </div>
                                                                             </div>
                                                                         </div>
@@ -243,8 +246,22 @@
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
-                                                                <div class="table-responsive retunr_continus_table">
-
+                                                                <div class="table-responsive ">
+                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="green_bg">Return</th>
+                                                                                <th class="dark_bg">6 M</th>
+                                                                                <th class="dark_bg">1 Y</th>
+                                                                                <th class="dark_bg">2 Y</th>
+                                                                                <th class="dark_bg">3 Y</th>
+                                                                                <th class="dark_bg">5 Y</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="retunr_continus_table">
+                                                                            
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -338,8 +355,33 @@
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer">
-                                                                <div class="table-responsive return_less_rank_table">
-
+                                                                <div class="table-responsive ">
+                                                                    <table id="example"
+                                                                        class="table table-striped dataTable no-footer"
+                                                                        style="width: 100%;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="green_bg sorting sorting_asc"
+                                                                                    tabindex="0" aria-controls="example"
+                                                                                    rowspan="1" colspan="1"
+                                                                                    aria-sort="ascending"
+                                                                                    aria-label="Time Frame: activate to sort column descending"
+                                                                                    style="width: 213px;">Time Frame</th>
+                                                                                <th class="dark_bg sorting" tabindex="0"
+                                                                                    aria-controls="example" rowspan="1"
+                                                                                    colspan="1"
+                                                                                    aria-label="Amount: activate to sort column ascending"
+                                                                                    style="width: 156px;">Rank</th>
+                                                                                <th class="dark_bg sorting" tabindex="0"
+                                                                                    aria-controls="example" rowspan="1"
+                                                                                    colspan="1"
+                                                                                    aria-label="Percentage %: activate to sort column ascending"
+                                                                                    style="width: 244px;">Active funds</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="return_less_rank_table">
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -396,8 +438,19 @@
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
-                                                                <div class="table-responsive risk_alpha_table">
-
+                                                                <div class="table-responsive ">
+                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="dark_bg">Ratios</th>
+                                                                                <th class="dark_bg">Jensen’s Alpha</th>
+                                                                                <th class="dark_bg">Beta</th>
+                                                                                <th class="dark_bg">Votality</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="risk_alpha_table">
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -459,8 +512,21 @@
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
-                                                                <div class="table-responsive portfolio_break_up">
-
+                                                                <div class="table-responsive ">
+                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="dark_bg">Equity</th>
+                                                                                <th class="dark_bg">Debt</th>
+                                                                                <th class="dark_bg">SOV</th>
+                                                                                <th class="dark_bg">Cash</th>
+                                                                                <th class="dark_bg">Other Cuurency</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody class="portfolio_break_up">
+                                                                           
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -490,12 +556,16 @@
                         <input type="hidden" value="{{ $fundMaster->fund_code }}" id="fund_code">
                         <input type="hidden" value="{{ $fundMaster->fund_type_id }}" id="fund_type">
                         <input type="hidden" value="{{ $fundMaster->indices_name }}" id="indices_name">
+                        <div id="loaging_image">
+                            <img  class="text-center mt-3" src="{{assets('themes/frontend/assets/v1/img/loading.gif')}}" alt="">
+                        </div>
                     @stop
                     @push('scripts')
                         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
                         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
                         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
                         <script type="text/javascript">
+                        let loadingImage=$('#loaging_image').html();
                             google.charts.load('current', {
                                 'packages': ['corechart']
                             });
@@ -563,6 +633,7 @@
                             }
 
                             function getFundCompostion() {
+                                $('.comp_html').html(loadingImage);
                                 axios.get('/fund-watch/fund-compositon/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
@@ -572,6 +643,7 @@
                             }
 
                             function getLumSum() {
+                                $('.lumsum_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-lumsum/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
@@ -581,6 +653,7 @@
                             }
 
                             function getRiskAdjustedAlpha() {
+                                $('.risk_alpha_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-risk-alpha/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
@@ -590,6 +663,7 @@
                             }
 
                             function getPortfolioBreakUp() {
+                                $('.portfolio_break_up').html(loadingImage);
                                 axios.get('/fund-watch/fund-portfolio-break-up/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {

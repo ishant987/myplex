@@ -163,18 +163,6 @@ class FundWatchController extends BaseController
 		$type_id=$classification;
 		foreach($defaultMonths as $key=>$val){
 			$date[] = SELF::get_last_month($val[0],$last_date);
-			//$data = DB::select('CALL sp_monthly_return_less_index_rank("'.$date.'","'.$type_id.'")');
-			//$sortedData =collect($data)->sortBy([[$key, 'desc']]);
-			//$rank = $sortedData->search(function($user) use($fund_code) {
-							//return $user->fund_code == $fund_code;
-					//});
-			//$result[] = [
-				//'period'=>$val[1],
-				//'active_funds'=>count($data),
-				//'rank'=>$rank,
-                //'date'=>date('d-M-Y',strtotime($date)),
-				
-			//];
 		}
 		$data['sixmonths'] = DB::select('CALL sp_monthly_return_less_index_rank_six("'.$date[0].'","'.$type_id.'")');
 		$data['oneyear'] = DB::select('CALL sp_monthly_return_less_index_rank_one_year("'.$date[1].'","'.$type_id.'")');
@@ -301,9 +289,8 @@ class FundWatchController extends BaseController
         $deatultLumsumAmount = 100000;
         $defaultYears = ['ONEYEAR' => 1, 'TWOYEAR' => 2, 'THREEYEAR' => 3];
         $yesterday = $this->Useful->get_yesterday();
-        //$yesterday='2022-11-01';
-        $fundDetails = FundDetail::where("fund_code", $fund_code);
-        $presentClosingNav = $fundDetails->where('entry_date', $yesterday)->first('closing_nav');
+        //$yesterday='2022-12-16';
+        $presentClosingNav =SELF::lumsumClosingNav($fund_code,$yesterday);
         $PreviewYearNavs = [];
         if ($presentClosingNav) {
             $response = Http::get(url('api/v1/fund-return-scheme?fund_code=' . $fund_code))->json();
@@ -331,6 +318,18 @@ class FundWatchController extends BaseController
         }
         $html = view('web.pages.fund_watch.lumsum',['lumbsum'=>$PreviewYearNavs])->render();
         return ['status'=>'success','html'=>$html];
+    }
+	  private function lumsumClosingNav($fund_code,$yesterday){
+        $fundDetails = FundDetail::where("fund_code", $fund_code);
+        $presentClosingNav = $fundDetails->where('entry_date', $yesterday)->first('closing_nav');
+        if($presentClosingNav==null){
+            $newDate =date('Y-m-d',(strtotime ( '-1 day' , strtotime ( $yesterday) ) ));
+           return  SELF::lumsumClosingNav($fund_code,$newDate);
+        }
+        else{
+            return $presentClosingNav;
+        }
+
     }
     public function fundCompAnalysis($fund_code)
     {
