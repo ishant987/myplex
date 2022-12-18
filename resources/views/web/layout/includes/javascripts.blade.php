@@ -8,6 +8,8 @@
 <script src="{{asset('themes/frontend/assets/v1/js/stock_header.js')}}"></script>
 <script src="{{asset('themes/frontend/assets/v1/js/custom.js')}}"></script>
 <script src="{{ asset('themes/assets/js/jquery.validate.min.js') }}"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 @if(View::hasSection('captcha'))
 <script src="https://www.google.com/recaptcha/api.js?render={{ Config('commonconstants.recaptcha.site_key') }}"></script>
 @endif
