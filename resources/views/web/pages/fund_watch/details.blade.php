@@ -168,7 +168,7 @@
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="col-sm-12 ">
-                                                                                <table id="example"
+                                                                                <table 
                                                                                     class="table table-striped no-footer"
                                                                                     style="width: 100%;">
                                                                                     <thead>
@@ -217,7 +217,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive">
-                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Time Frame</th>
@@ -247,7 +247,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive ">
-                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Return</th>
@@ -275,7 +275,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive">
-                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Return</th>
@@ -356,7 +356,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer">
                                                                 <div class="table-responsive ">
-                                                                    <table id="example"
+                                                                    <table 
                                                                         class="table table-striped no-footer"
                                                                         style="width: 100%;">
                                                                         <thead>
@@ -439,7 +439,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive ">
-                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="dark_bg">Ratios</th>
@@ -513,7 +513,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive ">
-                                                                    <table id="example" class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="dark_bg">Equity</th>
