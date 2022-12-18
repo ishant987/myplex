@@ -409,7 +409,7 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-6">
                                         <div class="cta_parameter_graph">
-                                            <img src="img/fund-watch-graph.jpg" class="img-fluid">
+                                            <img src="{{asset('themes/frontend/assets/v1/img/fund-watch-graph.jpg')}}" class="img-fluid">
                                         </div>
                                     </div>
                                     <div class="col-md-6 ps-0">
@@ -556,8 +556,8 @@
                         <input type="hidden" value="{{ $fundMaster->fund_code }}" id="fund_code">
                         <input type="hidden" value="{{ $fundMaster->fund_type_id }}" id="fund_type">
                         <input type="hidden" value="{{ $fundMaster->indices_name }}" id="indices_name">
-                        <div id="loaging_image">
-                            <img  class="text-center mt-3" src="{{assets('themes/frontend/assets/v1/img/loading.gif')}}" alt="">
+                        <div id="loaging_image" class="d-none">
+                            <img  class="text-center mt-3" src="{{asset('themes/frontend/assets/v1/img/loading.gif')}}" alt="">
                         </div>
                     @stop
                     @push('scripts')
