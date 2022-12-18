@@ -192,7 +192,7 @@
                                                                                         </tr>
                                                                                     </thead>
                                                                                 </table>
-                                                                                <tbody class="lumsum_table">
+                                                                                <tbody class="lumsum_table_body">
 
                                                                                 </tbody>
                                                                             </div>
@@ -643,11 +643,11 @@
                             }
 
                             function getLumSum() {
-                                $('.lumsum_table').html(loadingImage);
+                                $('.lumsum_table_body').html(loadingImage);
                                 axios.get('/fund-watch/fund-lumsum/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
-                                            $('.lumsum_table').html(res.data.html);
+                                            $('.lumsum_table_body').html(res.data.html);
                                         }
                                     })
                             }
