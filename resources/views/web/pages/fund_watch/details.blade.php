@@ -594,9 +594,11 @@
                                     //     title: 'Cups'
                                     // },
                                     // hAxis: {
-                                    //     title: 'Month'
+                                    //     title: 'Month'//
                                     // },
                                     seriesType: 'bars',
+                                    colors: ['#3e3e40'],
+                                    is3D:true,
                                     series: {
                                         5: {
                                             type: 'line'
@@ -622,6 +624,8 @@
                                     //     title: 'Month'
                                     // },
                                     seriesType: 'bars',
+                                    colors: ['#3e3e40'],
+                                    is3D:true,
                                     series: {
                                         5: {
                                             type: 'line'
