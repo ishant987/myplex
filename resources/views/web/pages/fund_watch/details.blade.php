@@ -565,7 +565,7 @@
                         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
                         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
                         <script type="text/javascript">
-                        let loadingImage=$('#loaging_image').html();
+                        let loadingImage='<img  class="text-center mt-3" src="{{asset('themes/frontend/assets/v1/img/loading.gif')}}" alt="">';
                             google.charts.load('current', {
                                 'packages': ['corechart']
                             });
@@ -673,6 +673,7 @@
                             }
 
                             function getReturnContinus() {
+                                $('.retunr_continus_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-return-continus/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
@@ -682,6 +683,7 @@
                             }
 
                             function getReturnLessRank() {
+                                $('.retunr_continus_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-return-less-rank/' + fund_code + '/' + fund_type + '/' + indices_name)
                                     .then(res => {
                                         if (res.data.status == 'success') {
