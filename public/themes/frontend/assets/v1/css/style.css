@@ -5074,6 +5074,19 @@ list-style:disc
 }
 
 @media (max-width: 991px) {
+	.return_box {
+    padding: 30px 30px 30px 50px;
+}
+	.return_text{
+		left:-65px;
+		font-size:14px;
+	}
+	.main_five_box{
+		left:-3% !important;
+	}
+	.abt_icon h4{
+		font-size:25px;
+	}
 	.form_select select{
 		width:100% !important;
 	}
