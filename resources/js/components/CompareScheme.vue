@@ -353,95 +353,91 @@
                     <!-- composition  -->
                     <div class="tab-pane fade" :class="{ 'active show': currentTab == 'composition' }" id="pills-contact"
                         role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <div class="table_scc">
+                        <div class="table_scc compare_section_div_str">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr class="bg_top top_bg_right_black">
-                                            <td colspan="2">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund1Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form_select">
-                                                    <label for="">Category</label>
-                                                    <select class="form-select" v-model="selectedCompositionCategory">
-                                                        <option value="">Select</option>
-                                                        <option value="top_script">Top Scrip</option>
-                                                        <option value="top_industry">Top Industry</option>
-                                                        <option value="aaum">AAUM</option>
-                                                    </select>
-                                                </div>
-                                            </td>
-                                            <td colspan="2" class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">Month/Year</label>
-                                                    <Datepicker v-model="selectedCompositionDate" :format="'MM/yyyy'"
-                                                        monthPicker :enableTimePicker="false" :autoApply="true"
-                                                        :range="false" :maxDate="maxDateRangComposition"></Datepicker>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr class="bg_green">
-                                            <td width="300">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund2Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund3Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund4Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                            <td width="300">
-                                                <div class="form_select">
-                                                    <label for="">Schemes, Index, Currency, Commodity</label>
-                                                    <multiselect class="" label="fund_name" track-by="fund_id"
-                                                        v-model="selectedFund5Composition" tag-placeholder=""
-                                                        placeholder="Select Fund" :options="funds" :multiple="false"
-                                                        :taggable="false" selectLabel="" :searchable="true"
-                                                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
-                                                        :showNoResults="true">
-                                                    </multiselect>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="row mb-1">
+                                    <div class="col-md-5 pe-sm-1">
+                                        <div class="form_select border_top_left">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                        v-model="selectedFund1Composition" tag-placeholder=""
+                        placeholder="Select Fund" :options="funds" :multiple="false"
+                        :taggable="false" selectLabel="" :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                        :showNoResults="true">
+                    </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pe-sm-1 ps-sm-0">
+                                        <div class="form_select">
+                                            <label for="">Category</label>
+                                            <select class="form-select" v-model="selectedCompositionCategory">
+                        <option value="">Select</option>
+                        <option value="top_script">Top Scrip</option>
+                        <option value="top_industry">Top Industry</option>
+                        <option value="aaum">AAUM</option>
+                    </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pe-sm-1 ps-sm-0">
+                                        <div class="form_select top_bg_right_black">
+                                            <label for="">Month / Year</label>
+                                            <Datepicker v-model="selectedCompositionDate" :format="'MM/yyyy'"
+                        monthPicker :enableTimePicker="false" :autoApply="true"
+                        :range="false" :maxDate="maxDateRangComposition"></Datepicker>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 pe-sm-1 col-6 pe-1 mb-1">
+                                        <div class="form_select bg_green border_bottom_left">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                        v-model="selectedFund2Composition" tag-placeholder=""
+                        placeholder="Select Fund" :options="funds" :multiple="false"
+                        :taggable="false" selectLabel="" :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                        :showNoResults="true">
+                    </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 ps-sm-0 pe-sm-1 col-6 ps-0">
+                                        <div class="form_select bg_green">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                        v-model="selectedFund3Composition" tag-placeholder=""
+                        placeholder="Select Fund" :options="funds" :multiple="false"
+                        :taggable="false" selectLabel="" :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                        :showNoResults="true">
+                    </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 pe-sm-1 ps-sm-0 col-6 pe-1">
+                                        <div class="form_select bg_green">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                        v-model="selectedFund4Composition" tag-placeholder=""
+                        placeholder="Select Fund" :options="funds" :multiple="false"
+                        :taggable="false" selectLabel="" :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                        :showNoResults="true">
+                    </multiselect>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 ps-sm-0 col-6 ps-0">
+                                        <div class="form_select bg_green border_bottom_right">
+                                            <label for="">Schemes, Index, Currency, Commodity</label>
+                                            <multiselect class="" label="fund_name" track-by="fund_id"
+                        v-model="selectedFund5Composition" tag-placeholder=""
+                        placeholder="Select Fund" :options="funds" :multiple="false"
+                        :taggable="false" selectLabel="" :searchable="true"
+                        :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150"
+                        :showNoResults="true">
+                    </multiselect>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="three_btn mt-3">
