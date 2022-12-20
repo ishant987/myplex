@@ -21,7 +21,6 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>{{$dataArr['title']}}</h4>
-                    <p>{{$dataArr['meta_descp']}}</p>
                 </div>
             </div>
         </div>
@@ -42,7 +41,7 @@
         </div>
         <div class="row">
             @foreach($data['editors_pick'] as $key=>$value)
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="single_blog">
                     <div class="single_blog_img">
                         <img src="{{$ImagePath.$value['image_thumb']}}" class="img-fluid" />

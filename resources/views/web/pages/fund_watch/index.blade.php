@@ -39,7 +39,7 @@
                                         <div class="archive-wrapper">
                                             <div class="archive-title"><h3>Recent Fund Watch</h3></div>
                                             <div class="row m-0 justify-content-between align-items-center">
-                                                <div class="col-md-4">
+                                                <div class="col-md-6 col-lg-4">
                                                     <div class="single_blog">
                                                         <div class="blog_content">
                                                             <h4>

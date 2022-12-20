@@ -60,7 +60,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-6"></div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-6">
                                         <div class="second_abt_cont" data-aos="fade-down" data-aos-duration="1000">
                                             <h4>The Various Metrics of Performance is Synthesised into Numbers</h4>
                                             <p>Product life cycles will compress. Variations in performances will manifest itself more
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3" data-aos="fade-down" data-aos-duration="500">
+                                    <div class="col-md-6 col-lg-3" data-aos="fade-down" data-aos-duration="500">
                                         <div class="single_vison">
                                             <div class="single_vison_img">
                                                 <img src="{{ asset('themes/frontend/assets/v1/img/vision1.png') }}" />
@@ -111,7 +111,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3" data-aos="fade-down" data-aos-duration="1000">
+                                    <div class="col-md-6 col-lg-3" data-aos="fade-down" data-aos-duration="1000">
                                         <div class="single_vison">
                                             <div class="single_vison_img">
                                                 <img src="{{ asset('themes/frontend/assets/v1/img/vision2.png') }}" />
@@ -121,7 +121,7 @@
                                                 may be blood vessels (veins, capillaries) or lymphatic vessels.</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3" data-aos="fade-down" data-aos-duration="1500">
+                                    <div class="col-md-6 col-lg-3" data-aos="fade-down" data-aos-duration="1500">
                                         <div class="single_vison">
                                             <div class="single_vison_img">
                                                 <img src="{{ asset('themes/frontend/assets/v1/img/vision3.png') }}" />
@@ -134,7 +134,7 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="col-md-3" data-aos="fade-down" data-aos-duration="2000">
+                                    <div class="col-md-6 col-lg-3" data-aos="fade-down" data-aos-duration="2000">
                                         <div class="single_vison">
                                             <div class="single_vison_img">
                                                 <img src="{{ asset('themes/frontend/assets/v1/img/vision4.png') }}" />
@@ -154,7 +154,7 @@
                             style="background-image: url({{ asset('themes/frontend/assets/v1/img/mission-bg.jpg') }}); background-position: center; background-size: cover; background-repeat: no-repeat">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-12 col-lg-5">
                                         <div class="mission_content" data-aos="fade-down" data-aos-duration="1500">
                                             <h4>Our Mission</h4>
                                             <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most
@@ -176,7 +176,7 @@
                         <section class="abt_meet_our_section section">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12 col-lg-6">
                                         <div class="vision_title mb-5">
                                             <h4 data-aos="fade-down" data-aos-duration="1000" class="aos-init aos-animate">Meet Our Team</h4>
                                             <p data-aos="fade-down" data-aos-duration="1500" class="aos-init aos-animate">We, at myplexus.com

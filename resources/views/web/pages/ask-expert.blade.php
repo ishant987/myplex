@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-12 col-lg-7">
                 <div class="question_listing_sec pe-5">                       
                     <div class="question_search_panel">
                         <form action="#" id="m_search_form" method="get">
@@ -169,7 +169,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-12 col-lg-5">
                 <div class="ask_question_form">
                     <h4>Ask Question</h4>
                     <p>Share your thoughts with us..</p>
@@ -189,7 +189,7 @@
 <section class="abt_meet_our_section section">
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12 col-lg-6">
                 <div class="vision_title mb-5">
                     <h4 data-aos="fade-down" data-aos-duration="1000">{{ $defDataArr['askexpert_lang']['pnl_of_exprts_txt'] }}</h4>
                     <p data-aos="fade-down" data-aos-duration="1500">We, at myplexus.com believe the financial intermediation and personal finance industry in India is going through the fastest evolutionary stage.</p>

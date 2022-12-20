@@ -37,7 +37,6 @@
 			<div class="col-md-12">
 				<div class="inner_section_banner">
 					<h4>Meet The Fund Man</h4>
-					<p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
 				</div>
 			</div>
 		</div>
@@ -46,12 +45,12 @@
 <section class="abt_page_section founder_about pb-0">
 	<div class="container">
 		<div class="row align-items-center">
-			<div class="col-md-6">
+			<div class="col-md-12 col-lg-6">
 				<div class="abt_right_img_wrapper" data-aos="fade-up" data-aos-duration="1500">
 					<img src="{{asset('themes/frontend/assets/v1/img/founder.jpg')}}" class="img-fluid"/>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-12 col-lg-6">
 				<div class="page_abt_inner" data-aos="fade-down" data-aos-duration="1000">
 					<h4>Vihang Naik, Fund Manager</h4>
 					<h5>Equity Investments,L&T Investment Management Limited</h5>

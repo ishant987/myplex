@@ -2248,6 +2248,9 @@ background-color: #f5f9f7;
     font-size: 14px;
     line-height: 25px
 }
+.footer_logo_sec{
+	padding:60px 0 0px 0
+}
 
 .footer_logo_sec img {
     margin-bottom: 10px
@@ -2267,6 +2270,15 @@ background-color: #f5f9f7;
     text-align: center;
     margin: 0px 5px
 }
+.multiselect__single, .multiselect__placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+
 
 .footer_social ul li a {
     color: #fff;
@@ -2291,8 +2303,10 @@ background-color: #f5f9f7;
 .footer_menu ul li a {
     color: #fff;
     font-size: 14px;
-    line-height: 35px;
     transition: ease-in all 0.3s
+}
+.footer_menu ul li{
+	margin:17px 0
 }
 
 .footer_menu ul li a:hover {
@@ -3325,7 +3339,7 @@ list-style:disc
 
 .Comparable_facts .single_facts label span {
     margin-right: 30px;
-    font-size: 25px
+    font-size: 16px
 }
 
 .scheme_dna {
@@ -3624,9 +3638,7 @@ list-style:disc
     text-align: center
 }
 
-.dictionary_table table tbody tr td:first-child {
-    white-space: nowrap
-}
+
 
 .dictionary_search_area {
     background-color: #f4f7f5;
@@ -5062,6 +5074,177 @@ list-style:disc
 }
 
 @media (max-width: 991px) {
+	.form_select select{
+		width:100% !important;
+	}
+	.form_select{
+		margin-bottom:10px;
+	}
+	.compare_section_div_str .form_select{
+		border-radius:10px;
+	}
+	.faq_left_filter .nav-link.faq-dot-2::before, .faq_left_filter .nav-link.faq-dot-1::before, .faq_left_filter .nav-link.faq-dot-3::before{
+		content:none
+	}
+	.faq_left_filter{
+		margin-bottom:30px
+	}
+	.single_calculator.have_before::before{
+		top:27px;
+		left:-23px;
+	}
+	.left_circle, .right_circle {
+    height: 14px;
+    width: 14px;
+    border: 2px solid var(--darkgreen);
+}
+	.single_calculator{
+		min-height:175px;
+		height:175px !important;
+	}
+	.money_left_sec{
+		border-radius:10px;
+	}
+	.header_section{
+		border-bottom:none;
+	}
+	.left_slider_sec{
+		border-bottom: 2px solid #fff;
+		border-right:none
+	}
+	.pentatech_filter{
+		margin:0
+	}
+	.scheme_dna{
+		flex-wrap:wrap;
+	}
+	.single_scheme_dna{
+		width:44%;
+		margin-bottom:15px;
+	}
+	.single_vison{
+		min-height:320px;
+		margin-bottom:10px;
+	}
+	.second_abt_cont{
+		padding-left:0px;
+	}
+	.single_big_post, .single_blog{
+		padding:15px
+	}
+	.big_post_cont_wrpper h4{
+		font-size:25px;
+	}
+	.big_post_img_wrapper{
+		height:170px
+	}
+	.page_abt_inner{
+		padding-right:0px
+	}
+	.header_section .cta_header_link{
+		margin-left:0px;
+	}
+	.dictionary_entity_row{
+		width:40%;
+	}
+	.dictionary_search{
+		width:70%;
+	}
+	.color_inverse{
+		background-color:inherit
+	}
+	.footer_menu {
+    padding-top: 30px;
+    padding-bottom: 0px;
+}
+	.footer_logo_sec{
+		margin-bottom:30px
+	}
+	.new_hero_section {
+    max-height: inherit;
+    overflow: hidden;
+}
+	  .navbar_section .navbar-nav {
+        background-color: #2d2d2d;
+        margin-top: 10px;
+    }
+
+    .navbar-collapse {
+        position: absolute;
+        top: 40px;
+        width: 100%;
+    }
+
+    .header_section nav .navbar-nav a.nav-link {
+        padding: 15px
+    }
+	.single_ask_expert p {
+    line-height: 23px;
+    font-size: 14px;
+}
+	.single_slider_message p {
+    font-size: 16px;
+    line-height: 26px;
+}
+	.fund_man_expert_home h2, .research_titile h4, .calculator_title h4, .faq_title h4, .blog_title h4, .vision_title h4, .money_seriously_title h4{
+		font-size:40px
+	}
+	.money_seriously_section .money_left_sec{
+		height:115px;
+	}
+	.money_seriously_title h4, .money_seriously_title p{
+		width:100%;
+	}
+	.money_seriously_title{
+		display:block !important;
+	}
+	.compare_titile h2{
+		font-size:40px
+	}
+	.section{
+		padding:50px 0
+	}
+	.single_abt_item{
+		padding:20px 15px;
+	}
+.single_abt_item{
+		min-height:auto;
+		margin-bottom:15px;
+	}
+.money_right_section {
+    padding: 40px 20px;
+}
+	.abt_img h2{
+		font-size:40px;
+	}
+	.single_rserach h2{
+		font-size:16px;
+	}
+	.left_slider_sec{
+		min-height:192px;
+	}
+	.single_slider_for img{
+		height:420px;
+	}
+	.her_banner_left_slide .next-arrow {
+   right: -140px;
+    top: inherit;
+    bottom: 30px;
+}
+	.her_banner_left_slide .prev-arrow {
+   right: -140px;
+    top: inherit;
+    bottom: 80px;
+}
+	.slider_caption h2{
+		font-size:40px
+	}
+	.single_slider_nav p{
+		font-size:14px
+	}
+	.left_slider_sec {
+    padding: 30px 190px 30px 30px;
+}
     .single_calculator img {
         margin-bottom: 20px;
         width: 40px;
@@ -5128,6 +5311,44 @@ list-style:disc
 }
 
 @media (max-width: 767px) {
+	.single_facts h4{
+		white-space:inherit
+	}
+	.fund_watch_parameter_wrapper h2{
+		font-size:30px
+	}
+	
+	.asset_aloocate h4{
+		font-size:25px
+	}
+	.archive-wrapper .single_blog{
+		height:auto
+	}
+	.latest_blog_title h4{
+		font-size:30px;
+		margin-bottom:20px
+	}
+	.blog_details_section{
+		padding-bottom:40px
+	}
+	.footer_logo_sec{
+		padding-top:0px;
+	}
+	.multiselect--above{
+		width:auto !important;
+	}
+	.tab_comp ul{
+		justify-content:center
+	}
+	.compare_section_div_str .top_bg_right_black{
+		margin-bottom:5px
+	}
+	.form_select label{
+		font-size:14px
+	}
+	.compare_section_div_str .bg_green, .compare_section_div_str .form_select{
+		border-radius:10px;
+	}
 	.vision_title h4, .mission_content h4{
 		font-size:30px
 	}
@@ -5566,20 +5787,7 @@ list-style:disc
         width: 100%
     }
 
-    .navbar_section .navbar-nav {
-        background-color: #2d2d2d;
-        margin-top: 10px;
-    }
-
-    .navbar-collapse {
-        position: absolute;
-        top: 40px;
-        width: 100%;
-    }
-
-    .header_section nav .navbar-nav a.nav-link {
-        padding: 15px
-    }
+  
 
     .faq_inner .accordion .accordion-item .accordion-header::after {
         width: 60%

@@ -1,8 +1,7 @@
 <template>
     <section class="compare_scheme">
         <div class="container">
-            <div class="comp_schem_bdr">
-                <h4>Compare Scheme</h4>
+            <div class="comp_schem_bdr">               
                 <div class="tab_comp">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -55,7 +54,7 @@
                         </div>
                         <div class="table_scc compare_section_div_str">
                             <div class="row mb-1">
-                                <div class="col-md-6 pe-sm-1">
+                                <div class="col-md-12 col-lg-6 pe-lg-1">
                                     <div class="form_select border_top_left">
                                         <label for="">Schemes, Index, Currency, Commodity</label>
                                         <multiselect :disabled="compare_price_process" class=""
@@ -67,14 +66,14 @@
                                         </multiselect>
                                     </div>
                                 </div>
-                                <div class="col-md-3 pe-sm-1 ps-sm-0">
+                                <div class="col-md-6 col-lg-3 pe-lg-1 ps-lg-0">
                                     <div class="form_select top_bg_right_black">
                                         <label for="">From Date</label>
                                         <input class="form-date" type="date"
                         v-model="selectedDateRangeFrom" />
                                     </div>
                                 </div>
-                                <div class="col-md-3 ps-sm-0">
+                                <div class="col-md-6 col-lg-3 ps-lg-0">
                                     <div class="form_select top_bg_right_black border_top_right">
                                         <label for="">To Date</label>
                                         <input class="form-date" type="date"
@@ -83,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3 pe-sm-1 col-6 pe-1 mb-1">
+                                <div class="col-md-12 col-lg-3 pe-lg-1 col-12 mb-1">
                                     <div class="form_select bg_green border_bottom_left">
                                         <label for="">Schemes, Index, Currency, Commodity</label>
                                         <multiselect :disabled="compare_price_process" class=""
@@ -95,7 +94,7 @@
                     </multiselect>
                                     </div>
                                 </div>
-                                <div class="col-md-3 ps-sm-0 pe-sm-1 col-6 ps-0">
+                                <div class="col-md-12 col-lg-3 ps-lg-0 pe-lg-1 col-12 mb-1">
                                     <div class="form_select bg_green">
                                         <label for="">Schemes, Index, Currency, Commodity</label>
                                         <multiselect :disabled="compare_price_process" class=""
@@ -107,7 +106,7 @@
                     </multiselect>
                                     </div>
                                 </div>
-                                <div class="col-md-3 pe-sm-1 ps-sm-0 col-6 pe-1">
+                                <div class="col-md-12 col-lg-3 pe-lg-1 ps-lg-0 col-12 mb-1">
                                     <div class="form_select bg_green">
                                         <label for="">Schemes, Index, Currency, Commodity</label>
                                         <multiselect :disabled="compare_price_process" class=""
@@ -119,7 +118,7 @@
                     </multiselect>
                                     </div>
                                 </div>
-                                <div class="col-md-3 ps-sm-0 col-6 ps-0">
+                                <div class="col-md-12 col-lg-3 ps-lg-0 col-12">
                                     <div class="form_select bg_green border_bottom_right">
                                         <label for="">Schemes, Index, Currency, Commodity</label>
                                         <multiselect :disabled="compare_price_process" class=""
@@ -205,7 +204,7 @@
                         </div>
                         <div class="table_scc compare_section_div_str">
                             <div class="row mb-1">
-                                    <div class="col-md-4 pe-sm-1">
+                                    <div class="col-md-12 col-lg-4 pe-lg-1 mb-2">
                                         <div class="form_select border_top_left">
                                             <label for="">Schemes, Index, Currency, Commodity</label>
                                             <multiselect class="" label="fund_name" track-by="fund_id"
@@ -218,7 +217,7 @@
                         </multiselect>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                    <div class="col-lg-2 col-md-6 pe-lg-1 ps-lg-0 mb-2">
                                         <div class="form_select">
                                             <label for="">Return Ratio</label>
                                             <select class="" v-model="selectedRatioReturn"
@@ -234,7 +233,7 @@
                                     </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                    <div class="col-lg-2 col-md-6 pe-lg-1 ps-lg-0 mb-2">
                                         <div class="form_select">
                                             <label for="">Risk Ratio</label>
                                             <select class="" v-model="selectedRatioRisk"
@@ -247,14 +246,14 @@
                                     </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 pe-sm-1 ps-sm-0">
+                                    <div class="col-lg-2 col-md-6 pe-lg-1 ps-lg-0">
                                         <div class="form_select top_bg_right_black">
                                             <label for="">From Date</label>
                                             <input class="form-date" type="date"
                             v-model="selectedRatioDateFrom" />
                                         </div>
                                     </div>
-                                    <div class="col-md-2 ps-sm-0">
+                                    <div class="col-lg-2 col-md-6 ps-lg-0">
                                         <div class="form_select top_bg_right_black border_top_right">
                                             <label for="">To Date</label>
                                             <input class="form-date" type="date"
@@ -263,7 +262,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 pe-sm-1 col-6 pe-1 mb-1">
+                                    <div class="col-lg-3 pe-lg-1 col-12 col-md-12 mb-1">
                                         <div class="form_select bg_green border_bottom_left">
                                             <label for="">Schemes, Index, Currency, Commodity</label>
                                             <multiselect class="" label="fund_name" track-by="fund_id"
@@ -276,7 +275,7 @@
                         </multiselect>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 ps-sm-0 pe-sm-1 col-6 ps-0">
+                                    <div class="col-lg-3 ps-lg-0 pe-lg-1 col-12 col-md-12">
                                         <div class="form_select bg_green">
                                             <label for="">Schemes, Index, Currency, Commodity</label>
                                             <multiselect class="" label="fund_name" track-by="fund_id"
@@ -289,7 +288,7 @@
                         </multiselect>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 pe-sm-1 ps-sm-0 col-6 pe-1">
+                                    <div class="col-lg-3 pe-lg-1 ps-lg-0 col-12 col-md-12">
                                         <div class="form_select bg_green">
                                             <label for="">Schemes, Index, Currency, Commodity</label>
                                             <multiselect class="" label="fund_name" track-by="fund_id"
@@ -302,7 +301,7 @@
                         </multiselect>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 ps-sm-0 col-6 ps-0">
+                                    <div class="col-lg-3 col-md-12 ps-lg-0 col-12">
                                         <div class="form_select bg_green border_bottom_right">
                                             <label for="">Schemes, Index, Currency, Commodity</label>
                                             <multiselect class="" label="fund_name" track-by="fund_id"

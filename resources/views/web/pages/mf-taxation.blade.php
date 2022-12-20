@@ -23,14 +23,14 @@
                     </div>
                     <div class="pentatech_inner">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12 col-lg-6">
                                 <div class="taxation_top_section_single">
                                     <img src="{{asset('themes/frontend/assets/v1/img/tax1.png')}}" />
                                     <h4>Tax on income from regular dividend</h4>
                                     <p>In Union Budget 2020, Finance Ministry changed the tax policy in dividends. In prior policy, fund houses are responsible to pay Dividend Distribution Tax or DDT. But now investors need to pay taxes on the income from dividends. From 1st April 2020, the income from dividends will be added to your income and tax will depend on your income slabs. </p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12 col-lg-6">
                                 <div class="taxation_top_section_single">
                                     <img src="{{asset('themes/frontend/assets/v1/img/tax2.png')}}" />
                                     <h4>Tax on income from Redemption</h4>
@@ -43,7 +43,7 @@
                                 <div class="tax_bottom_part">
                                     <p>*The Capital gain/loss is the difference between the purchase price and selling price of mutual fund units. </p>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12 col-lg-6">
                                             <div class="long_tearm_sec d-block d-sm-flex justify-content-between">
                                                 <div class="tearm_text_mobile d-block d-sm-none text-center">Long Term</div>
                                                 <div class="single_circle_tearm_wrapper">
@@ -63,7 +63,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-12 col-lg-6">
                                             <div class="long_tearm_sec d-block d-sm-flex justify-content-between">
                                                  <div class="tearm_text_mobile d-block d-sm-none text-center">Short Term</div>
                                                 <div class="single_circle_tearm_wrapper">

@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-md-12 col-lg-7">
                             <div class="info_monitor_inner_wrapper mb-3">
                                 <div class="info_title">
                                     <h4>Fund Stats</h4>
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-12 col-lg-5">
                             <div class="info_monitor_inner_wrapper mb-3">
                                 <div class="fund_fact_wrapper asset_aloocate">
                                     <h4>Asset Allocation</h4>

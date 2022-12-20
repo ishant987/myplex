@@ -1,7 +1,7 @@
 <section class="footer_section ">
     <div class="container">
-        <div class="row align-items-center ">
-            <div class="col-md-4 col-lg-3">
+        <div class="row align-items-start ">
+            <div class="col-md-12 col-lg-3">
                 <div class="footer_logo_sec">
                     <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" alt='myplex-logo'/>
                     <p>We provide a range of tools and financial know-how that  can help you make the most of your short-term and long-term investment goals.</p>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-md-8">
+            <div class="col-lg-9 col-md-12">
                 <div class="row">
                     <div class="col-md-6 col-lg-3 col-6 ">
                         <div class="footer_menu color_inverse">
@@ -41,7 +41,7 @@
                             <ul>
                                 <li><a href="/compare-scheme">Compare</a></li>
                                 <li><a href="{{route('web.get-blogs')}}">Money Seriously</a></li>
-                                <li><a href="/monthly-ranking">Category wise return & risk ratios</a></li>
+                                <li><a href="/monthly-ranking">Category wise return & <br/>risk ratios</a></li>
                             </ul>
                         </div>
                     </div>

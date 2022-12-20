@@ -198,10 +198,10 @@ $('.meet_team_slider').slick({
             }
     },
         {
-            breakpoint: 600,
+            breakpoint: 919,
             settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
+                slidesToShow: 2,
+                slidesToScroll: 2
             }
     },
         {
@@ -348,7 +348,7 @@ $('.recent_interview_slider').slick({
             }
     },
         {
-            breakpoint: 600,
+            breakpoint: 919,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2
@@ -381,7 +381,7 @@ $('.ask_expert_slider').slick({
             }
     },
         {
-            breakpoint: 600,
+            breakpoint: 991,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2

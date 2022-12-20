@@ -6,7 +6,6 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>Penta Tech</h4>
-                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
                 </div>
             </div>
         </div>
@@ -29,7 +28,7 @@
                         </div>
 
                         <div class="row mt-5">
-                            <div class="col-md-8 offset-md-2">
+                            <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
                                 <div class="pentatech_filter">
                                     <div class="single_pentatect_item_wrapper trans1">
                                         <div class="single_pentatect_item light_bg_filter funnel1">

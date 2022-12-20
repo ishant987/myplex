@@ -270,7 +270,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
-                                                        <h4>Return (Continious)</h4>
+                                                        <h4>Return Stack (Continious)</h4>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">

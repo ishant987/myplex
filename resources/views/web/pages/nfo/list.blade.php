@@ -67,7 +67,7 @@
                             @else
                            
                                 @foreach($record['items'] as $key => $record2)
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_blog">
                                         <div class="blog_content">
                                             <h4><a href="{{ route('web.nfomonitor', $record2['no_id']) }}">{{ $record2['fund_name'] }}</a></h4>

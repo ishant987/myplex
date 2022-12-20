@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
             @include('web.common.faq_list')
         </div>
     </div>

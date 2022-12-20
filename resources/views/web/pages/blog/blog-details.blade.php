@@ -66,7 +66,13 @@
                                         <input type="text" class="form-control" id="email" name="email" required>
                                     </div>
                                 </div>
-                                <textarea class="blog_comments_textarea col-12 mt-5" name="comment" required></textarea>
+								<div class="col-12 mt-4">
+                                    <div class="form-group">
+                                        <label for="email">Comment</label>
+                                         <textarea class="blog_comments_textarea col-12" name="comment" required></textarea>
+                                    </div>
+                                </div>
+                               
                             </div>
                             <button class="blog_comment_submit" type="submit">Submit Information</button>
                         </div>

@@ -32,7 +32,6 @@
             <div class="col-md-12">
                 <div class="inner_section_banner">
                     <h4>{!! nl2br($dataArr['title']) !!}</h4>
-                    <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most of us.</p>
                 </div>
             </div>
         </div>
@@ -50,28 +49,28 @@
                         </div>
                         <div class="single_faq_calc">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc1.png')}}" />
                                         <h4>Liquid & Money Market Funds</h4>
                                         <p>A money market funds invest predominantly in highly liquid money market and debt securities such as treasury bills, commercial paper, certificate of deposit etc. Liquid funds have a maturity period of 91 days. Money market funds have a maturity period of 1 year.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc2.png')}}" />
                                         <h4>Income Funds</h4>
                                         <p>Income Funds mainly focus on generating regular income by investing in high dividend generating stocks, corporate bonds, government securities etc. SEBI classifies income funds as those debt funds whose Macaulay duration is 4 years and more. </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc3.png')}}" />
                                         <h4>Fixed Maturity Plans</h4>
                                         <p>Fixed Maturity Plans are closed-ended debt fund which comes with fixed lock-in period and limited investment window. Investor can only invest in such securities during NFO (new fund offering). The tenure of an FMP may range from 30days to 60 months.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc4.png')}}" />
                                         <h4>Capital Protection Oriented Fund</h4>
@@ -79,21 +78,21 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc5.png')}}" />
                                         <h4>Interval Funds</h4>
                                         <p>Interval Fund is a mutual fund wherein the fund house allows to purchaseor sell the units only during specified transaction periods (STPs) at predetermined intervals.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc6.png')}}" />
                                         <h4>Multiple Yield Fund</h4>
                                         <p>Multiple Yield Funds are Hybrid Debt-Oriented Funds that invests predominantly in debt instruments and to some extent in dividend-yielding equities.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc7.png')}}" />
                                         <h4>Short-Term Fund</h4>
@@ -101,35 +100,35 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc8.png')}}" />
                                         <h4>Floating Rate Funds</h4>
                                         <p>A Floating Rate Fund invests in bonds and debt instruments whose interest payments fluctuate with an underlying interest rate level. </p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc9.png')}}" />
                                         <h4>Gilt Funds</h4>
                                         <p>Gilt Funds only invest in fixed-interest generating securities issued by the central and state government for various tenures.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc10.png')}}" />
                                         <h4>Dynamic Bond Fund</h4>
                                         <p>Dynamic Bond Funds are a class of debt mutual fund that alter allocations between short-term and long-term bonds based on interest rate movement.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc11.png')}}" />
                                         <h4>Monthly Income Plan</h4>
                                         <p>Monthly Income Plan invests in a combination of debt and equity securities. It invests pre-dominantly in debt securities and 15-25% in equities.</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-lg-4">
                                     <div class="single_classification">
                                         <img src="{{asset('themes/frontend/assets/v1/img/mfc12.png')}}" />
                                         <h4>Hybrid Debt</h4>

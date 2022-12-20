@@ -33,7 +33,7 @@
                             <div class="datatable_ll performance_compare_top_table mt-4">
                                 <h4>Scheme Name:</h4>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-12 col-md-4">
                                         <multiselect :disabled="process" class="" label="fund_name" track-by="fund_id"
                                             v-model="selectedFundReturns" tag-placeholder="" placeholder="Select Fund"
                                             :options="funds" :multiple="false" :taggable="false" selectLabel=""
@@ -437,7 +437,7 @@
                             <div class="datatable_ll performance_compare_top_table mt-4">
                                 <h4>Scheme Name:</h4>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-12 col-md-4">
                                         <multiselect :disabled="processRatios" class="" label="fund_name"
                                             track-by="fund_id" v-model="selectedFundRatios" tag-placeholder=""
                                             placeholder="Select Fund" :options="funds" :multiple="false"
@@ -594,7 +594,7 @@
                             <div class="datatable_ll performance_compare_top_table mt-4">
                                 <h4>Scheme Name:</h4>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-12 col-md-4">
                                         <multiselect :disabled="processPortfolios" class="" label="fund_name"
                                                 track-by="fund_id" v-model="selectedFundPortFolios" tag-placeholder=""
                                                 placeholder="Select Fund" :options="funds" :multiple="false"

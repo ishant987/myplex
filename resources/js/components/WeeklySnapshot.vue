@@ -22,7 +22,7 @@
                             <p v-if="from_date && to_date">Weekly Snapshot Report :{{from_date}} to {{to_date}}</p>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 box_border_right">
+                            <div class="col-md-12 col-lg-4 box_border_right">
                                 <div class="snopshot_changes_box">
                                     <div class="snopshot_changes_box_header index_changes_header">
                                         <h4>Index Changes</h4>
@@ -56,7 +56,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 box_border_right">
+                            <div class="col-md-12 col-lg-4 box_border_right">
                                 <div class="snopshot_changes_box">
                                     <div class="snopshot_changes_box_header">
                                         <h4>Currency Changes</h4>
@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-12 col-lg-4">
                                 <div class="snopshot_changes_box">
                                     <div class="snopshot_changes_box_header">
                                         <h4>Commodity Changes</h4>
@@ -181,7 +181,7 @@
                                 </div>
 
                             </div>
-                             <div class="col-md-6 d-none">
+                             <div class="col-md-12 col-lg-6 d-none">
                                 <div class="main_trer monthly_snap_shot_table">
                                     <div class="pentatech_filter_title mb-1">
                                     <h4>10 Worst Performing Schemes for The Month</h4>

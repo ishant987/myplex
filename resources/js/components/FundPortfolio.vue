@@ -2,13 +2,13 @@
 <section class="info_monitor_sec">
     <div class="container">
 		<div class="row mb-4">
-			<div class="col-lg-6 col-md-6 col-sm-12">
-				<h6 class="text-green-2">Fund House Name</h6>
+			<div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+				<label class="text-green-2">Fund House Name</label>
 				<multiselect class="" label="fund_house" track-by="fund_house" v-model="selectedFundHouse" tag-placeholder="" placeholder="Select Fund House" :options="fundHouses" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
 	</multiselect>
 	</div>
 			<div class="col-lg-6 col-md-6 col-sm-12">
-				<h6 class="text-green-2">Fund Name</h6>
+				<label class="text-green-2">Fund Name</label>
 				<multiselect :disabled="!selectedFundHouse" class="" label="fund_name" track-by="fund_id" v-model="selectedFund" tag-placeholder="" placeholder="Select Fund" :options="funds" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'Enter', 'backspace']" :max-height="150" :showNoResults="true">
 	</multiselect>
 	</div>

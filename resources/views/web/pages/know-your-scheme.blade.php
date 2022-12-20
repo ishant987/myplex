@@ -24,10 +24,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4>{{$dataArr['title']}}</h4>
-                    @if($dataArr['descp']) 
-                        <p>{!! $dataArr['descp'] !!}</p> 
-                    @endif
+                    <h4>{{$dataArr['title']}}</h4>                   
                 </div>
             </div>
         </div>
