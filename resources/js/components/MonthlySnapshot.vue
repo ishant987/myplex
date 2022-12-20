@@ -268,36 +268,52 @@
                     </div>
                 </div>
             </div>
+           
+        </div>
+        <!-- <div  :class="modalClasses" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Fund Changes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+        </div>
+    </div>
+</div> -->
 <div :class="modalClasses" class="fade" id="reject" role="dialog">
-       <div class="modal-dialog">
+       <div class="modal-dialog modal-lg">
              <div class="modal-content fund-c-analysis">
                   <div class="modal-header">
                     <h6 class="">Fund Changes</h6>
 
                     <button type="button" class="close" @click="toggle();selectedFundType=''">&times;</button>
                   </div>
-                  <div class="modal-body perform-paramtr c-snapchot-parent">
-                      <div class="dy-table-wrap">
-                            <div class="dy-table-block br-5">
-                                <table class="box-shadow">
-                                    <tr>
+                  <div class="modal-body">
+                <div class="main_trer mt-0">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-striped" style="width:100%">
+                            <thead>
+
+                                <tr>
                                         <th style="width: 80% !important;">Fund Name<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                         <th style="min-width: 130px;">% Change<span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
                                     </tr>
-                                    <tbody v-if="fund_change.length && !loading">
+                            </thead>
+                            <tbody v-if="fund_change.length && !loading">
                                         <tr v-for="index in fund_change" :key="index.fund_code">
                                             <td>{{ index.fund_name }}</td>
                                             <td>{{ index.change_value.toFixed(2) }}</td>
                                         </tr>
                                     </tbody>
-                                </table>
-                            </div>
-                        </div>
-                  </div>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
               </div>
        </div>
    </div>
-        </div>
     </div>
 </template>
 <style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>
@@ -442,5 +458,11 @@ export default {
 }
 .weekly-snapshot-blocks .ws-table-wrap,.weekly-table-block-two .ws-table-wrap{
 	overflow-x: auto;
+}
+.modal-open {
+    overflow: hidden;
+}
+.modal-backdrop.show {
+    opacity: .5;
 }
 </style>

@@ -66,7 +66,7 @@
                         <p>Already Have Acount <b><a href="#" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal"> Login Now</a></b></p>
                     </div>
                     <div class="socila_login">
-                        <a href="#" class="btn btn-block w-100"><span><i class="ph-google-logo-bold"></i></span> Sign Up With Google</a>
+                        <a href="{{ route('web.calculators.social.login','google') }}" class="btn btn-block w-100"><span><i class="ph-google-logo-bold"></i></span> Sign Up With Google</a>
                     </div>
                     <div class="separate_or text-center mb-4 mt-3"><span>or</span></div>
                     <div class="login_fomr">
