@@ -15,11 +15,14 @@ class MonthlyRatioCalculation extends Model
 
     public static function list($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false)
     {
+        // $tableName = (new MonthlyRatioCalculation)->getTable();
+        // dd($tableName);
         if ($fields == false) {
             $fields = ['*'];
         }
 
         $query = MonthlyRatioCalculation::select($fields);
+		// dd($query);
 
         $fundCode = isset($filterArr['fund_code']) ? $filterArr['fund_code'] : '';
         if ($fundCode != '') {
@@ -44,6 +47,11 @@ class MonthlyRatioCalculation extends Model
         }
 
         $query->orderBy($orderBy, $order);
+
+        $lastQuery = $query->toSql();
+        // echo $lastQuery;die;
+        // dd($query->get());
+
         return $perPage ? $query->paginate($perPage) : $query->get();
     }
 }

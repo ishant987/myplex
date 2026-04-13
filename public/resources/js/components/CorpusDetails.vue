@@ -1,0 +1,514 @@
+<template>
+<div class="performance_shanpshot_page section">
+<div class=" investing-tools perform-snapshot-tabs select2-styles">
+    <section class="">
+        <div class="container">
+            <div class="comp_schem_bdr">
+                <div class="tab_snap_shot">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation" style="display: none;">
+                            <button @click="currentTab = 'weekly'" class="nav-link" :class="{'active show':currentTab == 'weekly'}" id="pills-weekly-tab" data-bs-toggle="pill" data-bs-target="#pills-weekly" type="button" role="tab" aria-controls="pills-weekly" aria-selected="true"><i class="ph-calendar-check"></i> Weekly</button>
+                        </li>
+                        <li class="nav-item" role="presentation" style="display: none;">
+                            <button @click="currentTab = 'monthly'" class="nav-link" :class="{'active show':currentTab == 'monthly'}" id="pills-monthly-tab" data-bs-toggle="pill" data-bs-target="#pills-monthly" type="button" role="tab" aria-controls="pills-monthly" aria-selected="false"><i class="ph-calendar"></i> Monthly</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade " :class="{'active show':currentTab == 'weekly'}" id="pills-weekly" role="tabpanel" aria-labelledby="pills-weekly-tab" style="display: none;">
+                            <div class="top_table_bg_color mb-3">
+                                <div class="row align-items-end">
+                                    <div class="col-lg-10">
+                                        <div class="row align-items-end">
+                                            <div class="col-lg-4">
+                                                <div class="form_select">
+                                                    <Datepicker class="custom-input" v-model="selectedDateWeekly" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="false" :maxDate="maxDateRang"></Datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form_select">
+                                                    <multiselect :disabled="loading || process" class="" label="name" track-by="ft_id" v-model="selectedFundClassificationWeekly" tag-placeholder="" placeholder="Select Fund Classification" :options="fundClassifications" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'backspace']" :max-height="150" :showNoResults="true">
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form_select">
+                                                    <select v-model="selectedCategoryWeekly" id="ps-weekly-return" class="form-select custom-input">
+                                                        <option value="corpus_change">Corpus Changes</option>                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="middle_left">
+                                            <a class="perform-submit btn" @click="getWeeklySnapshot" :disabled="!selectedDateWeekly || !selectedFundClassificationWeekly || !selectedCategoryWeekly || processWeekly">Submit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                               <!-- <div class="mt-4" v-if="weekly_snapshot_data.length">
+                                    <p>Term of Fund : Medium Term</p>
+                                    <p>Type of Fund : <span>{{ selectedFundClassificationWeekly.name }}</span> for the Week Ended As On : <b>{{ formattedDate(selectedDateWeekly) }}</b></p>
+                                </div> -->
+                            </div>
+                            <div class="datatable_ll main_trer">
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-striped" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th v-if="dataCategoryWeekly != 'indices'">Scrip Name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th v-if="dataCategoryWeekly == 'indices' || dataCategoryWeekly == 'return'">Index Name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>7days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>14days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>30days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                <th>60days <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(data,index) in weekly_snapshot_data" :key="index" :class="index%2 ? 'even' : 'odd'">
+                                                <td v-if="dataCategoryWeekly != 'indices'">
+                                                    <a class="text-black" :href="`/fund-performance?fund_code=${encodeURIComponent(data.fund_code)}`" target="_blank">{{ data.fund_name }}</a>
+                                                </td>
+                                                <td v-if="dataCategoryWeekly == 'indices' || dataCategoryWeekly == 'return'">{{ data.indices_name }}</td>
+                                                <td>{{ data['7DAYS'].toFixed(2) }}</td>
+                                                <td>{{ data['14DAYS'].toFixed(2) }}</td>
+                                                <td>{{ data['30DAYS'].toFixed(2) }}</td>
+                                                <td>{{ data['60DAYS'].toFixed(2) }}</td>
+                                            </tr>
+                                            <tr v-if="processWeekly">
+                                                <td colspan="6">
+                                                    <div class="text-center mt-3">
+                                                        <LoadingBar :status="processWeekly"></LoadingBar>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- PERFORMANCE SNAPSHOT WEEKLY TAB END -->
+                        <!-- PERFORMANCE SNAPSHOT MONTHLY TAB START -->
+                        <div class="tab-pane fade" :class="{'active show':currentTab == 'monthly'}" id="pills-monthly" role="tabpanel" aria-labelledby="pills-monthly-tab">
+                            <div class="top_table_bg_color mb-3">
+                                <div class="row align-items-end">
+                                    <div class="col-lg-10">
+                                        <div class="row align-items-end">
+                                            <div class="col-lg-4" style="display: none;">
+                                                <div class="form_select">
+													<input type="text" :value="defaultEndDate" disabled="disabled" class="custom-input" />
+													<input type="text" class="custom-input" :value="lastMonthDate" style="display: none;" />
+                                                    <Datepicker style="display: none;" class="custom-input" v-model="selectedDateMonthly" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="false" :maxDate="maxDateRang"></Datepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form_select">
+                                                    <multiselect :disabled="loading || process" class="" label="name" track-by="ft_id" v-model="selectedFundClassificationMonthly" tag-placeholder="" placeholder="Select Fund Classification" :options="fundClassifications" :multiple="false" :taggable="false" selectLabel="" :searchable="true" :block-keys="['Tab', 'backspace']" :max-height="150" :showNoResults="true" @keyup.enter="SetMonthly($event)">
+                                                    </multiselect>
+                                                </div>
+                                            </div>
+											<div style="display:none;">
+                                                <div class="form_select">
+                                        <select v-model="selectedCategoryMonthly" id="ps-monthly-return" class="form-select custom-input">
+                                                        <option value="corpus_change" selected="selected">Corpus Changes</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+											<div class="col-lg-4">
+												<div class="middle_left">
+                                            <a class="perform-submit btn" @click="getMonthlySnapshot" :disabled="!selectedDateMonthly || !selectedFundClassificationWeekly || !selectedCategoryWeekly || processWeekly">Submit</a>
+                                        </div>
+											</div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        
+                                    </div>
+                                    <div class="mt-4" v-if="monthly_snapshot_data.length">
+                                        <!--<p>Term of Fund : Medium Term</p> -->
+                                        <p>Corpus Details- Type of Fund : <span>{{ selectedFundClassificationMonthly.name }}</span> for the Week Ended As On : <b>{{ formattedDate(lastMonthDate) }}</b></p>
+                                    </div>
+                                </div>                                
+                            </div>
+							<div class="datatable_ll main_trer">
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped" style="width:100%" v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return' || dataCategoryMonthly == 'return_less_index'">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sorting" v-on:click="sortTableM('fund_name')" :class="{'sorting_asc':sortKeyM == 'fund_name' && ascendingM, 'sorting_desc': sortKeyM == 'fund_name' && !ascendingM}" v-if="dataCategoryMonthly != 'indices'">Fund name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('indices_name')" :class="{'sorting_asc':sortKeyM == 'indices_name' && ascendingM, 'sorting_desc': sortKeyM == 'indices_name' && !ascendingM}" v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'">Index name <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('sixmonths')" :class="{'sorting_asc':sortKeyM == 'sixmonths' && ascendingM, 'sorting_desc': sortKeyM == 'sixmonths' && !ascendingM}">Six Months <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('oneyear')" :class="{'sorting_asc':sortKeyM == 'oneyear' && ascendingM, 'sorting_desc': sortKeyM == 'oneyear' && !ascendingM}">One Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('twoyear')" :class="{'sorting_asc':sortKeyM == 'twoyear' && ascendingM, 'sorting_desc': sortKeyM == 'twoyear' && !ascendingM}">Two Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTableM('threeyear')" :class="{'sorting_asc':sortKeyM == 'threeyear' && ascendingM, 'sorting_desc': sortKeyM == 'threeyear' && !ascendingM}">Three Year <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(data,index) in monthly_snapshot_data" :key="index" :class="index%2 ? 'even' : 'odd'">
+                                                    <td v-if="dataCategoryMonthly != 'indices'">
+                                                        <a class="text-gray" :href="`/fund-performance?fund_code=${encodeURIComponent(data.fund_code)}`" target="_blank">{{ data.fund_name }}</a></td>
+                                                    <td v-if="dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'">{{ data.indices_name }}</td>
+                                                    <td>{{ data['sixmonths'].toFixed(2) }}</td>
+                                                    <td>{{ data['oneyear'].toFixed(2) }}</td>
+                                                    <td>{{ data['twoyear'].toFixed(2) }}</td>
+                                                    <td>{{ data['threeyear'].toFixed(2) }}</td>
+                                                </tr>
+                                                <tr v-if="processMonthly">
+                                                    <td class="top_th text-center" colspan="6" rowspan="1">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="processMonthly"></LoadingBar>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- corpus_change table result -->
+                                        <table id="example" class="table table-striped" style="width:100%" v-if="dataCategoryMonthly == 'corpus_change'">
+                                            <thead>
+                                                <tr>
+                                                    <th class="sorting" v-on:click="sortTableC('fund_name')" :class="{'sorting_asc':sortKeyC == 'fund_name' && ascendingC, 'sorting_desc': sortKeyC == 'fund_name' && !ascendingC}">Fund name <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span></th>
+                                                    <th class="sorting" v-on:click="sortTableC('corpus_entry')" :class="{'sorting_asc':sortKeyC == 'corpus_entry' && ascendingC, 'sorting_desc': sortKeyC == 'corpus_entry' && !ascendingC}">Current Amount (Rs.in Lacs) <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span></th>
+                                                    <th class="sorting" v-on:click="sortTableC('corpus_change')" :class="{'sorting_asc':sortKeyC == 'corpus_change' && ascendingC, 'sorting_desc': sortKeyC == 'corpus_change' && !ascendingC}">Change Amount (Rs.in Lacs)<span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span> </th>
+                                                    <th class="sorting" v-on:click="sortTableC('percentage_change')" :class="{'sorting_asc':sortKeyC == 'percentage_change' && ascendingC, 'sorting_desc': sortKeyC == 'percentage_change' && !ascendingC}">(%) Change <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(data,index) in monthly_snapshot_data" :key="index">
+                                                    <td><a class="text-gray" :href="`/fund-performance?fund_code=${encodeURIComponent(data.fund_code)}`" target="_blank">{{ data.fund_name }}</a></td>
+                                                    <td>{{ data['corpus_entry'].toFixed(2) }}</td>
+                                                    <td>{{ data['corpus_change'].toFixed(2) }}</td>
+                                                    <td>{{ data['percentage_change'].toFixed(2) }}</td>
+                                                </tr>
+                                                <tr v-if="processMonthly">
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="processMonthly"></LoadingBar>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                        <!-- corpus_change table result end -->
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+</template>
+
+<style src="@suadelabs/vue3-multiselect/dist/vue3-multiselect.css"></style>
+
+<script>
+import CustomTable from './Common/CustomTable.vue'
+import Multiselect from '@suadelabs/vue3-multiselect'
+import mixin from '../mixin';
+import LoadingBar from "./Common/loading";
+import {
+    mapGetters,
+    mapActions
+} from 'vuex'
+import moment from 'moment';
+export default {
+    props: {
+        page_title: {
+            type: String,
+            required: true,
+            default: '',
+        },
+        page_description: {
+            type: String,
+            required: true,
+            default: '',
+        },
+        page_image: {
+            type: String,
+            required: true,
+            default: '',
+        },
+    },
+    components: {
+        Multiselect,
+        LoadingBar
+    },
+    mixins: [mixin],
+    data() {
+        return {
+            sortKey: 'fund_name',
+            ascending: true,
+            sortKeyM: 'fund_name',
+            ascendingM: true,
+            sortKeC: 'fund_name',
+            ascendingC: true,
+            composition_snapshot: [],
+			monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            snapshotText: null,
+            processWeekly: false,
+            currentTab: 'monthly',
+            selectedDateWeekly: null,
+            selectedFundClassificationWeekly: null,
+            selectedCategoryWeekly: '',
+            weekly_snapshot_data: [],
+            dataCategoryMonthly: '',
+            processMonthly: false,
+            selectedDateMonthly: null,
+            selectedFundClassificationMonthly: null,
+            selectedCategoryMonthly: 'corpus_change',
+            monthly_snapshot_data: [],
+            app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : ''
+        }
+    },
+    methods: {
+        ...mapActions('InputData', ['getFundClassifications']),
+        sortTableW(col) {
+            if (this.sortKey === col) {
+                this.ascending = !this.ascending;
+            } else {
+                this.ascending = true;
+                this.sortKey = col;
+            }
+
+            var ascending = this.ascending;
+
+            this.weekly_snapshot_data.sort(function (a, b) {
+                if (a[col] > b[col]) {
+                    return ascending ? 1 : -1
+                } else if (a[col] < b[col]) {
+                    return ascending ? -1 : 1
+                }
+                return 0;
+            })
+        },
+        sortTableM(col) {
+            if (this.sortKeyM === col) {
+                this.ascendingM = !this.ascendingM;
+            } else {
+                this.ascendingM = true;
+                this.sortKeyM = col;
+            }
+
+            var ascendingM = this.ascendingM;
+
+            this.monthly_snapshot_data.sort(function (a, b) {
+                if (a[col] > b[col]) {
+                    return ascendingM ? 1 : -1
+                } else if (a[col] < b[col]) {
+                    return ascendingM ? -1 : 1
+                }
+                return 0;
+            })
+        },
+        sortTableC(col) {
+            if (this.sortKeyC === col) {
+                this.ascendingC = !this.ascendingC;
+            } else {
+                this.ascendingC = true;
+                this.sortKeyC = col;
+            }
+
+            var ascendingC = this.ascendingC;
+
+            this.monthly_snapshot_data.sort(function (a, b) {
+                if (a[col] > b[col]) {
+                    return ascendingC ? 1 : -1
+                } else if (a[col] < b[col]) {
+                    return ascendingC ? -1 : 1
+                }
+                return 0;
+            })
+        },
+		
+		SetMonthly(e)
+		{
+			console.log(e);
+		},
+		
+        formattedDate(date) {
+            return moment(date).format('DD/MM/YYYY')
+        },
+        async getWeeklySnapshot() {
+            let that = this
+            // console.log(that.selectedFundClassificationWeekly);return false;
+            that.processWeekly = true
+            let data = {
+                fund_type_id: that.selectedFundClassificationWeekly.ft_id,
+                type: 'weekly',
+                report_category: that.selectedCategoryWeekly,
+                date: moment(that.selectedDateWeekly).format('YYYY-MM-DD')
+            }
+            Object.keys(data).forEach(key => {
+                that.addParamToURL(key, data[key])
+            });
+
+            if (that.selectedCategoryWeekly == 'indices') {
+                that.sortKey = 'indices_name'
+            }
+
+            that.dataCategoryWeekly = that.selectedCategoryWeekly;
+            that.weekly_snapshot_data = []
+            await axios.get('https://www.myplexus.com/api/v1/performance-snapshot', {
+                    params: data
+                })
+                .then(response => {
+                    that.weekly_snapshot_data = response.data.data.snapshot_data
+                    return true
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    that.processWeekly = false
+                })
+        },
+        async getMonthlySnapshot() {
+            let that = this
+            that.processMonthly = true
+			console.log(moment(that.lastMonthDate).format('YYYY-MM-DD'));
+            let data = {
+                fund_type_id: that.selectedFundClassificationMonthly.ft_id,
+                type: 'monthly',
+                report_category: that.selectedCategoryMonthly,
+				//date: that.lastMonthDate
+                date: moment(that.lastMonthDate).format('YYYY-MM-DD')
+            }
+            Object.keys(data).forEach(key => {
+                that.addParamToURL(key, data[key])
+            });
+
+            if (that.selectedCategoryMonthly == 'indices') {
+                that.sortKeyM = 'indices_name'
+            }
+
+            that.dataCategoryMonthly = that.selectedCategoryMonthly;
+            that.monthly_snapshot_data = []
+            await axios.get('https://www.myplexus.com/api/v1/performance-snapshot', {
+                    params: data
+                })
+                .then(response => {
+                    that.monthly_snapshot_data = response.data.data.snapshot_data
+                    return true
+                })
+                .then(response => {})
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    that.processMonthly = false
+                })
+        },
+    },
+    watch: {
+        selectedFundClassification(value) {
+            this.$store.commit('InputData/setFunds', [])
+            if (value) {
+                this.addParamToURL('fund_classification', value.name)
+                this.getFundCompositionSnapshot()
+            } else {
+                this.removeURLParameter('fund_classification')
+            }
+        },
+    },
+    computed: {
+        ...mapGetters('InputData', ['loading', 'fundClassifications']),
+        maxDateRang() {
+            let d = new Date();
+            return d.setDate(d.getDate() - 1);
+        },
+		
+           defaultEndDate() {
+                const d = new Date();
+			   	const m = this.monthNames[d.getMonth() - 1];
+			   	const y = d.getFullYear();
+                return m+", "+y;
+            },
+		
+		lastMonthDate() {			
+			var dateObj = new Date();
+    		dateObj.setDate(0);
+    		var month = dateObj.getMonth() + 1;
+    		var day = dateObj.getDate();
+    		var year = dateObj.getFullYear();
+    		var newdate = year + "-" + month + "-" + day;
+			return newdate;
+		},
+    },
+    mounted() {
+        console.log('app_url', this.app_url)
+        let that = this
+        let fund_type_id = that.getURLParams("fund_type_id")
+        let type = that.getURLParams("type")
+        let report_category = that.getURLParams("report_category")
+        let date = that.getURLParams("date")
+        const myPromise = new Promise(async (resolve, reject) => {
+            await this.getFundClassifications()
+            resolve(true)
+        });
+
+        myPromise.then(async (resolve, reject) => {
+            if (fund_type_id) {
+                if (type == 'weekly') {
+                    that.currentTab = 'weekly'
+                    that.selectedFundClassificationWeekly = that.fundClassifications.filter(function (el) {
+                        return el.ft_id == fund_type_id
+                    })[0]
+                    if (report_category) {
+                        that.selectedCategoryWeekly = report_category
+                    }
+                    if (date) {
+                        that.selectedDateWeekly = moment(date)
+                    }
+                } else if (type == 'monthly') {
+                    that.currentTab = 'monthly'
+                    that.selectedFundClassificationMonthly = that.fundClassifications.filter(function (el) {
+                        return el.ft_id == fund_type_id
+                    })[0]
+                    if (report_category) {
+                        that.selectedCategoryMonthly = report_category
+                    }
+                    if (date) {
+                        that.selectedDateMonthly = moment(date)
+                    }
+                }
+            }
+            return true
+        }).then(async (resolve, reject) => {
+            if (type == 'weekly') {
+                that.getWeeklySnapshot()
+            } else if (type == 'monthly') {
+                that.getMonthlySnapshot()
+            }
+        });
+    },
+}
+</script>
+<style>
+.top_th {
+	background: #00665e !important;
+	color: #fff  !important;
+}
+.with_border{
+border-left: 1px solid #000  !important;
+border-right: 1px solid #000  !important;
+}
+.left_border{
+border-left: 1px solid #000 !important;
+}
+.right_border{
+border-right: 1px solid #000 !important;
+}
+th{
+    vertical-align: middle !important;
+}
+.perform-paramtr .dy-table-wrap .dy-table-block {
+	border: 0px !important;
+}
+.dp__pointer {
+    height: 48px;
+}
+</style>

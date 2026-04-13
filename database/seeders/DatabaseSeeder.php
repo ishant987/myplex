@@ -24,5 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplateSeeder::class);
         $this->call(PagesSeeder::class);
         $this->call(CustomFieldTypeSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(SubscriptionSeeder::class);
     }
 }

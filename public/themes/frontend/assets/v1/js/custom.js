@@ -50,10 +50,10 @@ $('.trade_details_result').slick({
             }
     },
         {
-            breakpoint: 600,
+            breakpoint: 991,
             settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2
+                slidesToShow: 3,
+                slidesToScroll: 3
             }
     },
         {
@@ -107,6 +107,7 @@ $('.trade_details_result').slick({
 
 
 $('.her_banner_left_slide').slick({
+	
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -518,7 +519,10 @@ $('.slider').each(function () {
     $this.find('.value').html(value);
 });
 /*--- range slider ---------*/
-
+/*--slect2--*/
+$(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
 
 
 

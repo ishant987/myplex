@@ -3,7 +3,7 @@
         <div class="row align-items-start ">
             <div class="col-md-12 col-lg-3">
                 <div class="footer_logo_sec">
-                    <img src="{{asset('themes/frontend/assets/v1/img/logo-white.png')}}" alt='myplex-logo'/>
+                    <img src="{{asset('themes/frontend/assets/v1/img/Logo_v2-03-white.png')}}" alt='myplex-logo'/>
                     <p>We provide a range of tools and financial know-how that  can help you make the most of your short-term and long-term investment goals.</p>
 
                     <div class="neswlatter_inner d-block d-sm-flex align-items-center mb-4">
@@ -12,7 +12,7 @@
                                 <input type="email" name="email" id="email" placeholder="Enter Your Email" />
                                 <span><img src="{{asset('themes/frontend/assets/v1/img/newslatter_icon.png')}}" /></span>
                             </div>
-                            <button type="submit" data-url="{{ route('web.newsletter.save') }}" class="subsribe_btn money_title_btn"  ><i class="ph-arrow-right-light"></i></button>
+                            <button type="submit" data-url="{{ route('web.newsletter.save') }}" class="subsribe_btn money_title_btn_new"  ><i class="ph-arrow-right-light"></i></button>
                         </div>
                         <div id="msg_id" class="text-danger"></div>
 
@@ -42,6 +42,7 @@
                                 <li><a href="/compare-scheme">Compare</a></li>
                                 <li><a href="{{route('web.get-blogs')}}">Money Seriously</a></li>
                                 <li><a href="/monthly-ranking">Category wise return & <br/>risk ratios</a></li>
+                                <li><a href="https://myplexus.my-portfolio.co.in" target="_blank">Portfolio Status</a></li>
                             </ul>
                         </div>
                     </div>
@@ -51,7 +52,7 @@
                             <ul>
 
                                 <li><a href="/fund-performance">Fund Performance</a></li>
-                                <li><a href="/fund-watch">Fund Watch</a></li>
+                                <li><a href="/fund-watch-new/QkFMIDAwMTQ=">Fund Watch</a></li>
                                 <li><a href="/nfo-monitor-list">NFO Monitor</a></li>
                                 <li><a href="/know-your-scheme?fund_house=">Know Your Scheme</a></li>
 								<li><a href="/know-the-ratio">Know Your Ratio</a></li>

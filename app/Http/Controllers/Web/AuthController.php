@@ -35,6 +35,7 @@ class AuthController extends BaseController
     public function __construct()
     {
         $this->middleware('guest:web')->except('logout');
+		$this->page_path =env('PAGE_PATHS','web.pages');
     }
 
     /**
@@ -49,7 +50,8 @@ class AuthController extends BaseController
 
     public function signupData(Request $request)
     {
-        $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 34);
+        $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 34);		
+		//dd($dataArr);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
 
@@ -64,6 +66,159 @@ class AuthController extends BaseController
         }
         return abort(404);
     }
+	
+	public function investorsignupData(Request $request)
+	{		
+		 $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 53);
+		//dd($dataArr);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = array("web_lang" => __('web'));
+			
+			return view($this->page_path.'.investor.create-investor', compact('dataArr', 'defDataArr'));
+		}
+	}
+	
+	public function investorsignupsave(Request $request)
+	{
+		//dd( $request->all() );
+		
+		$commonconstants = Config('commonconstants');
+        $frontconstants = Config('frontconstants');
+
+        $message = __('message');
+        $webLang = __('web');
+        $resArr['msg'] = "";
+        $resArr['url'] = "";	
+		$authLang = __('auth');
+		
+            $vldtrRules = [
+                'f_name' => 'required',
+                'email'  => 'required|email|unique:users',
+                'user_type' => 'required'                
+            ];
+
+            $vldtrMessages = [
+                'f_name.required' => __('front.validation.required.f_name')
+            ];
+
+            $validator = Validator::make($request->all(), $vldtrRules, $vldtrMessages);
+
+            if ($validator->fails()) {
+                // $resArr['msg'] = $validator->getMessageBag();
+                // return json_encode($resArr);
+                $html = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                        <strong>' . $webLang['error_ttl'] . '&nbsp;</strong>';
+                if ($validator->getMessageBag()->toArray()) {
+                    $html .= '<ul>';
+                    foreach ($validator->getMessageBag()->toArray() as $errors) {
+                        foreach ($errors as $error) {
+                            $html .= '<li>' . $error . '</li>';
+                        }
+                    }
+                    $html .= '</ul>';
+                }
+                $html .= '</div>';
+                $resArr['msg'] = $html;
+                return json_encode($resArr);
+            }
+			
+			try {
+				
+				
+				$dataSavedErrMsg = $message['error']['saved'];
+                $cuBy = $commonconstants['cu_by_val'][2];
+                $cuMedium = $commonconstants['medium']['value'][1];
+                $accType = Config('auth.acc_type.value.0');
+                $defAdminId = $commonconstants['def_super_admin_id'];
+                $defUsrGrpId = $commonconstants['def_sbsrbd_usr_grp_id'];
+
+                DB::beginTransaction();
+
+                $email = $request->email;
+                $genUsrPswdNo = $commonconstants['gen_usr_password_no'];
+                //$password = Useful::generateStrongPassword($genUsrPswdNo);				
+				$password = 'admin123#';
+				
+				//dd($password);
+
+                $store = $store2 = new User();
+                $store->acc_type = $accType;
+                $store->f_name = $request->f_name;
+                $store->l_name = $request->l_name;
+                $store->email = $email;
+                $store->password = bcrypt($password);               
+                $store->status           = $commonconstants['status_val'][1];
+                $store->is_approved      = $commonconstants['y_n_val'][1];
+                $store->created_by       = $cuBy;
+                $store->created_id       = 0;
+				$store->user_type		 = $request->user_type;
+				$store->is_contacted_with_team = $request->is_contacted_with_team;
+                if ($store->save()) {					
+					$userId = $store->u_id;
+                    $store2->created_id       = $userId;
+                    $store2->updated_by       = $cuBy;
+                    $store2->updated_id       = $userId;
+					
+					if ($store2->save()) {
+                        $role = new UserGroupRelModel();
+                        $role->u_g_id       = $defUsrGrpId;
+                        $role->u_id         = $userId;
+                        $role->updated_id   = $defAdminId;
+                        if ($role->save()) {
+                            DB::commit();
+
+                            $fullname = rtrim($request->f_name . " " . $request->l_name);
+
+                            session()->put('useremail', $email);
+                            session()->put('username', $fullname);                            
+						}
+					}
+					
+					
+                                /*attempt to do the login*/
+                                if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                                        <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
+                                        ' . $authLang['success']['su_signup'] . '
+                                    </div>';
+
+                                    $resArr['url'] = route('web.myaccount');
+                                } else {
+                                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                                        <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
+                                        ' . $authLang['failed'] . '
+                                    </div>';
+                                }
+					
+				} else {
+					
+					DB::rollBack();
+				
+				}	
+			
+			} catch(QueryException $exception)
+			{
+				DB::rollBack();
+				$resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                    <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
+                    ' . $dataSavedErrMsg . '
+                </div>';
+			}
+		
+		return json_encode($resArr);
+		
+	}
 
     public function signup(Request $request)
     {
@@ -124,8 +279,8 @@ class AuthController extends BaseController
             }
 
             try {
+				
                 $dataSavedErrMsg = $message['error']['saved'];
-
                 $cuBy = $commonconstants['cu_by_val'][2];
                 $cuMedium = $commonconstants['medium']['value'][1];
                 $accType = Config('auth.acc_type.value.0');
@@ -153,7 +308,6 @@ class AuthController extends BaseController
                 $store->created_id       = 0;
                 if ($store->save()) {
                     $userId = $store->u_id;
-
                     $store2->created_id       = $userId;
                     $store2->updated_by       = $cuBy;
                     $store2->updated_id       = $userId;
@@ -263,18 +417,20 @@ class AuthController extends BaseController
      */
     public function loginForm(Request $request)
     {
+        //dd("ok");
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 33);
         if (!empty($dataArr)) {
+            
             $dataArr['full_url'] = $request->fullUrl();
 
             $previousUrl = url()->previous();
-
-            if ($previousUrl == route('web.logout')) {
+            
+            /*if ($previousUrl == route('web.logout')) {
                 $previousUrl = route('web.myaccount');
-            }
-
+            }*/
+            
             $request->session()->put('url.web_intended', $previousUrl);
-
+            
             $meta_title = $dataArr['meta_title'];
             $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
             $meta_descp = $dataArr['meta_descp'];
@@ -282,134 +438,122 @@ class AuthController extends BaseController
 
             $defDataArr = array("web_lang" => __('web'));
 
+            //dd("ok");
+
             return view('themes.frontend.pages.login', compact('dataArr', 'defDataArr'));
         }
         return abort(404);
     }
 
-    public function login(Request $request)
-    {
-        $commonconstants = Config('commonconstants');
-        $frontconstants = Config('frontconstants');
+  public function login(Request $request)
+{
+    $commonconstants = Config('commonconstants');
+    $frontconstants = Config('frontconstants');
 
-        $message = __('message');
-        $webLang = __('web');
-        $resArr['msg'] = "";
-        $resArr['url'] = "";
+    $message = __('message');
+    $webLang = __('web');
+    $resArr['msg'] = "";
+    $resArr['url'] = "";
 
-        $vars = array(
-            'secret' => $commonconstants['recaptcha']['secret_key'],
-            "response" => $request->input('recaptcha_v3')
-        );
+    $vars = array(
+        'secret' => $commonconstants['recaptcha']['secret_key'],
+        "response" => $request->input('recaptcha_v3')
+    );
 
-        $url = "https://www.google.com/recaptcha/api/siteverify";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
-        $encoded_response = curl_exec($ch);
-        $response = json_decode($encoded_response, true);
-        curl_close($ch);
+    $url = "https://www.google.com/recaptcha/api/siteverify";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
+    $encoded_response = curl_exec($ch);
+    $response = json_decode($encoded_response, true);
+    curl_close($ch);
 
-        if ($response['success'] && $response['action'] == 'login_form' && $response['score'] > $commonconstants['recaptcha']['score']) {
-            try {
-                $authLang = __('auth');
+    if ($response['success'] && $response['action'] == 'login_form' && $response['score'] > $commonconstants['recaptcha']['score']) {
+        try {
+            $authLang = __('auth');
 
-                $input = $request->all();
-                $email = $input['email'];
+            $input = $request->all();
+            $email = $input['email'];
 
-                $validator = Validator::make($request->all(), [
-                    'email' => [
-                        'required',
-                        Rule::exists('users')->where(function ($query) use ($email) {
-                            $query->where('email', $email);
-                        }),
-                    ],
-                    'password' => 'required|min:6'
-                ], [
-                    'email.exists' => $authLang['error']['no_acc_email']
-                ]);
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email', // Assuming email is used for login
+            ]);
 
-                if ($validator->fails()) {
-                    // $resArr['msg'] = $validator->getMessageBag();
-                    // return json_encode($resArr);
-                    $html = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                        <strong>' . $webLang['error_ttl'] . '&nbsp;</strong>';
-                    if ($validator->getMessageBag()->toArray()) {
-                        $html .= '<ul>';
-                        foreach ($validator->getMessageBag()->toArray() as $errors) {
-                            foreach ($errors as $error) {
-                                $html .= '<li>' . $error . '</li>';
-                            }
+            if ($validator->fails()) {
+                $html = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                    <strong>' . $webLang['error_ttl'] . '&nbsp;</strong>';
+                if ($validator->getMessageBag()->toArray()) {
+                    $html .= '<ul>';
+                    foreach ($validator->getMessageBag()->toArray() as $errors) {
+                        foreach ($errors as $error) {
+                            $html .= '<li>' . $error . '</li>';
                         }
-                        $html .= '</ul>';
                     }
-                    $html .= '</div>';
-                    $resArr['msg'] = $html;
-                    return json_encode($resArr);
+                    $html .= '</ul>';
                 }
+                $html .= '</div>';
+                $resArr['msg'] = $html;
+                return json_encode($resArr);
+            }
 
-                $usrObj = User::where('email', $email)->first();
-                if ($usrObj->status != $commonconstants['status_val'][1]) {
-                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                        <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 
-                        ' . $authLang['warning']['acc_disabled'] . '
-                    </div>';
-                    return json_encode($resArr);
-                }
-                if ($usrObj->is_approved == $commonconstants['y_n_val'][2]) {
-                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                        <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 
-                        ' . $authLang['warning']['acc_approved'] . '
-                    </div>';
-                    return json_encode($resArr);
-                }
-
-                /*attempt to do the login*/
-                if (Auth::attempt(['email' => $email, 'password' => $request->password])) {
-                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                        <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
-                        ' . $authLang['success']['login'] . '
-                    </div>';
-
-                    session()->put('useremail', $email);
-                    session()->put('username', trim($usrObj->f_name.' '.$usrObj->l_name));
-
-                    $resArr['url'] = $request->session()->get('url.web_intended');
-                } else {
-                    /*validation not successful, send back to form*/
-                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                        <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
-                        ' . $authLang['failed'] . '
-                    </div>';
-                }
-            } catch (QueryException $exception) {
+            $usrObj = User::where('email', $email)->first();
+            if (!$usrObj) {
                 $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                     <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
                     ' . $authLang['failed'] . '
                 </div>';
+                return json_encode($resArr);
             }
-        } else {
-            /*
-            then probably this is a bot
-            you can do your logic here pass it or deny or do something special
-            score check value of 0.5 you can set which you want form 0 to 1
-            score 1 is probably human score 0 is probably bot
-            */
+
+            if ($usrObj->status != $commonconstants['status_val'][1]) {
+                $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                    <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 
+                    ' . $authLang['warning']['acc_disabled'] . '
+                </div>';
+                return json_encode($resArr);
+            }
+            if ($usrObj->is_approved == $commonconstants['y_n_val'][2]) {
+                $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                    <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 
+                    ' . $authLang['warning']['acc_approved'] . '
+                </div>';
+                return json_encode($resArr);
+            }
+
+            // Log in the user without checking the password
+            Auth::login($usrObj);
+
+            $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
+                ' . $authLang['success']['login'] . '
+            </div>';
+
+            session()->put('useremail', $email);
+            session()->put('username', trim($usrObj->f_name.' '.$usrObj->l_name));
+
+            $resArr['url'] = $request->session()->get('url.web_intended');
+        } catch (QueryException $exception) {
             $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                 <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
-                ' . $message['error']['recaptcha'] . '
+                ' . $authLang['failed'] . '
             </div>';
         }
-        return json_encode($resArr);
+    } else {
+        $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+            <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
+            ' . $message['error']['recaptcha'] . '
+        </div>';
     }
+    return json_encode($resArr);
+}
 
     /**
      * Logout only front end user.

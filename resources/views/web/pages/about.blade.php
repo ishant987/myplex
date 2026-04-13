@@ -23,7 +23,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="inner_section_banner">
-                                            <h4>About Myplexus</h4>
+                                            <h4>About myplexus</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -31,32 +31,34 @@
                         </section>
 
 
-                        <section class="abt_page_section pb-0">
+                        <section class="abt_page_section pb-0 pb-md-5 chkr">
                             <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-md-6">
+                                <div class="row">
+									<div class="col-lg-6 order-md-1 col-md-12 mb-md-3">
+                                        <div class="abt_right_img_wrapper" data-aos="fade-up" data-aos-duration="1500">
+											
+                                            <img src="{{ asset('themes/frontend/assets/v1/img/abt-right-img.jpg') }}" class="img-fluid " />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 order-md-2 col-md-12">
                                         <div class="page_abt_inner" data-aos="fade-down" data-aos-duration="1000">
-                                            <h4>The Meaning of myplexus</h4>
+											<h4>The meaning of <span>plexus</span></h4>
                                             <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves. The vessels
                                                 may be blood vessels (veins, apillaries) or lymphatic vessels. The nerves are typically axons
                                                 outside the central nervous system.</p>
                                             <p>The financial systems today are a close copy of the network of nerves. Equally complex and
                                                 confounding. But myplexus.com is the ordering of this complex into a largely simplified and
                                                 understandable one, in the context of the saving and investment instruments.</p>
-                                            <p>Source: Wikipedia https://en.wikipedia.org/wiki/Plexus</p>
+                                            <p>Source: Wikipedia</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="abt_right_img_wrapper" data-aos="fade-up" data-aos-duration="1500">
-                                            <img src="{{ asset('themes/frontend/assets/v1/img/abt-right-img.jpg') }}" class="img-fluid" />
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </section>
 
                         <section class="page_abt_second_sec"
-                            style="background: url({{ asset('themes/frontend/assets/v1/img/second_abt_arrow.png') }}) #010800; background-repeat: no-repeat; background-position: left; background-size: cover">
+                            style="background: url({{ asset('themes/frontend/assets/v1/img/graph.jpg') }}) #010800; background-repeat: no-repeat; background-position: left; background-size: cover">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-6"></div>
@@ -83,11 +85,11 @@
                             </div>
                         </section>
 
-
+<!-- 
                         <section class="our_vision_sec">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-8 offset-md-2">
+                                    <div class="col-lg-8 offset-lg-2 col-md-12">
                                         <div class="vision_title mb-4 text-center">
                                             <h4 data-aos="fade-down" data-aos-duration="1000">Our Vision</h4>
                                             <p data-aos="fade-down" data-aos-duration="1500">
@@ -117,8 +119,7 @@
                                                 <img src="{{ asset('themes/frontend/assets/v1/img/vision2.png') }}" />
                                             </div>
                                             <h4>Portfolio Allocation</h4>
-                                            <p>A plexus (from the Latin for "braid") is a branching network of vessels or nerves. The vessels
-                                                may be blood vessels (veins, capillaries) or lymphatic vessels.</p>
+                                            <p>Over time, as your investment goals change, so should your asset allocation. We can provide you with a personalized asset allocation that is in line with your risk tolerance and investment objectives.</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-3" data-aos="fade-down" data-aos-duration="1500">
@@ -128,9 +129,7 @@
                                             </div>
                                             <h4>Peer Comparison</h4>
                                             <p>
-                                                Over time, as your investment goals change, so should your asset allocation. We can provide you
-                                                with a personalized asset allocation that is in line with your risk tolerance and investment
-                                                objectives.
+                                                We give you the ability to compare your performance against similar investors and find out where you stand by assessing your investment strategies and making necessary changes.
                                             </p>
                                         </div>
                                     </div>
@@ -148,16 +147,16 @@
                                     </div>
                                 </div>
                             </div>
-                        </section>
+                        </section> -->
 
                         <section class="mission_section"
                             style="background-image: url({{ asset('themes/frontend/assets/v1/img/mission-bg.jpg') }}); background-position: center; background-size: cover; background-repeat: no-repeat">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-12 col-lg-5">
-                                        <div class="mission_content" data-aos="fade-down" data-aos-duration="1500">
+                                        <div class="mission_content mission" data-aos="fade-down" data-aos-duration="1500">
                                             <h4>Our Mission</h4>
-                                            <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most
+                                                                                        <p>The mutual fund industry is fast becoming the preferred savings and investment vehicle for most
                                                 of us. However, selections and preferences are still locked in the antiquated time period
                                                 returns only.</p>
                                             <p>At myplexus.com we provide multiple statistical parameters, portfolio components and
@@ -169,16 +168,26 @@
                                             <p>Live better, through research!!!</p>
                                         </div>
                                     </div>
+                                    <div class="col-md-12 col-lg-5">
+                                        <div class="mission_content" data-aos="fade-down" data-aos-duration="1500">
+                                            <h4>Our Vision</h4>
+											<p>We, at myplexus.com believe the financial intermediation and personal finance industry in India is going through the fastest evolutionary stage and in the coming days this is only going to become more hectic. Product life cycles will compress. Variations in performances will manifest itself more frequently. Risk evaluation will take centre-stage for marking the success or failure of every financial product or solution.</p>
+                                            <p>Unbiased, user defined statistical tools will be the bedrock for understanding performance and evaluating efficacy of funds and fund managers in delivering returns quantum, providing it consistently and most specifically managing its various risk factors within manageable levels.</p>
+                                            <p>But where will the technically able as well as the lay person converge to find out all this?? myplexus.com aims to be this platform. Over time, myplexus should be the most preferred option for the individual, the corporate investor, the fund professional for checking out the fund's overview as well as technical details. In a manner that is easy, simple, structured. And UNBIASED. And USER DEFINED.</p>
+											<p>And myplexus.com will continue to evolve. With more evaluation tools. Continuously contemporize. And remain the most relevant.</p>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
 
                         <section class="abt_meet_our_section section">
                             <div class="container">
-                                <div class="row">
+                                <div class="row justify-content-center text-center">
                                     <div class="col-md-12 col-lg-6">
                                         <div class="vision_title mb-5">
-                                            <h4 data-aos="fade-down" data-aos-duration="1000" class="aos-init aos-animate">Meet Our Team</h4>
+                                            <h4 data-aos="fade-down" data-aos-duration="1000" class="aos-init aos-animate">Meet Our <span>Team</span></h4>
                                             <p data-aos="fade-down" data-aos-duration="1500" class="aos-init aos-animate">We, at myplexus.com
                                                 believe the financial intermediation and personal finance industry in India is going through the
                                                 fastest evolutionary stage.</p>

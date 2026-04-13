@@ -15,7 +15,8 @@ function initialState() {
         monthly_bad_funds:[],
         indices:[],
         currencies:[],
-        apiURL:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'',
+		comodities:[],
+        apiURL:process.env.MIX_APP_ENV=='local' ?  process.env.MIX_API_URL_LOCAL :'https://www.myplexus.com',
     }
 }
 
@@ -35,6 +36,7 @@ const getters = {
     monthly_bad_funds: state => state.monthly_bad_funds,
     indices: state => state.indices,
     currencies: state => state.currencies,
+	comodities: state => state.comodities,
 }
 
 const actions = {
@@ -96,6 +98,25 @@ const actions = {
                 commit('setLoading', false)
             })
     },
+	
+	async getComodities({ commit, state }) {
+        commit('setLoading', true)
+        await axios.get(state.apiURL+'/api/v1/comodities')
+            .then(response => {
+                commit('setComodities', response.data.data)
+            }).catch(error => {
+                var message = error.response.data.message || error.message
+                this.dispatch('Alert/setAlert', {
+                    message: message,
+                    color: 'warning',
+                },
+                {
+                    root: true
+                })
+            }).finally(() => {
+                commit('setLoading', false)
+            })
+    },
     async getFundClassifications({ commit, state }) {
         commit('setLoading', true)
         await axios.get(state.apiURL+'/api/v1/fund-classifications')
@@ -138,6 +159,7 @@ const actions = {
     },
     async getSnapshotDates({ commit, state }, payload) {
         this.process = true
+        console.log('Payload: ', payload);
         await axios.get(state.apiURL+'/api/v1/snapshot-dates', { params: payload })
             .then(response => {
                 commit('setFromDate', response.data.data.from_date)
@@ -152,6 +174,7 @@ const actions = {
     },
     async getIndexChanges({ commit, state },payload) {
         commit('setLoading', true)
+		//console.log('Payload: ',payload);
         await axios.get(state.apiURL+'/api/v1/changes-index', { params: payload })
             .then(response => {
                 commit('setIndexChanges', response.data.data.changes_index)
@@ -213,7 +236,11 @@ const actions = {
     },
     async getFundChanges({ commit, state },payload) {
         commit('setLoading', true)
-        await axios.get(state.apiURL+'/api/v1/changes-fund', { params: payload })
+        await axios.get(state.apiURL+'/api/v1/changes-fund', { headers: {
+        'Access-Control-Allow-Origin': '*',
+		'Content-Type': 'application/json'
+      },      
+       params: payload })
             .then(response => {
                 commit('setFundChanges', response.data.data.changes_fund)
             })
@@ -339,6 +366,9 @@ const mutations = {
     },
     setCurrencies(state, currencies) {
         state.currencies = currencies
+    },
+	 setComodities(state, comodities) {
+        state.comodities = comodities
     },
     resetState(state) {
         state = Object.assign(state, initialState())

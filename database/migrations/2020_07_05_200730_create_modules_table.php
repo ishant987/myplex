@@ -17,8 +17,8 @@ class CreateModulesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('module_id');
             $table->addColumn('integer', 'class_id', ['length' => 10, 'comment' => '']);
-            $table->enum('has_templates', ['', 'n', 'y'])->comment('y=Yes,n=No');
-            $table->enum('set_user_rights', ['', 'n', 'y'])->comment('y=Yes,n=No');
+            $table->enum('has_templates', ['', 'n', 'y'])->default('')->comment('y=Yes,n=No');
+            $table->enum('set_user_rights', ['', 'n', 'y'])->default('')->comment('y=Yes,n=No');
             $table->string('title', 128);
             $table->string('label', 255)->nullable();
             $table->text('info')->nullable();

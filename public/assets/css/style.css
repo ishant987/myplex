@@ -1,0 +1,484 @@
+
+div, ul, li, p, form, h5, h6, h4, h3, h2, h1, p {  margin: 0; padding: 0;}
+
+a{
+    text-decoration: none;
+    transition: .4s all;
+}
+
+body{
+    position: relative;
+    min-height: 100dvh; 
+    padding: 0 !important;   
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+
+li{
+    list-style: none;
+}
+
+figure{
+    margin: 0 ;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
+
+/* ::-webkit-scrollbar{
+    width: 12px;
+}
+
+::-webkit-scrollbar-track{
+    background: #181818;
+}
+::-webkit-scrollbar-thumb{
+    background:  linear-gradient(#181818, #1b796c );
+    border-radius: 10px;
+} */
+
+.container {
+    width: 100%;
+    /* max-width: 1712px; */
+    /* padding: 0 100px; */
+}
+
+section{
+    position: relative;
+}
+
+.content {
+    flex: 1;
+}
+
+/* ================================================== */
+
+
+.header-fig{
+    width: 200px;
+    /* margin: auto; */
+}
+
+.header-fig img{
+    width: 100%;
+}
+
+.header{
+    padding: 10px 90px;
+    background: black;
+}
+
+.card-section{
+    padding: 20px 0;
+}
+
+/* .card-wrapper .card{
+    height: 140px;
+    width: 140px;
+    align-items: center;
+    justify-content: center;
+    background: #00665e;
+    color: white;
+} */
+
+.card-wrapper .card{
+    border-radius: 20px 0px 20px 0px;
+}
+
+.card-wrapper .card a {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 600;
+    height: 150px;
+    width: 150px;
+    align-items: center;
+    justify-content: center;
+    background: #00665e;
+    display: flex;
+    border-radius: 20px 0px 20px 0px;
+    text-align: center;
+    padding: 10px 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.card-wrapper .card a:hover{
+    background: black;
+}
+
+.card-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.footer{
+    background: black;
+    padding: 12px 90px;
+}
+
+.footer p{
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    opacity: 0.5;
+}
+
+.inner-top{
+    padding: 20px 0;
+}
+
+.result-table{
+    margin-bottom: 0;
+}
+
+.result-table thead th{
+    background-color: #00665e;
+    color: white;
+    border-bottom: none;
+    font-size: 16px;
+}
+
+.result-table tbody tr td{
+    background: #f7f7fb;
+    color: #000;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.edit-reslt{
+    font-size: 16px;
+    color: #000;
+    transition: 0.4s all;
+}
+
+.edit-reslt:hover{
+    color: #00665e;
+}
+
+.table-wrapper{
+    margin-top: 40px;
+    overflow-x: scroll;
+}
+
+.scroll-div{
+    /* overflow-x: scroll; */
+    width: 100%;
+}
+
+.form-wrapper label{
+    font-size: 15px;
+    font-weight: 600;
+    flex: none;
+    max-width: 110px;
+    width: 100%;
+}
+
+.form-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.form-submit{
+    text-align: center;
+}
+
+.form-submit .search-submit{
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+    background: #00665e;
+    color: white;
+    border-radius: 6px;
+    font-size: 17px;
+    border: 1px solid #00665e;
+    font-weight: 600;
+    transition: 0.3s all;
+}
+
+.form-submit .search-submit:hover{
+    background: white;
+    color: #00665e;
+}
+
+.form-wrapper .form-control {
+    height: 45px;
+}
+
+.form-wrapper .select2-container--default .select2-selection--single{
+    height: 45px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px !important;
+}
+
+
+.form-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px;
+}
+
+.top-form{
+    border: 1px solid #e7e4e4;
+    background: #f7f7fb;
+    box-shadow: 2px 8px 15px -6px #0000001f;
+    padding: 25px 20px;
+    border-radius: 6px;
+}
+
+/* .result-table thead tr th:last-child{
+    width: 110px;
+}
+
+.result-table thead tr th:first-child {
+    width: 50px;
+} */
+
+.dataTables_wrapper .dataTables_filter input{
+    margin-bottom: 8px;
+}
+
+h3.report-sub-heading{
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.report-heading{
+    margin-bottom: 20px;
+}
+
+.select2-container{
+    width: 100% !important;
+}
+
+.form-error .text-danger{
+    font-size: 14px;
+    text-align: right;
+    display: block;
+}
+
+
+
+@media only screen and (max-width: 1570px) {
+    .header-fig {
+        width: 180px;
+    }
+
+    .card-wrapper .card a {
+        font-size: 15px;
+        height: 115px;
+        width: 115px;
+    }
+
+    .footer p {
+        font-size: 15px;
+    }
+
+    .form-wrapper .form-control {
+        height: 40px;
+    }
+
+    .form-submit .search-submit {
+        height: 39px;
+        padding: 0 38px;
+        font-size: 15px;
+    }
+
+    .form-wrapper label {
+        font-size: 14px;
+        max-width: 100px;
+    }
+
+    .form-wrapper {
+        gap: 7px;
+    }
+
+    .result-table thead th, .result-table tbody tr td {
+        font-size: 14px;
+    }
+
+    .edit-reslt {
+        font-size: 14px;
+    }
+
+    .table-wrapper {
+        margin-top: 35px;
+    }
+
+    .card-section, .inner-top {
+        padding: 16px 0;
+    }
+
+    h3.report-sub-heading{
+        margin-bottom: 16px;
+        font-size: 20px;
+    }
+
+    .report-heading{
+        margin-bottom: 20px;
+    }
+
+    .form-wrapper .select2-container--default .select2-selection--single {
+        height: 40px;
+    }
+
+    .form-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    
+    .container{
+        max-width: 100%;
+        padding: 0 30px;
+    }
+
+    .header {
+        padding: 7px 30px;
+    }
+
+    .header-fig {
+        width: 130px;
+    }
+
+    .card-section, .inner-top {
+        padding: 16px 0;
+    }
+
+    .card-wrapper .card a {
+        font-size: 13px;
+        height: 90px;
+        width: 90px;
+    }
+
+    .card-wrapper {
+        gap: 20px;
+    }
+
+    .footer {
+        padding: 8px 30px;
+    }
+
+    .footer p {
+        font-size: 13px;
+    }
+
+    .form-wrapper {
+        margin-bottom: 20px;
+    }
+
+    .table-wrapper {
+        margin-top: 30px;
+    }
+
+    .form-wrapper .select2-container--default .select2-selection--single {
+        height: 40px;
+    }
+
+    .form-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px;
+    }
+
+    h3.report-sub-heading, .report-heading {
+        margin-bottom: 16px;
+    }
+
+}
+
+@media only screen and (max-width: 767px){
+    
+    .table-wrapper .dataTables_wrapper .dataTables_length, .table-wrapper .dataTables_wrapper .dataTables_filter, .table-wrapper .dataTables_wrapper .dataTables_info, .table-wrapper .dataTables_wrapper .dataTables_paginate{
+        text-align: left;
+        font-size: 13px;
+    }
+
+    .table-wrapper .dataTables_wrapper .dataTables_filter input {
+        padding: 2px 5px;
+    }
+
+    .table-wrapper .dataTables_filter, .table-wrapper .dataTables_length{
+        font-size: 13px;
+    }
+
+    .table-wrapper .dataTables_wrapper .dataTables_length select {
+        padding: 2px 3px;
+    }
+
+    .table-wrapper .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 2px 8px;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+
+    .card-section, .inner-top {
+        padding: 20px 0;
+    }
+
+    .container {
+        padding: 0 20px;
+    }
+
+    .result-table thead th, .result-table tbody tr td {
+        font-size: 13px;
+    }
+
+    .top-form {
+        padding: 16px 10px;
+    }
+
+    .form-submit .search-submit {
+        height: 35px;
+        padding: 0 30px;
+        font-size: 13px;
+    }
+
+    .table-wrapper {
+        margin-top: 20px;
+    }
+
+    .form-wrapper label {
+        font-size: 13px;
+        max-width: 87px;
+        width: 100%;
+    }
+
+    .edit-reslt {
+        font-size: 13px;
+    }
+
+    .header-fig {
+        width: 110px;
+    }
+
+    .result-table thead tr th:first-child {
+        width: 40px;
+    }
+
+    .result-table thead tr th:last-child {
+        width: 70px;
+    }
+
+    .form-wrapper .form-control {
+        font-size: 14px;
+    }
+
+    .form-error .text-danger{
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-wrapper {
+        margin-bottom: 15px;
+    }
+}

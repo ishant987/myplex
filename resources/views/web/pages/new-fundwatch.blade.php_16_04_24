@@ -1,0 +1,525 @@
+@extends('web.layout.app')
+
+@section('content')
+
+<div class="banner" style="background: url(https://myplexus.com/themes/frontend/assets/v1/img/inner_banner.png)">
+    <div class="container">
+        <h1>fund watch</h1>
+        <h4>Aditya Birla Sun Life Arbitrage</h4>
+    </div>
+</div>
+
+<div class="body_main">
+    <div class="container">
+        <div class="body_content">
+            <div class="content_left">
+                <h2>Preamble</h2>
+                <p class="pre_text">To generate income and capital appreciation from a diversified predominantly investng in india equity related securities of large cap and midcap companied at the time of investment</p>
+
+                <div class="fund_detail mt_15">
+                    <div class="single_fund">
+                        <h3>Fund Details</h3>
+                        <ul>
+                            <li><p>Starting Date</p> <i>:</i> <span>9th August, 2010</span></li>
+                            <li><p>Fund Type</p> <i>:</i> <span>Regular Plan - Growth   |   59.60</span></li>
+                            <li><p>Benchmark</p> <i>:</i> <span>High Value</span></li>
+                        </ul>
+                    </div>
+                    <div class="single_fund">
+                        <h3>Management Details</h3>
+                        <ul>
+                            <li><p>Fund Manager</p> <i>:</i> <span>Mr. Lovelish Solanki</span></li>
+                            <li><p>Schemes Managed</p> <i>:</i> <span>Regular Plan - Growth   |   59.60</span></li>
+                            <li><p>Total Asset Size</p> <i>:</i> <span>High Value</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="aaum mt_15">
+                    <h3>AAUM Growth</h3>
+                    <div class="aaum_graph">
+                        <img src="https://myplexus.com/themes/frontend/assets/v1/img/graph.png" alt="">
+                    </div>
+                </div>
+
+                <div class="member mt_15">
+                    <div class="member_left">
+                        <span>Research Team members</span>
+                    </div>
+                    <div class="member_right">
+                        <ul>
+                            <li><a href="#">1. Aslam Khandwani</a></li>
+                            <li><a href="#">2. Siddhant Sharma</a></li>
+                            <li><a href="#">3. Vinayak Kathare</a></li>
+                            <li><a href="#">4. Sumit Singh Ranga</a></li>
+                        </ul>                                      
+                    </div>
+                </div>
+
+                <div class="philo mt_15">
+                    <div class="philo_single">
+                        <h3>Fund Philosophy</h3>
+                        <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                    </div>
+                    <div class="philo_single">
+                        <h3>Investment Style</h3>
+                        <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                    </div>
+                </div>
+
+                <div class="perform mt_15">
+                    <h2>Performance Parameter</h2>
+                    <div class="perform_in">
+                        <div class="perform_single">
+                            <h5>Lumsump (Amount Invested | Rs. 1,00,000/-)</h5>
+                            <table class="cmn_table">
+                                <thead>
+                                    <tr>
+                                        <th>Time Frame</th>
+                                        <th>Amount</th>
+                                        <th>Percentage(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1 Year</td>
+                                        <td>9620/-</td>
+                                        <td>8.30%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 Years</td>
+                                        <td>24021/-</td>
+                                        <td>8.02%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5 Years</td>
+                                        <td>85035/-</td>
+                                        <td>14.37%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>% One (AGR) 1 Year and Annual</p>
+                        </div>
+                        <div class="perform_single">
+                            <h5>SIP (Amount Invested | Rs. 10,000/- Per Month)</h5>
+                            <table class="cmn_table">
+                                <thead>
+                                    <tr>
+                                        <th>Amount Invested</th>
+                                        <th>Amount</th>
+                                        <th>Percentage(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1 Year</td>
+                                        <td>9620/-</td>
+                                        <td>8.30%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3 Years</td>
+                                        <td>24021/-</td>
+                                        <td>8.02%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5 Years</td>
+                                        <td>85035/-</td>
+                                        <td>14.37%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="perform_in perform_return mt_15">
+                        <div class="perform_single">
+                            <h5>Return (Continuous)</h5>
+                            <table class="cmn_table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>6M</th>
+                                        <th>1Y</th>
+                                        <th>2Y</th>
+                                        <th>3Y</th>
+                                        <th>5Y</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Benchmark</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scheme</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Category AV</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>  
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="perform_single">
+                            <h5>Return (Noncontinuous)</h5>
+                            <table class="cmn_table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>6M-1Y</th>
+                                        <th>1Y-2y’s</th>
+                                        <th>2Y’s-3Y’s</th>
+                                        <th>3Y’s-5Y’s</th>
+                                    </tr>   
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Benchmark</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scheme</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Category AV</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                        <td>10/-</td>
+                                    </tr>  
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="return_less mt_15">
+                    <div class="return_less_in">
+                        <figure>
+                            <h3>Return Less Index</h3>
+                            <img src="https://myplexus.com/themes/frontend/assets/v1/img/graph.png" alt="">
+                        </figure>
+                        <figure>
+                            <h3>Return Less Index Rank</h3>
+                            <img src="https://myplexus.com/themes/frontend/assets/v1/img/graph.png" alt="">
+                        </figure>
+                    </div>
+                    <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                </div>
+
+                <div class="rank mt_15">
+                    <h3>Rank, quartile, Decile</h3>
+                    <div class="rank_in">
+                        <div class="rank_left">
+                            <figure><img src="https://myplexus.com/themes/frontend/assets/v1/img/graph.png" alt=""></figure>
+                        </div>
+                        <div class="rank_right">
+                            <p>The dark days of the scheme was the second half of 17-18 FY and the first half year of 19-20 FY where the fund had made a law of a rank 10 and a second quartile position. Most other funds would have be happy to see that position for any period its life time. But not this fund. It quickly realigned itself to changed the market conditions and did a splendid rebound. So much so that on an absolute basis the fund has generated stellar no. 1 position in rank quartile and decile. Intact one of the hallmarks all the funds has been in re-strategizing itself and quickly cover lost ground in spite of very steep addition to its AAUM> Commendable.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="risk_adjust mt_15">
+                    <div class="rist_table_top">
+                        <h5>Risk Adjusted Alpha (Jensen's) and The Risk Rations</h5>
+                        <h5>(As On 26.10.2020)</h5>
+                    </div>
+                    <div class="rist_adjust_in">
+                    <table class="cmn_table">
+                        <thead>
+                            <tr>
+                                <th>Ratios</th>
+                                <th>Jensen’s Alpha</th>
+                                <th>Beta</th>
+                                <th>Votality</th>
+                            </tr>      
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>H1 FY’17-18</td>
+                                <td>2.06</td>
+                                <td>25.34%</td>
+                                <td>13950.10</td>
+                            </tr>
+                            <tr>
+                                <td>H1 FY’17-18</td>
+                                <td>2.06</td>
+                                <td>25.34%</td>
+                                <td>13950.10</td>
+                            </tr>
+                            <tr>
+                                <td>H1 FY’17-18</td>
+                                <td>2.06</td>
+                                <td>25.34%</td>
+                                <td>13950.10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                </div>
+
+                <div class="fund_compo mt_15">
+                    <h2>Fund Composition Analysis</h2>
+                    <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                    <div class="fund_compo_in">
+                    <table class="cmn_table">
+                        <thead>
+                            <tr>
+                                <th>Scrip</th>
+                                <th>Sep’ 20</th>
+                                <th>Mar’ 20</th>
+                                <th>Sep’ 20</th>
+                                <th>Mar’ 20</th>
+                                <th>Sep’ 20</th>
+                                <th>Mar’ 20</th>
+                                <th>Sep’ 20</th>
+                                <th>Mar’ 20</th>
+                            </tr>              
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ICICI Bank</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                            </tr>
+                            <tr>
+                                <td>Voltas</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                            </tr>
+                            <tr>
+                                <td>Natco Pharma</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                            </tr>
+                            <tr>
+                                <td>ICICI Bank</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                            </tr>
+                            <tr>
+                                <td>Voltas</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                            </tr>
+                            <tr>
+                                <td>Natco Pharma</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                            </tr>
+                            <tr>
+                                <td>ICICI Bank</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                                <td>5.22</td>
+                            </tr>
+                            <tr>
+                                <td>Voltas</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                                <td>2.72</td>
+                            </tr>
+                            <tr>
+                                <td>Natco Pharma</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                                <td>2.09</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <p>A scheme that has been over a decade in existence. In the initial period, there were enormous challenges that nearly threatened the existence of the scheme and perhaps the fund house too. Currently occupying the Large and midcap category and with a fund manager who has been in charge for all of its life brings a certain comfort to the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in returns, recognition and asset growth since 2018.</p>
+                </div>
+
+                <div class="portfolio mt_15">
+                    <h3>Portfolio Breakup</h3>
+                    <div class="portfolio_in">
+                    <table class="cmn_table port_table">
+                        <thead>
+                            <tr>
+                                <th>Equity</th>
+                                <th>Debt</th>
+                                <th>SOV</th>
+                                <th>Cash</th>
+                                <th>Others Currency</th>
+                            </tr>          
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data From System</td>
+                                <td>Data From System</td>
+                                <td>Data From System</td>
+                                <td>Data From System</td>
+                                <td>Data From System</td>
+                            </tr> 
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+
+                <div class="feedback mt_15">
+                    <h3>Myplexus.com Feedback</h3>
+                    <p>The Mirae Asset Emerging Business fund has shown fantastic resilience to ride over rough market situation and yet remain ahead of its peers in most parameters. Based on the statistical evidence on hand we are very confident the fund will continue to be a top end performer in the coming times too. The portfolio is adequately diversified and thefund manager follows a full investment strategy as we have seen and thus we not concerned about market timing and the pitfalls of such endeavours. Overall an outstanding performance which might be damped by the volatility issue but we see no reason why the performance will not be sustained.</p>
+                </div>
+
+                <p class="discl"><strong>Disclaimer :</strong> The entire report is based on independent utillization of statistical tools for evaluating performance in mutual fund. myplexus.com or any of its personnel connot be held resposible for outcome of actions taken on the basis of its report on this fund or ay other.</p>
+            </div>     <!--CONTENT LEFT-->    
+
+
+
+            <div class="content_right">
+                <h2 class="arc">archive</h2>
+                <div class="m_fund">
+                    <ul>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                        <li>
+                            <a href="#">Aditya Birla Sun Life Arbitrage</a>
+                            <figure>
+                                <a href="#"><img src="https://myplexus.com/themes/frontend/assets/v1/img/fund.png" alt=""></a>
+                            </figure>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection

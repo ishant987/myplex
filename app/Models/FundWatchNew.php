@@ -11,6 +11,7 @@ class FundWatchNew extends Model
     protected $table = 'fund_watch_new';
     protected $fillable = [
         'fund_code',
+        'logo',
         'preamble',
         'team',
         'philosophy',
@@ -30,7 +31,7 @@ class FundWatchNew extends Model
         if ($fields == false) {
             $fields = ['*'];
         }
-        $fields = ['id', 'fund_code', 'preamble', 'created_at','updated_at'];
+        $fields = ['id', 'fund_code', 'logo', 'preamble', 'created_at','updated_at'];
         $query = FundWatchNew::select($fields);
 
         $status = isset($filterArr['status']) ? intval($filterArr['status']) : 0;

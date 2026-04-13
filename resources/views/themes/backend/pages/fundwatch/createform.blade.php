@@ -12,6 +12,7 @@
         <h5 class="card-header-text">{{ __('admin.fundwatch.add_txt') }}</h5>
       </div>
       <div class="card-block">
+		  
         <x-form.alert type="{{ session()->get('alert') }}" title="{{ session()->get('title') }}" message="{{ session()->get('message') }}" />
 
         <form name="aeDataFrm" id="aeDataFrm" action="{{ route('admin.fund-watch.store')}}" method="POST" enctype="multipart/form-data">

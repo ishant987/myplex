@@ -43,6 +43,13 @@ class CreateUsersTable extends Migration
                 $table->bigInteger('created_id');
                 $table->enum('updated_by', ['', 'a', 'u'])->comment('a=admin,u=user');
                 $table->bigInteger('updated_id')->default(0);
+                $table->string('contact_person')->nullable();
+                $table->string('city')->nullable();
+                $table->string('state')->nullable();
+                $table->string('gst')->nullable();
+                $table->string('arn')->nullable();
+                $table->string('pan')->nullable();
+                $table->dateTime('subscription_expiry_date')->nullable();
                 $table->timestamps();
             });
         }

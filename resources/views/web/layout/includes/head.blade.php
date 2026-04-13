@@ -17,20 +17,29 @@
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="{{config('app.name')}}" />
 <meta property="og:type" content="article">
-<meta property="og:url" content="@yield('cur-url')" />
-<meta property="og:title" content="@yield('meta-title')" />
+<!-- <meta property="og:url" content="@yield('cur-url')" />
+<meta property="og:title" content="@yield('meta-title')" /> -->
+<meta property="og:url" content="{{config('app.name')}}" />
+<meta property="og:title" content="{{config('app.name')}}" />
+<meta property="og:image" content="{{config('app.name')}}" />
+
 @if(View::hasSection('meta-image'))
-<meta property="og:image" content="@yield('meta-image')" />
+<!-- <meta property="og:image" content="@yield('meta-image')" /> -->
 @endif
 @if (View::hasSection('moneycontrol'))
     <link rel="stylesheet" href="https://stat.moneycontrol.co.in/mccss/mcradar/https_style.css?ver=1.6" />
 @endif
 <link href="{{ asset('themes/frontend/assets/v1/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="{{ asset('themes/frontend/assets/v1/css/style.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+
 <link href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="{{ asset('themes/frontend/assets/v1/css/all.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <script src="https://unpkg.com/phosphor-icons"></script>
 @stack('style')
 <style>

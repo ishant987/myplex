@@ -1,3 +1,4 @@
+
 <template>
      <section class="info_monitor_sec">
         <div class="container">
@@ -8,12 +9,12 @@
                     <div class="monthly_ranking_text">
                         <p class="sub_gren_title" v-if="snapshotTextHeding">{{snapshotTextHeding}}</p>
                     </div>
-                     <div class="monthly_ranking_share d-block d-sm-flex">
+                     <!-- <div class="monthly_ranking_share d-block d-sm-flex">
                                     <a  target="_blank" :href="'https://www.facebook.com/sharer/sharer.php?u='+currentURL()"  class="share_btn facebook"><i class="ph-facebook-logo"></i> Share</a>
                                     <a  target="_blank" :href="'http://twitter.com/share?text='+shareText+'&url='+currentURL()" class="share_btn twitter"><i class="ph-twitter-logo"></i> Share</a>
                                     <a target="_blank" :href="'https://www.linkedin.com/shareArticle?mini=true&url='+currentURL()+'&title='+shareText" class="share_btn linkedin"><i class="ph-linkedin-logo"></i> Share</a>
                                     <a href="javascript://" class="share_btn pdf" @click="downloadPDF"><i class="ph-file-pdf"></i> Share</a>
-                                </div>
+                                </div> -->
                 </div>
                 <div class="mb-2">
                      <multiselect 
@@ -47,22 +48,67 @@
                             <div class="monthly_ranking_table">
                                 <div class="datatable_ll main_trer">
                                     <div class="table-responsive">
-                                        <table id="example" class="table table-striped" style="width:100%">
+                                        <table id="example" class="table table-responsive table-striped box-shadow" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th style="background-color: #00665e !important;" colspan="3"></th>
                                                     <th style="background-color: #222222 !important" colspan="3">Ranking</th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Name of Fund <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
-                                                    <th>AAUM (Lacs) <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
-                                                    <th>Return % <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
-                                                    <th>Return Quality <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
-                                                    <th>Volitilty <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
-                                                    <th>Market Risk <span class="filter__arrow"><a href="javascript:void(0)"><i class="ph-arrows-down-up-bold"></i></a></span></th>
+                                                    <th class="sorting" v-on:click="sortTable('fund_name')" :class="{'sorting_asc':sortKey == 'fund_name' && ascending, 'sorting_desc': sortKey == 'fund_name' && !ascending}">
+												Name of Fund <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+												</th>
+                                                    <th class="sorting" v-on:click="sortTable('aaum')" :class="{'sorting_asc':sortKey == 'aaum' && ascending, 'sorting_desc': sortKey == 'aaum' && !ascending}">
+														AAUM(Crores) <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+													</th>
+                                                    <th class="sorting" v-on:click="sortTable('one_year_return')" :class="{'sorting_asc':sortKey == 'one_year_return' && ascending, 'sorting_desc': sortKey == 'one_year_return' && !ascending}">
+														Return % (1 Year)<span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+													</th>
+                                                    <th class="sorting" v-on:click="sortTable('return_quality')" :class="{'sorting_asc':sortKey == 'return_quality' && ascending, 'sorting_desc': sortKey == 'return_quality' && !ascending}">
+														Consistency <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+													</th>
+                                                    <th class="sorting" v-on:click="sortTable('volatality')" :class="{'sorting_asc':sortKey == 'volatality' && ascending, 'sorting_desc': sortKey == 'volatality' && !ascending}">
+												Fund Volatility <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+													</th>
+                                                    <th class="sorting" v-on:click="sortTable('market_risk')" :class="{'sorting_asc':sortKey == 'market_risk' && ascending, 'sorting_desc': sortKey == 'market_risk' && !ascending}">
+														Market Risk <span class="filter__arrow"><i class="ph-arrows-down-up-bold"></i></span>
+													</th>
                                                 </tr>
                                             </thead>
+                                            <!-- {{console.log('555555555555')}} -->
+                                            <!-- {{ process = false }} -->
                                             <tbody v-if="!process">
+                                                <tr v-for="(fund,index) in monthly_ranking" :key="index" :class="index%2 ? 'even' : 'odd'">
+                                                    <td data-label="Name of Fund">
+                                                        {{ fund.fund_name }}
+                                                    </td>
+                                                    <td data-label="AAUM">
+                                                        <span v-if="fund.per_change_aaum !== null">{{ (fund.aaum / 100).toFixed(2) }}</span>
+                                                        <span v-else>NA</span>
+                                                    </td>
+                                                    <td data-label="Return %">
+                                                      <span v-if="fund.one_year_return !== null ">{{ fund.one_year_return.toFixed(2) }}</span>
+                                                        <span v-else>NA</span>
+                                                    </td>
+                                                    <td data-label="Return Quality">
+                                                        <div class="return_quality_td">
+                                                            <i v-for="count in fund.return_quality" class="ph-star-fill active" :id="count">
+                                                            </i>
+                                                            <i v-if=" fund.return_quality!==null" v-for="countStart in getRemaningStars(fund.return_quality)" class="ph-star-fill" :class="index%2 ? '' : 'grey'" :id="countStart+'empty'"></i>
+                                                            <span v-else>NA</span>
+                                                        </div>
+                                                    </td>
+                                                    <td data-label="Volitilty">
+                                                        <img style="padding-right:2px" v-if="fund.volatality !== null && fund.volatality !== '' " v-for="count in fund.volatality"  :src="`/images/fire_icon.png`" :title="count" :alt="count" >&nbsp;
+                                                        <span v-else>NA</span>
+                                                    </td>
+                                                    <td data-label="Market Risk">
+                                                        <img style="padding-right:2px" v-if="fund.market_risk !== null " v-for="count in fund.market_risk"  :src="`/images/fire_icon.png`" :title="count" :alt="count" >&nbsp;
+                                                        <span v-else>NA</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <!-- <tbody v-if="!process">
                                                 <tr  v-for="(fund,index) in monthly_ranking" :key="index" :class="index%2 ? 'even' : 'odd'">
                                                     <td data-label="Name of Fund">
                                                         {{ fund.fund_name }}
@@ -72,7 +118,7 @@
                                                         <span v-else>NA</span>
                                                     </td>
                                                     <td data-label="Return %">
-                                                        <span v-if="fund.one_year_return !== null ">{{ fund.one_year_return.toFixed(2) }}</span>
+                                                      <span v-if="fund.one_year_return !== null ">{{ fund.one_year_return.toFixed(2) }}</span>
                                                         <span v-else>NA</span>
                                                     </td>
                                                     <td data-label="Return Quality">
@@ -91,14 +137,23 @@
                                                         <img style="padding-right:2px" v-if="fund.market_risk !== null " v-for="count in fund.market_risk"  :src="`/images/fire_icon.png`" :title="count" :alt="count" >&nbsp;
                                                         <span v-else>NA</span>
                                                     </td>
-                                                </tr>
-                                                
-                                            </tbody>
+                                                </tr>                                                
+                                            </tbody> -->
                                             <tbody v-else>
                                                 <tr>
                                                     <td colspan="6">
                                                         <div class="text-center mt-3">
                                                             <LoadingBar :status="process"></LoadingBar>
+                                                        </div>      
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody v-if="!process && monthly_ranking.length === 0">
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <div class="text-center mt-3">
+                                                            <LoadingBar :status="process"></LoadingBar>
+                                                            No data available
                                                         </div>      
                                                     </td>
                                                 </tr>
@@ -190,28 +245,73 @@ export default {
       })
     },
    async getMonthlyRanking(){
-       let that = this
-       that.process = true
+       let that = this;
+       that.process = true;
        that.snapshotText = ''
        await axios.get(that.app_url+'/api/v1/monthly-ranking/'+that.selectedFundClassification.ft_id)
             .then(response => {
-                that.monthly_ranking = response.data.data.monthly_ranking
-                return true
+                console.log(response.data.data.monthly_ranking);
+                that.monthly_ranking = response.data.data.monthly_ranking;
+                if(that.monthly_ranking.length != 0){
+                    // alert('if');
+                    var first_fund = that.monthly_ranking[0];
+                    var formattedMonth = moment(first_fund.end_date, 'YYYY-MM-DD').format('MMMM');
+                    var formattedYear = moment(first_fund.end_date, 'YYYY-MM-DD').format('YYYY');
+                    that.snapshotTextHeding='For The Month of  '+formattedMonth+' , '+ formattedYear;
+                    that.snapshotText = that.selectedFundClassification.name
+                    that.shareText = 'Monthly Ranking For the Month of  '+formattedMonth+' '+ formattedYear
+                    that.process = false;
+                }else{
+                    // alert('else');
+                    that.process = false;
+                }
+                
+                console.log('test'+that.process);
             })
-            .then(response => {
-                let first_fund = that.monthly_ranking[0]
-                var formattedMonth = moment(first_fund.end_date, 'YYYY-MM-DD').format('MMMM');
-                var formattedYear = moment(first_fund.end_date, 'YYYY-MM-DD').format('YYYY');
-                that.snapshotTextHeding='For The Month of  '+formattedMonth+' , '+ formattedYear;
-                that.snapshotText = that.selectedFundClassification.name
-                that.shareText = 'Monthly Ranking For the Month of  '+formattedMonth+' '+ formattedYear
-            })
+            // .then(response => {
+            //     var first_fund = that.monthly_ranking[0];
+                
+            //     var formattedMonth = moment(first_fund.end_date, 'YYYY-MM-DD').format('MMMM');
+                
+            //     var formattedYear = moment(first_fund.end_date, 'YYYY-MM-DD').format('YYYY');
+            //     that.snapshotTextHeding='For The Month of  '+formattedMonth+' , '+ formattedYear;
+            //     that.snapshotText = that.selectedFundClassification.name
+            //     that.shareText = 'Monthly Ranking For the Month of  '+formattedMonth+' '+ formattedYear
+            //     // that.process = false;
+            //     // that.process = false;
+            // })
             .catch(error => {
+                // alert(error);
                 console.log(error);
             })
             .finally(() => {
-                that.process = false
+                // alert('True');
+                // that.process = false;
             })
+            // alert(that.process);
+            // console.log(that.monthly_ranking.length);
+
+    // try {
+    //     const response = await axios.get(that.app_url+'/api/v1/monthly-ranking/'+that.selectedFundClassification.ft_id);
+        
+    //     // Log the response data
+    //     console.log('Response:', response.data);
+
+    //     // Update component data properties
+    //     that.monthly_ranking = response.data.data.monthly_ranking;
+    //     let first_fund = that.monthly_ranking[0];
+    //     var formattedMonth = moment(first_fund.end_date, 'YYYY-MM-DD').format('MMMM');
+    //     var formattedYear = moment(first_fund.end_date, 'YYYY-MM-DD').format('YYYY');
+    //     that.snapshotTextHeding = 'For The Month of ' + formattedMonth + ', ' + formattedYear;
+    //     that.snapshotText = that.selectedFundClassification.name;
+    //     that.shareText = 'Monthly Ranking For the Month of ' + formattedMonth + ' ' + formattedYear;
+    // } catch (error) {
+    //     // Log any errors
+    //     console.error('Error:', error);
+    // } finally {
+    //     that.process = false;
+    // }
+
    },
    downloadPDF(){
        window.open('/monthly-ranking-pdf/'+this.selectedFundClassification.ft_id, '_blank');

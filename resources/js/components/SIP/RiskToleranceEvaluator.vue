@@ -1,237 +1,270 @@
 <template>
-    <section class="compare_scheme" v-if="currentTab != ''">
-        <div class="container">
-            <div class="tab_snap_shot">
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="comp_schem_bdr">
-                        <div class="s_renge risk_tolarance_evaliator">
-                            <div class="row">
-                                <template v-if="!Object.keys(calculatedValues).length">
-                                    <div class="row m-0 invst-fields invst-field-1 justify-content-between mb-3"
-                                        v-if="!start">
-                                        <div class="col-md-6">
-                                            <div class="risk-tol-eval-common risk-tol-eval-email cal_form_select">
-                                                <label>Email Address</label>
-                                                <input class="form-text" type="email" id="risk-tolerance-user-email"
-                                                    v-model="email" readonly placeholder="Enter Email" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="risk-tol-eval-common risk-tol-eval-name cal_form_select">
-                                                <label>Enter Name</label>
-                                                <input class="form-text" type="text" id="risk-tolerance-username"
-                                                    v-model="name" placeholder="Enter Name" />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="invst-fields-action-buttons" v-if="!start">
-                                        <div class="row m-0 justify-content-end">
-                                            <div class="action-common action-btn-1">
-                                                <button id="next-step" class="btn btn-green reserch_discover_btn"
-                                                    href="javascript:void(0);" @click="start = true">Next Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="risk-tol-choose-age" v-if="start">
-                                        <div class="risk-tol-age-wrap">
-                                            <div v-for="(question, index) in questions" :key="index">
-                                                <div v-if="index == activeIndex"
-                                                    class="row align-items-center risk-tol-age-wrap-in mb-3">
-                                                    <div class="risk-tol-age-lft">
-                                                        <h5 v-html="question.q"></h5>
-                                                    </div>
-                                                    <div class="risk-tol-age-rgt">
-                                                        <div class="form-check" v-for="(option, key) in question.o"
-                                                            :key="key">
-                                                            <label class="form-check-label" :for="'optradio' + key"
-                                                                v-if="option">
-                                                                <input :id="'optradio' + key" type="radio"
-                                                                    class="form-check-input" name="optradio"
-                                                                    :value="key" v-model="question.a" /> {{ option }}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="invst-fields-action-buttons">
-                                                <div class="row m-0">
-                                                    <div class="action-common action-btn-1 col-md-4 ">
-                                                        <button id="back"
-                                                            class="btn btn-dark reserch_discover_btn dark_bg color_white me-3"
-                                                            @click="previous">Back</button>
-
-                                                        <button :disabled="!questions[activeIndex].a" id="next"
-                                                            class="btn btn-green reserch_discover_btn" @click="next"
-                                                            v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
-                                                        <button :disabled="!questions[activeIndex].a || process"
-                                                            id="next" class="btn btn-green reserch_discover_btn"
-                                                            @click="submitForm"
-                                                            v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                            <div class="invst-wrap invst-risk-tol-calc">
-                                <div class="w-100 text-center" v-if="process">
-                                    <div class="text-center mt-3">
-                                        <LoadingBar :status="process"></LoadingBar>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="risk-result" v-if="Object.keys(calculatedValues).length">
-                                <div class="">
-                                    <h4 class="mn_h4 mb-1">Evaluation Results</h4>
-                                    <p>Hello {{ name }}, Here is summary of your Risk Profile that you just filled.</p>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="main_trer evalution_resupt_table mt-2">
-                                                <div class="">
-                                                    <table id="example" class="table table-striped table-responsive">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Parameter</th>
-                                                                <th>Type of investor</th>
-                                                                <th>Score</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>Capacity to take risk</td>
-                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor1
-                                                                }}</td>
-                                                                <td>
-                                                                    <div
-                                                                        class="star_wrape d-flex align-items-center justify-content-center">
-                                                                        <i v-for="count in parseInt(calculatedValues.accor1_star)"
-                                                                            class="ph-star-fill active" :id="count"></i>
-                                                                        <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor1_star)"
-                                                                            class="ph-star-fill"></i>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td>Risk appetite</td>
-                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor2
-                                                                }}</td>
-                                                                <td>
-                                                                    <div
-                                                                        class="star_wrape d-flex align-items-center justify-content-center">
-                                                                        <i v-for="count in parseInt(calculatedValues.accor2_star)"
-                                                                            class="ph-star-fill active" :id="count"></i>
-                                                                        <i v-for="countStart in defaultStart - calculatedValues.accor2_star"
-                                                                            class="ph-star-fill grey"></i>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Need to take Risk</td>
-                                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor3
-                                                                }}</td>
-                                                                <td>
-                                                                    <div
-                                                                        class="star_wrape d-flex align-items-center justify-content-center">
-                                                                        <i v-for="count in parseInt(calculatedValues.accor3_star)"
-                                                                            class="ph-star-fill active" :id="count"></i>
-                                                                        <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor3_star)"
-                                                                            class="ph-star-fill"></i>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-4 mb-4">
-                                    <div class="col-lg-8 col-md-12">
-                                        <div class="colorful__heading text-center p-4">
-                                            <h4>Your Overall Risk Profile</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-12">
-                                        <div class="colorful__heading2 text-center p-4">
-                                            <h4>Conservative</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="main_trer evalution_resupt_table risk_calculator_table mt-2">
-                                                <div class="">
-                                                    <table id="example" class="table table-responsive">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Score</th>
-                                                                <th>Tolerance Level</th>
-                                                                <th>Preferable Equity holding</th>
-                                                                <th>Preferable Debt holding</th>
-                                                                <th>Type of Investor</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>4-5</td>
-                                                                <td>Very High</td>
-                                                                <td>100%</td>
-                                                                <td>0%</td>
-                                                                <td>Highly Aggresive</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>4-5</td>
-                                                                <td>80%</td>
-                                                                <td>3-4</td>
-                                                                <td>20%</td>
-                                                                <td> Aggresive</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>4-5</td>
-                                                                <td>80%</td>
-                                                                <td>3-4</td>
-                                                                <td>20%</td>
-                                                                <td>Moderate</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>4-5</td>
-                                                                <td>80%</td>
-                                                                <td>3-4</td>
-                                                                <td>20%</td>
-                                                                <td>Conservation</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>4-5</td>
-                                                                <td>80%</td>
-                                                                <td>3-4</td>
-                                                                <td>20%</td>
-                                                                <td>Highly Conservation</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="mt-3 ps-4">Best wishes, myplexus</p>
-                            </div>
+   <section class="compare_scheme pt-3" v-if="currentTab != ''">
+      <div class="container">
+         <div class="tab_snap_shot">
+            <div class="tab-content" id="pills-tabContent">
+               <div class="comp_schem_bdr">
+                  <div class="s_renge risk_tolarance_evaliator p-0">
+                     <div class="row calbanner">
+                        <div class="l">
+                           <h4 class="heading-green">  Risk Tolerance Evaluator  </h4>
+                           <p>This helps to evaluate the degree of risk  of an investor based on a set of questions. </p>
                         </div>
-                    </div>
-                </div>
+                        <div class="r">
+                           <img src="https://new.myplexus.com/themes/frontend/assets/v1/img/RiskAppetiteCalculator,.png">
+                        </div>
+                     </div>
+                     <div class="row" id="fromDataInput">
+                        <div class="col-md-12 left-side">
+                           <div class="row">
+                              <template v-if="!Object.keys(calculatedValues).length">
+                                 <div class="row m-0 invst-fields invst-field-1 justify-content-between mb-3"
+                                    v-if="!start">
+                                    <div class="col-md-6 d-none">
+                                       <div class="risk-tol-eval-common risk-tol-eval-email cal_form_select">
+                                          <label>Email Address</label>
+                                          <input class="form-text" type="email" id="risk-tolerance-user-email"
+                                             v-model="email" readonly placeholder="Enter Email" />
+                                       </div>
+                                    </div>
+                                    <div class="col-md-6 d-none">
+                                       <div class="risk-tol-eval-common risk-tol-eval-name cal_form_select">
+                                          <label>Enter Name</label>
+                                          <input class="form-text" type="text" id="risk-tolerance-username"
+                                             v-model="name" placeholder="Enter Name" />
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="invst-fields-action-buttons" v-if="!start">
+                                    <div class="row m-0 justify-content-end">
+                                       <div class="action-common action-btn-1">
+                                          <button id="next-step" class="btn btn-green reserch_discover_btn"
+                                             href="javascript:void(0);" @click="start = true">Start</button>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="risk-tol-choose-age" v-if="start">
+                                    <div class="risk-tol-age-wrap">
+                                       <div v-for="(question, index) in questions" :key="index">
+                                          <div v-if="index == activeIndex"
+                                             class="row align-items-center risk-tol-age-wrap-in mb-3">
+                                             <div class="risk-tol-age-lft">
+                                                <h5 v-html="question.q"></h5>
+                                             </div>
+                                             <div class="risk-tol-age-rgt">
+                                                <div class="form-check" v-for="(option, key) in question.o"
+                                                   :key="key">
+                                                   <label class="form-check-label" :for="'optradio' + key"
+                                                      v-if="option">
+                                                   <input :id="'optradio' + key" type="radio"
+                                                      class="form-check-input" name="optradio"
+                                                      :value="key" v-model="question.a" /> {{ option }}
+                                                   </label>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="invst-fields-action-buttons">
+                                          <div class="row m-0">
+                                             <div class="action-common action-btn-1 col-md-12 ">
+                                                <button id="back"
+                                                   class="btn btn-dark reserch_discover_btn dark_bg color_white me-3"
+                                                   @click="previous">Back</button>
+                                                <button :disabled="!questions[activeIndex].a" id="next"
+                                                   class="btn btn-green reserch_discover_btn" @click="next"
+                                                   v-if="activeIndex < (questions.length - 1) && !(activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Next</button>
+                                                <button :disabled="!questions[activeIndex].a || process"
+                                                   id="next" class="btn btn-green reserch_discover_btn"
+                                                   @click="submitForm"
+                                                   v-if="activeIndex == (questions.length - 1) || (activeIndex == (questions.length - 3) && questions[activeIndex].a == 2)">Submit</button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="clear"></div>
+                                    </div>
+                                 </div>
+                              </template>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="invst-wrap invst-risk-tol-calc">
+                        <div class="w-100 text-center" v-if="process">
+                           <div class="text-center mt-3">
+                              <LoadingBar :status="process"></LoadingBar>
+                           </div>
+                        </div>
+                     </div>
+                     <div id="risk-result" v-if="Object.keys(calculatedValues).length">
+                        <div class="">
+                           <h4 class="mn_h4 mb-1">Evaluation Results</h4>
+                           <p>Hello {{ name }}, Here is summary of your Risk Profile that you just filled.</p>
+                           <div class="row d-none">
+                              <div class="col-md-12">
+                                 <div class="main_trer evalution_resupt_table mt-2">
+                                    <div class="">
+                                       <table id="example" class="table table-striped table-responsive">
+                                          <thead>
+                                             <tr>
+                                                <th>Parameter</th>
+                                                <th>Type of investor</th>
+                                                <th>Score</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr>
+                                                <td>Capacity to take risk</td>
+                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor1
+                                                   }}
+                                                </td>
+                                                <td>
+                                                   <div
+                                                      class="star_wrape d-flex align-items-center justify-content-center">
+                                                      <i v-for="count in parseInt(calculatedValues.accor1_star)"
+                                                         class="ph-star-fill active" :id="count"></i>
+                                                      <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor1_star)"
+                                                         class="ph-star-fill"></i>
+                                                   </div>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                                <td>Risk appetite</td>
+                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor2
+                                                   }}
+                                                </td>
+                                                <td>
+                                                   <div
+                                                      class="star_wrape d-flex align-items-center justify-content-center">
+                                                      <i v-for="count in parseInt(calculatedValues.accor2_star)"
+                                                         class="ph-star-fill active" :id="count"></i>
+                                                      <i v-for="countStart in defaultStart - calculatedValues.accor2_star"
+                                                         class="ph-star-fill grey"></i>
+                                                   </div>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                                <td>Need to take Risk</td>
+                                                <td>{{ calculatedValues.capacity_to_take_risk_for_accor3
+                                                   }}
+                                                </td>
+                                                <td>
+                                                   <div
+                                                      class="star_wrape d-flex align-items-center justify-content-center">
+                                                      <i v-for="count in parseInt(calculatedValues.accor3_star)"
+                                                         class="ph-star-fill active" :id="count"></i>
+                                                      <i v-for="countStart in defaultStart - parseInt(calculatedValues.accor3_star)"
+                                                         class="ph-star-fill"></i>
+                                                   </div>
+                                                </td>
+                                             </tr>
+                                          </tbody>
+                                       </table>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row mt-4 mb-4">
+                           <div class="col-lg-8 col-md-12">
+                              <div class="colorful__heading text-center p-4">
+                                 <h4>Your Overall Risk Profile</h4>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-12">
+                              <div class="colorful__heading2 text-center p-4">
+                                 <h4>{{ calculatedValues.capacity_to_take_risk_for_total }}</h4>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <div class="main_trer evalution_resupt_table risk_calculator_table mt-2">
+                                    <div class="">
+                                       <table id="example" class="table table-responsive">
+                                          <thead>
+                                             <tr>
+                                                <th>Score</th>
+                                                <th>Tolerance Level</th>
+                                                <th>Preferable Equity holding</th>
+                                                <th>Preferable Debt holding</th>
+                                                <th>Type of Investor</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr v-if="tableRowHide1 == 1">
+                                                <td>4-5</td>
+                                                <td>Very High</td>
+                                                <td>100%</td>
+                                                <td>0%</td>
+                                                <td>Highly Aggresive</td>
+                                             </tr>
+                                             <tr v-if="tableRowHide2 == 1">
+                                                <td>3-4</td>
+                                                <td>Moderate</td>
+                                                <td>80%</td>
+                                                <td>20%</td>
+                                                <td>HAggresive</td>
+                                             </tr>
+                                             <tr v-if="tableRowHide3 == 1">
+                                                <td>3-2</td>
+                                                <td>High</td>
+                                                <td>60%</td>
+                                                <td>40%</td>
+                                                <td>Moderate</td>
+                                             </tr>
+                                             <tr v-if="tableRowHide4 == 1">
+                                                <td>1-2</td>
+                                                <td>Low</td>
+                                                <td>40%</td>
+                                                <td>60%</td>
+                                                <td>Conservative</td>
+                                             </tr>
+                                             <tr v-if="tableRowHide5 == 1">
+                                                <td>0-1</td>
+                                                <td>Very Low</td>
+                                                <td>20%</td>
+                                                <td>80%</td>
+                                                <td>Highly Conservative</td>
+                                             </tr>
+                                          </tbody>
+                                       </table>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <p class="mt-3 ps-4">Best wishes, myplexus</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="plan_faq">
+                  <div class="faq_title">
+                     <h4>FAQ - <span>Frequently asked questions</span></h4>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>What is Risk Tolerance?</h4>
+                     <p>It is the ability of an individual to withstand negative outcomes in pusuit of a particular goal or investment. Usually young individuals should be able to take more risks than older individuals since young people have the capability to make more money working and have more time to handle market fluctuations.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Categories of Risk Tolerance</h4>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Aggressive</h4>
+                     <p>Individuals in this category are generally comfortable with a high level of risk. Substantial returns are their first priority so they are willing to accept short term fluctuations and potential losses.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Moderate</h4>
+                     <p>They are relatively less risk tolerant when compared to aggressive risk investors. They take on some risk but also seek to protect their investment to some extent. They balance their investments between risky and safe asset classes.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Conservative</h4>
+                     <p>Highly risk averse individuals falls in this category. Their priority lies in preserving their investments and take on minimal risk in exchange for relatively lower potential returns.</p>
+                  </div>
+               </div>
             </div>
-        </div>
-    </section>
+         </div>
+      </div>
+   </section>
 </template>
 
 <script>
@@ -475,6 +508,11 @@ export default {
             calculatedValues: [],
             process: false,
             defaultStart: 5,
+            tableRowHide1: 0,
+            tableRowHide2: 0,
+            tableRowHide3: 0,
+            tableRowHide4: 0,
+            tableRowHide5: 0,
         }
     },
     methods: {
@@ -507,7 +545,27 @@ export default {
             }
             axios.post(this.app_url + '/api/v1/calculate-risk-tolerance-portfolio', data)
                 .then(response => {
-                    this.calculatedValues = response.data.data.risk_tolerance_portfolio
+                    //console.log(response);
+                    this.calculatedValues = response.data.data.risk_tolerance_portfolio;
+                    var result = response.data.data.risk_tolerance_portfolio;
+                    if(result.capacity_to_take_risk_for_total == 'Highly Aggresive'){
+                        //alert('Highly Aggresive');
+                        this.tableRowHide1 = 1;
+                    }else if(result.capacity_to_take_risk_for_total == 'HAggresive'){
+                        //alert('HAggresive');
+                        this.tableRowHide2 = 1;
+                    }else if(result.capacity_to_take_risk_for_total == 'Moderate'){
+                        //alert('Moderate');
+                       this.tableRowHide3 = 1;
+                    }else if(result.capacity_to_take_risk_for_total == 'Highly Conservative'){
+                        //alert('Highly Conservative');
+                        this.tableRowHide5 = 1;
+                    }else{
+                        //alert('conservative');
+                        this.tableRowHide4 = 1;
+                    }
+                    
+                    $("#fromDataInput").hide();
                 })
                 .then(response => {
 

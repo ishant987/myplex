@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Request;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('commonconstants.admin_prefix'))->group(function () {
+Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('commonconstants.admin_prefix'))->group(function () 
+{
     Route::get('error/{error_code?}', ['uses' => 'BaseController@error', 'as' => 'error']);
 
     Route::get('/', 'AuthController@showLoginForm')->name('login');
@@ -150,7 +151,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         Route::get('indices/nocor', [
             'as' => 'indices.nocor',
             'uses' => 'IndicesMasterController@indexnocor'
-        ]);
+        ]);	
 
         Route::resource('fundtype', 'FundTypeController', ['except' => 'show', 'destroy']);
         Route::post('/fundtype/delete', 'FundTypeController@deletedata')->name('fundtype.delete');
@@ -490,22 +491,46 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('know-your-scheme', 'PageController@knowYourSchemeData')->name('know.your.scheme');
     Route::get('fund-portfolio', 'PageController@fundPortfolioData')->name('fund.portfolio');
     Route::get('composition-snapshot', 'PageController@compositionSnapshotData')->name('composition.snapshot');
+	
+	Route::get('corpus-details', 'PageController@corpusDetailsData')->name('corpus.details');	
+	Route::get('fund-man-details', 'PageController@fundManDetailsData')->name('fund.man.details');
+	//Route::get('new-from-myplexus');
+	
+	Route::get('get-news', 'PageController@getNewsApi')->name('get.news');
+	
+	Route::get('fund-man-details/shridatta-bhandwaldar', 'PageController@fundManDetailsShridattaBhandwaldar')->name('fund.man.details.shridatta-bhandwaldar');
+	
+	Route::get('fund-man-details/shreyas-devalkar', 'PageController@fundManDetailsShreyasDevalkar')->name('fund.man.details.shreyas-devalkar');
+	
+	Route::get('fund-man-details/aniruddha-naha', 'PageController@fundManDetailsAniruddhaNaha')->name('fund.man.details.aniruddha-naha');
+	
+	Route::get('fund-man-details/sanjay-chawla', 'PageController@fundManDetailsSanjayChawla')->name('fund.man.details.sanjay-chawla');
+	
     Route::get('composition-snapshot-pdf/{type_id}', 'PDFDataController@compositionSnapshotPDF')->name('composition.snapshot.pdf');
     Route::get('weekly-snapshot', 'PageController@weeklySnapshotData')->name('weekly.snapshot');
+	
     Route::get('monthly-snapshot', 'PageController@monthlySnapshotData')->name('monthly.snapshot');
+	
+	 Route::get('return-calculator', 'PageController@returnCalculationData')->name('return.calculator');
+	
+	 Route::get('volatility-calculator', 'PageController@volatilityCalculationData')->name('volatility.calculator');
+
+     //Route::get('performance-synopsis', 'PageController@performanceSynopsisData')->name('performance.synopsis');
+	
     Route::get('monthly-ranking', 'PageController@monthlyRankingData')->name('monthly.ranking');
     Route::get('monthly-ranking-pdf/{type_id}', 'PDFDataController@monthlyRankingPDF')->name('monthly.ranking.pdf');
     Route::get('fund-performance', 'PageController@fundPerformanceData')->name('fund.performance');
     Route::get('compare-scheme', 'PageController@compareSchemeData')->name('compare.scheme');
     Route::get('performance-snapshot', 'PageController@performanceSnapshotData')->name('performance.snapshot');
-    // Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
-    Route::any('calculator', 'CalculatorController@CalualotLogin')->name('calculators');
+    Route::any('calculator', 'PageController@calculatorsPageData')->name('calculators');
+    //Route::any('calculator', 'CalculatorController@CalualotLogin')->name('calculators');
     Route::any('objective-calculator', 'CalculatorController@ObjectiveCalculator')->name('calculators.objective');
     Route::any('inflation_calculator', 'CalculatorController@InflationCalculator')->name('calculators.inflation');
     Route::any('retirement_calualtor', 'CalculatorController@RetirementCalculator')->name('calculators.retirement');
     Route::any('risk_evaluation', 'CalculatorController@RiskCalculator')->name('calculators.risk');
 
     Route::get('calculator-login/{provider}', 'PageController@redirectCalculator')->name('calculators.social.login');
+    // Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
     Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
 
     Route::get('contact', 'EnquiryController@contactData')->name('contact');
@@ -534,16 +559,30 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('in-the-news', 'PageController@newsData')->name('news');
     Route::get('pentatec-filter', 'PageController@pentatecData')->name('pentatec');
 
-    // Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
+    Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
+
     Route::get('fund-watch', 'FundWatchController@index')->name('fundwatch');
+    Route::get('new-fundwatch/{fund_code}', 'NewfundwatchController@index')->name('new_fundwatch');
+    Route::get('new-fundwatch-list', 'NewfundwatchController@list')->name('new-fundwatch-list');
+    Route::get('return-less-index-link/{fund_code}/{fund_type_id}', 'NewfundwatchController@getReturnlessIndexRank')->name('return-less-index-link');
+    Route::get('get-quartile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getQuartile')->name('get-quartile');
+    Route::get('get-decile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getDecile')->name('get-decile');
+    Route::get('get-rank-quartile-decile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getRankQuartileDecile')->name('get-rank-quartile-decile');
+    Route::get('demo-new-fundwatch/{fund_code}', 'NewfundwatchController@demoindex')->name('demo_new_fundwatch');
+
+	
+	
+	
     Route::get('fund-watch-new/{fund_code}', 'FundWatchController@newIndex')->name('fundwatch.index');
-	Route::get('fund-watch/fund-compositon/{fund_code}', 'FundWatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
-	Route::get('fund-watch/fund-lumsum/{fund_code}', 'FundWatchController@getLumnsubData')->name('fundwatch.getLumnsubData');
-	Route::get('fund-watch/fund-risk-alpha/{fund_code}', 'FundWatchController@getRiskAplha')->name('fundwatch.getRiskAplha');
-	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'FundWatchController@breakUP')->name('fundwatch.breakUP');
-	Route::get('fund-watch/fund-return-continus/{fund_code}', 'FundWatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
-	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'FundWatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
-	Route::get('fund-watch/fund-sip/{fund_code}', 'FundWatchController@getSIPData')->name('fundwatch.getSIPData');
+	Route::get('fund-watch/fund-compositon/{fund_code}', 'NewfundwatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
+	Route::get('fund-watch/fund-lumsum/{fund_code}', 'NewfundwatchController@getLumnsubData')->name('fundwatch.getLumnsubData');
+	Route::get('fund-watch/fund-risk-alpha/{fund_code}', 'NewfundwatchController@getRiskAplha')->name('fundwatch.getRiskAplha');
+	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'NewfundwatchController@breakUP')->name('fundwatch.breakUP');
+	Route::get('fund-watch/fund-return-continus/{fund_code}', 'NewfundwatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
+	Route::get('fund-watch/fund-return-discontinus/{fund_code}', 'NewfundwatchController@getReturndisContinous')->name('fundwatch.getReturndisContinous');
+	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'NewfundwatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
+	Route::get('fund-watch/fund-sip/{fund_code}', 'NewfundwatchController@getSIPData')->name('fundwatch.getSIPData');
+	
 
 
     //  added by pixel
@@ -558,6 +597,9 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('signup', 'AuthController@signupData')->name('signup');
     Route::post('signup-process', 'AuthController@signup')->name('signup.save');
+	
+	Route::get('investor-signup', 'AuthController@investorsignupData')->name('investor-signup');
+	Route::post('investor-signup-process', 'AuthController@investorsignupsave')->name('investor-signup.save');
 
     Route::get('forgot-password', 'AuthController@forgotPassword')->name('forgot.password');
     Route::post('forgot-password-process', 'AuthController@forgotPasswordSendCode')->name('forgot.password.sendcode');
@@ -570,6 +612,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     #== END:Manage by AuthController only ==#
 
     Route::get('ask-question', 'AskExpertController@askQuestionData')->name('ask-question');
+
+    Route::get('cron-update-monthly-ranking', 'CronController@update_monthly_ranking')->name('cron-update-monthly-ranking');
     #==Auth dependent pages ==#
     Route::group(['middleware' => ['auth']], function () {
         Route::get('myaccount', 'UserController@myAccountData')->name('myaccount');
@@ -590,5 +634,87 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
     Route::get('money_seriously/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
     Route::post('money_seriously','BlogController@postBlogDetails')->name('post-blogs-detail');
+	
+
+    Route::any('calctest', 'PageController@calculatorsPageDatas');
+
+
+    #==Infosolz ==#
+
+    Route::get('report-dashboard','CalculatordashbordController@index')->name('report-dashboard');
+    Route::get('report-beta','CalculatordashbordController@beta_calculator')->name('report-beta');
+    Route::get('get-indices-name','CalculatordashbordController@get_indices_name')->name('get-indices-name');
+    Route::get('report-volatility','VolatilityController@volatility_calculator')->name('report-volatility');
+    Route::get('report-jensens-alpla','JensonsalphaController@jensonsalpha_calculator')->name('report-jensens-alpla');
+    Route::get('report-sharpe','SharpeController@sharpe_calculator')->name('report-sharpe');
+    Route::get('report-treynor','TreynorController@treynor_calculator')->name('report-treynor');
+    Route::get('report-tracking-error','TrackingerrorController@tracking_error_calculator')->name('report-tracking-error');
+    Route::get('report-information-ratio','InformationratioController@information_ratio_calculator')->name('report-information-ratio');
+    Route::get('report-r-squere','rsquereController@r_squere_calculator')->name('report-r-squere');
+    Route::get('report-skewness','SkewnessController@skewness_calculator')->name('report-skewness');
+    Route::get('report-kurtosis','KurtosisController@kurtosis_calculator')->name('report-kurtosis');
+    Route::get('report-rolling-return','RollingreturnController@rolling_return_calculator')->name('report-rolling-return');
+    Route::get('report-cagr','CagrController@cagr_calculator')->name('report-cagr');
+    Route::get('report-sip-return','SipreturnController@sipreturn_calculator')->name('report-sip-return');
+    Route::get('report-sortino','SortinoController@sortino_calculator')->name('report-sortino');
+
+    Route::get('test-report-beta','BetaController@beta_calculator')->name('test-report-beta');
+
+
     
+});
+//Auth::routes();
+Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
+{
+    Route::get('/user-login', function () 
+    {
+        $cal = Request::get('cal');
+        //return view('web.auth.login');
+     
+        if (!$cal) 
+        {
+            
+            $cal = '';
+        }
+        return view('web.auth.login', ['cal' => $cal]);
+    })->name('user_login');
+
+    // Auth::routes();
+
+    // Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::post('post-login', 'LoginController@postLogin')->name('loginpost');
+    Route::get('logout', 'LoginController@logout')->name('logout');
+
+    Route::get('login/google', 'LoginController@redirectToGoogle')->name('login.google');
+    Route::get('login/google/callback', 'LoginController@handleGoogleCallback');
+    Route::get('login/facebook', 'LoginController@redirectToFacebook')->name('login.facebook');
+    Route::get('login/facebook/callback', 'LoginController@handleFacebookCallback');
+  
+
+    //========================================Start Registration ======================================//
+
+    Route::get('registration', 'RegistrationController@index')->name('registration');
+    Route::post('registration-store', 'RegistrationController@store')->name('registration-store');
+    Route::get('verify-email/{id}', 'RegistrationController@verify')->name('verify-email');
+    Route::post('check-email-unique', 'RegistrationController@checkEmailUnique')->name('check-email-unique');
+
+    //======================================== End Registration ======================================//
+
+    //======================================== Start Dashboard ======================================//
+    // Route::middleware(['auth'])->group(function () {
+        Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+        // Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
+        Route::middleware(['subscription'])->group(function () {
+            Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
+            Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
+            Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
+        });
+        Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
+        //======================================== End Dashboard ======================================//
+        //======================================== Subscription Start ======================================//
+        Route::any('subscription', 'SubscriptionController@dashboard')->name('subscription');
+    // });
+      //======================================== End Subscription ======================================//
+
 });

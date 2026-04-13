@@ -1,4 +1,4 @@
-@extends('themes.frontend.layouts.app')
+@extends('web.layout.app')
 @section('captcha') @stop
 @section('jquery-validate') @stop
 @if(isset($dataArr['meta_title']))
@@ -40,7 +40,8 @@
       <div class="login-block bg-gry br-5 box-shadow">
         <div class="login-wrap">
           <div class="col-lg-5 col-md-6 col-sm-12 m-auto login-main-box">
-            {!! $dataArr['descp'] !!}
+			  <h3>View performance Synopsis</h3>
+           <!-- {!! $dataArr['descp'] !!} --> 
             <form action="{{ route('web.login.request') }}" name="loginFrm" id="loginFrm" method="post">
               {{ csrf_field() }}
               <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />
@@ -50,15 +51,15 @@
                 <x-form.field.text2 type="email" id="email" name="email" class="box-shadow" placeholder="{{ __('subscribeduser.placeholder.email_txt') }}" value="{{ old('email') }}" />
               </div>
 
-              <div class="password-field">
+             <!-- <div class="password-field">
                 <label>{{ __('common.password_txt') }}</label>
                 <x-form.field.password id="password" name="password" class="box-shadow" placeholder="{{ __('subscribeduser.placeholder.password_txt') }}" />
-              </div>
+              </div>-->
 
               <div class="log-other-opt">
-                <div class="login-forgot-btn float-left">
+               <!-- <div class="login-forgot-btn float-left">
                   <x-link url="{{ route('web.forgot.password') }}">{{ __('auth.sign_in_f_password_txt') }}</x-link>
-                </div>
+                </div>-->
                 <div class="login-action-btn float-right">
                   <x-form.field.button3 class="text-uppercase btn-bg-2 f-b text-white" type="button" id="sendLoginFrm" name="sendLoginFrm" text="{{ $defDataArr['web_lang']['login_txt'] }}" />
                 </div>
@@ -77,7 +78,7 @@
                   <span class="text-green">{{ __('auth.signup_prfx_txt') }}</span>
                 </div>
                 <div class="creat-account-message">
-                  <x-link url="{{ route('web.signup') }}">{{ __('auth.sign_up2_txt') }}</x-link>
+                  <x-link url="{{ route('web.investor-signup') }}">{{ __('auth.sign_up2_txt') }}</x-link>
                 </div>
               </div>
             </div>
@@ -106,18 +107,12 @@
           email: {
             required: true,
             email: true
-          },
-          password: {
-            required: true
           }
         },
         messages: {
           email: {
             required: "{{ $defDataArr['web_lang']['jq_validate']['enter_an_txt'].strtolower(__('common.email_txt')) }}",
             email: "{{ $defDataArr['web_lang']['jq_validate']['enter_valid_txt'].strtolower(__('common.email_txt')) }}"
-          },
-          password: {
-            required: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('common.password_txt')) }}"
           }
         }
       }),
@@ -135,7 +130,7 @@
                 var formData = {
                   "_token": $('meta[name="csrf-token"]').attr('content'),
                   email: $("#email").val(),
-                  password: $("#password").val(),
+                  //password: $("#password").val(),
                   recaptcha_v3: $("#recaptcha_v3").val()
                 };
                 $.ajax({
@@ -153,12 +148,13 @@
                     $('#sendLoginFrm').prop('disabled', false);
                     $("#sendLoginFrm").text("{{ $defDataArr['web_lang']['login_txt'] }}");
                     $("#msg_id").html(data['msg']);
-                    if (data['url'] != '') {
+					  window.location.href = '/myaccount';
+                    /*if (data['url'] != '') {
                       window.location.href = data['url'];
-                    }
+                    }*/
                   },
                   error: function(e) {
-                    // console.log(e);
+                    //console.log(e);
                     $("#msg_id").html('There is error while submit');
                   }
                 });

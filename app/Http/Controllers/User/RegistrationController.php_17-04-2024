@@ -1,0 +1,213 @@
+<?php
+namespace App\Http\Controllers\User;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\Web\BaseController as BaseController;
+use App\Models\User;
+use App\Models\Subscription;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Auth;
+use Mail;
+use Illuminate\Mail\Message;
+use GuzzleHttp\Client;
+use ReCaptcha\ReCaptcha;
+class RegistrationController extends BaseController
+{
+
+    public function index(Request $request)
+    {
+       // dd('hii');
+        return view('web.auth.registration');
+
+    }
+
+    public function store(Request $request)
+    {
+        //dd('ok');
+        $validatedData = $request->validate([
+            'company_name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'contact_person' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'arn' => 'required|numeric',
+            'pan' => 'required|regex:/^[0-9A-Za-z]{10}$/',
+            'gst' => 'required|regex:/^[0-9A-Za-z]{15}$/',
+            'privacy_policy' => 'required',
+            'password' => 'required',
+            'g-recaptcha-response' => 'required',
+            //'file' => 'mimes:jpg,jpeg,png',
+
+
+        ]
+        , [
+            'company_name.required' => 'Please enter  company name.',
+            'email.required' => 'Please enter your email address.',
+            'email.unique' => 'This email already exists.',
+            'password.required' => 'Please enter your password.',
+            'contact_person.required' => 'Please enter contact person name.',
+            'city.required' => 'Please enter your city.',
+            'state.required' => 'Please enter your state.',
+            'arn.required' => 'Please enter ARN.',
+            'arn.numeric' => 'ARN must be numeric.',
+            'pan.required' => 'Please enter your PAN.',
+            'pan.regex' => 'PAN must be exactly 10 characters long and alphanumeric.',
+
+            'gst.required' => 'Please enter gst.',
+            'gst.regex' => 'GST must be exactly 15 characters long and alphanumeric.',
+
+            'privacy_policy.required' => 'Check privacy policy',
+            //'file.mimes' => 'Logo must be jpg,jpeg,png'
+           // 'g-recaptcha-response.required' => 'Please complete the reCAPTCHA verification.',
+       
+        ]);
+       // dd('hii');
+        // $recaptcha = new ReCaptcha(env('RECAPTCHA_SECRET_KEY'));
+        // $response = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
+        // if (!$response->isSuccess()) {
+        //     // reCAPTCHA verification failed, redirect back with error message
+        //     return redirect()->back()->withErrors(['captcha' => 'reCAPTCHA verification failed.']);
+        // }
+        // if ($request->hasFile('image'))
+       /* if(isset($request->image) && $request->image != '')
+        {
+          //  dd('hii');
+            $image = $request->file('image');
+           // dd($image);
+            $imageName = time().'.'.$image->extension();
+          //  $fileName = time().'.'.$request->file->extension();
+           // dd($imageName);
+            $files->move(public_path('uploads/users'), $imageName);
+           // dd('upload');
+            $insert['profile'] = $imageName;
+            
+        }*/
+       // dd('filenot');
+
+        $plainPassword = $request->password;
+        // dd('ok1');
+        $registrationDate=date('Y-m-d');
+        $registrationDates = Carbon::now(); 
+       
+        $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+       // dd( $expiryDate);
+      
+       // $registrationDate = Carbon::parse($registrationDate);
+       
+       
+        $hashedPassword = Hash::make($plainPassword);
+        //dd('ok2');
+        $insert['company']=$request->company_name;
+        $insert['email']=$request->email;
+        $insert['contact_person']=$request->contact_person;
+        $insert['city']=$request->city;
+        $insert['state']=$request->state;  
+         $insert['arn']=$request->arn;
+        $insert['pan']=$request->pan;
+        $insert['gst']=$request->gst;
+        $insert['password']=$hashedPassword;
+        $insert['subscription_expiry_date']=$expiryDate;
+        $insert['acc_type']='a';
+        $insert['created_by']='u';
+       // dd($insert);
+
+
+        $user = User::create($insert);
+        $userId = $user->u_id;
+        $userCode = $user->u_code;
+
+        $subscription_table['u_id']=$userId;
+        $subscription_table['u_code']=$userCode;
+        $subscription_table['subscription_type']='free_subscription';
+        $subscription_table['created_date']=date('Y-m-d');
+        $subscription_table['subscription_expiry_date']=$expiryDate;
+        $subscription_table['status']='a';
+        $subscription_table['created_by']='u';
+        $subscription_table['created_id']=$userId;
+        $subscription = Subscription::create($subscription_table);
+
+        // $config = [
+        //     'driver' => 'smtp',
+        //     'host' => 'smtpout.secureserver.net',
+        //     'port' => 465,
+        //     'from' => ['address' => 'info@technopmse.com', 'name' => 'Myplexus'],
+        //     'to'=>$request->email,
+        //     'encryption' => 'tls',
+        //     'username' => 'info@technopmse.com',
+        //     'password' => 'PmSe3xaM23',
+        //   //  'sendmail' => '/usr/sbin/sendmail -bs',
+        // ];
+
+       
+
+
+        try 
+        {
+            // Mail::send('web.auth.email.registration_email',  ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function ($message) use ($request) {
+            //    $message->to($request->email);
+            //     $message->subject('Welcome to our myplexus');
+            // });
+
+            // Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message) use($request){
+            //     $message->to($request->email);
+            //     $message->subject('Application Status');
+            // });
+
+
+            // Mail::raw('This is a test email', function ($message) {
+            //     $message->to('paromita@infosolz.in')->subject('Test Email');
+            // });
+            // registration_email
+            //  Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message){
+            //     $message->to('paromita@infosolz.in');
+            //     $message->subject('Application Status');
+            // });
+
+           
+                Mail::send('web.auth.email.registration_email', ['id' => base64_encode($userId), 'email' => $request->email, 'password' => $plainPassword, 'date' => $registrationDate], function ($message) use($request) {
+                    $message->to($request->email);
+                    $message->subject('Application Status');
+                });
+                //return 'Email sent successfully';
+       
+             
+         
+           // die;
+
+  
+        } 
+        catch(\Exception $e)
+        {
+            return 'Failed to send email: ' . $e->getMessage();
+            die;
+        }
+        return redirect()->route('user.registration')->with('success','You have successfully register and email send your email id -'.$request->email);
+
+
+
+
+
+
+
+
+    }
+
+    public function verify(Request $request,$id)
+    {
+        // echo 'hii';
+        // die;
+        $update['is_approved']='y';
+        $id=base64_decode($id);
+        $user_find=User::find($id);
+        $update_data=$user_find->update($update);
+
+        return redirect()->route('user.user_login');
+
+    }
+
+}
+
+

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Web\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 use App\Lib\Core\Core;
@@ -24,12 +25,15 @@ use App\Models\KnowTheRatio;
 use App\Models\News;
 use App\Models\Newsletter;
 use App\Models\NfoOffer;
+use App\Models\NewFromMyplexus;
 // use App\Plans;
 use App\Models\SettingsModel;
 use App\Models\Teams;
 use App\Models\BlogModel;
 use Session;
 use Socialite;
+use App\Models\FundWatchNew;
+use App\Models\CalculatorRegister;
 
 class PageController extends BaseController
 {
@@ -40,7 +44,7 @@ class PageController extends BaseController
     {
         $classNameArr = explode('\\', __CLASS__);
         $this->className = end($classNameArr);
-        $this->class_id = self::getClassIdByname($this->className);
+        $this->class_id = self::getClassIdByname($this->className);		
         $this->page_path =env('PAGE_PATHS','web.pages');
         $this->defDataArr = self::getDefData();
         $this->BlogImagePath = url('/') . '/' . Config('commonconstants.blog_dir_name_front_end');
@@ -52,14 +56,46 @@ class PageController extends BaseController
         $xml = preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;', $incoming);
         $xml = simplexml_load_string($xml);
         $return_array = array();
-        $html = "";
-        foreach ($xml->channel as $value) {
-            foreach ($value->item as $row) {
-                $html .= "<li><p><a href='" . $row->link . "' target='_blank' title=" . $row->title . ">" . $row->title . "</a></p></li>";
+        $html = [];
+		$p = [];
+		$htm = "";
+		$i=1;
+		$count = 0;
+        foreach ($xml->channel as $value) {			
+            foreach ($value->item as $row) {				
+				$i++;
+					//echo $i;
+		/*$html['data'][] = "<div class='single_slider_nav'><p><a href='" . $row->link . "' target='_blank'>" . $row->title ."</a></p><p>Testing Data One</p><p>Testing Data Two</p></div>";*/	
+		
+		$p['data'][] = "<p><a href='" . $row->link . "' target='_blank'>" . $row->title ."</a></p>";
             }
+			
+			//$html['data'][] = "<div class='single_slider_nav'></div>";
         }
-        $return_array["html"] = $html;
-        return $return_array["html"];
+		
+		$arrays = array_chunk($p['data'], 2);
+		
+		//dd($arrays);
+		
+		//dd( array_chunk($html['data'], 2) );
+        //dd($i);
+        //$return_array["html"] = $html;
+		
+		foreach ($arrays as $array_num => $array) {
+			$htm = "<div class='single_slider_nav'>";
+		  //echo "Array $array_num:\n";
+			//dd($array);
+		  foreach ($array as $item_num => $item) {
+			  $htm .= $item;
+			//echo "  Item $item_num: $item\n";
+		  }
+			$htm .= "</div>";
+			
+			$html['data'][] = $htm;
+			$htm = "";
+		}
+		//dd($html['data']);
+        return json_encode($html);
     }
 
     public function pageData(Request $request, $slug)
@@ -83,10 +119,25 @@ class PageController extends BaseController
     public function homeData(Request $request, $slug = false)
     {
         $dataId = 0;
+		$blogResponses = [];
+		
         if ($slug == false || $slug == '') {
             $dataId = 1;
         }
-
+		
+		$apiURL = 'https://blog.myplexus.com/wp-json/wp/v2/posts';		
+		$blogResponses = $this->blogData($apiURL);
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/funds';
+        $fundReponses = $this->DropDownData($apiURL);
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/fund-classifications';
+        $performaceResponses = $this->DropDownData($apiURL);
+		
+		//dd($performaceResponses);
+		
+		//dd($fundReponses['data']);
+		
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
@@ -120,17 +171,98 @@ class PageController extends BaseController
 
             $aeQuesMdl = AskExpertQuestion::list(['status' => $status], '', 'created_at', 'DESC', 1);
 
-            $fndWtchMdl = FundWatch::frontList([], '', '', '', 1);
+            //$fndWtchMdl = FundWatch::frontList([], '', '', '', 2);
+			$fndWtchMdl = FundWatchNew::where('status','1')->orderBy('id','desc')->with('fundDetails')->get();	
+			
+			
+			//dd($fndWtchMdl);
 
-            $nfoMdl = NfoOffer::frontList([], '', '', '',2);
-            // dd($nfoMdl->toArray());
+            $nfoMdl = NfoOffer::frontList([], '', '', '','',5);
+			
+			$allnewfroms = NewFromMyplexus::all();
+			
+			//dd($allnewfroms);
+			
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "news_folder" => Core::getUploadedURL($commonconstants['news_dir_name']), "user_media_folder" => $commonconstants['user_dir_name'], "payment_lang" => __('payment'), "yes_no_txt" => __('common.yes_no_txt'), "web_lang" => __('web')));
             // dd($defDataArr);
             $BlogImagePath=$this->BlogImagePath;
-            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr','blogPosts','BlogImagePath', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl'));
+            return view('web.home.index', compact('defDataArr', 'dataArr', 'bnrMdl', 'nwsApiData', 'fundManMdl', 'tstmnlMdl', 'pthPgsMdl', 'stngDataArr','blogPosts','BlogImagePath', 'nwsListMdl', 'aeQuesMdl', 'fndWtchMdl', 'nfoMdl', 'blogResponses', 'fundReponses', 'performaceResponses', 'allnewfroms'));
         }
         return abort(404);
     }
+	
+	public function DropDownData($apiURL)
+    {
+        $data = [];
+        $parameters = [];
+		$response = Http::get($apiURL, $parameters);
+		$statusCode = $response->status();
+		$responseBody = json_decode($response->getBody(), true);
+			
+		return $responseBody;
+        //dd($responseBody);
+    }
+	
+	public function blogData($apiURL)
+	{
+		$blogs = [];
+		$parameters = ['per_page' => 3];
+		$response = Http::get($apiURL, $parameters);
+		$statusCode = $response->status();
+		$responseBody = json_decode($response->getBody(), true);
+		
+		//dd($responseBody);
+		
+		if(!empty($responseBody))
+		{
+			foreach($responseBody as $response)
+			{	
+				
+				$blogs[] = array(
+					
+					'img' => $this->blogImage($response['featured_media']),
+					'title' => html_entity_decode($response['title']['rendered']),
+					'short_desc' => $response['content']['rendered'],
+					'link' => $response['link']
+				
+				);
+			}
+		}
+		
+		return $blogs;
+		
+		
+	}
+	
+	public function blogImage($id)
+	{
+		
+		$apiURL = 'https://blog.myplexus.com/wp-json/wp/v2/media/'.$id;		
+		$parameters = "";
+		$response = Http::get($apiURL, $parameters);
+		$statusCode = $response->status();
+		$responseBody = json_decode($response->getBody(), true);	
+		$img_url = "";
+		
+        //dd($responseBody);
+
+        if(array_key_exists('media_details', $responseBody))
+        {
+            if(isset($responseBody['media_details']['sizes']['full']['source_url']))
+            {
+                $img_url = $responseBody['media_details']['sizes']['full']['source_url'];
+                
+            } else {
+                
+                $img_url = $responseBody['media_details']['sizes']['medium']['source_url'];
+            }
+        }
+		
+		
+		//dd($responseBody);
+		
+		return $img_url;
+	}
 
     public function storeNewsletter(Request $request)
     {
@@ -263,6 +395,30 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name'])));
             return view($this->page_path.'.about', compact('defDataArr', 'dataArr', 'teamMdl'));
+        }
+        return abort(404);
+    }
+
+
+    public function performanceSynopsisData(Request $request, $slug = false)
+    {
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 54;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.performance-synopsis', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
@@ -538,7 +694,7 @@ class PageController extends BaseController
         $dataId = 0;
         if ($slug == false || $slug == '') {
             $dataId = 8;
-        }
+        }		
 
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
         if (!empty($dataArr)) {
@@ -555,9 +711,56 @@ class PageController extends BaseController
         }
         return abort(404);
     }
+	
+	public function corpusDetailsData(Request $request, $slug = false)
+    {
+		
+		 $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 51;
+        }		
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+		
+		//dd($dataArr);
+		
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            $apiUrl = "https://www.myplexus.com/api/v1/fund-classifications";
+
+            $responseData = $this->getData($apiUrl);
+
+            //dd($responseData);
+
+            return view($this->page_path.'.corpus-details', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+
+    }
+
+    public function getData($apiUrl)
+    {
+        $parameters = "";
+		$response = Http::get($apiUrl, $parameters);
+		$statusCode = $response->status();
+		$responseBody = json_decode($response->getBody(), true);
+
+        return $responseBody;
+    }
+	
+	
 
     public function weeklySnapshotData(Request $request, $slug = false)
     {
+		
         $dataId = 0;
         if ($slug == false || $slug == '') {
             $dataId = 10;
@@ -573,11 +776,14 @@ class PageController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
 
             $defDataArr = $this->defDataArr;
+			//dd($dataArr);
 
             return view($this->page_path.'.weekly-snapshot', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
+	
+	
 
     public function monthlySnapshotData(Request $request, $slug = false)
     {
@@ -585,8 +791,9 @@ class PageController extends BaseController
         if ($slug == false || $slug == '') {
             $dataId = 9;
         }
-
+        // dd($this->class_id);
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        // dd($dataArr);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
 
@@ -604,11 +811,12 @@ class PageController extends BaseController
 
     public function monthlyRankingData(Request $request, $slug = false)
     {
+        // dd($request->all());
         $dataId = 0;
         if ($slug == false || $slug == '') {
             $dataId = 6;
         }
-
+        // dd($dataId);
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
@@ -619,6 +827,8 @@ class PageController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
 
             $defDataArr = $this->defDataArr;
+            // dd($dataArr);
+            // dd($this->page_path);
             return view($this->page_path.'.monthly-ranking', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
@@ -641,7 +851,8 @@ class PageController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
 
             $defDataArr = $this->defDataArr;
-
+			//print_r($defDataArr);
+            //dd($this->page_path);
             return view($this->page_path.'.fund-performance', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
@@ -678,6 +889,8 @@ class PageController extends BaseController
         }
 
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+		//dd($dataArr);
+		$dataArr['title'] = 'Category Performance Snapshot';
         if (!empty($dataArr)) {
             $dataArr['full_url'] = $request->fullUrl();
 
@@ -687,7 +900,7 @@ class PageController extends BaseController
             $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
 
             $defDataArr = $this->defDataArr;
-
+			//dd($this->page_path);
             return view($this->page_path.'.performance-snapshot', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
@@ -712,30 +925,98 @@ class PageController extends BaseController
             if ($request->isMethod('post')) {
                 session()->put('useremail', $request->useremail);
                 session()->put('username', $request->username);
+
+                //data storing for loggin session
+                $calculator_register = new CalculatorRegister();
+                // dd($calculator_register);
+                $calculator_register->username = $request->username;
+                $calculator_register->email = $request->useremail;
+                $calculator_register->save();
+				return redirect('https://myplexus.com/calctest');
+				//dd(url()->previous());				
             }
-            return view('themes.frontend.pages.calculators', compact('defDataArr', 'dataArr'));
+			
+			//dd($request->fullUrl());
+            return view($this->page_path.'.calculators', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+    }
+
+	 public function calculatorsPageDatas(Request $request, $slug = false)
+    {
+		// dd($request);
+        $dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 44;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+            if ($request->isMethod('post')) {
+                // dd('post');
+                session()->put('useremail', $request->useremail);
+                session()->put('username', $request->username);
+
+                
+				return redirect(url()->previous());
+				//dd(url()->previous());				
+            }else{
+                // dd('Not');
+            }
+			
+			//dd($request->fullUrl());
+            return view($this->page_path.'.calculatortest', compact('defDataArr', 'dataArr'));
         }
         return abort(404);
     }
 
     public function redirectCalculator($service, Request $request)
     {
+        // dd($request->all());
+        // dd($service);
+        // dd(Socialite::driver($service));
+        // dd(Socialite);
+        // $drivers = array_keys(config('services.socialite', []));
+        // dd($drivers);
         return Socialite::driver($service)->redirect();
+        // return Socialite::driver('google')->redirectUrl(config('services.google.calcredirect'))->redirect();
     }
 
     public function callbackCalculator(Request $request, $provider)
     {
+        // dd($provider);
+        if($provider=='google'){
+            $provider = 'google-calc';
+        }else{
+            $provider = 'facebook-calc';
+        }
         $frontconstants = Config('frontconstants');
         $webLang = __('web');
         $authLang = __('auth');
         $userSocial =   Socialite::driver($provider)->stateless()->user();
+        // dd($userSocial);
 
         $useremail = $userSocial->getEmail();
+        // dd($useremail);
         $username = $userSocial->getName();
 
         if ($useremail == '' || $useremail === null) {
             return redirect()->route('web.calculators')->with('alert', $frontconstants['alert_css']['3'])->with('message', $authLang['warning']['email_not_provided'])->with('title', $webLang['warning_ttl']);
         }
+
+        $calculator_register = new CalculatorRegister();
+        // dd($calculator_register);
+        $calculator_register->username = $username;
+        $calculator_register->email = $useremail;
+        $calculator_register->platform = $provider=='google-calc'? '1' : '2';
+        $calculator_register->save();
 
         session()->put('useremail', $useremail);
         session()->put('username', $username);
@@ -767,7 +1048,7 @@ class PageController extends BaseController
 
             $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['pdf_dir_name']), "setting_folder" => Core::getUploadedURL($commonconstants['setting_dir_name']), "web_lang" => __('web')));
 
-            return view('themes.frontend.pages.thoughts-and-opinion-on-funds', compact('defDataArr', 'dataArr', 'fundSgsListMdl', 'pthPgsMdl', 'stngDataArr'));
+            return view($this->page_path.'.thoughts-and-opinion-on-funds', compact('defDataArr', 'dataArr', 'fundSgsListMdl', 'pthPgsMdl', 'stngDataArr'));
         }
         return abort(404);
     }
@@ -793,10 +1074,20 @@ class PageController extends BaseController
             $commonconstants = Config('commonconstants');
 
             $dataListMdl = News::list(['status' => $commonconstants['status_val']['1']], ['title', 'slug', 'media_type', 'image', 'video_from', 'video_data', 'video_image', 'news_source_link']);
+			
+			//dd($dataListMdl);
+			
+			//dd($this->defDataArr);
 
-            $defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['news_dir_name'])));
+            //$defDataArr = array_merge($this->defDataArr, array("media_folder" => Core::getUploadedURL($commonconstants['news_dir_name'])));
+			
+			$defDataArr = array_merge($this->defDataArr, array("media_folder" => 'https://www.new.myplexus.com/storage/news/'));
+			
+			//dd($defDataArr);
 
-            return view('themes.frontend.pages.in-the-news', compact('defDataArr', 'dataArr', 'dataListMdl'));
+            //return view('themes.frontend.pages.in-the-news', compact('defDataArr', 'dataArr', 'dataListMdl'));
+			
+			return view($this->page_path.'.in-the-news', compact('defDataArr', 'dataArr', 'dataListMdl'));			
         }
         return abort(404);
     }
@@ -823,4 +1114,177 @@ class PageController extends BaseController
         }
         return abort(404);
     }
+	
+	public function fundManDetailsData(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 51;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.fund-man-details', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+	}
+	
+	public function fundManDetailsShridattaBhandwaldar(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 52;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.shridatta-bhandwaldar', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+	}
+	
+	public function fundManDetailsShreyasDevalkar(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 53;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.shreyas-devalkar', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+	}
+	
+	public function fundManDetailsAniruddhaNaha(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 54;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.aniruddha-naha', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+	}
+	
+	public function fundManDetailsSanjayChawla(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 55;
+        }
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.sanjay-chawla', compact('defDataArr', 'dataArr'));
+        }
+        return abort(404);
+	}
+	
+	public function returnCalculationData(Request $request, $slug = false)
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 56;
+        }
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/funds';
+        $fundReponses = $this->DropDownData($apiURL);
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/indices';
+        $index_fundReponses = $this->DropDownData($apiURL);
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.return-calculator', compact('defDataArr', 'dataArr', 'fundReponses', 'index_fundReponses'));
+        }
+        return abort(404);
+	}
+	
+	public function volatilityCalculationData(Request $request, $slug = false) 
+	{
+		$dataId = 0;
+        if ($slug == false || $slug == '') {
+            $dataId = 57;
+        }
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/funds';
+        $fundReponses = $this->DropDownData($apiURL);
+		
+		$apiURL = 'https://www.myplexus.com/api/v1/indices';
+        $index_fundReponses = $this->DropDownData($apiURL);
+
+        $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $defDataArr = $this->defDataArr;
+
+            return view($this->page_path.'.volatility-calculator', compact('defDataArr', 'dataArr', 'fundReponses', 'index_fundReponses'));
+        }
+        return abort(404);
+	}
 }

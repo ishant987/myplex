@@ -1,0 +1,269 @@
+<?php
+
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\FundMaster;
+use App\Models\FundDetail;
+use App\Models\IndicesDetail;
+use Carbon\Carbon;
+
+
+class CalculatordashbordController extends BaseController
+{
+    public $className;
+    public $class_id;
+
+    public function __construct()
+    {
+        $classNameArr = explode('\\', __CLASS__);
+        $this->className = end($classNameArr);
+        $this->class_id = self::getClassIdByname($this->className);
+        $this->page_path =env('PAGE_PATHS','web.pages');
+        $this->defDataArr = self::getDefData();
+    }
+    public function index(Request $request, $slug = false)
+    {		
+        // $aa = 'ok';
+        // return $aa;
+        
+        // dd("ok");
+
+        //return view($this->page_path.'.calculators', compact('defDataArr', 'dataArr'));
+        //return abort(404);
+        return view('web.infosolz-calculator.list');
+    }
+
+    public function beta_calculator(Request $request)
+    {
+        $input = $request->all();
+        if(isset($input['search']) && $input['search'] == 'Search')
+        {
+
+            $this->validate($request, [
+                'search_fund_name' => 'required',
+                'search_indices_name' => 'required',
+                'search_from_date' => 'required',
+                'search_to_date' => 'required',
+            ],[
+                'search_fund_name.required' => 'The fund name field is required',
+                'search_indices_name.required' => 'The indices name field is required',
+                'search_from_date.required' => 'The from date field is required',
+                'search_to_date.required' => 'The to date field is required',
+            ]);
+            
+            $data['search_fund_name'] = $input['search_fund_name'];
+            // $data['search_indices_name'] = $input['search_indices_name'];
+            $data['search_from_date'] = $input['search_from_date'];
+            $data['search_to_date'] = $input['search_to_date'];
+
+            $fundsDatas = FundDetail::where('fund_code',$input['search_fund_name'])->where('holiday','<>',1)->whereBetween('entry_date', [date("Y-m-d", strtotime($input['search_from_date'])),date("Y-m-d", strtotime($input['search_to_date']))])->get();
+
+            $fund_details = FundMaster::select('indices_name')->where('fund_code',$input['search_fund_name'])->first();
+
+            $indicesDatas = IndicesDetail::where('name',$fund_details->indices_name)->where('holiday','<>',1)->whereBetween('entry_date', [date("Y-m-d", strtotime($input['search_from_date'])),date("Y-m-d", strtotime($input['search_to_date']))])->get();
+            
+            $total_fund = count($fundsDatas);
+            $total_nav = 0;
+            $j = 0;
+            if($total_fund > 0)
+            {
+                foreach($fundsDatas as $row)
+                {
+                    if($j != 0)
+                    {
+                        $total_nav += $row->percentage_change;
+                    }
+                    $j++;
+                }
+            }
+            if($total_fund != 0)
+            {
+                $average_of_nav = ($total_nav/$total_fund);
+            }
+            else
+            {
+                $average_of_nav = 0;
+            }
+            
+
+            $total_indices = count($indicesDatas);
+            $total_index = 0;
+            if($total_indices > 0)
+            {
+                foreach($indicesDatas as $row)
+                {
+                    $total_index += $row->percentage_change;
+                }
+            }
+            //dd($total_index);
+            if($total_indices != 0)
+            {
+                $average_of_index = ($total_index/$total_indices);
+            }
+            else
+            {
+                $average_of_index = 0;
+            }
+            
+
+
+
+
+            $fundsDatasArray = $fundsDatas->toArray();
+            $indicesDatasArray = $indicesDatas->toArray();
+            
+
+
+            $start = Carbon::parse(date("Y-m-d", strtotime($input['search_from_date'])));
+            $end = Carbon::parse(date("Y-m-d", strtotime($input['search_to_date'])));
+
+            $allDates = [];
+
+            while ($start->lte($end)) {
+                $allDates[] = $start->toDateString();
+                $start->addDay(); 
+            }
+
+            // while ($start->lte($end)) {
+            //     // Skip Saturdays and Sundays (ISO-8601 numeric representation of the day of the week)
+            //     if ($start->dayOfWeekIso >= 1 && $start->dayOfWeekIso <= 5) {
+            //         $allDates[] = $start->toDateString();
+            //     }
+            
+            //     $start->addDay();
+            // }
+
+            $searchedResultArray = [];
+            $i = 0;
+            $f_g_sum = 0;
+            $h_sum = 0;
+            foreach($allDates as $value)
+            {
+                $filteredFundRows = [];
+                $filteredIndicesRows = [];
+
+                $filteredFundRows = array_filter($fundsDatasArray, function ($row) use ($value) {
+                    return $row['entry_date'] === $value;
+                });
+
+                $foundFundRow = reset($filteredFundRows);
+                
+                $filteredIndicesRows = array_filter($indicesDatasArray, function ($row1) use ($value) {
+                    return $row1['entry_date'] === $value;
+                });
+
+                $foundIndicesRow = reset($filteredIndicesRows);
+
+                $fund_return_average_of_return = 0;
+                $index_ret_average_of_index = 0;
+                
+
+                if($foundIndicesRow != false )
+                {
+                    if($i == 0)
+                    {
+                        $fund_return = 0;
+                    }
+                    else
+                    {
+                        $fund_return = $foundFundRow['percentage_change'] ?? 0;
+                    }
+
+                    $fund_return_average_of_return = $fund_return-$average_of_nav;
+
+                    //$index_ret_average_of_index = isset($foundIndicesRow['percentage_change']) ? $foundIndicesRow['percentage_change'] : 0 -$average_of_index;
+                    
+                    if(isset($foundIndicesRow['percentage_change'])){
+                        $index_ret_average_of_index = $foundIndicesRow['percentage_change'] - $average_of_index;
+                    }else{
+                        $index_ret_average_of_index = 0-$average_of_index;
+                    }
+
+                    $index_rate_average_of_index_squere = $index_ret_average_of_index*$index_ret_average_of_index;
+                    $f_g = $fund_return_average_of_return*$index_ret_average_of_index;
+
+                    $res = array(
+                        'entry_date' => date("d-m-Y", strtotime($value)),
+                        'fund_closing' => $foundFundRow['closing_nav'] ?? 0,
+                        'indices_closing' => $foundIndicesRow['closing_value'] ?? 0,
+                        'fund_return' => $fund_return,
+                        'index_return' => $foundIndicesRow['percentage_change'] ?? 0,
+                        'fund_return_average_of_return' => ($fund_return_average_of_return == -0) ? 0 : $fund_return_average_of_return,
+                        'index_ret_average_of_index' =>  ($index_ret_average_of_index == -0) ? 0 : $index_ret_average_of_index,
+                        'index_rate_average_of_index_squere' => ($index_rate_average_of_index_squere == -0) ? 0 : $index_rate_average_of_index_squere,
+                        'f_g' => ($f_g == -0) ? 0 : $f_g,
+                    );
+                    $f_g_sum += $fund_return_average_of_return*$index_ret_average_of_index;
+                    $h_sum +=$index_ret_average_of_index*$index_ret_average_of_index;
+                    $i++;
+                    array_push($searchedResultArray , $res);
+                    
+                }
+            }
+            $data['searched_result'] = $searchedResultArray;
+            $data['average_of_nav'] = $average_of_nav ?? 0;
+            $data['average_of_index'] = $average_of_index ?? 0;
+            $data['sum_of_fg'] = $f_g_sum ?? 0;
+            if($i != 0)
+            {
+                //$data['covariance'] = $covariance = $f_g_sum??0/($i-1);
+                if($f_g_sum > 0){
+                    $covariance = $f_g_sum / ($i-1);
+                }else{
+                    $covariance = 0;
+                }
+                $data['covariance'] = $covariance;
+                //$data['variance'] = $variance = $h_sum??0/$i;
+
+                if($h_sum > 0){
+                    $variance = $h_sum / $i;
+                }else{
+                    $variance = 0;
+                }
+
+                $data['variance'] = $variance;
+            }
+            else
+            {
+                $data['covariance'] = $covariance = 0;
+                $data['variance'] = $variance = 0;
+            }
+            
+            
+            $data['sum_of_h'] = $h_sum ?? 0;
+            $data['total_number_of_result'] = $i;
+            if($variance != 0)
+            {
+                $data['beta'] = $covariance/$variance;
+            }
+            else
+            {
+                $data['beta'] = 0;
+            }
+            
+        }
+        
+        $data['fundNames'] = FundMaster::select('fund_name','fund_code')->where('status',1)->get();
+
+        return view('web.infosolz-calculator.beta',$data);
+    }
+
+    public function get_indices_name(Request $request)
+    {
+        $fund_code = $request->fund_code;
+        $fund_details = FundMaster::select('indices_name')->where('fund_code',$fund_code)->first();
+        if($fund_details)
+        {
+            echo $fund_details->indices_name;
+        }
+        else
+        {
+            echo 'not_found';
+        }
+    }
+
+    
+    
+}

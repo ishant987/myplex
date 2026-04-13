@@ -3,9 +3,9 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
 <script src="{{ mix('js/vue-app.js') }}"></script>
 <script src="{{asset('themes/frontend/assets/v1/js/stock_header.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{asset('themes/frontend/assets/v1/js/custom.js')}}"></script>
 <script src="{{ asset('themes/assets/js/jquery.validate.min.js') }}"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -13,6 +13,7 @@
 @if(View::hasSection('captcha'))
 <script src="https://www.google.com/recaptcha/api.js?render={{ Config('commonconstants.recaptcha.site_key') }}"></script>
 @endif
+
 {{-- @if(View::hasSection('moneycontrol'))
 <script src="https://stat2.moneycontrol.com/mcjs/common/jquery-1.7.2.min.js"></script>
 <script>

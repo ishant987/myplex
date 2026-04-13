@@ -26,6 +26,7 @@ use App\Lib\Core\MailPS;
 use Validator;
 use Illuminate\Support\Str;
 use Storage;
+Use Exception;
 
 class FrontDataController extends BaseController
 {
@@ -44,12 +45,13 @@ class FrontDataController extends BaseController
         return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
     }
     public function getCurrencies()
-    {
+    {		
         $responseArr = [];
-        $dataArr = CurrencyMaster::select('name', 'cm_id')->where('status', 1)->get();
+        $dataArr = CurrencyMaster::select('name', 'cm_id', 'is_comodity')->where('status', 1)->get();
         $responseArr = $dataArr;
         return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
-    }
+    }   
+	
     public function getFundClassifications()
     {
         $responseArr = [];
@@ -94,6 +96,8 @@ class FrontDataController extends BaseController
         }
         $responseArr['portfolio'] = $dataArr;
         $responseArr['total_amount'] = count($dataArr) ? sprintf('%0.3f', $dataArr[0]->corpus_entry) : 0;
+        $responseArr['month'] = Carbon::parse($last_entry->entry_date)->format('F');
+        $responseArr['year'] = Carbon::parse($last_entry->entry_date)->format('Y');
 
         return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
     }
@@ -105,32 +109,64 @@ class FrontDataController extends BaseController
         $date = date("Y-m-d");
         if ($request->type == 'weekly') {
             $weekday = date('l', strtotime($date));
+            // if ($weekday == 'Monday') {
+            //     $start_date = date('Y-m-d', strtotime('-2 days'));
+            //     $end_date = date('Y-m-d', strtotime('-8 days'));
+            // }
+            // if ($weekday == 'Tuesday') {
+            //     $start_date = date('Y-m-d', strtotime('-3 days'));
+            //     $end_date = date('Y-m-d', strtotime('-9 days'));
+            // }
+            // if ($weekday == 'Wednesday') {
+            //     // dd('Wed');
+            //     $start_date = date('Y-m-d', strtotime('-4 days'));
+            //     $end_date = date('Y-m-d', strtotime('-10 days'));
+            // }
+            // if ($weekday == 'Thursday') {
+            //     $start_date = date('Y-m-d', strtotime('-5 days'));
+            //     $end_date = date('Y-m-d', strtotime('-11 days'));
+            // }
+            // if ($weekday == 'Friday') {
+            //     $start_date = date('Y-m-d', strtotime('-6 days'));
+            //     $end_date = date('Y-m-d', strtotime('-12 days'));
+            // }
+            // if ($weekday == 'Saturday') {
+            //     $start_date = date('Y-m-d', strtotime('-0 days'));
+            //     $end_date = date('Y-m-d', strtotime('-6 days'));
+            // }
+            // if ($weekday == 'Sunday') {
+            //     $start_date = date('Y-m-d', strtotime('-1 days'));
+            //     $end_date = date('Y-m-d', strtotime('-7 days'));
+            // }
+
+            //changed logic for the last date to be friday instead of saturday...
             if ($weekday == 'Monday') {
-                $start_date = date('Y-m-d', strtotime('-2 days'));
+                $start_date = date('Y-m-d', strtotime('-3 days'));
                 $end_date = date('Y-m-d', strtotime('-9 days'));
             }
             if ($weekday == 'Tuesday') {
-                $start_date = date('Y-m-d', strtotime('-3 days'));
+                $start_date = date('Y-m-d', strtotime('-4 days'));
                 $end_date = date('Y-m-d', strtotime('-10 days'));
             }
             if ($weekday == 'Wednesday') {
-                $start_date = date('Y-m-d', strtotime('-4 days'));
+                // dd('Wed');
+                $start_date = date('Y-m-d', strtotime('-5 days'));
                 $end_date = date('Y-m-d', strtotime('-11 days'));
             }
             if ($weekday == 'Thursday') {
-                $start_date = date('Y-m-d', strtotime('-5 days'));
+                $start_date = date('Y-m-d', strtotime('-6 days'));
                 $end_date = date('Y-m-d', strtotime('-12 days'));
             }
             if ($weekday == 'Friday') {
-                $start_date = date('Y-m-d', strtotime('-6 days'));
-                $end_date = date('Y-m-d', strtotime('-13 days'));
+                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $end_date = date('Y-m-d', strtotime('-6 days'));
             }
             if ($weekday == 'Saturday') {
-                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $start_date = date('Y-m-d', strtotime('-1 days'));
                 $end_date = date('Y-m-d', strtotime('-7 days'));
             }
             if ($weekday == 'Sunday') {
-                $start_date = date('Y-m-d', strtotime('-1 days'));
+                $start_date = date('Y-m-d', strtotime('-2 days'));
                 $end_date = date('Y-m-d', strtotime('-8 days'));
             }
         } else {
@@ -146,11 +182,20 @@ class FrontDataController extends BaseController
     {
         $dataArr = $responseArr = [];
         $message = __('message');
-
-        $dataArr = DB::select('CALL sp_fund_composition_classification('.$type_id.')');
+		try
+		{
+			$dataArr = DB::select('CALL sp_fund_composition_classification('.$type_id.')');
+		}
+		catch(Exception $e)
+		{
+		   dd($e->getMessage());
+		}
+	
+        //$dataArr = DB::select('CALL sp_fund_composition_classification_testcd('.$type_id.')');
         if (count($dataArr)) {
             $responseArr['composition_snapshot'] = $dataArr;
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+			//return json_encode($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
     }
@@ -161,32 +206,32 @@ class FrontDataController extends BaseController
         $date = date("Y-m-d");
         $weekday = date('l', strtotime($date));
         if ($weekday == 'Monday') {
-            $start_date = date('Y-m-d', strtotime('-2 days'));
-            $end_date = date('Y-m-d', strtotime('-9 days'));
-        }
-        if ($weekday == 'Tuesday') {
             $start_date = date('Y-m-d', strtotime('-3 days'));
             $end_date = date('Y-m-d', strtotime('-10 days'));
         }
-        if ($weekday == 'Wednesday') {
+        if ($weekday == 'Tuesday') {
             $start_date = date('Y-m-d', strtotime('-4 days'));
             $end_date = date('Y-m-d', strtotime('-11 days'));
         }
-        if ($weekday == 'Thursday') {
+        if ($weekday == 'Wednesday') {
             $start_date = date('Y-m-d', strtotime('-5 days'));
             $end_date = date('Y-m-d', strtotime('-12 days'));
         }
-        if ($weekday == 'Friday') {
+        if ($weekday == 'Thursday') {
             $start_date = date('Y-m-d', strtotime('-6 days'));
             $end_date = date('Y-m-d', strtotime('-13 days'));
         }
-        if ($weekday == 'Saturday') {
+        if ($weekday == 'Friday') {
             $start_date = date('Y-m-d', strtotime('-0 days'));
             $end_date = date('Y-m-d', strtotime('-7 days'));
         }
-        if ($weekday == 'Sunday') {
+        if ($weekday == 'Saturday') {
             $start_date = date('Y-m-d', strtotime('-1 days'));
             $end_date = date('Y-m-d', strtotime('-8 days'));
+        }
+        if ($weekday == 'Sunday') {
+            $start_date = date('Y-m-d', strtotime('-2 days'));
+            $end_date = date('Y-m-d', strtotime('-9 days'));
         }
         $weekly_best_funds = DB::select('CALL sp_snapshot_weekly_fund("'.$start_date.'")');
         if (count($weekly_best_funds)) {
@@ -221,43 +266,40 @@ class FrontDataController extends BaseController
         $date = date("Y-m-d");
         $weekday = date('l', strtotime($date));
         if ($weekday == 'Monday') {
-            $start_date = date('Y-m-d', strtotime('-2 days'));
+            $start_date = date('Y-m-d', strtotime('-3 days'));
             $end_date = date('Y-m-d', strtotime('-9 days'));
         }
         if ($weekday == 'Tuesday') {
-            $start_date = date('Y-m-d', strtotime('-3 days'));
+            $start_date = date('Y-m-d', strtotime('-4 days'));
             $end_date = date('Y-m-d', strtotime('-10 days'));
         }
         if ($weekday == 'Wednesday') {
-            $start_date = date('Y-m-d', strtotime('-4 days'));
+            $start_date = date('Y-m-d', strtotime('-5 days'));
             $end_date = date('Y-m-d', strtotime('-11 days'));
         }
         if ($weekday == 'Thursday') {
-            $start_date = date('Y-m-d', strtotime('-5 days'));
+            $start_date = date('Y-m-d', strtotime('-6 days'));
             $end_date = date('Y-m-d', strtotime('-12 days'));
         }
         if ($weekday == 'Friday') {
-            $start_date = date('Y-m-d', strtotime('-6 days'));
-            $end_date = date('Y-m-d', strtotime('-13 days'));
+            $start_date = date('Y-m-d', strtotime('-0 days'));
+            $end_date = date('Y-m-d', strtotime('-6 days'));
         }
         if ($weekday == 'Saturday') {
-            $start_date = date('Y-m-d', strtotime('-0 days'));
+            $start_date = date('Y-m-d', strtotime('-1 days'));
             $end_date = date('Y-m-d', strtotime('-7 days'));
         }
         if ($weekday == 'Sunday') {
-            $start_date = date('Y-m-d', strtotime('-1 days'));
+            // dd('sunday');
+            $start_date = date('Y-m-d', strtotime('-2 days'));
             $end_date = date('Y-m-d', strtotime('-8 days'));
         }
         $weekly_benchmark = DB::select('CALL sp_snapshot_weekly_benchmark("'.$start_date.'")');
+        // dd($start_date);
         if (count($weekly_benchmark)) {
             $responseArr['changes_fund_type'] = $weekly_benchmark;
-
-
-
             $responseArr['from_date'] = date('d/m/Y', strtotime($end_date));
             $responseArr['to_date'] = date('d/m/Y', strtotime($start_date));
-
-
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
@@ -267,8 +309,9 @@ class FrontDataController extends BaseController
         $dataArr = $responseArr = [];
         $message = __('message');
         $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
+        // dd($start_date);
         $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
-
+        // dd($end_date);
         $monthly_benchmark = DB::select('CALL sp_snapshot_monthly_benchmark("'.$start_date.'")');
         if (count($monthly_benchmark)) {
             $responseArr['changes_fund_type'] = $monthly_benchmark;
@@ -283,48 +326,78 @@ class FrontDataController extends BaseController
     }
     public function getChangesFund(Request $request)
     {
+        // dd($request->all());
         $dataArr = $responseArr = [];
         $message = __('message');
         $date = date("Y-m-d");
+        $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
         if ($request->type == 'weekly') {
             $weekday = date('l', strtotime($date));
             if ($weekday == 'Monday') {
-                $start_date = date('Y-m-d', strtotime('-2 days'));
+                $start_date = date('Y-m-d', strtotime('-3 days'));
                 $end_date = date('Y-m-d', strtotime('-9 days'));
             }
             if ($weekday == 'Tuesday') {
-                $start_date = date('Y-m-d', strtotime('-3 days'));
+                $start_date = date('Y-m-d', strtotime('-4 days'));
                 $end_date = date('Y-m-d', strtotime('-10 days'));
             }
             if ($weekday == 'Wednesday') {
-                $start_date = date('Y-m-d', strtotime('-4 days'));
+                $start_date = date('Y-m-d', strtotime('-5 days'));
                 $end_date = date('Y-m-d', strtotime('-11 days'));
             }
             if ($weekday == 'Thursday') {
-                $start_date = date('Y-m-d', strtotime('-5 days'));
+                $start_date = date('Y-m-d', strtotime('-6 days'));
                 $end_date = date('Y-m-d', strtotime('-12 days'));
             }
             if ($weekday == 'Friday') {
-                $start_date = date('Y-m-d', strtotime('-6 days'));
-                $end_date = date('Y-m-d', strtotime('-13 days'));
+                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $end_date = date('Y-m-d', strtotime('-6 days'));
             }
             if ($weekday == 'Saturday') {
-                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $start_date = date('Y-m-d', strtotime('-1 days'));
                 $end_date = date('Y-m-d', strtotime('-7 days'));
             }
             if ($weekday == 'Sunday') {
-                $start_date = date('Y-m-d', strtotime('-1 days'));
+                $start_date = date('Y-m-d', strtotime('-2 days'));
                 $end_date = date('Y-m-d', strtotime('-8 days'));
             }
-            $days = 7;
+            $days = 6;
+            $query = 'CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'","'.$days.'","weekly")';
         } else {
-            $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
-            $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
-            $days = strtotime($start_date) - strtotime($end_date);
-            $days = (int)round($days / (60 * 60 * 24))+1;
+            $start_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
+            $end_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
+            // dd($end_date);
+            // $days = strtotime($start_date) - strtotime($end_date);
+            // $days = (int)round($days / (60 * 60 * 24))+1;
+            // $days = 30;
+            // dd(date('d', strtotime($end_date)));
+            $end_days = date('d', strtotime($end_date));
+             if($end_days == 31){
+                // dd('31');
+                $days = 30;
+             }elseif($end_days == 30){
+                $days = 29;
+             }elseif($end_days == 29){
+                $days = 28;
+             }elseif($end_days == 28){
+                $days = 27;
+             }
+            //  dd($days.'-final');
+            $query = 'CALL sp_snapshot_fund_change_val("'.$end_date.'","'.$type_id.'","'.$days.'","monthly")';
         }
-        $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
-        $changes_fund = DB::select('CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'",'.$days.')');
+        
+        // dd($start_date);
+        // dd($type_id);
+        // dd($days);
+        // $changes_fund = DB::select('CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'",'.$days.')');
+        // dd($changes_fund);
+        // dd($days);
+        // $query = 'CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'","'.$days.'","")';
+        // dd($query);
+        $changes_fund = DB::select($query);
+        // Print the SQL query
+        // echo $query;
+
         if (count($changes_fund)) {
             $responseArr['changes_fund'] = $changes_fund;
             $responseArr['from_date'] = date('d/m/Y', strtotime($end_date));
@@ -335,56 +408,76 @@ class FrontDataController extends BaseController
     }
     public function getChangesIndex(Request $request)
     {
+        // dd($request);
         $dataArr = $responseArr = [];
         $message = __('message');
         $date = date("Y-m-d");
         if ($request->type == 'weekly') {
+            // dd('weekly');
             $weekday = date('l', strtotime($date));
             if ($weekday == 'Monday') {
-                $start_date = date('Y-m-d', strtotime('-2 days'));
+                $start_date = date('Y-m-d', strtotime('-3 days'));
                 $end_date = date('Y-m-d', strtotime('-9 days'));
+                // dd("Monday Start Date: ".$start_date." End Date: ".$end_date); 
             }
             if ($weekday == 'Tuesday') {
-                $start_date = date('Y-m-d', strtotime('-3 days'));
+                $start_date = date('Y-m-d', strtotime('-4 days'));
                 $end_date = date('Y-m-d', strtotime('-10 days'));
             }
             if ($weekday == 'Wednesday') {
-                $start_date = date('Y-m-d', strtotime('-4 days'));
+                $start_date = date('Y-m-d', strtotime('-5 days'));
                 $end_date = date('Y-m-d', strtotime('-11 days'));
+                // dd("Start Date: ".$start_date." End Date: ".$end_date);
             }
             if ($weekday == 'Thursday') {
-                $start_date = date('Y-m-d', strtotime('-5 days'));
+                $start_date = date('Y-m-d', strtotime('-6 days'));
                 $end_date = date('Y-m-d', strtotime('-12 days'));
             }
             if ($weekday == 'Friday') {
-                $start_date = date('Y-m-d', strtotime('-6 days'));
-                $end_date = date('Y-m-d', strtotime('-13 days'));
+                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $end_date = date('Y-m-d', strtotime('-6 days'));
             }
             if ($weekday == 'Saturday') {
-                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $start_date = date('Y-m-d', strtotime('-1 days'));
                 $end_date = date('Y-m-d', strtotime('-7 days'));
             }
             if ($weekday == 'Sunday') {
-                $start_date = date('Y-m-d', strtotime('-1 days'));
+                $start_date = date('Y-m-d', strtotime('-2 days'));
                 $end_date = date('Y-m-d', strtotime('-8 days'));
             }
-            $days = 7;
-        } else {
-            // $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
-            // $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
-			$start_date =date('Y-m-d',strtotime('2021-02-01'));
-			$end_date =date('Y-m-d',strtotime('2021-03-01'));
-            $days = strtotime($start_date) - strtotime($end_date);
-            $days = (int)round($days / (60 * 60 * 24))+1;
-        }
+            $days = 6;
 
-        $changes_indices = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_INDICES","'.$start_date.'",'.$days.')');
-        if (count($changes_indices)) {
-            $responseArr['changes_index'] = $changes_indices;
-            $responseArr['from_date'] = date('d/m/Y', strtotime($end_date));
-            $responseArr['to_date'] = date('d/m/Y', strtotime($start_date));
-            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+            // dd("Start Date: ".$start_date." End Date: ".$end_date);
+            // dd($end_date);
+            $changes_indices = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_INDICES","'.$start_date.'",'.$days.')');
+            if (count($changes_indices)) {
+                // dd($changes_indices);
+                $responseArr['changes_index'] = $changes_indices;
+                $responseArr['from_date'] = $start_date;
+                $responseArr['to_date'] = $end_date;
+                return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+            }
+        } else {
+            $start_date = date('Y-m-01', strtotime('first day of previous month'));
+            $end_date = date('Y-m-t', strtotime('last day of previous month'));
+            // $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
+            $days = strtotime($end_date) - strtotime($start_date);
+            // dd($days);
+            $days = (int)round($days / (60 * 60 * 24));
+            // dd($days);
+            // dd("Start Date: ".$start_date." End Date: ".$end_date);
+            // dd("Start Date: ".$start_date." End Date: ".$end_date);
+            // dd($end_date);
+            $changes_indices = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_INDICES","'.$end_date.'",'.$days.')');
+            if (count($changes_indices)) {
+                // dd($changes_indices);
+                $responseArr['changes_index'] = $changes_indices;
+                $responseArr['from_date'] = $start_date;
+                $responseArr['to_date'] = $end_date;
+                return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+            }
         }
+        
         return $this->sendError($message['data_not_available'], '');
     }
     public function getChangesCurrency(Request $request)
@@ -395,39 +488,39 @@ class FrontDataController extends BaseController
         if ($request->type == 'weekly') {
             $weekday = date('l', strtotime($date));
             if ($weekday == 'Monday') {
-                $start_date = date('Y-m-d', strtotime('-2 days'));
+                $start_date = date('Y-m-d', strtotime('-3 days'));
                 $end_date = date('Y-m-d', strtotime('-9 days'));
             }
             if ($weekday == 'Tuesday') {
-                $start_date = date('Y-m-d', strtotime('-3 days'));
+                $start_date = date('Y-m-d', strtotime('-4 days'));
                 $end_date = date('Y-m-d', strtotime('-10 days'));
             }
             if ($weekday == 'Wednesday') {
-                $start_date = date('Y-m-d', strtotime('-4 days'));
+                $start_date = date('Y-m-d', strtotime('-5 days'));
                 $end_date = date('Y-m-d', strtotime('-11 days'));
             }
             if ($weekday == 'Thursday') {
-                $start_date = date('Y-m-d', strtotime('-5 days'));
+                $start_date = date('Y-m-d', strtotime('-6 days'));
                 $end_date = date('Y-m-d', strtotime('-12 days'));
             }
             if ($weekday == 'Friday') {
-                $start_date = date('Y-m-d', strtotime('-6 days'));
-                $end_date = date('Y-m-d', strtotime('-13 days'));
+                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $end_date = date('Y-m-d', strtotime('-6 days'));
             }
             if ($weekday == 'Saturday') {
-                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $start_date = date('Y-m-d', strtotime('-1 days'));
                 $end_date = date('Y-m-d', strtotime('-7 days'));
             }
             if ($weekday == 'Sunday') {
-                $start_date = date('Y-m-d', strtotime('-1 days'));
+                $start_date = date('Y-m-d', strtotime('-2 days'));
                 $end_date = date('Y-m-d', strtotime('-8 days'));
             }
-            $days = 7;
+            $days = 6;
         } else {
             $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
             $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
             $days = strtotime($start_date) - strtotime($end_date);
-            $days = (int)round($days / (60 * 60 * 24))+1;
+            $days = (int)round($days / (60 * 60 * 24));
         }
 
         $changes_currency = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","'.$start_date.'",'.$days.')');
@@ -439,6 +532,137 @@ class FrontDataController extends BaseController
         }
         return $this->sendError($message['data_not_available'], '');
     }
+	public function getPerformanceSynopsis(Request $request)
+	{
+		 $responseArr = [];
+        $message = __('message');
+		$data = [];
+		$one = $two = $three = $four = 0;
+		$start_date = $last_date = "";
+		
+		// $dataArr = FundMaster::selectRaw('COUNT(fund_code) as total_fund')->selectRaw('fund_house')->where('fund_house', $request->fund_house)->groupby('fund_house')->orderBy('fund_house', 'ASC')->get(); before one commented by codtrees
+		$dataArr = FundMaster::selectRaw('COUNT(fund_code) as total_fund')->selectRaw('fund_house')->groupby('fund_house')->orderBy('fund_house', 'ASC')->get();
+		//echo '<pre>';
+		//print_r($dataArr);
+		//dd($dataArr);
+		/*$dataArr = FundMaster::selectRaw('COUNT(fund_code) as total_fund')->selectRaw('fund_house')->groupby('fund_house')->orderBy('fund_house', 'ASC')->limit(1)->get();*/
+		
+		//dd($dataArr);
+		
+		
+		if(!empty($dataArr))
+		{
+			foreach($dataArr as $key => $item)
+			{
+				$data[$key]['total_scheme'] = $item->total_fund;
+				$data[$key]['fund_house'] = $item->fund_house;
+				
+			$fund_codes = FundMaster::select('fund_code', 'fund_type_id')->where('fund_house', $item->fund_house)->where('status', 1)->get();
+				
+			//dd($fund_codes);
+				
+				if(!empty($fund_codes))
+				{
+					foreach($fund_codes as $fundcode)
+					{
+						$last_date = FundDetail::getLastPublishedDate($fundcode->fund_code);
+						
+						$start_date = date('Y-m-d', strtotime($last_date . ' - 6 months'));
+						
+						//echo 'CALL sp_fund_search_scheme_ret("' . $last_date . '","' . $fundcode . '")';
+						
+						$return_scheme = DB::select('CALL sp_fund_search_scheme_ret("' . $last_date . '","' . $fundcode->fund_code . '")');
+						
+						//dd($return_scheme);
+						
+						$dataLagardLeader = DB::select('CALL sp_get_cagr_quartile_ps("' . $start_date . '","' . $last_date . '","' . $fundcode->fund_code . '","' . $fundcode->fund_type_id . '")');
+						
+						/*if($dataLagardLeader[0]->leader || $dataLagardLeader[0]->laggard)
+						{
+							echo $dataLagardLeader[0]->leader.' ## '.$dataLagardLeader[0]->laggard;
+						}*/
+						
+						if(!empty($dataLagardLeader))
+						{
+				$quartile = $this->getQuartile($return_scheme[0]->SIXMONTHS, $dataLagardLeader[0]->leader, $dataLagardLeader[0]->laggard);
+							
+							switch($quartile)
+							{
+								case 1:
+								$one++;
+								break;
+									
+								case 2:
+								$two++;
+								break;
+									
+								case 3:
+								$three++;
+								break;
+								
+								case 4:
+								$four++;
+								break;								
+							}
+						}						
+					}
+					
+					$data[$key]['one'] = $one;
+					$data[$key]['two'] = $two;
+					$data[$key]['three'] = $three;
+					$data[$key]['four'] = $four;
+				}
+			}
+			
+			//dd($data);
+			
+			$response['data'] = $data;
+			$response['start_date'] = date('d-m-Y', strtotime($start_date));
+			$response['last_date'] = date('d-m-Y', strtotime($last_date));
+			
+			return $this->sendResponse($response, __('api.success.api_dt_rtrv'));
+		}
+		
+		return $this->sendError($message['data_not_available'], '');
+	}
+	public function getQuartile($scheme_return_sixmonths, $leader, $lagard) 
+	{
+		$quartile_class_gap = number_format( ((number_format($leader, 2) - number_format($lagard, 2)) / 4), 3 );
+		
+		$first_value = number_format($leader, 2);
+		$second_value = $first_value - $quartile_class_gap;
+		$third_value = 0;
+		$num_val = 0;
+		$scheme_return_sixmonths = $scheme_return_sixmonths != 0 ? number_format($scheme_return_sixmonths, 2) : 0;
+		
+		if( $scheme_return_sixmonths == 0)
+		{
+			return 0;
+		}
+		
+		if( $second_value <= $scheme_return_sixmonths &&  $scheme_return_sixmonths <= $first_value )
+		{
+			$num_val = 1;
+			
+		} else {
+			
+			for($i=2; $i<=4; $i++)
+			{
+				$third_value = $second_value;
+				$first_value = $third_value;
+				$second_value = ($first_value - $quartile_class_gap);
+				$third_value = 0;
+				
+				if( $second_value <= $scheme_return_sixmonths &&  $scheme_return_sixmonths <= $first_value )
+				{
+					$num_val = $i;
+				}
+			}
+		
+		}		
+		
+		return $num_val;
+	}
     public function getChangesCommodity(Request $request)
     {
         $dataArr = $responseArr = [];
@@ -447,39 +671,39 @@ class FrontDataController extends BaseController
         if ($request->type == 'weekly') {
             $weekday = date('l', strtotime($date));
             if ($weekday == 'Monday') {
-                $start_date = date('Y-m-d', strtotime('-2 days'));
+                $start_date = date('Y-m-d', strtotime('-3 days'));
                 $end_date = date('Y-m-d', strtotime('-9 days'));
             }
             if ($weekday == 'Tuesday') {
-                $start_date = date('Y-m-d', strtotime('-3 days'));
+                $start_date = date('Y-m-d', strtotime('-4 days'));
                 $end_date = date('Y-m-d', strtotime('-10 days'));
             }
             if ($weekday == 'Wednesday') {
-                $start_date = date('Y-m-d', strtotime('-4 days'));
+                $start_date = date('Y-m-d', strtotime('-5 days'));
                 $end_date = date('Y-m-d', strtotime('-11 days'));
             }
             if ($weekday == 'Thursday') {
-                $start_date = date('Y-m-d', strtotime('-5 days'));
+                $start_date = date('Y-m-d', strtotime('-6 days'));
                 $end_date = date('Y-m-d', strtotime('-12 days'));
             }
             if ($weekday == 'Friday') {
-                $start_date = date('Y-m-d', strtotime('-6 days'));
-                $end_date = date('Y-m-d', strtotime('-13 days'));
+                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $end_date = date('Y-m-d', strtotime('-6 days'));
             }
             if ($weekday == 'Saturday') {
-                $start_date = date('Y-m-d', strtotime('-0 days'));
+                $start_date = date('Y-m-d', strtotime('-1 days'));
                 $end_date = date('Y-m-d', strtotime('-7 days'));
             }
             if ($weekday == 'Sunday') {
-                $start_date = date('Y-m-d', strtotime('-1 days'));
+                $start_date = date('Y-m-d', strtotime('-2 days'));
                 $end_date = date('Y-m-d', strtotime('-8 days'));
             }
-            $days = 7;
+            $days = 6;
         } else {
             $start_date= date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
             $end_date= date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
             $days = strtotime($start_date) - strtotime($end_date);
-            $days = (int)round($days / (60 * 60 * 24))+1;
+            $days = (int)round($days / (60 * 60 * 24));
         }
 
         $changes_currency = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","'.$start_date.'",'.$days.')');
@@ -507,7 +731,10 @@ class FrontDataController extends BaseController
     }
     public function monthlyRanking(Request $request, $type_id)
     {
+        // dd($type_id);
+        \Log::debug('Type ID', [$type_id]);
         $dataArr = $responseArr = [];
+        
 
         // $end_date = CorpusEntry::getLastPublishedDate();
         // $start_date = Carbon::parse($end_date)->subMonths(12)->addDay()->format('Y-m-d');
@@ -529,75 +756,103 @@ class FrontDataController extends BaseController
         //     $fourth_period_start_date,$fourth_period_end_date,
         // ]);
         $dataArr = MonthlyRatioCalculation::list(['fund_type_id' => $type_id ]);
+		// dd($dataArr);
+        // echo "<pre>";print_r($dataArr);die;
+        // \Log::debug('data_array', [$dataArr]);
+        // print_r($dataArr);die;
         $volatalityArr = $betaArr = $jensenAlphaArr = [];
-        foreach ($dataArr as $fund) {
-            if ($fund->p1_volatality !== null && $fund->p2_volatality !== null && $fund->p3_volatality !== null && $fund->p4_volatality !== null) {
-                $volatalityArr[0][$fund->fund_code] = $fund->p1_volatality;
-                $volatalityArr[1][$fund->fund_code] = $fund->p2_volatality;
-                $volatalityArr[2][$fund->fund_code] = $fund->p3_volatality;
-                $volatalityArr[3][$fund->fund_code] = $fund->p4_volatality;
+        if(count($dataArr) > 0){
+            // dd('if');
+            foreach ($dataArr as $fund) {
+                if ($fund->p1_volatality !== null && $fund->p2_volatality !== null && $fund->p3_volatality !== null && $fund->p4_volatality !== null) {
+                    $volatalityArr[0][$fund->fund_code] = $fund->p1_volatality;
+                    $volatalityArr[1][$fund->fund_code] = $fund->p2_volatality;
+                    $volatalityArr[2][$fund->fund_code] = $fund->p3_volatality;
+                    $volatalityArr[3][$fund->fund_code] = $fund->p4_volatality;
+                }
+                if ($fund->p1_beta !== null && $fund->p2_beta !== null && $fund->p3_beta !== null && $fund->p4_beta !== null) {
+                    $betaArr[0][$fund->fund_code] = $fund->p1_beta;
+                    $betaArr[1][$fund->fund_code] = $fund->p2_beta;
+                    $betaArr[2][$fund->fund_code] = $fund->p3_beta;
+                    $betaArr[3][$fund->fund_code] = $fund->p4_beta;
+                }
+                if ($fund->p1_jensen_alpha !== null && $fund->p2_jensen_alpha !== null && $fund->p3_jensen_alpha !== null && $fund->p4_jensen_alpha !== null) {
+                    $jensenAlphaArr[0][$fund->fund_code] = $fund->p1_jensen_alpha;
+                    $jensenAlphaArr[1][$fund->fund_code] = $fund->p2_jensen_alpha;
+                    $jensenAlphaArr[2][$fund->fund_code] = $fund->p3_jensen_alpha;
+                    $jensenAlphaArr[3][$fund->fund_code] = $fund->p4_jensen_alpha;
+                }
             }
-            if ($fund->p1_beta !== null && $fund->p2_beta !== null && $fund->p3_beta !== null && $fund->p4_beta !== null) {
-                $betaArr[0][$fund->fund_code] = $fund->p1_beta;
-                $betaArr[1][$fund->fund_code] = $fund->p2_beta;
-                $betaArr[2][$fund->fund_code] = $fund->p3_beta;
-                $betaArr[3][$fund->fund_code] = $fund->p4_beta;
+    
+    
+            foreach ($dataArr as $index => $fund) {
+                \Log::debug('fund', [$fund->fund_code]);
+                $dataArr[$index]['volatality'] = $dataArr[$index]['market_risk'] = $dataArr[$index]['return_quality'] = null;
+                if ($fund->p1_volatality !== null && $fund->p2_volatality !== null && $fund->p3_volatality !== null && $fund->p4_volatality !== null) {
+                    // dd($fund->fund_code.'-------'.$volatalityArr);
+                    $dataArr[$index]['volatality'] = $this->gtRiskRatiosval($fund->fund_code, $volatalityArr);
+                }
+                // dd($dataArr[$index]['volatality']);
+                if ($fund->p1_beta !== null && $fund->p2_beta !== null && $fund->p3_beta !== null && $fund->p4_beta !== null) {
+                    $dataArr[$index]['market_risk'] = $this->gtRiskRatiosval($fund->fund_code, $betaArr);
+                }
+                if ($fund->p1_jensen_alpha !== null && $fund->p2_jensen_alpha !== null && $fund->p3_jensen_alpha !== null && $fund->p4_jensen_alpha !== null) {
+                    $dataArr[$index]['return_quality'] = $this->gtReturnQualityval($fund->fund_code, $jensenAlphaArr);
+                }
+                $unset_array = array("p1_volatality", "p2_volatality", "p3_volatality", "p4_volatality",'p1_beta','p2_beta','p3_beta','p4_beta','p1_jensen_alpha','p2_jensen_alpha','p3_jensen_alpha','p4_jensen_alpha');
+                foreach ($unset_array as $key) {
+                    unset($dataArr[$index][$key]);
+                }
             }
-            if ($fund->p1_jensen_alpha !== null && $fund->p2_jensen_alpha !== null && $fund->p3_jensen_alpha !== null && $fund->p4_jensen_alpha !== null) {
-                $jensenAlphaArr[0][$fund->fund_code] = $fund->p1_jensen_alpha;
-                $jensenAlphaArr[1][$fund->fund_code] = $fund->p2_jensen_alpha;
-                $jensenAlphaArr[2][$fund->fund_code] = $fund->p3_jensen_alpha;
-                $jensenAlphaArr[3][$fund->fund_code] = $fund->p4_jensen_alpha;
-            }
+            $responseArr['monthly_ranking'] = $dataArr;
+            // $dataArr[0]['end_date'] = '2024-01-31';
+            // $dataArr[0]['start_date'] = '2023-12-01';
+            $responseArr['from_date'] = date('d/m/Y', strtotime($dataArr[0]['start_date']));
+            $responseArr['to_date'] = date('d/m/Y', strtotime($dataArr[0]['end_date']));
+
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));   
+
         }
+        else{
+            // dd('else');
+            $responseArr['monthly_ranking'] = $dataArr;
+            // $dataArr[0]['end_date'] = '2024-01-31';
+            // $dataArr[0]['start_date'] = '2023-12-01';
+            $responseArr['from_date'] = '';
+            $responseArr['to_date'] = '';
 
-
-        foreach ($dataArr as $index => $fund) {
-            \Log::debug('fund', [$fund->fund_code]);
-            $dataArr[$index]['volatality'] = $dataArr[$index]['market_risk'] = $dataArr[$index]['return_quality'] = null;
-            if ($fund->p1_volatality !== null && $fund->p2_volatality !== null && $fund->p3_volatality !== null && $fund->p4_volatality !== null) {
-                $dataArr[$index]['volatality'] = $this->gtRiskRatiosval($fund->fund_code, $volatalityArr);
-            }
-            if ($fund->p1_beta !== null && $fund->p2_beta !== null && $fund->p3_beta !== null && $fund->p4_beta !== null) {
-                $dataArr[$index]['market_risk'] = $this->gtRiskRatiosval($fund->fund_code, $betaArr);
-            }
-            if ($fund->p1_jensen_alpha !== null && $fund->p2_jensen_alpha !== null && $fund->p3_jensen_alpha !== null && $fund->p4_jensen_alpha !== null) {
-                $dataArr[$index]['return_quality'] = $this->gtReturnQualityval($fund->fund_code, $jensenAlphaArr);
-            }
-            $unset_array = array("p1_volatality", "p2_volatality", "p3_volatality", "p4_volatality",'p1_beta','p2_beta','p3_beta','p4_beta','p1_jensen_alpha','p2_jensen_alpha','p3_jensen_alpha','p4_jensen_alpha');
-            foreach ($unset_array as $key) {
-                unset($dataArr[$index][$key]);
-            }
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
-
-        $responseArr['monthly_ranking'] = $dataArr;
-        $responseArr['from_date'] = date('d/m/Y', strtotime($dataArr[0]['start_date']));
-        $responseArr['to_date'] = date('d/m/Y', strtotime($dataArr[0]['end_date']));
-
-        return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
     }
 
 
     //Volatility and Market Risk avg
     public function gtRiskRatiosval($fund_code, $ratioArr)
     {
+        // dd($ratioArr);
         $calArr = [];
         foreach ($ratioArr as $key => $dataArr) {
             $dataArr = array_filter($dataArr, fn ($value) => !is_null($value) && $value !== '');
             arsort($dataArr);
+            // dd(max($dataArr));
+            // dd($dataArr);
             $value_vol = (max($dataArr)-min($dataArr))/5;
             $value_1_vol = max($dataArr);
+            // dd($value_1_vol);
             $value_2_vol = $value_1_vol-$value_vol;
             $value_3_vol = $value_2_vol-$value_vol;
             $value_4_vol = $value_3_vol-$value_vol;
             $value_5_vol = $value_4_vol-$value_vol;
             $value_6_vol = min($dataArr);
+            // dd($value_1_vol.'|'.$value_2_vol.'|'.$value_3_vol.'|'.$value_4_vol.'|'.$value_5_vol.'|'.$value_6_vol);
 
             //\log::debug('values - '.$key, [$value_1_vol,$value_2_vol,$value_3_vol,$value_4_vol,$value_5_vol,$value_6_vol]);
 
             $final_val_vol = $dataArr[$fund_code];
+            // dd($final_val_vol);
             //\log::debug('final_val_vol - '.$key, [$fund_code,$dataArr[$fund_code]]);
-
+            /*
+            old logic
             if ($final_val_vol <= $value_1_vol && $final_val_vol >= $value_2_vol) {
                 $param_vol = 1;
             } elseif ($final_val_vol <= $value_2_vol && $final_val_vol >= $value_3_vol) {
@@ -609,12 +864,42 @@ class FrontDataController extends BaseController
             } else {
                 $param_vol = 5;
             }
+            */
+
+            //new logic 07.03.2024 changed by : Saikat Banerjee
+            if ($final_val_vol >= $value_2_vol && $final_val_vol <= $value_1_vol) {
+                $param_vol = 5;
+            } elseif ($final_val_vol >= $value_3_vol && $final_val_vol <= $value_2_vol) {
+                $param_vol = 4;
+            } elseif ($final_val_vol >= $value_4_vol && $final_val_vol <= $value_3_vol) {
+                $param_vol = 3;
+            } elseif ($final_val_vol >= $value_5_vol && $final_val_vol <= $value_4_vol) {
+                $param_vol = 2;
+            } elseif ($final_val_vol >= $value_6_vol && $final_val_vol <= $value_5_vol) {
+                $param_vol = 1;
+            } else{
+                $param_vol = 0;
+            }
+            // dd($param_vol);
             //\log::debug('param_vol - '.$key, [$fund_code,$param_vol]);
 
             $calArr[$key]=$param_vol;
         }
         $avgva=array_sum($calArr)/4;
-        return round($avgva);
+        // dd(round($avgva));
+        // return round($avgva,2);
+        // return round($avgva);
+        if($avgva <= 5 && $avgva > 4){
+            return 5;
+        }elseif($avgva <= 4 && $avgva > 3){
+            return 4;
+        }elseif($avgva <= 3 && $avgva > 2){
+            return 3;
+        }elseif($avgva <= 2 && $avgva > 1){
+            return 2;
+        }elseif($avgva <= 1 && $avgva > 0){
+            return 1;
+        }
     }
     //Return Quality avg
     public function gtReturnQualityval($fund_code, $sdArr)
@@ -635,7 +920,7 @@ class FrontDataController extends BaseController
 
             $final_val_vol = $dataArr[$fund_code];
             //\log::debug('final_val_vol - '.$key, [$fund_code,$dataArr[$fund_code]]);
-
+            
             if ($final_val_vol >= $value_1_vol && $final_val_vol < $value_2_vol) {
                 $param_vol = 1;
             } elseif ($final_val_vol >= $value_2_vol && $final_val_vol < $value_3_vol) {
@@ -652,7 +937,19 @@ class FrontDataController extends BaseController
             $calArr[$key]=$param_vol;
         }
         $avgva=array_sum($calArr)/4;
-        return round($avgva);
+        // return round($avgva);
+        // return $avgva;
+        if($avgva <= 5 && $avgva > 4){
+            return 5;
+        }elseif($avgva <= 4 && $avgva > 3){
+            return 4;
+        }elseif($avgva <= 3 && $avgva > 2){
+            return 3;
+        }elseif($avgva <= 2 && $avgva > 1){
+            return 2;
+        }elseif($avgva <= 1 && $avgva > 0){
+            return 1;
+        }
     }
     public function fundDetails(Request $request)
     {
@@ -663,20 +960,44 @@ class FrontDataController extends BaseController
         if ($fund_code) {
             $fund = FundMaster::where('fund_code', $request->fund_code)->first();
             $fund_detail = FundDetail::where('fund_code', $request->fund_code)->where('publish', 'y')->orderBy('entry_date', 'DESC')->first();
-            $index_detail = IndicesDetail::where('name', $fund->indices_name)->where('publish', 'y')->orderBy('entry_date', 'DESC')->first();
+            // $index_detail = IndicesDetail::where('name', $fund->indices_name)->where('publish', 'y')->orderBy('entry_date', 'DESC')->first();
+            // dd($index_detail);
+            $indicesName = $fund->indices_name;
+
+            $query = "
+                SELECT * 
+                FROM mpx_indices_detail 
+                WHERE (
+                    name = (SELECT corelation FROM mpx_indices_corelation WHERE name = :indicesName1) 
+                    OR 
+                    name = (SELECT corelation FROM mpx_indices_master WHERE name = :indicesName2)
+                ) 
+                AND publish = 'y' 
+                ORDER BY entry_date DESC 
+                LIMIT 1
+            ";
+
+            $results = DB::select($query, [
+                'indicesName1' => $indicesName,
+                'indicesName2' => $indicesName,
+            ]);
+            $arrayResults = json_decode(json_encode($results), true);
+            // dd($arrayResults);
+            $index_detail = $arrayResults[0];
+            // dd($index_detail);
             $corpus_detail = CorpusEntry::where('fund_code', $fund->fund_code)->where('publish', 'y')->orderBy('entry_date', 'DESC')->first();
             $no_of_schemes = FundMaster::where('fund_type_id', $fund->fund_type_id)->count();
 
             $dataArr['benchmark'] = $fund->indices_name;
             $dataArr['benchmark_closing_value'] =\Arr::get($index_detail,'closing_value','');
-            $dataArr['benchmark_entry_date'] = \Arr::get($index_detail,'entry_date','');
+            $dataArr['benchmark_entry_date'] =  date('d-m-Y', strtotime(\Arr::get($index_detail,'entry_date','')));
             $dataArr['category'] = $fund->classification;
             $dataArr['fund_house'] = $fund->fund_house;
             $dataArr['fund_code'] = $fund->fund_code;
-            $dataArr['fund_opened'] = $fund->fund_opened;
+            $dataArr['fund_opened'] = date('d-m-Y', strtotime($fund->fund_opened));
             $dataArr['fund_man'] = $fund->fund_manager;
             $dataArr['nav'] = \Arr::get($fund_detail,'closing_nav','');
-            $dataArr['nav_entry_date'] = \Arr::get($fund_detail,'entry_date','');
+            $dataArr['nav_entry_date'] = date('d-m-Y', strtotime(\Arr::get($fund_detail,'entry_date','')));
             $dataArr['aaum'] = \Arr::get($corpus_detail,'corpus_entry','');
             $dataArr['no_of_schemes'] = $no_of_schemes;
 
@@ -693,8 +1014,14 @@ class FrontDataController extends BaseController
         $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
         if ($fund_code) {
             $last_date = FundDetail::getLastPublishedDate($fund_code);
-
+			//dd($last_date);
+			try{
             $return_scheme = DB::select('CALL sp_fund_search_scheme_ret("'.$last_date.'","'.$fund_code.'")');
+			//dd($return_scheme);
+			}
+			catch (Exception $e) {
+                dd($e->getMessage());
+            }
             if (count($return_scheme)) {
                 $responseArr['return_scheme'] = $return_scheme[0];
                 $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
@@ -703,7 +1030,7 @@ class FrontDataController extends BaseController
         }
         return $this->sendError($message['data_not_available'], '');
     }
-    public function fundReturnBenchmark(Request $request)
+  /*  public function fundReturnBenchmark(Request $request)
     {
         $dataArr = $responseArr = [];
         $message = __('message');
@@ -722,26 +1049,293 @@ class FrontDataController extends BaseController
             }
         }
         return $this->sendError($message['data_not_available'], '');
+    } */
+	public function fundReturnBenchmark(Request $request)
+    {
+        // dd($request->all());
+        $responseArr = [];
+        $message = __('message');
+
+        $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
+        // dd($fund_code);
+        $indices_name = FundMaster::select('indices_name')->where('fund_code', $fund_code)->first();
+
+        if ($fund_code && !empty($indices_name)) {
+            $last_date = IndicesDetail::getLastPublishedDate($indices_name->indices_name);
+			// dd($indices_name->indices_name);
+			// dd($last_date);
+            // dd('CALL sp_fund_search_benchmark_ret("' . $last_date . '","' . $indices_name->indices_name . '","' . $fund_code . '")');
+            $return_benchmark = DB::select('CALL sp_fund_search_benchmark_ret("' . $last_date . '","' . $indices_name->indices_name . '","' . $fund_code . '")');
+			// dd($return_benchmark);
+            if (count($return_benchmark)) {
+                $responseArr['return_benchmark'] = $return_benchmark[0];
+                $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
+                return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+            }
+        }
+        return $this->sendError($message['data_not_available'], '');
     }
     public function fundPerformanceCompareToCategory(Request $request)
     {
+		// dd($request->all());
         $dataArr = $responseArr = [];
         $message = __('message');
 
         $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
         $fund_type_id = FundMaster::select('fund_type_id')->where('fund_code', $fund_code)->first();
+        if ($fund_code && !empty($fund_type_id)) {
+            $last_date = FundDetail::getLastPublishedDate($fund_code);	
+			
+			//dd($nlastdate);
+			
+			
+        try {
+            // echo date('Y-m-d', strtotime($last_date. ' - 7 days'));die;
+            // echo $last_date;die;
+            // echo $fund_code;die;
+            // echo $fund_type_id->fund_type_id;die;
+            // echo "First Date : ".date('Y-m-d', strtotime($last_date. ' - 1 year'))." Last Date : ".$last_date;die;
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+
+            $dataArr['SEVENDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+	        // dd($dataArr['SEVENDAYS'][0]);
+            if(!empty($dataArr['SEVENDAYS'])){
+                $sevenDays_cagr = $dataArr['SEVENDAYS'][0]->cagr_value;
+                $sevenDays_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$sevenDays_cagr.'")');
+                // dd($sevenDays_quartile_sp[0]->quartile);
+                $sevenDays_quartile = $sevenDays_quartile_sp[0]->quartile;
+                $dataArr['SEVENDAYS'][0]->quartile = $sevenDays_quartile;
+                // dd($sevenDays_quartile);
+                $sevenDays_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$sevenDays_cagr.'")');
+                // dd($sevenDays_decile_sp[0]->decile);
+                $sevenDays_decile = $sevenDays_decile_sp[0]->decile;
+                // dd($sevenDays_decile);
+                $dataArr['SEVENDAYS'][0]->decile = $sevenDays_decile;
+                // dd($dataArr['SEVENDAYS'][0]);
+            }
+            //$dataArr['THIRTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile_new("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 1 month')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+	        $dataArr['THIRTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            $thirtyDays_cagr = $dataArr['THIRTYDAYS'][0]->cagr_value;
+            if(!empty($dataArr['THIRTYDAYS'])){
+                // Calculate quartile using the 30-day CAGR value and fund information
+                $thirtyDays_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$thirtyDays_cagr.'")');
+
+                // Extract and assign the quartile value for 30 days
+                $thirtyDays_quartile = $thirtyDays_quartile_sp[0]->quartile;
+                $dataArr['THIRTYDAYS'][0]->quartile = $thirtyDays_quartile;
+
+                // Calculate decile using the 30-day CAGR value and fund information
+                $thirtyDays_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$thirtyDays_cagr.'")');
+
+                // Extract and assign the decile value for 30 days
+                $thirtyDays_decile = $thirtyDays_decile_sp[0]->decile;
+                $dataArr['THIRTYDAYS'][0]->decile = $thirtyDays_decile;
+                // dd($dataArr['THIRTYDAYS'][0]);    
+            }
+            
+            //$dataArr['NINTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile_new("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            // DB::select('CALL sp_get_cagr_test("' . date('Y-m-d', strtotime($last_date . ' - 3 months')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+
+			$dataArr['NINTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("' . date('Y-m-d', strtotime($last_date . ' - 90 days')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            if(!empty($dataArr['NINTYDAYS'])){
+                $nintyDays_cagr = $dataArr['NINTYDAYS'][0]->cagr_value;
+                $nintyDays_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$nintyDays_cagr.'")');
+                $nintyDays_quartile = $nintyDays_quartile_sp[0]->quartile;
+                $dataArr['NINTYDAYS'][0]->quartile = $nintyDays_quartile;
+                $nintyDays_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$nintyDays_cagr.'")');
+                $nintyDays_decile = $nintyDays_decile_sp[0]->decile;
+                $dataArr['NINTYDAYS'][0]->decile = $nintyDays_decile;
+                // dd($dataArr['NINTYDAYS'][0]);
+            }
+           // $dataArr['SIXMONTHS'] = DB::select('CALL sp_get_cagr_quartile_decile_new("'.date('Y-m-d', strtotime($last_date. ' - 183 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            // DB::select('CALL sp_get_cagr_test("' . date('Y-m-d', strtotime($last_date . ' - 6 months')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+
+			$dataArr['SIXMONTHS'] = DB::select('CALL sp_get_cagr_quartile_decile("' . date('Y-m-d', strtotime($last_date . ' - 182 days')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            if(!empty($dataArr['SIXMONTHS'])){
+                $sixMonths_cagr = $dataArr['SIXMONTHS'][0]->cagr_value;
+                $sixMonths_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 182 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$sixMonths_cagr.'")');
+                $sixMonths_quartile = $sixMonths_quartile_sp[0]->quartile;
+                $dataArr['SIXMONTHS'][0]->quartile = $sixMonths_quartile;
+                $sixMonths_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 182 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$sixMonths_cagr.'")');
+                $sixMonths_decile = $sixMonths_decile_sp[0]->decile;
+                $dataArr['SIXMONTHS'][0]->decile = $sixMonths_decile;
+                // dd($dataArr['SIXMONTHS'][0]);
+            }
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 1 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            $dataArr['ONEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 366 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            if(!empty($dataArr['ONEYEAR'])){
+                $oneYear_cagr = $dataArr['ONEYEAR'][0]->cagr_value;
+                $oneYear_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 366 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$oneYear_cagr.'")');
+                $oneYear_quartile = $oneYear_quartile_sp[0]->quartile;
+                $dataArr['ONEYEAR'][0]->quartile = $oneYear_quartile;
+                $oneYear_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 366 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$oneYear_cagr.'")');
+                $oneYear_decile = $oneYear_decile_sp[0]->decile;
+                $dataArr['ONEYEAR'][0]->decile = $oneYear_decile;
+                // dd($dataArr['ONEYEAR'][0]);   
+            }
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 2 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+
+            $dataArr['TWOYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 731 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            if(!empty($dataArr['TWOYEAR'])){
+                $twoYear_cagr = $dataArr['TWOYEAR'][0]->cagr_value;
+                $twoYear_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 731 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$twoYear_cagr.'")');
+                $twoYear_quartile = $twoYear_quartile_sp[0]->quartile;
+                $dataArr['TWOYEAR'][0]->quartile = $twoYear_quartile;
+                $twoYear_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 731 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$twoYear_cagr.'")');
+                $twoYear_decile = $twoYear_decile_sp[0]->decile;
+                $dataArr['TWOYEAR'][0]->decile = $twoYear_decile;
+                // dd($dataArr['TWOYEAR'][0]);
+            }
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 3 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            
+            $dataArr['THREEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 1096 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            if(!empty($dataArr['THREEYEAR'])){
+                $threeYear_cagr = $dataArr['THREEYEAR'][0]->cagr_value;
+                $threeYear_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 1096 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$threeYear_cagr.'")');
+                $threeYear_quartile = $threeYear_quartile_sp[0]->quartile;
+                $dataArr['THREEYEAR'][0]->quartile = $threeYear_quartile;
+                $threeYear_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 1096 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$threeYear_cagr.'")');
+                $threeYear_decile = $threeYear_decile_sp[0]->decile;
+                $dataArr['THREEYEAR'][0]->decile = $threeYear_decile;
+                // dd($dataArr['THREEYEAR'][0]);
+            }
+
+            // DB::select('CALL sp_get_cagr_test("'.date('Y-m-d', strtotime($last_date. ' - 5 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+
+            $dataArr['FIVEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 1827 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            if(!empty($dataArr['FIVEYEAR'])){
+                $fiveYear_cagr = $dataArr['FIVEYEAR'][0]->cagr_value;
+                $fiveYear_quartile_sp = DB::select('CALL sp_calculate_quartile("'.date('Y-m-d', strtotime($last_date. ' - 1827 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$fiveYear_cagr.'")');
+                $fiveYear_quartile = $fiveYear_quartile_sp[0]->quartile;
+                $dataArr['FIVEYEAR'][0]->quartile = $fiveYear_quartile;
+                $fiveYear_decile_sp = DB::select('CALL sp_calculate_decile("'.date('Y-m-d', strtotime($last_date. ' - 1827 days')).'","'.$last_date.'","'.$fund_type_id->fund_type_id.'","'.$fiveYear_cagr.'")');
+                $fiveYear_decile = $fiveYear_decile_sp[0]->decile;
+                $dataArr['FIVEYEAR'][0]->decile = $fiveYear_decile;
+                // dd($dataArr['FIVEYEAR'][0]);
+            }
+            // echo "<pre>";print_r($dataArr);die;
+            $finalArr = [];
+            /*foreach ($dataArr as $key => $data) {
+                if (count($data)) {
+                    $finalArr[$key] = $data[0];
+                } else {
+                    $finalArr[$key] = [];
+                }
+            }*/
+			
+                $i=0;
+				$fund_nameld = "";
+				$fund_name = "";
+				$leadername = "";
+				$laggername = "";
+				$fund_nameldc = "";
+				$fund_name1 = "";
+                foreach ($dataArr as $key => $data) {
+                    if (count($data)) {
+						switch($key){
+							case 'SEVENDAYS':
+								$start = date('Y-m-d', strtotime($last_date. ' - 7 days'));
+								break;
+							case 'THIRTYDAYS':
+								$start = date('Y-m-d', strtotime($last_date. ' - 30 days'));
+								break;
+							case 'NINTYDAYS':
+								$start = date('Y-m-d', strtotime($last_date. ' - 3 months'));
+								break;
+							case 'SIXMONTHS':
+								$start = date('Y-m-d', strtotime($last_date. ' - 6 months'));
+								break;
+							case 'ONEYEAR':
+								$start = date('Y-m-d', strtotime($last_date. ' - 1 year'));
+								break;
+							case 'TWOYEAR':
+								$start = date('Y-m-d', strtotime($last_date. ' - 2 year'));
+								break;
+							case 'THREEYEAR':
+								$start = date('Y-m-d', strtotime($last_date. ' - 3 year'));
+								break;
+							case 'FIVEYEAR':
+								$start = date('Y-m-d', strtotime($last_date. ' - 5 year'));
+								break;
+						}
+                        $leader = number_format((float)$data[0]->leader, 2, '.');
+						$conditions = [
+							["cagr_value",'LIKE',"%{$leader}%"],
+							["fund_type_id", '=', $fund_type_id->fund_type_id],
+							["start_date",'=',$start]
+						];
+                        $fund_name = DB::table('cagrs')->select("fund_code")->where($conditions)->get();
+                        if (!$fund_name->isEmpty()) {
+                            $leaderfc = $fund_name[0]->fund_code;
+                            $fund_nameld = DB::table('fund_master')->select("fund_name")->where("fund_code", $leaderfc)->get();
+                        }
+                        if ($fund_nameld != "") {
+                            $leadername = $fund_nameld[0]->fund_name;
+                        }
+                        $lagger = number_format((float)$data[0]->laggard, 2, '.');
+						$conditions1 = [
+							["cagr_value", 'LIKE', "%{$lagger}%"],
+							["fund_type_id", '=', $fund_type_id->fund_type_id],
+							["start_date",'=',$start]
+						];
+                        $fund_name1 = DB::table('cagrs')->select("fund_code")->where($conditions1)->get();
+                        if (!$fund_name1->isEmpty()) {
+                            $laggerfc = $fund_name1[0]->fund_code;
+                            $fund_nameldc = DB::table('fund_master')->select("fund_name")->where("fund_code", 'LIKE', "%{$laggerfc}%")->get();
+                        }
+                        if ($fund_nameldc != "") {
+                            $laggername = $fund_nameldc[0]->fund_name;
+                        }
+                        $finalArr[$key] = $data[0];
+						if($leadername){
+                        	$finalArr[$key."".$i] = $leadername;
+						}
+						if($laggername){
+                        	$finalArr[$key."".$i."c"] = $laggername;
+						}
+                    } else {
+                        $finalArr[$key] = [];
+                    }
+                    $i++;
+                }
+            } catch (Exception $e) {
+                dd($e->getMessage());
+            }
+            $responseArr['category_compare_data'] = $finalArr;
+            $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
+			
+			//dd($finalArr);
+
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+        }
+        return $this->sendError($message['data_not_available'], '');
+    }
+	public function fundPerformanceCompareToCategorydis(Request $request)
+    {
+        // echo "hi";die;
+		try{
+        $dataArr = $responseArr = [];
+        $message = __('message');
+        $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
+        $fund_type_id = FundMaster::select('fund_type_id')->where('fund_code', $fund_code)->first();
 
         if ($fund_code && !empty($fund_type_id)) {
             $last_date = FundDetail::getLastPublishedDate($fund_code);
-
-            $dataArr['SEVENDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 7 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['THIRTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['NINTYDAYS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['SIXMONTHS'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 180 days')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['ONEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 1 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['TWOYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 2 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['THREEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 3 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
-            $dataArr['FIVEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("'.date('Y-m-d', strtotime($last_date. ' - 5 year')).'","'.$last_date.'","'.$fund_code.'","'.$fund_type_id->fund_type_id.'")');
+            // dd($last_date);
+			$last_dateone1 = date('Y-m-d', strtotime($last_date . ' - 6 months'));
+            // dd($last_dateone1);
+			$last_dateone = date('Y-m-d', strtotime($last_dateone1 . ' - 1 day'));
+			$last_datetwo1 = date('Y-m-d', strtotime($last_dateone . ' - 1 year'));
+			$last_datetwo = date('Y-m-d', strtotime($last_datetwo1 . ' - 1 day'));
+			
+            $dataArr['SIXMONTHS'] = DB::select('CALL sp_get_cagr_quartile_decile("' . date('Y-m-d', strtotime($last_date . ' - 6 months')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            // dd('CALL sp_get_cagr_quartile_decile_new("' . date('Y-m-d', strtotime($last_date . ' - 6 months')) . '","' . $last_date . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            // return date('Y-m-d', strtotime($last_date . ' - 6 months'));die;
+           $dataArr['ONEYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("' . date('Y-m-d', strtotime($last_dateone . ' - 1 year')) . '","' . $last_dateone . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+        //    dd('CALL sp_get_cagr_quartile_decile_new("' . date('Y-m-d', strtotime($last_dateone . ' - 1 year')) . '","' . $last_dateone . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            $dataArr['TWOYEAR'] = DB::select('CALL sp_get_cagr_quartile_decile("' . date('Y-m-d', strtotime($last_datetwo . ' - 2 year')) . '","' . $last_datetwo . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
+            // dd('CALL sp_get_cagr_quartile_decile_new("' . date('Y-m-d', strtotime($last_datetwo . ' - 2 year')) . '","' . $last_datetwo . '","' . $fund_code . '","' . $fund_type_id->fund_type_id . '")');
             $finalArr = [];
             foreach ($dataArr as $key => $data) {
                 if (count($data)) {
@@ -750,39 +1344,144 @@ class FrontDataController extends BaseController
                     $finalArr[$key] = [];
                 }
             }
+			
             $responseArr['category_compare_data'] = $finalArr;
+            $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
+
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+        }
+			} catch (Exception $e) {
+                dd($e->getMessage());
+            }
+        return $this->sendError($message['data_not_available'], '');
+    }
+    public function fundPerformanceJensenalphaBetaVolatility(Request $request)
+    {
+        // return 'true';exit;
+        // dd('api reached');
+        // echo "api reached";die;
+        $dataArr = $responseArr = [];
+        $message = __('message');
+
+        $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
+        // dd($fund_code);
+        if ($fund_code) {
+            $last_date = FundDetail::getLastPublishedDate($fund_code);
+            // dd($last_date);
+            // return $this->sendResponse($last_date, __('api.success.api_dt_rtrv'));
+            $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // dd($dataArr['SEVENDAYS']);
+            $dataArr['THIRTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['NINTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 180 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 365 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 730 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 1095 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 1825 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // return $dataArr;
+            $finalArr = [];
+            foreach ($dataArr as $key => $data) {
+                if (count($data)) {
+                    // echo ($data[0]->start_date);
+                    $data[0]->start_date = date('d-m-Y', strtotime($data[0]->start_date));
+                    $data[0]->end_date = date('d-m-Y', strtotime($data[0]->end_date));
+                    $finalArr[$key] = $data[0];
+                    // echo $key.'------------'.$data[0]."<br>";
+                } else {
+                    $finalArr[$key] = [];
+                }
+            }
+            // die;
+            // echo "<pre>";print_r($finalArr);die;
+            $responseArr['jensenalpha_beta_volatility_data'] = $finalArr;
             $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
 
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
     }
-    public function fundPerformanceJensenalphaBetaVolatility(Request $request)
+    public function fundPerformanceJensenalphaBetaVolatilityNew(Request $request)
     {
+        // return 'true';exit;
+        // dd('api reached');
+        // echo "api reached";die;
         $dataArr = $responseArr = [];
         $message = __('message');
 
         $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
-
+        // dd($fund_code);
         if ($fund_code) {
-            $last_date = FundDetail::getLastPublishedDate($fund_code);
-
-            $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 7 days')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['THIRTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['NINTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 180 days')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 1 year')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 2 year')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 3 year')).'","'.$last_date.'","'.$fund_code.'")');
-            $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 5 year')).'","'.$last_date.'","'.$fund_code.'")');
+            $last_date_1 = FundDetail::getLastPublishedDate($fund_code);
+            $last_date_2 = date('Y-m-d', strtotime($last_date_1. ' - 182 days'));
+            $last_date_3 = date('Y-m-d', strtotime($last_date_1. ' - 366 days'));
+            // dd($last_date_1."||||".$last_date_2."||||".$last_date_3);
+            $dataArr['SIXMONTHS_1'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.$last_date_2.'","'.$last_date_1.'","'.$fund_code.'")');
+            // dd();
+            $dataArr['SIXMONTHS_2'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.$last_date_3.'","'.$last_date_2.'","'.$fund_code.'")');
+            $dataArr['SIXMONTHS_3'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date_1. ' - 547 days')).'","'.date('Y-m-d', strtotime($last_date_1. ' - 366 days')).'","'.$fund_code.'")');
+            // dd('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date_1. ' - 547 days')).'","'.date('Y-m-d', strtotime($last_date_1. ' - 366 days')).'","'.$fund_code.'")');
+            // return $dataArr;
             $finalArr = [];
             foreach ($dataArr as $key => $data) {
                 if (count($data)) {
+                    // echo ($data[0]->start_date);
+                    $data[0]->start_date = date('d-m-Y', strtotime($data[0]->start_date));
+                    $data[0]->end_date = date('d-m-Y', strtotime($data[0]->end_date));
                     $finalArr[$key] = $data[0];
+                    // echo $key.'------------'.$data[0]."<br>";
                 } else {
                     $finalArr[$key] = [];
                 }
             }
+            // die;
+            // echo "<pre>";print_r($finalArr);die;
+            $responseArr['jensenalpha_beta_volatility_data'] = $finalArr;
+            $responseArr['to_date'] = date('d/m/Y', strtotime($last_date_1));
+
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+        }
+        return $this->sendError($message['data_not_available'], '');
+    }
+    public function fundPerformanceJensenalphaBetaVolatilityoneYeartwoYear(Request $request)
+    {
+        // return 'true';exit;
+        // dd('api reached');
+        // echo "api reached";die;
+        $dataArr = $responseArr = [];
+        $message = __('message');
+
+        $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
+        // dd($fund_code);
+        if ($fund_code) {
+            $last_date = FundDetail::getLastPublishedDate($fund_code);
+            // dd($last_date);
+            // return $this->sendResponse($last_date, __('api.success.api_dt_rtrv'));
+            // $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 6 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // // dd($dataArr['SEVENDAYS']);
+            // $dataArr['THIRTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 30 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // $dataArr['NINTYDAYS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 90 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 180 days')).'","'.$last_date.'","'.$fund_code.'")');
+            $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 366 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // dd($dataArr['ONEYEAR']);
+            $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 731 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // dd($dataArr['TWOYEAR']);
+            // $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 1095 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_jensenalpha_beta_volatility("'.date('Y-m-d', strtotime($last_date. ' - 1825 days')).'","'.$last_date.'","'.$fund_code.'")');
+            // return $dataArr;
+            $finalArr = [];
+            foreach ($dataArr as $key => $data) {
+                if (count($data)) {
+                    // echo ($data[0]->start_date);
+                    $data[0]->start_date = date('d-m-Y', strtotime($data[0]->start_date));
+                    $data[0]->end_date = date('d-m-Y', strtotime($data[0]->end_date));
+                    $finalArr[$key] = $data[0];
+                    // echo $key.'------------'.$data[0]."<br>";
+                } else {
+                    $finalArr[$key] = [];
+                }
+            }
+            // die;
+            // echo "<pre>";print_r($finalArr);die;
             $responseArr['jensenalpha_beta_volatility_data'] = $finalArr;
             $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
 
@@ -792,21 +1491,88 @@ class FrontDataController extends BaseController
     }
     public function fundPerformanceSchemeSIP(Request $request)
     {
+        // dd('fundPerformanceSchemeSIP');
         $dataArr = $responseArr = [];
         $message = __('message');
 
         $fund_code = (isset($request->fund_code) && $request->fund_code) ? $request->fund_code : '';
         $fund_type_id = FundMaster::select('fund_type_id')->where('fund_code', $fund_code)->first();
+        $fund_opening_details = fundDetail::select('entry_date')->where('fund_code', $fund_code)->first();
 
         if ($fund_code && !empty($fund_type_id)) {
             $last_date = FundDetail::getLastPublishedDate($fund_code);
+            // $one_month_before = Carbon::parse($last_date)->subMonth()->toDateString();
+            $backdates = [
+                'ONEMONTH' => Carbon::parse($last_date)->subMonth()->toDateString(),
+                'THREEMONTHS' => Carbon::parse($last_date)->subMonths(3)->toDateString(),
+                'SIXMONTHS' => Carbon::parse($last_date)->subMonths(6)->toDateString(),
+                'ONEYEAR' => Carbon::parse($last_date)->subYear()->toDateString(),
+                'TWOYEAR' => Carbon::parse($last_date)->subYears(2)->toDateString(),
+                'THREEYEAR' => Carbon::parse($last_date)->subYears(3)->toDateString(),
+                'FIVEYEAR' => Carbon::parse($last_date)->subYears(5)->toDateString(),
+            ];
+            // dd($backdates['ONEMONTH']);
+            // dd($fund_opening_date);
+            $fund_opening_date = Carbon::createFromFormat('Y-m-d', $fund_opening_details->entry_date)->toDateString();
+            // dd($fund_opening_date);
+            if($fund_opening_date < $backdates['ONEMONTH']){
+                // dd('One month data Found');
+                $dataArr['ONEMONTH'] = DB::select('CALL sp_SIP_calc(1,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['ONEMONTH'] = [];
+            }
 
-            $dataArr['SIXMONTHS'] = DB::select('CALL sp_SIP_calc(6,"'.$fund_code.'",1000)');
-            $dataArr['ONEYEAR'] = DB::select('CALL sp_SIP_calc(12,"'.$fund_code.'",1000)');
-            $dataArr['TWOYEAR'] = DB::select('CALL sp_SIP_calc(24,"'.$fund_code.'",1000)');
-            $dataArr['THREEYEAR'] = DB::select('CALL sp_SIP_calc(36,"'.$fund_code.'",1000)');
-            $dataArr['FIVEYEAR'] = DB::select('CALL sp_SIP_calc(60,"'.$fund_code.'",1000)');
+            if($fund_opening_date < $backdates['THREEMONTHS']){
+                // dd('One month data Found');
+                $dataArr['THREEMONTHS'] = DB::select('CALL sp_SIP_calc(3,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['THREEMONTHS'] = [];
+            }
 
+            if($fund_opening_date < $backdates['SIXMONTHS']){
+                // dd('One month data Found');
+                $dataArr['SIXMONTHS'] = DB::select('CALL sp_SIP_calc(6,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['SIXMONTHS'] = [];
+            }
+
+            if($fund_opening_date < $backdates['ONEYEAR']){
+                // dd('One month data Found');
+                $dataArr['ONEYEAR'] = DB::select('CALL sp_SIP_calc(12,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['ONEYEAR'] = [];
+            }
+
+            if($fund_opening_date < $backdates['TWOYEAR']){
+                // dd('One month data Found');
+                $dataArr['TWOYEAR'] = DB::select('CALL sp_SIP_calc(24,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['TWOYEAR'] = [];
+            }
+			
+            if($fund_opening_date < $backdates['THREEYEAR']){
+                // dd('One month data Found');
+                $dataArr['THREEYEAR'] = DB::select('CALL sp_SIP_calc(36,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['THREEYEAR'] = [];
+            }
+
+            if($fund_opening_date < $backdates['FIVEYEAR']){
+                // dd('One month data Found');
+                $dataArr['FIVEYEAR'] = DB::select('CALL sp_SIP_calc(60,"'.$fund_code.'",1000)');
+                // dd($dataArr['ONEMONTH']);
+            }else{
+                $dataArr['FIVEYEAR'] = [];
+            }
+			
+            // dd($dataArr['ONEMONTH']);
+            // return $dataArr['ONEMONTH'];
             $finalArr = [];
             foreach ($dataArr as $key => $data) {
                 if (count($data)) {
@@ -815,7 +1581,9 @@ class FrontDataController extends BaseController
                     $finalArr[$key] = [];
                 }
             }
-
+				
+			// return $dataArr;
+			
             $responseArr['scheme_sip_data'] = $finalArr;
             $responseArr['to_date'] = date('d/m/Y', strtotime($last_date));
 
@@ -902,14 +1670,25 @@ class FrontDataController extends BaseController
         if ($fund_code && !empty($indices_name)) {
             $last_date = IndicesDetail::getLastPublishedDate($indices_name->indices_name);
 
-            $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",7)');
+            //old method
+            // $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",7)');
+            // $dataArr['THIRTYDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",30)');
+            // $dataArr['NINTYDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",90)');
+            // $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",180)');
+            // $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",365)');
+            // $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",730)');
+            // $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1095)');
+            // $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1825)');
+
+            //new method
+            $dataArr['SEVENDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",6)');
             $dataArr['THIRTYDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",30)');
             $dataArr['NINTYDAYS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",90)');
-            $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",180)');
-            $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",365)');
-            $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",730)');
-            $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1095)');
-            $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1825)');
+            $dataArr['SIXMONTHS'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",182)');
+            $dataArr['ONEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",366)');
+            $dataArr['TWOYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",731)');
+            $dataArr['THREEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1096)');
+            $dataArr['FIVEYEAR'] = DB::select('CALL sp_fund_search_ben_high_low("'.$last_date.'","'.$indices_name->indices_name.'",1827)');
 
             $finalArr = [];
             foreach ($dataArr as $key => $data) {
@@ -960,13 +1739,13 @@ class FrontDataController extends BaseController
             $end_date = FundDetail::getLastPublishedDate($fund_code);
             $start_date = Carbon::parse($end_date)->subDays($days)->format('Y-m-d');
 
-            $last_aaum = DB::select("SELECT entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1) AND fund_code = '".$fund_code."'");
+            $last_aaum = DB::select("SELECT DATE_FORMAT(entry_date, '%d-%m-%Y') AS entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1) AND fund_code = '".$fund_code."'");
             $dataArr['last_aaum'] = count($last_aaum) ? $last_aaum[0] : [];
-            $f_aaum = DB::select("SELECT entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 3 MONTH)) AND fund_code = '".$fund_code."'");
+            $f_aaum = DB::select("SELECT DATE_FORMAT(entry_date, '%d-%m-%Y') AS entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 3 MONTH)) AND fund_code = '".$fund_code."'");
             $dataArr['f_aaum'] = count($f_aaum) ? $f_aaum[0] : [];
-            $s_aaum = DB::select("SELECT entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 6 MONTH)) AND fund_code = '".$fund_code."'");
+            $s_aaum = DB::select("SELECT DATE_FORMAT(entry_date, '%d-%m-%Y') AS entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 6 MONTH)) AND fund_code = '".$fund_code."'");
             $dataArr['s_aaum'] = count($s_aaum) ? $s_aaum[0] : [];
-            $t_aaum = DB::select("SELECT entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 9 MONTH)) AND fund_code = '".$fund_code."'");
+            $t_aaum = DB::select("SELECT DATE_FORMAT(entry_date, '%d-%m-%Y') AS entry_date , corpus_entry FROM mpx_corpus_entry WHERE entry_date = (DATE_SUB((SELECT entry_date from mpx_corpus_entry WHERE fund_code = '".$fund_code."' AND publish = 'y' ORDER BY entry_date DESC LIMIT 1), INTERVAL 9 MONTH)) AND fund_code = '".$fund_code."'");
             $dataArr['t_aaum'] = count($t_aaum) ? $t_aaum[0] : [];
 
             $responseArr['aaum_data'] = $dataArr;
@@ -1107,7 +1886,7 @@ class FrontDataController extends BaseController
                 $type2 = 'GRAPH_CURRENCY';
             }
             $graphArr[0] = DB::select('CALL sp_fund_index_currency("'.$type1.'","'.$from_date.'","'.$to_date.'",0,"'.$value1.'","","",0)');
-            $graphArr[1] = DB::select('CALL sp_fund_index_currency("'.$type2.'","'.$from_date.'","'.$to_date.'",0,"'.$value2.'","","",0)');
+			$graphArr[1] = DB::select('CALL sp_fund_index_currency("'.$type2.'","'.$from_date.'","'.$to_date.'",0,"'.$value2.'","","",0)');
             $responseArr['graph_data'] = $graphArr;
             $responseArr['notice_text'] = $notice_text;
             $responseArr['notice_value_type'] = $notice_value_type;
@@ -1118,6 +1897,7 @@ class FrontDataController extends BaseController
     }
     public function getCompareRatios(Request $request)
     {
+        \Log::debug('calling sp_fund_ratios');
         $dataArr = $responseArr = [];
         $message = __('message');
 
@@ -1263,6 +2043,10 @@ class FrontDataController extends BaseController
         $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
         $report_category = isset($request->report_category) ? $request->report_category : '';
         $date = (isset($request->date) && $request->date) ? urldecode($request->date) : '';
+		// $Latest_corpus_entry_date='2024-03-31';
+        $last_aaum =  DB::select("SELECT `entry_date` FROM `mpx_corpus_entry` WHERE fund_code IN (SELECT fund_code FROM mpx_fund_master WHERE fund_type_id = $type_id) ORDER BY `entry_date` DESC LIMIT 0,1;");
+        $last_aaum_date = $last_aaum[0]->entry_date;
+        // dd($last_aaum_date);
         if ($type == 'weekly') {
             if ($report_category == 'return') {
                 $dataArr = DB::select('CALL sp_weekly_funds("'.$date.'",'.$type_id.')');
@@ -1285,12 +2069,15 @@ class FrontDataController extends BaseController
                 $dataArr = DB::select('CALL sp_monthly_return_less_index("'.$date.'",'.$type_id.')');
             }
             if ($report_category == 'corpus_change') {
-                $dataArr = DB::select('CALL sp_monthly_corpus_change("'.$date.'",'.$type_id.')');
+                $dataArr = DB::select('CALL sp_monthly_corpus_change("'.$last_aaum_date.'",'.$type_id.')');
             }
         }
         if (count($dataArr)) {
             $responseArr['snapshot_data'] = $dataArr;
 			$responseArr['test']=$type_id;
+            if ($report_category == 'corpus_change'){
+                $responseArr['aaum_date']=$last_aaum_date;
+            }
             return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
         }
         return $this->sendError($message['data_not_available'], '');
@@ -1346,7 +2133,7 @@ class FrontDataController extends BaseController
             'output' => 'required',
         ];
 
-        $validator = Validator::make($request->all(), $rulesArr, []);
+        $validator = Validator::make($request->all(), $rulesArr, [fund_type_id]);
 
         if ($validator->fails()) {
             return $this->sendError($messageLang['error']['request_validation'], $validator->errors());
@@ -1617,5 +2404,35 @@ class FrontDataController extends BaseController
             }
         }
         return $this->sendError($message['data_not_available'], '');
+    }
+    public function getFundCompositionSnapshotFundWatch($fund_code)
+    {
+        // dd($type_id);
+        $dataArr = $responseArr = [];
+        $message = __('message');
+
+        // $dataArr = DB::select('CALL sp_fund_composition_classification_fund_watch(' . $type_id . ', "' . $fund_code . '")');
+        
+        $fund_code = "'".$fund_code."'";
+        // dd($fund_code);
+        // echo 'CALL sp_fund_search_portfolio(' . $fund_code . ')';die;
+        $dataArr = DB::select('CALL sp_fund_search_portfolio(' . $fund_code . ')');
+        // dd($dataArr);
+        if (count($dataArr)) {
+            // dd('count successful');
+            $responseArr['composition_snapshot_fundwatch'] = $dataArr;
+            return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
+        }
+        return $this->sendError($message['data_not_available'], '');
+    }
+    public function getLastAAUmDate(Request $request){
+        $dataArr = $responseArr = [];
+        $message = __('message');
+
+        $type_id = $request->fund_type_id;
+        $last_aaum =  DB::select("SELECT `entry_date` FROM `mpx_corpus_entry` WHERE fund_code IN (SELECT fund_code FROM mpx_fund_master WHERE fund_type_id = $type_id) ORDER BY `entry_date` DESC LIMIT 0,1;");
+        $last_aaum_date = $last_aaum[0]->entry_date;
+        $responseArr['last_date'] = $last_aaum_date;
+        return $this->sendResponse($responseArr, __('api.success.api_dt_rtrv'));
     }
 }

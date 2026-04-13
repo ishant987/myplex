@@ -12,6 +12,11 @@ class CreateActiveIndicesProcedure extends Migration
      */
     public function up()
     {
+        // Stored procedures are not supported by SQLite; skip in local dev.
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         $procedure = "DROP PROCEDURE IF EXISTS active_indices;
             CREATE PROCEDURE active_indices() 
             BEGIN

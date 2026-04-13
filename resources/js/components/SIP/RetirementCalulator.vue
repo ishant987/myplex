@@ -1,243 +1,325 @@
 <template>
-    <section class="compare_scheme" v-if="currentTab != ''">
-        <div class="container">
-            <div class="tab_snap_shot">
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="comp_schem_bdr">
-                        <div class="s_renge">
-                            <div class="row mb-5">
-                                <div class="col-lg-4 col-md-12 ">
-                                    <div class="cal_form_select">
-                                        <label for="">Current age *</label>
-                                        <input class="form-text" type="text" placeholder="Current age *"
-                                            v-model="current_age" />
+   <section class="compare_scheme pt-3" v-if="currentTab != ''">
+      <div class="container">
+         <div class="tab_snap_shot">
+            <div class="tab-content" id="pills-tabContent">
+               <div class="comp_schem_bdr">
+                  <div class="s_renge p-0">
+                     <div class="row calbanner">
+                        <div class="l">
+                           <h4 class="heading-green">Retirement Calculator</h4>
+                           <p>This calculator can help with planning the financial aspects of your retirement, such as providing an idea where you stand in terms of retirement savings, how much to save to reach your target, and what your retrievals will look like in retirement.</p>
+                        </div>
+                        <div class="r">
+                           <img src="https://new.myplexus.com/themes/frontend/assets/v1/img/retirementcalculator.png">
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-12 left-side">
+                           <div class="row mb-5">
+                              <div class="row">
+                                 <div class="col-12 col-md-6">
+                                    <div class="col-lg-12 col-md-12 ">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Current age *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="How old are you currently?"></i></strong><span><input class="form-text input-s" type="text" placeholder="Current age *"
+                                             v-model="current_age"
+                                             /> years</span> </label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="1" class="slider" id="current_age_output" @input="current_age_input_change">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12 ">
-                                    <div class="cal_form_select">
-                                        <label for="">Expected age of Retirement *</label>
-                                        <input class="form-text" type="number"
-                                            placeholder="Expected age of Retirement *" v-model="retirement_age" />
+                                    <div class="col-lg-12 col-md-12 ">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Expected Age of Retirement *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="At which age do you expect your reirement?"></i></strong> <span><input class="form-text input-s" type="number"
+                                             placeholder="Expected age of Retirement *" v-model="retirement_age" /> years</span></label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="60" class="slider" @input="expected_age_retirement_input" id="expected_age_retirement_output">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="cal_form_select">
-                                        <label for="">Life Expectancy *</label>
-                                        <input class="form-text" type="number" placeholder="Life Expectancy *"
-                                            v-model="life_expect" />
+                                    <div class="col-lg-12 col-md-12">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Life Expectancy *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Till which age do yo want to keep your investments?"></i></strong> <span> <input class="form-text input-s" type="number" placeholder="Life Expectancy *"
+                                             v-model="life_expect" />  years</span></label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="80" class="slider" id="life_expectancy_output" @input="life_expectancy_input">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row mb-5 mt-5">
-                                <div class="col-lg-4 col-md-12 ">
-                                    <div class="cal_form_select">
-                                        <label for="">Rate of return during accumulation period *</label>
-                                        <input class="form-text" type="text"
-                                            placeholder="Rate of return during accumulation period *"
-                                            v-model="return_during" />
+                                 </div>
+                                 <div class="col-12 col-md-6">
+                                    <div class="col-lg-12 col-md-12 ">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Rate of return during accumulation period *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="How much rate of return do you expect to achieve till retirement?"></i></strong> <span><input class="form-text input-s" type="text"
+                                             placeholder="Rate of return during accumulation period *"
+                                             v-model="return_during" id="accumulation_period"/> %</span></label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="50" class="slider" id="accumulation_period_output" @input="accumulation_period_input">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12 ">
-                                    <div class="cal_form_select">
-                                        <label for="">Rate of return after retirement *</label>
-                                        <input class="form-text" type="number"
-                                            placeholder="Rate of return after retirement *" v-model="return_after" />
+                                    <div class="col-lg-12 col-md-12 ">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Rate of return after retirement *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="How much rate of return do you expect after your retirement?"></i></strong> <span> <input class="form-text input-s" type="number"
+                                             placeholder="Rate of return after retirement *" id="retirement" v-model="return_after" /> %</span></label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="50" class="slider" id="retirement_output" @input="retirement_input">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="cal_form_select">
-                                        <label for="">Inflation *</label>
-                                        <input class="form-text" type="number" placeholder="Inflation *"
-                                            v-model="inflation" />
+                                    <div class="col-lg-12 col-md-12">
+                                       <div class="cal_form_select">
+                                          <label for=""><strong>Inflation *: <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Rate of increase in general price level in economy"></i></strong> <span><input class="form-text input-s" type="number" placeholder="Inflation *"
+                                             v-model="inflation" id="inflation"/> %</span></label>
+                                          <div class="d-flex">
+                                             <div class="right">
+                                                <div class="slidecontainer">
+                                                   <input type="range" min="1" max="100" value="10" class="slider" id="inflation_output" @input="inflation_input">
+                                                   <!-- <p>Value: <span id="demo"></span></p> -->
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
                                     </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row mt-5">
-                                <div class="col-lg-6 col-md-12 mb-4">
-                                    <div class="cal_form_select">
-                                        <label for="">Monthly expenditure (In Rs.) *</label>
-                                        <input class="form-text" type="text"
-                                            placeholder="Monthly expenditure (In Rs.) *" v-model="monthly_expence" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-12 mb-4">
-                                    <div class="cal_form_select">
-                                        <label for="">Pension/income after retirement (If any)</label>
-                                        <input class="form-text" type="number"
-                                            placeholder="Pension/income after retirement (If any)" v-model="pension" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-12 mb-4">
-                                    <div class="cal_form_select">
-                                        <label for="">Current Savings per month/SIP (If any)</label>
-                                        <input class="form-text" type="number"
-                                            placeholder="Current Savings per month/SIP (If any)"
-                                            v-model="curr_savings" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-12 mb-4">
-                                    <div class="cal_form_select">
-                                        <label for="">Current lump sum (If any)</label>
-                                        <input class="form-text" type="number" placeholder="Current lump sum (If any)"
-                                            v-model="current_lumsum" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row d-none">
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Current age *</span>
-                                        <div id="slider-bedrooms" class="slider" data-min="15" data-max="70"
-                                            data-value="15" data-step="1"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="currentAge" value="0" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Expected age of Retirement *</span>
-                                        <div id="slider-price" class="slider" data-min="50" data-max="75"
-                                            data-value="50" data-step="1"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="retirementAge" value="0" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Life Expectancy *</span>
-                                        <div id="slider-bedrooms" class="slider" data-min="70" data-max="110"
-                                            data-value="70" data-step="1"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="lifeExpect" value="0" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Rate of return during accumulation period *</span>
-                                        <div id="slider-price" class="slider" data-min="3" data-max="20" data-value="3"
-                                            data-step="1"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="returnDuring" value="0" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Rate of return after retirement *</span>
-                                        <div id="slider-bedrooms" class="slider" data-min="3" data-max="20"
-                                            data-value="3" data-step="1"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="returnAfter" value="0" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-12">
-                                    <div class="range-slider-wrapper">
-                                        <span class="slider-heading">Inflation *</span>
-                                        <div id="slider-price" class="slider" data-min="2" data-max="8" data-value="1"
-                                            data-step="2"></div>
-                                        <input class="vue-value" data-from="retirementCalculator" type="hidden"
-                                            ref="inflation" value="0" />
-                                    </div>
-                                </div>
-
-                            </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="row manualinputs">
+                              <div class="col-12 col-lg-6 col-md-6 ">
+                                 <div class="cal_form_select">
+                                    <label for=""><strong>Monthly expenditure (In Rs.) * <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Amount of money usually spent in every month"></i></strong></label>
+                                    <input class="form-text" type="text"
+                                       placeholder="Monthly expenditure (In Rs.) *" v-model="monthly_expence" />
+                                 </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-md-6">
+                                 <div class="cal_form_select">
+                                    <label for=""><strong>Pension/income after retirement (If any) <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Expected amount from pension every month, if any"></i></strong></label>
+                                    <input class="form-text" type="number"
+                                       placeholder="Pension/income after retirement (If any)" v-model="pension" />
+                                 </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-md-6">
+                                 <div class="cal_form_select">
+                                    <label for=""><strong>Current Savings per month/SIP (If any) <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Amount of money invested every month, if any"></i></strong></label>
+                                    <input class="form-text" type="number"
+                                       placeholder="Current Savings per month/SIP (If any)"
+                                       v-model="curr_savings" />
+                                 </div>
+                              </div>
+                              <div class="col-12 col-lg-6 col-md-6">
+                                 <div class="cal_form_select">
+                                    <label for=""><strong>Current lump sum (If any) <i class="ph ph-question" data-toggle="tooltip" data-placement="top" title="Did you invest any lumpsum amount of money from which you are expecting a return at the age of retirement? If yes metion the lumpsum amount"></i></strong></label>
+                                    <input class="form-text" type="number" placeholder="Current lump sum (If any)"
+                                       v-model="current_lumsum" />
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="three_btn one_btn text-center">
+                              <div class="middle_left d-inline">
+                                 <a href="javascript://" :disabled="disabledCalculate"
+                                    @click="calculate_retirement" class="btn-cal">Calculate</a>
+                              </div>
+                           </div>
+                           <div class="row d-none">
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Current age *</span>
+                                    <div id="slider-bedrooms" class="slider" data-min="15" data-max="70"
+                                       data-value="15" data-step="1"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="currentAge" value="0" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Expected age of Retirement *</span>
+                                    <div id="slider-price" class="slider" data-min="50" data-max="75"
+                                       data-value="50" data-step="1"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="retirementAge" value="0" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Life Expectancy *</span>
+                                    <div id="slider-bedrooms" class="slider" data-min="70" data-max="110"
+                                       data-value="70" data-step="1"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="lifeExpect" value="0" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Rate of return during accumulation period *</span>
+                                    <div id="slider-price" class="slider" data-min="3" data-max="20" data-value="3"
+                                       data-step="1"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="returnDuring" value="0" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Rate of return after retirement *</span>
+                                    <div id="slider-bedrooms" class="slider" data-min="3" data-max="20"
+                                       data-value="3" data-step="1"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="returnAfter" value="0" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12">
+                                 <div class="range-slider-wrapper">
+                                    <span class="slider-heading">Inflation *</span>
+                                    <div id="slider-price" class="slider" data-min="2" data-max="8" data-value="1"
+                                       data-step="2"></div>
+                                    <input class="vue-value" data-from="retirementCalculator" type="hidden"
+                                       ref="inflation" value="0" />
+                                 </div>
+                              </div>
+                           </div>
                         </div>
                         <div class="table_scc calculator_table d-none">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr class="bg_top top_bg_right_black">
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">Monthly expenditure (In Rs.) *</label>
-                                                    <input class="form-date" type="number" v-model="monthly_expence" />
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">Pension/income after retirement (If any)</label>
-                                                    <input class="form-date" type="number" id="pension"
-                                                        v-model="pension" />
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">Current Savings per month/SIP (If any)</label>
-                                                    <input class="form-date" type="number" id="curr_savings"
-                                                        v-model="curr_savings" />
-                                                </div>
-                                            </td>
-                                            <td class="bg_222">
-                                                <div class="form_select">
-                                                    <label for="">Current lump sum (If any)</label>
-                                                    <input class="form-date" type="number" id="current_lumsum"
-                                                        v-model="current_lumsum" />
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
+                           <div class="table-responsive">
+                              <table class="table table-bordered">
+                                 <tbody>
+                                    <tr class="bg_top top_bg_right_black">
+                                       <td class="bg_222">
+                                          <div class="form_select">
+                                             <label for="">Monthly expenditure (In Rs.) *</label>
+                                             <input class="form-date" type="number" v-model="monthly_expence" />
+                                          </div>
+                                       </td>
+                                       <td class="bg_222">
+                                          <div class="form_select">
+                                             <label for="">Pension/income after retirement (If any)</label>
+                                             <input class="form-date" type="number" id="pension"
+                                                v-model="pension" />
+                                          </div>
+                                       </td>
+                                       <td class="bg_222">
+                                          <div class="form_select">
+                                             <label for="">Current Savings per month/SIP (If any)</label>
+                                             <input class="form-date" type="number" id="curr_savings"
+                                                v-model="curr_savings" />
+                                          </div>
+                                       </td>
+                                       <td class="bg_222">
+                                          <div class="form_select">
+                                             <label for="">Current lump sum (If any)</label>
+                                             <input class="form-date" type="number" id="current_lumsum"
+                                                v-model="current_lumsum" />
+                                          </div>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </div>
                         </div>
                         <a href="javascript://" id="retirementCalulator-jquery-click" class="d-none"
-                            @click="calculate_retirement"></a>
-                        <div class="three_btn one_btn">
-                            <div class="middle_left">
-                                <a href="javascript://" :disabled="disabledCalculate"
-                                    @click="calculate_retirement">Claculatre</a>
-                            </div>
+                           @click="calculate_retirement"></a>
+                     </div>
+                  </div>
+                  <div class="invst-wrap invst-retirement-calc">
+                     <div class="row invst-fields invst-field-1 justify-content-between">
+                        <p v-if="errorMsg" class="text-danger mt-3 mb-3 w-100 text-right">{{ errorMsg }}</p>
+                        <div class="invst-inflation-data mt-3 mb-3"
+                           v-if="corpus_need_on_retirement || savings_required_per_month || savings_equired_per_year">
+                           <div class="row m-0">
+                              <div class="col-lg-4 col-md-4 col-sm-4 inflataion-data-common pt-2 pb-2">
+                                 <h5 class="m-0">Corpus you will need on retirement</h5>
+                                 <span class="data">{{ corpus_need_on_retirement }}</span>
+                              </div>
+                              <div class="col-lg-4 col-md-4 col-sm-4 inflataion-data-common pt-2 pb-2">
+                                 <h5  class="m-0">Savings Required per month</h5>
+                                 <span class="data">{{ savings_required_per_month }}</span>
+                              </div>
+                              <div class="col-lg-4 col-md-4 col-sm-4 inflataion-data-common pt-2 pb-2">
+                                 <h5  class="m-0">Savings Required per year</h5>
+                                 <span class="data">{{ savings_equired_per_year }}</span>
+                              </div>
+                           </div>
                         </div>
-                        <div class="invst-wrap invst-retirement-calc">
-                            <div class="row invst-fields invst-field-1 justify-content-between">
-                                <p v-if="errorMsg" class="text-danger mt-3 mb-3 w-100 text-right">{{ errorMsg }}</p>
-                                <div class="invst-inflation-data col-12 mt-5 mb-3"
-                                    v-if="corpus_need_on_retirement || savings_required_per_month || savings_equired_per_year">
-                                    <div class="row m-0">
-                                        <div class="col-lg-4 col-md-4 col-sm-4 inflataion-data-common">
-                                            <h5>Corpus you will need on retirement</h5>
-                                            <span class="data">{{ corpus_need_on_retirement }}</span>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-4 inflataion-data-common">
-                                            <h5>Savings Required per month</h5>
-                                            <span class="data">{{ savings_required_per_month }}</span>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-4 inflataion-data-common">
-                                            <h5>Savings Required per year</h5>
-                                            <span class="data">{{ savings_equired_per_year }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <p v-if="emailMsg" class="text-success mt-3 mb-3 w-100 text-right">{{ emailMsg }}</p>
-                            <div class="row mt-5">
-                                <div id="screen_capture" class="mt-3 w-100">
-                                    <div class="col-md-12">
-                                        <div class="graph_div" ref="printMe" style="position: relative;">
-                                            <div id="chartContainerRetirementCal" style="width: 100%;"
-                                                :class="{ 'height_370': showchart }"></div>
-                                            <div v-show="showchart"
-                                                style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom: 0px;"
-                                                id="myplexusC"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                     </div>
+                     <p v-if="emailMsg" class="text-success mt-2 mb-2 w-100 text-right">{{ emailMsg }}</p>
+                     <div class="row mt-2">
+                        <div id="screen_capture" class="mt-3 w-100">
+                           <div class="col-md-12">
+                              <div class="graph_div" ref="printMe" style="position: relative;">
+                                 <div id="chartContainerRetirementCal" style="width: 100%;"
+                                    :class="{ 'height_370': showchart }"></div>
+                                 <div v-show="showchart"
+                                    style="height:30px; width:70px; background:#fff; position:absolute; z-index:999;bottom: 0px;"
+                                    id="myplexusC"></div>
+                              </div>
+                           </div>
                         </div>
-                    </div>
-                </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="plan_faq">
+                  <div class="faq_title">
+                     <h4>FAQ - <span>Frequently asked questions</span></h4>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>What is Retirement Planner?</h4>
+                     <p>Retirement planning is a critical financial and lifestyle consideration that involves setting aside enough money and assets to support yourself comfortably after you stop working.This requires analyzing current expenses to estimate future requirement expenses, determining the time horizon for retirement, assessing the risk apetite, and tax-efficiency of your retirements.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Why Retirement planning is important?</h4>
+                     <p>The first and foremost reason is inflation which reduces the value of money over time. So it is essential to have investments that offer the potential for growth to outpace inflation in order to support desired lifestyle in retirement. Secondly, life expectancy directly impacts how long your retirement savings need to last and the income you'll require during the retirement years.  </p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Benefits of Retirement planning</h4>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Financial Security</h4>
+                     <p>Retirement planning helps in securing you financially once you stop working by ensuring that your living expenses and maintaining desired standard of living during retirement.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Inflation Protection</h4>
+                     <p>A well structured retirement plan accounts for inflation, ensuring that your income keeps pace with rising living costs. This protection helps maintain your purchasing power over time.</p>
+                  </div>
+                  <div class="single_faq_calc">
+                     <h4>Independence</h4>
+                     <p>With a solid retirement plan, you're less likely to rely on others, such as family members, for financial support in your later years.</p>
+                  </div>
+               </div>
             </div>
-        </div>
-    </section>
+         </div>
+      </div>
+   </section>
 </template>
 
 <script>
 import mixin from '../../mixin';
-var CanvasJS = require('../../canvasjs.min.js');
+ var CanvasJS = require('../../canvasjs.min.js');
+import Vue3ChartJs from '@j-t-mcc/vue3-chartjs'
 export default {
     props: {
         username: {
@@ -253,7 +335,7 @@ export default {
 
     },
     components: {
-
+Vue3ChartJs
     },
     mixins: [mixin],
     data() {
@@ -283,9 +365,40 @@ export default {
             corpus_need_on_retirement: '',
             savings_required_per_month: '',
             savings_equired_per_year: '',
+			current_age_input: '',
+			expected_age_retirement: '',
+			life_expectancy: '',
+			accumulation_period: '',
+			retirement: '',
+			inflation:'',
+			chartData: {
+        labels: [ 'January', 'February', 'March' ],
+        datasets: [ { data: [40, 20, 12] } ]
+      },
+      chartOptions: {
+        responsive: true
+      }
         }
     },
     methods: {
+		 current_age_input_change(event){
+		    this.current_age = event.target.value;
+	        },
+            expected_age_retirement_input(event){
+                this.retirement_age = event.target.value;
+            },
+            life_expectancy_input(event){
+                this.life_expect = event.target.value;
+            },
+            accumulation_period_input(event){
+                this.return_during = event.target.value;
+            },
+            retirement_input(event){
+                this.return_after = event.target.value;
+            },
+            inflation_input(event){
+                this.inflation = event.target.value;
+            },
         UpdateCalualtorInputs() {
             this.current_age = this.$refs.currentAge.value
             this.retirement_age = this.$refs.retirementAge.value
@@ -489,7 +602,7 @@ export default {
                     type: "column",
                     showInLegend: true,
                     legendMarkerColor: "#6ab130",
-                    legendText: "Investment in Cr. (Rs.)",
+                    name: "Investment in Cr. (Rs.)",
                     yValueFormatString: "##.00",
                     color: '#6ab130',
                     dataPoints: dataPointsR1,
@@ -498,7 +611,7 @@ export default {
                     type: "column",
                     showInLegend: true,
                     legendMarkerColor: "#6d78ad",
-                    legendText: "Balance in Cr. (Rs.)",
+                    name: "Balance in Cr. (Rs.)",
                     yValueFormatString: "##.00",
                     color: '#6d78ad',
                     dataPoints: dataPointsR2,
@@ -507,7 +620,7 @@ export default {
                     type: "column",
                     showInLegend: true,
                     legendMarkerColor: "#000000",
-                    legendText: "Withdrawl in Cr. (Rs.)",
+                    name: "Withdrawl in Cr. (Rs.)",
                     yValueFormatString: "##.00",
                     color: '#000000',
                     dataPoints: dataPointsR3,
@@ -518,6 +631,7 @@ export default {
             this.chart.render();
 
             this.send_graph_result();
+			
 
         },
         toolTipFormatter(e) {
@@ -686,6 +800,11 @@ export default {
             return true;
         }
     },
+    beforeMount() {
+       this.retirement_age = 60;
+       this.life_expect = 80;
+       this.inflation = 10;
+    },
     watch: {
 
     },
@@ -707,6 +826,37 @@ export default {
         }
     },
     mounted() {
+let chart = {
+            colorSet: "greenShades",
+            backgroundColor: "#fff  ",
+            theme: "light2",
+            animationEnabled: true,
+            axisY: {
+                includeZero: false,
+                title: "Scheme",
+                suffix: " "
+            },
+            toolTip: {
+                shared: "true"
+            },
+            legend: {
+                cursor: "pointer",
+                itemclick: this.toggleDataSeries
+            },
+            title: {
+                text: "Scheme NAV Chart"
+            },
+            data: [{
+                type: "spline",
+                showInLegend: true,
+                yValueFormatString: "##.00",
+                name: "NAV Value",
+                dataPoints: this.dataPoints
+            }]
+        }
+        CanvasJS.addColorSet("greenShades", ["#4661EE", "#EC5657", "#1BCDD1", "#8FAABB", "#B08BEB", "#3EA0DD", "#F5A52A", "#23BFAA", "#FAA586", "#EB8CC6"]);
+        this.chart = new CanvasJS.Chart("chartContainer", chart);
+        this.chart.render();
 
     },
 }

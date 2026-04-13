@@ -1,0 +1,4 @@
+mpx_module_class
+mpx_modules with class id
+mpx_module_methods , with module_id
+mpx_role_module_method_rights

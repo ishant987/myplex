@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
         'grant.access' => \App\Http\Middleware\GrantAccess::class,
         // 'XSS' => \App\Http\Middleware\XSS::class,
+		'subscription' => \App\Http\Middleware\SubscriptionMiddleware::class,
     ];
 }

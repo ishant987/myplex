@@ -3,7 +3,7 @@
         <div class="col-md-8 offset-md-2 mb-4">
             <div class="faq_title text-center">
                 <h4 data-aos="fade-down" data-aos-duration="1500">Frequently Asked Question</h4>
-                <p data-aos="fade-down" data-aos-duration="1500">Pro membership brings exclusive and timely data at your fingertips.<br> Discover your next great investment idea quicker and easier</p>
+                <p data-aos="fade-down" data-aos-duration="1500">The mutual fund  industry is rife with different types of funds, strategies, and terminology.<br> We are here to help you make sense of it all.</p>
             </div>
         </div>
     </div>
@@ -14,7 +14,8 @@
     </div>
 	<div class="row mt-2">
 									<div class="col-md-12 text-center">
-										<a href="/faq" class="money_title_btn">View All FAQ</a>
+										<a href="/faq" class="money_title_btn mb-2">View All FAQ</a>
+										<a href="https://www.quora.com/profile/Prasunjit-Mukherjee?q=prasunjit%20mukherjee" class="money_title_btn" target="_blank"><i class="fa fa-quora"></i>&nbsp;Discover More</a>
 									</div>
 								</div>
 </div>

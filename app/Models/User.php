@@ -57,6 +57,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_id',
         'updated_by',
         'updated_id',
+        'contact_person',
+        'city',
+        'state',
+        'gst',
+        'arn',
+        'pan',
+        'subscription_expiry_date',
     ];
 
     protected $guarded = [

@@ -12,6 +12,11 @@ class CreateActiveAUMsProcedure extends Migration
      */
     public function up()
     {
+        // Stored procedures are not supported by SQLite; skip in local dev.
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+
         $procedure = "DROP PROCEDURE IF EXISTS active_aums;
             CREATE PROCEDURE active_aums() 
             BEGIN

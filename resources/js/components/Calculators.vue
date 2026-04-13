@@ -25,28 +25,28 @@
         <div class="tab_snap_shot">
             <ul class="nav nav-pills filter_tab mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link " :class="{'active show':currentTab == 'sip-planner'}" @click="currentTab = 'sip-planner'" id="pills-weekly-tab1" data-bs-toggle="pill" data-bs-target="#pills-weekly1" type="button" role="tab" aria-controls="pills-weekly1" aria-selected="false">
-                        <img :src="image_path+`/tab_icon_cal.png`" /> SIP Planner
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
                     <button class="nav-link" :class="{'active show':currentTab == 'sip-p-calc'}" @click="currentTab = 'sip-p-calc'" id="pills-monthly-tab1" data-bs-toggle="pill" data-bs-target="#pills-monthly1" type="button" role="tab" aria-controls="pills-monthly1" aria-selected="false">
-                        <img :src="image_path+`/tab_icon_cal1.png`" /> Lumpsum Calculator
+                        <img :src="image_path+`/tab_icon_cal1.png`" /> SIP Planner
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" :class="{'active show':currentTab == 'inf-calc'}" @click="currentTab = 'inf-calc'" id="pills-monthly-tab2" data-bs-toggle="pill" data-bs-target="#pills-monthly2" type="button" role="tab" aria-controls="pills-monthly2" aria-selected="false">
-                        <img :src="image_path+`/tab_icon_cal2.png`" /> Inflation Calculator
+                    <button class="nav-link " :class="{'active show':currentTab == 'sip-planner'}" @click="currentTab = 'sip-planner'" id="pills-weekly-tab1" data-bs-toggle="pill" data-bs-target="#pills-weekly1" type="button" role="tab" aria-controls="pills-weekly1" aria-selected="false">
+                        <img :src="image_path+`/tab_icon_cal.png`" /> Lumpsum Fund Planner
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link " :class="{'active show':currentTab == 'retire-calc'}" @click="currentTab = 'retire-calc'" id="pills-monthly-tab3" data-bs-toggle="pill" data-bs-target="#pills-monthly3" type="button" role="tab" aria-controls="pills-monthly3" aria-selected="true">
-                        <img :src="image_path+`/tab_icon_cal3.png`" /> Retirement Calculator
+                        <img :src="image_path+`/tab_icon_cal3.png`" /> Retirement Planner
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" :class="{'active show':currentTab == 'risk-tol-eval'}" @click="currentTab = 'risk-tol-eval'" id="pills-monthly-tab4" data-bs-toggle="pill" data-bs-target="#pills-monthly4" type="button" role="tab" aria-controls="pills-monthly4" aria-selected="false">
                         <img :src="image_path+`/tab_icon_cal4.png`" /> Risk Tolerance Evaluator
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" :class="{'active show':currentTab == 'inf-calc'}" @click="currentTab = 'inf-calc'" id="pills-monthly-tab2" data-bs-toggle="pill" data-bs-target="#pills-monthly2" type="button" role="tab" aria-controls="pills-monthly2" aria-selected="false">
+                        <img :src="image_path+`/tab_icon_cal2.png`" /> Inflation Calculator
                     </button>
                 </li>
             </ul>

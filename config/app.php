@@ -174,13 +174,18 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         //..Custom added...
         App\Providers\MailConfigServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-
+        // Socialite\SocialiteServiceProvider::class,
+        App\Providers\FacebookServiceProvider::class,
+        App\Providers\FacebookCalcServiceProvider::class,
+        App\Providers\GoogleServiceProvider::class,
+        App\Providers\GoogleCalcServiceProvider::class,
     ],
 
     /*
@@ -237,7 +242,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-
+        // 'Socialite' => Socialite\Facades\Socialite::class,
     ],
 
 ];

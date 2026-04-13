@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>myplexus | Register</title>
+	<link rel="shortcut icon" href="{{asset('themes/frontend/assets/infosolz/images/favicon.png')}}" type="image/x-icon">
+	<link rel="stylesheet" href="{{asset('themes/frontend/assets/infosolz/css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{asset('themes/frontend/assets/infosolz/css/all.min.css')}}">
+	<link rel="stylesheet" href="{{asset('themes/frontend/assets/infosolz/css/owl.carousel.min.css')}}">
+	<link rel="stylesheet" href="{{asset('themes/frontend/assets/infosolz/css/login.css')}}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+   
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	
+</head>
+<body>
+
+	<div class="main">
+        <div class="login_main register_main">
+            <div class="container">
+            @if (session('error'))
+                    <div class="alert alert-danger danger-login new-dngr">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if ($message = Session::get('success'))
+                    <div class="alert alert-success">
+                        <p>{{ $message }}</p>
+                    </div>
+                @endif
+                <img src="{{asset('themes/frontend/assets/infosolz/images/logo.png')}}" alt="" class="login_logo">
+                <h1>Create Account</h1>
+                
+                <form method="post" action="{{route('user.registration-store')}}" enctype="multipart/form-data">
+                  @csrf
+                    <div class="upload_file">
+                        <label class="label" for="input"><span>Logo</span></label>
+
+                        <div class="input">
+                            <input name="image" id="file" type="file">
+                        </div>
+
+                        <p>Upload logo</p>
+                       
+                    </div>
+                    @if ($errors->has('image'))
+                            <div class="text-danger">{{ $errors->first('image') }}</div>
+                        @endif
+                   
+
+                    <div class="free_trial">
+                        <span>Free Trial (14 Days)</span>
+                    </div>
+
+              
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>Company Name</label>
+                                <input type="text" name="company_name" value="{{old('company_name')}}">
+                                @if ($errors->has('company_name'))
+                                    <div class="text-danger">{{ $errors->first('company_name') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>Contact Person</label>
+                                <input type="text" name="contact_person" value="{{old('contact_person')}}">
+                                @if ($errors->has('contact_person'))
+                                    <div class="text-danger">{{ $errors->first('contact_person') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>Email</label>
+                                <input type="email"  name="email" value="{{old('email')}}">
+                                @if ($errors->has('email'))
+                                    <div class="text-danger">{{ $errors->first('email') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>City</label>
+                                <input type="text" name="city" value="{{old('city')}}">
+                                @if ($errors->has('city'))
+                                    <div class="text-danger">{{ $errors->first('city') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>State</label>
+                                <input type="text" name="state" value="{{old('state')}}" >
+                                @if ($errors->has('state'))
+                                    <div class="text-danger">{{ $errors->first('state') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>ARN</label>
+                                <input type="text" name="arn" value="{{old('arn')}}">
+                                @if ($errors->has('arn'))
+                                    <div class="text-danger">{{ $errors->first('arn') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>PAN</label>
+                                <input type="text" name="pan" value="{{old('pan')}}">
+                                @if ($errors->has('pan'))
+                                    <div class="text-danger">{{ $errors->first('pan') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>GST</label>
+                                <input type="text" name="gst" value="{{old('gst')}}">
+                                @if ($errors->has('gst'))
+                                    <div class="text-danger">{{ $errors->first('gst') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>PASSWORD</label>
+                                <input type="text" name="password" value="{{old('password')}}">
+                                @if ($errors->has('password'))
+                                    <div class="text-danger">{{ $errors->first('password') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <!-- <div class="form_group radio_btns">
+                                <input type="radio" id="test1" name="radio-group" checked>
+                                <label for="test1">Paid</label>
+                                <input type="radio" id="test2" name="radio-group">
+                                <label for="test2">Free Trial (7 Days)</label>
+                            </div> -->
+                            <div class="form_group check_btns">
+                                <input type="checkbox" id="html" name="privacy_policy" value="1" @if(old('privacy_policy') == '1') checked @endif>
+                                <label for="html">privacy policy, terms & condition.</label>
+                                @if ($errors->has('privacy_policy'))
+                                    <div class="text-danger">{{ $errors->first('privacy_policy') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form_group">
+                                <div class="captcha">
+                                    <!-- <img src="{{asset('themes/frontend/assets/infosolz/images/capcha_box.png')}}" alt=""> -->
+                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                    @error('g-recaptcha-response')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="sign_in">
+                                <input type="submit" value="Sign Up">
+                                <p class="dont_acc">Already Have An Account?   <a href="{{route('user.user_login')}}"> Sign In Now!</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        
+		<img class="left_bg" src="{{asset('themes/frontend/assets/infosolz/images/left_img.png')}}" alt="">
+		<img class="right_bg" src="{{asset('themes/frontend/assets/infosolz/images/rignt_img.png')}}" alt="">
+	</div>
+
+	<script src="{{asset('themes/frontend/assets/infosolz/js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('themes/frontend/assets/infosolz/js/jquery.min.js')}}"></script>
+	<script src="{{asset('themes/frontend/assets/infosolz/js/owl.carousel.min.js')}}"></script>
+	<script src="{{asset('themes/frontend/assets/infosolz/js/icon.js')}}"></script>
+	<script src="{{asset('themes/frontend/assets/infosolz/js/main.js')}}"></script>
+</body>
+</html>
