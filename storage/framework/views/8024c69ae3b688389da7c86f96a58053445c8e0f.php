@@ -1,6 +1,0 @@
-<tr>
-  <td style="margin:0;padding:25px 50px 10px 50px;font-family:<?php echo e($mailCssAtr['font_family']); ?>; font-size:<?php echo e($mailCssAtr['txt_fnt_size']); ?>;color:<?php echo e($mailCssAtr['txt_color']); ?>;font-weight:<?php echo e($mailCssAtr['fnt_nrml']); ?>;line-height:<?php echo e($mailCssAtr['txt_fnt_line_height']); ?>;"><?php echo e(__('common.hello_txt')); ?> <?php echo e(__('common.admin_txt')); ?><?php echo e($commaSign); ?></td>
-</tr>
-<tr>
-  <td style="margin:0;padding:0px 50px 25px 50px;font-family:<?php echo e($mailCssAtr['font_family']); ?>; font-size:<?php echo e($mailCssAtr['txt_fnt_size']); ?>;color:<?php echo e($mailCssAtr['txt_color']); ?>;font-weight:<?php echo e($mailCssAtr['fnt_nrml']); ?>;line-height:<?php echo e($mailCssAtr['txt_fnt_line_height']); ?>;"><?php echo e(__('contact.mail_p_pfx')); ?><strong><?php echo e($mailArr['fullname']); ?><?php echo e($commaSign); ?></strong> <a style="color: <?php echo e($mailCssAtr['lnk_color']); ?>;" href="<?php echo e(route('admin.contact.index')); ?>" target="_blank"><?php echo e(__('common.click_here_txt')); ?></a><?php echo e(__('contact.mail_p_sfx')); ?></td>
-</tr><?php /**PATH /var/www/vhosts/myplexus.com/httpdocs/resources/views/emails/web/to-admin-contact.blade.php ENDPATH**/ ?>

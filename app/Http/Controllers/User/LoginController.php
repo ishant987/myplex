@@ -16,6 +16,23 @@ use App\Models\Subscription;
 
 class LoginController extends BaseController
 {
+    public function logout(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user) {
+            $user->update([
+                'session_token' => null,
+                'is_session_active' => false,
+            ]);
+        }
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('user.user_login')->with('success', 'You have successfully logged out.');
+    }
 
     public function postLogin(Request $request)
     {
@@ -41,6 +58,10 @@ class LoginController extends BaseController
         {
                  //  dd("ok4");
             $user = Auth::user();
+            $user->update([
+                'session_token' => $request->session()->getId(),
+                'is_session_active' => true,
+            ]);
              //dd($user);
             // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
             if(isset($request->pageurl))
@@ -48,7 +69,7 @@ class LoginController extends BaseController
                 //dd($request->pageurl);
                 if($request->pageurl=='subcription')
                 {
-                    return redirect()->route('user.subscription');
+                    return redirect()->route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription');
                 }
                 
             }
@@ -68,18 +89,6 @@ class LoginController extends BaseController
         // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
     }
     //callback
-
-    // public function logout(Request $request)
-    // {
-    //     $this->guard()->logout();
-
-    //     $request->session()->invalidate();
-    
-    //     $request->session()->regenerateToken();
-
-    //     return $this->loggedOut($request) ?: redirect('/');
-    // }
-
 
     public function redirectToGoogle()
     {
@@ -207,6 +216,10 @@ class LoginController extends BaseController
 
 
                 auth()->login($finduser);
+                $finduser->update([
+                    'session_token' => $request->session()->getId(),
+                    'is_session_active' => true,
+                ]);
                 return redirect()->route('user.ratio_dashboard');
             }
             else
@@ -242,6 +255,12 @@ class LoginController extends BaseController
                 $subscription_table['created_id']=$userId;
                 $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
+                $user->update([
+                    'session_token' => $request->session()->getId(),
+                    'is_session_active' => true,
+                    'trial_ends_at' => $expiryDate,
+                    'subscription_status' => 'trial',
+                ]);
                 return redirect()->route('user.ratio_dashboard');
               //  return redirect()->back();
             }

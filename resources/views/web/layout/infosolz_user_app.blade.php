@@ -30,37 +30,39 @@
                         </div>
                     </div>
                     <ul class="welcome">
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/wel.png')}}" alt="">Welcome to Dashboard</a></li>
-                        <li><a href="#">
+                        <li><a href="{{ route('user.ratio_dashboard') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/wel.png')}}" alt="">Welcome to Dashboard</a></li>
+                        <li><a href="{{ route('user.notifications') }}">
                             <i>
                                 <img src="{{asset('themes/frontend/assets/infosolz/images/noti.png')}}" alt="">
-                                <span>2</span>
+                                <span>0</span>
                             </i>
                             Notification</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/log.png')}}" alt="">Logout</a></li>
+                        <li><a href="{{ route('user.logout') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/log.png')}}" alt="">Logout</a></li>
                     </ul>
                 </div>
                 <div class="subscription_heading">
                     <div class="subs_in">
-                        @if($expiry_date < $current_date)
-                        <!-- red warning--> <i class="fa-solid fa-triangle-exclamation red"></i> <p>Subscription is expired, Please renew</p> <a  href="{{ route('user.subscription', ['cal' => 'subcription']) }}">subscription</a> 
+                        @if(!empty($show_expired_warning))
+                        <!-- red warning--> <i class="fa-solid fa-triangle-exclamation red"></i> <p>Subscription is expired, Please renew</p> <a  href="{{ route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription', ['cal' => 'subcription']) }}">subscription</a> 
                         
-                        @elseif($current_date <= $fiveDaysBeforeExpiry)
-                        <!-- yellow last 4 day before warning--> <i class="fa-solid fa-triangle-exclamation yellow"></i>  <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}, Please renew <a  href="{{ route('user.subscription', ['cal' => 'subcription']) }}">subscription</a>
-                        @else
+                        @elseif(!empty($show_renew_warning))
+                        <!-- yellow last 4 day before warning--> <i class="fa-solid fa-triangle-exclamation yellow"></i>  <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}, Please renew <a  href="{{ route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription', ['cal' => 'subcription']) }}">subscription</a>
+                        @elseif(!empty($expiry_date))
                         <!-- green subscription warning--> <i class="fa-solid fa-bell green"></i> <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}
+                        @else
+                        <i class="fa-solid fa-bell green"></i> <p>Subscription is active.</p>
                         @endif
                     </div>
                 </div>
                 <nav class="left_menu same_height">
                     <ul>
-                        <li class="active"><a href="{{route('user.ratio_dashboard')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/ratop_report.png') }}" alt="">Ratio Reports</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/ratio_ana.png') }}" alt=""> Ratio Analysis</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/compos.png') }}" alt="">Composition Report</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/indies.png') }}" alt="">Indies Report</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/model.png') }}" alt="">Model Portfolio</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/filter.png') }}" alt="">Filters</a></li>
-                        <li><a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/predic.png') }}" alt="">Predictive</a></li>
+                        <li class="{{ request()->routeIs('user.ratio_dashboard') ? 'active' : '' }}"><a href="{{route('user.ratio_dashboard')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/ratop_report.png') }}" alt="">Ratio Reports</a></li>
+                        <li class="{{ request()->routeIs('user.ratio_analysis') ? 'active' : '' }}"><a href="{{route('user.ratio_analysis')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/ratio_ana.png') }}" alt=""> Ratio Analysis</a></li>
+                        <li class="{{ request()->routeIs('user.composition_report') ? 'active' : '' }}"><a href="{{route('user.composition_report')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/compos.png') }}" alt="">Composition Report</a></li>
+                        <li class="{{ request()->routeIs('user.indies_report') ? 'active' : '' }}"><a href="{{route('user.indies_report')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/indies.png') }}" alt="">Indies Report</a></li>
+                        <li class="{{ request()->routeIs('user.model_portfolio') ? 'active' : '' }}"><a href="{{route('user.model_portfolio')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/model.png') }}" alt="">Model Portfolio</a></li>
+                        <li class="{{ request()->routeIs('user.filters') ? 'active' : '' }}"><a href="{{route('user.filters')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/filter.png') }}" alt="">Filters</a></li>
+                        <li class="{{ request()->routeIs('user.predictive') ? 'active' : '' }}"><a href="{{route('user.predictive')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/predic.png') }}" alt="">Predictive</a></li>
                     </ul>
                 </nav>
         </header>

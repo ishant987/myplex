@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class SubscriptionMiddleware
 {
@@ -19,26 +20,27 @@ class SubscriptionMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if the user is authenticated
         if (Auth::check()) {
             $user = Auth::user();
-            $userId = $user->u_id;
 
-            // Retrieve user details
-            $userdetails = User::where('u_id', $userId)->first();
+            if (method_exists($user, 'hasActiveSubscription') && $user->hasActiveSubscription()) {
+                return $next($request);
+            }
 
-            // Parse and compare subscription expiry date
-            $expiry_datetime = Carbon::parse($userdetails->subscription_expiry_date);
-            $today = Carbon::now();
+            $userdetails = User::where('u_id', $user->u_id)->first();
+            $expiryDate = $userdetails?->subscription_expiry_date;
+
+            if (!$expiryDate) {
+                return redirect()->route('user.subscription_lock');
+            }
+
+            $expiry_datetime = Carbon::parse($expiryDate);
 
             if ($expiry_datetime->isPast()) {
-                // Redirect to the subscription lock route if the subscription has expired
                 return redirect()->route('user.subscription_lock');
             }
         }
 
-        // Proceed with the request
         return $next($request);
     }
 }
-

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Commands\MembersBirthday::class,
         Commands\InsertCagrQuartileDecile::class,
+        Commands\SendTrialReminders::class,
     ];
 
     /**
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
 
         // $schedule->command('inspire')->hourly();
         $schedule->command('set:daily-cagr')->dailyAt('16:28');
+        $schedule->command('app:send-trial-reminders')->dailyAt('09:00');
     }
 
     /**

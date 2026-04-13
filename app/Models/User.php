@@ -16,6 +16,9 @@ use App\Lib\Core\MailPS;
 use App\Models\UserGroupModel;
 use App\Models\UserGroupRelModel;
 use App\Models\AdminModel;
+use App\Models\Subscription;
+use App\Models\PaymentTransaction;
+use App\Models\UserSensitiveDetail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -64,10 +67,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'arn',
         'pan',
         'subscription_expiry_date',
+        'trial_ends_at',
+        'session_token',
+        'is_session_active',
+        'subscription_status',
     ];
 
     protected $guarded = [
         'u_id',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'is_session_active' => 'boolean',
     ];
 
 
@@ -121,6 +134,38 @@ class User extends Authenticatable implements MustVerifyEmail
     public function groups()
     {
         return $this->belongsToMany(UserGroupModel::class, 'user_group_rel', 'u_id', 'u_g_id');
+    }
+
+    public function razorpaySubscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id', 'u_id');
+    }
+
+    public function paymentTransactions()
+    {
+        return $this->hasMany(PaymentTransaction::class, 'user_id', 'u_id');
+    }
+
+    public function sensitiveDetails()
+    {
+        return $this->hasOne(UserSensitiveDetail::class, 'user_id', 'u_id');
+    }
+
+    public function activeSubscription()
+    {
+        return $this->razorpaySubscriptions()
+            ->whereIn('status', ['a', 'active'])
+            ->latest('id');
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription()->exists() || $this->subscription_status === 'active';
+    }
+
+    public function isOnTrial(): bool
+    {
+        return $this->subscription_status === 'trial' && (bool) $this->trial_ends_at;
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)

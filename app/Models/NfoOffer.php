@@ -14,6 +14,18 @@ class NfoOffer extends Model
 {
     use HasFactory;
 
+    protected static function yearExpression($column)
+    {
+        return config('database.default') === 'sqlite'
+            ? "strftime('%Y', {$column})"
+            : "DATE_FORMAT({$column}, '%Y')";
+    }
+
+    protected static function applyYearFilter($query, $column, $year)
+    {
+        return $query->whereRaw(self::yearExpression($column) . ' = ?', [(string) $year]);
+    }
+
     /**
      * The table associated with the model.
      *
@@ -185,7 +197,9 @@ class NfoOffer extends Model
 		
 		/*NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->where(['status' => $commonconstants['status_val'][1], 'type' => $commonconstants['nfo_monitor_type']['value'][2]])->groupByRaw('year')->orderByRaw('year DESC')->get();*/
 		
-        return NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->groupByRaw('year')->orderByRaw('year DESC')->get();
+        $yearExpr = self::yearExpression('post_date');
+
+        return NfoOffer::selectRaw("{$yearExpr} AS year, COUNT(no_id) AS tot")->groupByRaw('year')->orderByRaw('year DESC')->get();
 		
       //   dd(\DB::getQueryLog()); // Show results of log
 
@@ -213,7 +227,7 @@ class NfoOffer extends Model
 		//dd($year);
 		$year = Date('Y');
         if($year != null){
-            $query->whereRaw('DATE_FORMAT(fund_closing, "%Y") ='.$year);
+            self::applyYearFilter($query, 'fund_closing', $year);
         }
 
         if ($orderBy == false && $order == false) {
@@ -279,7 +293,7 @@ public static function frontListArchieve($filterArr = false, $fields = false, $o
 		
 		
         if($year != null){
-            $query->whereRaw('DATE_FORMAT(post_date, "%Y") ='.$year);
+            self::applyYearFilter($query, 'post_date', $year);
         }
 
         if ($orderBy == false && $order == false) {
@@ -324,7 +338,13 @@ public static function frontListArchieve($filterArr = false, $fields = false, $o
 		
 		/*NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->where(['status' => $commonconstants['status_val'][1], 'type' => $commonconstants['nfo_monitor_type']['value'][2]])->groupByRaw('year')->orderByRaw('year DESC')->get();*/
 		
-        return NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->whereRaw('DATE_FORMAT(post_date, "%Y") ='.$year)->groupByRaw('year')->orderByRaw('year DESC')->get();
+        $yearExpr = self::yearExpression('post_date');
+
+        return NfoOffer::selectRaw("{$yearExpr} AS year, COUNT(no_id) AS tot")
+            ->whereRaw("{$yearExpr} = ?", [(string) $year])
+            ->groupByRaw('year')
+            ->orderByRaw('year DESC')
+            ->get();
 		
       //   dd(\DB::getQueryLog()); // Show results of log
 

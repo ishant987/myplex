@@ -138,6 +138,7 @@
                         <!--Tab-->
                         <div class="tab-content-box-item tab-content-box-item-active" id="companies">
                             <div class="service-style1-tab-content-box-item">
+                                @if(count($allnewfroms) >= 3)
                                 <div class="row">
                                     <!--Start Single Service Box Style1-->
                                     <div class="col-xl-4 col-lg-4 mt-4">
@@ -198,6 +199,7 @@
                                     </div>
                                     <!--End Single Service Box Style1-->
                                 </div>
+                                @endif
                             </div>
                         </div>
 

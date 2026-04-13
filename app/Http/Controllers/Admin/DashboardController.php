@@ -14,6 +14,8 @@ use App\Models\Newsletter;
 use App\Models\FundMaster;
 use App\Models\IndicesMaster;
 use App\Models\CurrencyMaster;
+use App\Models\PaymentTransaction;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends BaseController
 {
@@ -41,7 +43,17 @@ class DashboardController extends BaseController
 
         $moduleAtrArr = ['see_all' => $adminLang['see_all_txt'], 'data_not_available' => __('message.data_not_available'), 'target' => $commonconstants['target_opt1'], "mdfy_dt_frmt" => $commonconstants['dt_tm_frmt2'], "edit_txt" => $adminLang['edit_txt'], "added_date_txt" => $adminLang['added_date_txt'], 'list_txt' => $adminLang['list_txt'], 'char_lngth' => Config('adminconstants.descp_char_lngth')];
 
-        return view('themes.backend.pages.dashboard', compact('totalBoxes', 'slBoxes', 'moduleAtrArr', 'recentBoxesAtr', 'nwsRcntList', 'aeqRcntList', 'suRcntList'));
+        $subscriptionStats = [];
+        if (config('features.subscription_enabled') && Schema::hasTable('subscriptions') && Schema::hasTable('payment_transactions')) {
+            $subscriptionStats = [
+                ['title' => 'Active Subscribers', 'total' => User::where('subscription_status', 'active')->count()],
+                ['title' => 'Trial Users', 'total' => User::where('subscription_status', 'trial')->count()],
+                ['title' => 'Trial Expiring In 7 Days', 'total' => User::where('subscription_status', 'trial')->whereBetween('trial_ends_at', [now(), now()->copy()->addDays(7)])->count()],
+                ['title' => 'Monthly Revenue', 'total' => number_format((float) PaymentTransaction::where('status', 'captured')->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])->sum('amount'), 2)],
+            ];
+        }
+
+        return view('themes.backend.pages.dashboard', compact('totalBoxes', 'slBoxes', 'moduleAtrArr', 'recentBoxesAtr', 'nwsRcntList', 'aeqRcntList', 'suRcntList', 'subscriptionStats'));
     }
 
     public function cleardata()

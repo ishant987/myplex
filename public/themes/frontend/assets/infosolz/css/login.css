@@ -4,6 +4,176 @@ body {
     font-family: "Poppins", sans-serif;
 }
 
+@media only screen and (max-width:1200px){
+    .login_main {
+        max-width: 540px;
+        width: calc(100% - 40px);
+    }
+    img.login_logo {
+        max-width: 420px;
+    }
+    .login_main h1 {
+        font-size: 40px;
+        margin: 16px 0 24px;
+    }
+    .login_main form label,
+    a.forgot_pass {
+        font-size: 17px;
+    }
+    .login_main form input {
+        height: 62px;
+        padding: 0 22px;
+        font-size: 16px;
+    }
+    .login_main form input[type="submit"] {
+        font-size: 24px;
+    }
+    p.dont_acc,
+    p.dont_acc a {
+        font-size: 19px;
+    }
+    i.toggle_password {
+        top: 20px;
+    }
+}
+
+@media only screen and (max-width:767px){
+    .login_main {
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 32px 20px 40px;
+    }
+    img.login_logo {
+        max-width: 280px;
+    }
+    .login_main h1 {
+        font-size: 30px;
+        margin: 12px 0 20px;
+    }
+    .login_main form label,
+    a.forgot_pass {
+        font-size: 15px;
+    }
+    .form_group {
+        margin-bottom: 16px;
+    }
+    .login_main form input {
+        height: 54px;
+        border-radius: 12px;
+        padding: 0 18px;
+        font-size: 16px;
+    }
+    .login_main form input[type="submit"] {
+        font-size: 20px;
+        border-bottom-width: 5px;
+    }
+    p.dont_acc,
+    p.dont_acc a {
+        font-size: 16px;
+        margin-top: 20px;
+    }
+    p.dont_acc a {
+        margin-left: 8px;
+    }
+    i.toggle_password {
+        font-size: 20px;
+        right: 16px;
+        top: 17px;
+    }
+    .register_main {
+        padding: 95px 20px 35px;
+    }
+}
+
+@media only screen and (max-width:1200px){
+    .login_main {
+        max-width: 540px;
+        width: calc(100% - 40px);
+    }
+    img.login_logo {
+        max-width: 420px;
+    }
+    .login_main h1 {
+        font-size: 40px;
+        margin: 16px 0 24px;
+    }
+    .login_main form label,
+    a.forgot_pass {
+        font-size: 17px;
+    }
+    .login_main form input {
+        height: 62px;
+        padding: 0 22px;
+        font-size: 16px;
+    }
+    .login_main form input[type="submit"] {
+        font-size: 24px;
+    }
+    p.dont_acc,
+    p.dont_acc a {
+        font-size: 19px;
+    }
+    i.toggle_password {
+        top: 20px;
+    }
+}
+
+@media only screen and (max-width:767px){
+    .login_main {
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 32px 20px 40px;
+    }
+    img.login_logo {
+        max-width: 280px;
+    }
+    .login_main h1 {
+        font-size: 30px;
+        margin: 12px 0 20px;
+    }
+    .login_main form label,
+    a.forgot_pass {
+        font-size: 15px;
+    }
+    .form_group {
+        margin-bottom: 16px;
+    }
+    .login_main form input {
+        height: 54px;
+        border-radius: 12px;
+        padding: 0 18px;
+        font-size: 16px;
+    }
+    .login_main form input[type="submit"] {
+        font-size: 20px;
+        border-bottom-width: 5px;
+    }
+    p.dont_acc,
+    p.dont_acc a {
+        font-size: 16px;
+        margin-top: 20px;
+    }
+    p.dont_acc a {
+        margin-left: 8px;
+    }
+    i.toggle_password {
+        font-size: 20px;
+        right: 16px;
+        top: 17px;
+    }
+    .register_main {
+        padding: 95px 20px 35px;
+    }
+}
+
 body {
     overflow-x: hidden;
     scroll-behavior: smooth;

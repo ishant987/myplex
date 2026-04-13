@@ -131,6 +131,27 @@
         </div>
     </div>
 </div>
+@if (!empty($subscriptionStats))
+<div class="row dshbrd-qck-bx">
+    @foreach ($subscriptionStats as $stat)
+    <div class="col-xl-3 col-md-6 p-r-0">
+        <div class="card m-b-10">
+            <div class="card-block">
+                <div class="row align-items-center m-l-0">
+                    <div class="col-auto">
+                        <i class="fa fa-credit-card f-30 text-c-blue"></i>
+                    </div>
+                    <div class="col-auto">
+                        <h6 class="text-muted m-b-10">{{ $stat['title'] }}</h6>
+                        <h2 class="m-b-0">{{ $stat['total'] }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</div>
+@endif
 {{-- Section Links Boxes --}}
 <div class="row dshbrd-qck-bx">
     <div class="col-xl-3 col-md-6 p-r-0">

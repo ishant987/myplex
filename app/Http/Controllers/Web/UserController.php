@@ -97,7 +97,7 @@ class UserController extends BaseController
 
             $user = User::find(self::getLoggedInUserId());
 
-            $birthdayArr = ['0' => '', '1' => ''];
+            $birthdayArr = ['0' => '', '1' => '', '2' => ''];
             if ($user->birthday != '') {
                 $birthdayArr = explode("-", $user->birthday);
             }
@@ -106,8 +106,11 @@ class UserController extends BaseController
             $webLang = __('web');
 
             $defDataArr = array("web_lang" => $webLang, "user_media_folder" => $commonconstants['user_dir_name']);
+            $daysArr = User::days();
+            $monthsArr = User::months();
+            $yearArr = range(date('Y'), 1950);
 
-            return view('themes.frontend.pages.edit-profile', compact('dataArr', 'defDataArr', 'user', 'birthdayArr'));
+            return view('themes.frontend.pages.edit-profile', compact('dataArr', 'defDataArr', 'user', 'birthdayArr', 'daysArr', 'monthsArr', 'yearArr'));
         }
         return abort(404);
     }
@@ -123,9 +126,18 @@ class UserController extends BaseController
         $webLang = __('web');
 
         $vldtrRules = [
-            'f_name' => 'required',
+            'f_name' => 'required|string|max:255',
+            'l_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id . ',u_id',
             'mobile' => 'nullable|numeric',
+            'company' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'address' => 'nullable|string|max:500',
+            'pincode' => 'nullable|string|max:20',
+            'birthday_day' => 'nullable|integer|min:1|max:31',
+            'birthday_month' => 'nullable|integer|min:1|max:12',
+            'birthday_year' => 'nullable|integer|min:1900|max:2100',
             'p_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:' . Config('frontconstants.img_upld_max_size') . ''
         ];
 
@@ -148,23 +160,30 @@ class UserController extends BaseController
             $exstPicture = $store->p_picture;
             $exstPincode = $store->pincode;
 
-            $input = $request->except('_token');
+            $input = $request->only([
+                'f_name',
+                'l_name',
+                'email',
+                'mobile',
+                'company',
+                'city',
+                'state',
+                'address',
+                'pincode',
+            ]);
 
-            $bdArr = [];
             foreach ($input as $key => $value) {
-                if ($key == 'b_date' || $key == 'b_month') {
-                    array_push($bdArr, trim($value));
-                } else {
-                    $store->$key = trim($value);
-                }
+                $store->$key = is_string($value) ? trim($value) : $value;
             }
 
-            if (count($bdArr) > 0) {
-                $b = '';
-                if ($bdArr[0] != '' && $bdArr[1] != '') {
-                    $b = implode('-', $bdArr);
-                }
-                $store->birthday = $b;
+            $birthdayYear = trim((string) $request->input('birthday_year', ''));
+            $birthdayMonth = trim((string) $request->input('birthday_month', ''));
+            $birthdayDay = trim((string) $request->input('birthday_day', ''));
+
+            if ($birthdayYear !== '' && $birthdayMonth !== '' && $birthdayDay !== '') {
+                $store->birthday = sprintf('%04d-%02d-%02d', (int) $birthdayYear, (int) $birthdayMonth, (int) $birthdayDay);
+            } else {
+                $store->birthday = null;
             }
 
             if ($request->hasFile('p_picture')) {
@@ -182,20 +201,6 @@ class UserController extends BaseController
                 }
             } else {
                 $store->p_picture = $exstPicture;
-            }
-
-            $pincode = $input['pincode'];
-            if ($pincode != '') {
-                if ($exstPincode != $pincode) {
-                    $lookup = new GoogleAddressLookup();
-                    $lookup->setZipCode($pincode);
-
-                    $latitude = $lookup->getLatitude();
-                    $longitude = $lookup->getLongitude();
-
-                    $store->lat = $latitude;
-                    $store->lng = $longitude;
-                }
             }
 
             $store->u_updated_medium = $commonconstants['medium']['value'][1];

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Validator;
 
 use App\Lib\Core\Core;
@@ -53,8 +54,14 @@ class PageController extends BaseController
     public function getNewsApi()
     {
         $incoming = @file_get_contents('https://www.moneycontrol.com/rss/latestnews.xml');
+        if (! $incoming) {
+            return '';
+        }
         $xml = preg_replace('#&(?=[a-z_0-9]+=)#', '&amp;', $incoming);
         $xml = simplexml_load_string($xml);
+        if (! $xml) {
+            return '';
+        }
         $return_array = array();
         $html = [];
 		$p = [];
@@ -179,7 +186,7 @@ class PageController extends BaseController
 
             $nfoMdl = NfoOffer::frontList([], '', '', '','',5);
 			
-			$allnewfroms = NewFromMyplexus::all();
+			$allnewfroms = Schema::hasTable('new_from_myplexus') ? NewFromMyplexus::all() : collect();
 			
 			//dd($allnewfroms);
 			
@@ -191,15 +198,18 @@ class PageController extends BaseController
         return abort(404);
     }
 	
-	public function DropDownData($apiURL)
+    public function DropDownData($apiURL)
     {
-        $data = [];
-        $parameters = [];
-		$response = Http::get($apiURL, $parameters);
-		$statusCode = $response->status();
-		$responseBody = json_decode($response->getBody(), true);
-			
-		return $responseBody;
+        try {
+            $response = Http::timeout(5)->get($apiURL, []);
+            if (! $response->successful()) {
+                return ['success' => false, 'data' => []];
+            }
+
+            return $response->json() ?? ['success' => false, 'data' => []];
+        } catch (\Throwable $th) {
+            return ['success' => false, 'data' => []];
+        }
         //dd($responseBody);
     }
 	
@@ -207,9 +217,15 @@ class PageController extends BaseController
 	{
 		$blogs = [];
 		$parameters = ['per_page' => 3];
-		$response = Http::get($apiURL, $parameters);
-		$statusCode = $response->status();
-		$responseBody = json_decode($response->getBody(), true);
+        try {
+		    $response = Http::timeout(5)->get($apiURL, $parameters);
+            if (! $response->successful()) {
+                return [];
+            }
+		    $responseBody = $response->json();
+        } catch (\Throwable $th) {
+            return [];
+        }
 		
 		//dd($responseBody);
 		
@@ -427,7 +443,7 @@ class PageController extends BaseController
     {
         $dataId = 0;
         if ($slug == false || $slug == '') {
-            $dataId = 4;
+            $dataId = 5;
         }
 
         $dataArr = PageModel::getData($this->class_id, $slug, $dataId);
@@ -748,12 +764,16 @@ class PageController extends BaseController
 
     public function getData($apiUrl)
     {
-        $parameters = "";
-		$response = Http::get($apiUrl, $parameters);
-		$statusCode = $response->status();
-		$responseBody = json_decode($response->getBody(), true);
+        try {
+		    $response = Http::timeout(5)->get($apiUrl, "");
+            if (! $response->successful()) {
+                return ['success' => false, 'data' => []];
+            }
 
-        return $responseBody;
+            return $response->json() ?? ['success' => false, 'data' => []];
+        } catch (\Throwable $th) {
+            return ['success' => false, 'data' => []];
+        }
     }
 	
 	

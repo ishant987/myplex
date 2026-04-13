@@ -26,5 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CustomFieldTypeSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(SubscriptionSeeder::class);
+        $this->call(LocalDemoContentSeeder::class);
+        $this->call(SubscriptionPlanSeeder::class);
     }
 }

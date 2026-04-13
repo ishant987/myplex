@@ -39,6 +39,18 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         });
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+        if (config('features.subscription_enabled')) {
+            Route::get('/subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
+            Route::get('/subscriptions/{subscription}', 'SubscriptionController@show')->name('subscriptions.show');
+            Route::get('/secure-panel', 'SecurePanelController@login')->name('secure-panel.login');
+            Route::post('/secure-panel', 'SecurePanelController@authenticate')->name('secure-panel.authenticate');
+            Route::middleware(['secure.admin'])->prefix('secure-panel')->name('secure-panel.')->group(function () {
+                Route::get('/users', 'SecurePanelController@users')->name('users.index');
+                Route::get('/users/{user}', 'SecurePanelController@show')->name('users.show');
+                Route::get('/users/{user}/edit', 'SecurePanelController@edit')->name('users.edit');
+                Route::post('/users/{user}', 'SecurePanelController@update')->name('users.update');
+            });
+        }
 
         Route::get('/profile', 'AdminController@editprofile')->name('profile');
         Route::post('/profile/{id}', 'AdminController@update')->name('profile.update');
@@ -631,6 +643,16 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::post('draft-answer/{aeqa_id}', 'AskExpertController@draftAnswerSave')->name('draft-answer.save');
     });
 
+    if (config('features.subscription_enabled')) {
+        Route::get('/subscription', 'SubscriptionController@index')->name('subscription.index');
+        Route::middleware(['auth'])->group(function () {
+            Route::post('/subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
+            Route::post('/subscription/verify-payment', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+            Route::post('/subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
+        });
+        Route::post('/razorpay/webhook', 'RazorpayWebhookController@handle')->name('razorpay.webhook');
+    }
+
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
     Route::get('money_seriously/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
     Route::post('money_seriously','BlogController@postBlogDetails')->name('post-blogs-detail');
@@ -684,7 +706,6 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::post('post-login', 'LoginController@postLogin')->name('loginpost');
-    Route::get('logout', 'LoginController@logout')->name('logout');
 
     Route::get('login/google', 'LoginController@redirectToGoogle')->name('login.google');
     Route::get('login/google/callback', 'LoginController@handleGoogleCallback');
@@ -703,18 +724,31 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
 
     //======================================== Start Dashboard ======================================//
     // Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'nocache'])->group(function () {
+        Route::get('logout', 'LoginController@logout')->name('logout');
         Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+        Route::get('notifications', 'RatioController@notifications')->name('notifications');
         // Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
         Route::middleware(['subscription'])->group(function () {
+            Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
+            Route::get('user-composition-report', 'RatioController@composition_report')->name('composition_report');
+            Route::get('user-indies-report', 'RatioController@indies_report')->name('indies_report');
+            Route::get('user-model-portfolio', 'RatioController@model_portfolio')->name('model_portfolio');
+            Route::get('user-filters', 'RatioController@filters')->name('filters');
+            Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
             Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
             Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
             Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
+            Route::get('user-fund-factsheet', 'RatioController@fund_factsheet')->name('fund_factsheet');
+            Route::get('user-stats', 'RatioController@stats')->name('stats');
+            Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
+            Route::get('user-comparative', 'RatioController@comparative')->name('comparative');
         });
         Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
         //======================================== End Dashboard ======================================//
         //======================================== Subscription Start ======================================//
-        Route::any('subscription', 'SubscriptionController@dashboard')->name('subscription');
-    // });
+        Route::any('user/subscription', 'SubscriptionController@dashboard')->name('subscription');
+    });
       //======================================== End Subscription ======================================//
 
 });

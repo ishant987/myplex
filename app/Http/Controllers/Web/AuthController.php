@@ -304,6 +304,8 @@ class AuthController extends BaseController
                 $store->company = $request->company;
                 $store->status           = $commonconstants['status_val'][1];
                 $store->is_approved      = $commonconstants['y_n_val'][1];
+                $store->trial_ends_at    = now()->addDays(14);
+                $store->subscription_status = 'trial';
                 $store->created_by       = $cuBy;
                 $store->created_id       = 0;
                 if ($store->save()) {
@@ -339,6 +341,10 @@ class AuthController extends BaseController
                             if ($mailResp) {
                                 /*attempt to do the login*/
                                 if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                                    Auth::user()->update([
+                                        'session_token' => session()->getId(),
+                                        'is_session_active' => true,
+                                    ]);
                                     $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                                         <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
@@ -527,6 +533,10 @@ class AuthController extends BaseController
 
             // Log in the user without checking the password
             Auth::login($usrObj);
+            $usrObj->update([
+                'session_token' => session()->getId(),
+                'is_session_active' => true,
+            ]);
 
             $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
@@ -860,7 +870,7 @@ class AuthController extends BaseController
         $webLang = __('web');
 
         if ($userMdl === null) {
-            return redirect()->route('web.forgot.reset.password', $code)->with('alert', $frontconstants['alert_css']['2'])->with('message', __('passwords.token'))->with('title', $webLang['error_ttl']);
+            return redirect()->route('web.forgot.password')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('passwords.token'))->with('title', $webLang['error_ttl']);
         }
 
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 40);
@@ -1093,6 +1103,8 @@ class AuthController extends BaseController
             $store->password = bcrypt($password);
             $store->status           = $commonconstants['status_val'][1];
             $store->is_approved      = $commonconstants['y_n_val'][1];
+            $store->trial_ends_at    = now()->addDays(14);
+            $store->subscription_status = 'trial';
             $store->u_created_medium = $cuMedium;
             $store->created_by       = $cuBy;
             $store->created_id       = 0;
@@ -1166,6 +1178,10 @@ class AuthController extends BaseController
 
                             if ($mailResp) {
                                 if (Auth::login($store)) {
+                                    $store->update([
+                                        'session_token' => session()->getId(),
+                                        'is_session_active' => true,
+                                    ]);
                                     return redirect($request->session()->get('url.web_intended'));
                                 } else {
                                     return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('auth.failed'))->with('title', $webLang['error_ttl']);

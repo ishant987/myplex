@@ -5,6 +5,37 @@
 <div class="inner_main">
             <div class="page_detail">
                     <div class="inner_padding">
+                        <div class="profile_panel">
+                            <div class="profile_panel__identity">
+                                <div class="profile_panel__avatar">
+                                    {{ strtoupper(substr(trim(($userdetails->f_name ?? 'U') . ' ' . ($userdetails->l_name ?? '')), 0, 1)) }}
+                                </div>
+                                <div class="profile_panel__meta">
+                                    <p class="profile_panel__label">My Profile</p>
+                                    <h2>{{ trim(($userdetails->f_name ?? '') . ' ' . ($userdetails->l_name ?? '')) ?: 'User Profile' }}</h2>
+                                    <p>{{ $userdetails->email ?? '-' }}</p>
+                                </div>
+                            </div>
+                            <div class="profile_panel__details">
+                                <div class="profile_panel__item">
+                                    <span>Mobile</span>
+                                    <strong>{{ $userdetails->mobile ?: '-' }}</strong>
+                                </div>
+                                <div class="profile_panel__item">
+                                    <span>Subscription</span>
+                                    <strong>{{ ucfirst($userdetails->subscription_status ?: ($has_active_subscription ? 'active' : 'trial')) }}</strong>
+                                </div>
+                                <div class="profile_panel__item">
+                                    <span>Expiry</span>
+                                    <strong>{{ !empty($expiry_date) ? date('d M Y', strtotime($expiry_date)) : '-' }}</strong>
+                                </div>
+                            </div>
+                            <div class="profile_panel__actions">
+                                <a href="{{ route('web.edit.profile') }}" class="profile_btn primary">Edit Profile</a>
+                                <a href="{{ route('web.reset.password') }}" class="profile_btn secondary">Reset Password</a>
+                            </div>
+                        </div>
+
                         <div class="all_dash">
                             <h1 class="page_heading">Ratio Reports</h1>
                             <ul>
@@ -21,26 +52,26 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="{{route('user.fund_factsheet')}}">
                                         <figure><img src="{{asset('new-images/dh3.png')}}" alt=""></figure>
                                         <h4>Fund <span>Factsheet</span></h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="{{route('user.stats')}}">
                                         <figure><img src="{{asset('new-images/dh4.png')}}" alt=""></figure>
                                         <h4>Stats</h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="{{route('user.quartile_decile')}}">
                                         <figure><img src="{{asset('new-images/dh5.png')}}" alt=""></figure>
                                         <h4>Quartile &amp;<br> Decile</h4>
                                     </a>
                                 </li>
                                
                                 <li>
-                                    <a href="#">
+                                    <a href="{{route('user.comparative')}}">
                                         <figure><img src="{{asset('new-images/dh6.png')}}" alt=""></figure>
                                         <h4>Comparative</h4>
                                     </a>

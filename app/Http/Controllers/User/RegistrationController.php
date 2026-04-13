@@ -110,6 +110,8 @@ class RegistrationController extends BaseController
         $insert['gst']=$request->gst;
         $insert['password']=$hashedPassword;
         $insert['subscription_expiry_date']=$expiryDate;
+        $insert['trial_ends_at']=$expiryDate;
+        $insert['subscription_status']='trial';
         $insert['acc_type']='a';
         $insert['created_by']='u';
        // dd($insert);
@@ -128,6 +130,21 @@ class RegistrationController extends BaseController
         $subscription_table['created_by']='u';
         $subscription_table['created_id']=$userId;
         $subscription = Subscription::create($subscription_table);
+
+        if (class_exists(\App\Models\UserSensitiveDetail::class)) {
+            \App\Models\UserSensitiveDetail::updateOrCreate(
+                ['user_id' => $userId],
+                [
+                    'company_name' => $request->company_name,
+                    'contact_person' => $request->contact_person,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'pan' => $request->pan,
+                    'arn' => $request->arn,
+                    'gst' => $request->gst,
+                ]
+            );
+        }
 
         // $config = [
         //     'driver' => 'smtp',
@@ -218,5 +235,4 @@ class RegistrationController extends BaseController
     }
 
 }
-
 
