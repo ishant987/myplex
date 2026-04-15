@@ -750,6 +750,8 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
             Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
             Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
+            Route::get('user-monthly-snapshot-new', 'RatioController@monthly_snapshot')->name('monthly_snapshot_new');
+            Route::get('user-weekly-snapshot-new', 'RatioController@weekly_snapshot')->name('weekly_snapshot_new');
             Route::get('user-fund-factsheet', 'RatioController@fund_factsheet')->name('fund_factsheet');
             Route::get('user-stats', 'RatioController@stats')->name('stats');
             Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
