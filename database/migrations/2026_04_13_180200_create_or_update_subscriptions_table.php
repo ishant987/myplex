@@ -8,46 +8,45 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up()
-    {
-        // Add new columns to existing user_subscription table.
-        Schema::table('user_subscription', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_subscription', 'plan_id')) {
-                $table->unsignedBigInteger('plan_id')->nullable()->after('user_id');
-            }
-            if (!Schema::hasColumn('user_subscription', 'razorpay_order_id')) {
-                $table->string('razorpay_order_id')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'razorpay_payment_id')) {
-                $table->string('razorpay_payment_id')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'razorpay_subscription_id')) {
-                $table->string('razorpay_subscription_id')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'billing_cycle')) {
-                $table->enum('billing_cycle', ['monthly', 'yearly'])->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'starts_at')) {
-                $table->timestamp('starts_at')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'ends_at')) {
-                $table->timestamp('ends_at')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'trial_ends_at')) {
-                $table->timestamp('trial_ends_at')->nullable();
-            }
-            if (!Schema::hasColumn('user_subscription', 'amount')) {
-                $table->decimal('amount', 10, 2)->default(0);
-            }
-            if (!Schema::hasColumn('user_subscription', 'currency')) {
-                $table->string('currency', 3)->default('INR');
-            }
-        });
-
-        // Modify status column to include new enum values
-        if (Schema::hasColumn('user_subscription', 'status') && DB::getDriverName() === 'mysql') {
-            DB::statement("ALTER TABLE user_subscription MODIFY status ENUM('', 'a', 'e', 'pending', 'active', 'failed', 'cancelled') NOT NULL DEFAULT 'pending'");
+   {
+    Schema::table('user_subscription', function (Blueprint $table) {
+        if (!Schema::hasColumn('user_subscription', 'plan_id')) {
+            $table->unsignedBigInteger('plan_id')->nullable();
         }
+        if (!Schema::hasColumn('user_subscription', 'razorpay_order_id')) {
+            $table->string('razorpay_order_id')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'razorpay_payment_id')) {
+            $table->string('razorpay_payment_id')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'razorpay_subscription_id')) {
+            $table->string('razorpay_subscription_id')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'billing_cycle')) {
+            $table->enum('billing_cycle', ['monthly', 'yearly'])->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'starts_at')) {
+            $table->timestamp('starts_at')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'ends_at')) {
+            $table->timestamp('ends_at')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'trial_ends_at')) {
+            $table->timestamp('trial_ends_at')->nullable();
+        }
+        if (!Schema::hasColumn('user_subscription', 'amount')) {
+            $table->decimal('amount', 10, 2)->default(0);
+        }
+        if (!Schema::hasColumn('user_subscription', 'currency')) {
+            $table->string('currency', 3)->default('INR');
+        }
+    });
+
+    // Extend status enum to include new values
+    if (DB::getDriverName() === 'mysql') {
+        DB::statement("ALTER TABLE mpx_user_subscription MODIFY status ENUM('', 'a', 'e', 'pending', 'active', 'failed', 'cancelled') NOT NULL DEFAULT 'pending'");
     }
+}
 
     public function down()
     {
