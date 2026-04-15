@@ -744,6 +744,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
             Route::get('user-composition-report', 'RatioController@composition_report')->name('composition_report');
             Route::get('user-indies-report', 'RatioController@indies_report')->name('indies_report');
+            Route::get('user-indices-report', 'RatioController@indies_report')->name('indices_report');
             Route::get('user-model-portfolio', 'RatioController@model_portfolio')->name('model_portfolio');
             Route::get('user-filters', 'RatioController@filters')->name('filters');
             Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
@@ -756,6 +757,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('user-stats', 'RatioController@stats')->name('stats');
             Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
             Route::get('user-comparative', 'RatioController@comparative')->name('comparative');
+            Route::get('user-r-square-comparison', 'RatioController@comparative')->name('r_square_comparison');
         });
         Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
         //======================================== End Dashboard ======================================//

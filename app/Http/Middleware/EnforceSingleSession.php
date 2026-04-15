@@ -14,7 +14,7 @@ class EnforceSingleSession
             $user = Auth::user();
             $sessionId = $request->session()->getId();
 
-            if ($user->session_token && $user->session_token !== $sessionId) {
+            if ($user->session_token && $user->is_session_active && $user->session_token !== $sessionId) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();

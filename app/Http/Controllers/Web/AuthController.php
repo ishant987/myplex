@@ -25,6 +25,16 @@ use Session;
 
 class AuthController extends BaseController
 {
+    protected function establishFrontendSession(Request $request, User $user): void
+    {
+        $request->session()->regenerate();
+
+        $user->update([
+            'session_token' => $request->session()->getId(),
+            'is_session_active' => true,
+        ]);
+    }
+
     protected $redirectTo = '/myaccount'; //..if needed then use to redirect else leave..
 
     /**
@@ -185,6 +195,7 @@ class AuthController extends BaseController
 					
                                 /*attempt to do the login*/
                                 if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                                    $this->establishFrontendSession($request, Auth::user());
                                     $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                                         <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
@@ -533,10 +544,7 @@ class AuthController extends BaseController
 
             // Log in the user without checking the password
             Auth::login($usrObj);
-            $usrObj->update([
-                'session_token' => session()->getId(),
-                'is_session_active' => true,
-            ]);
+            $this->establishFrontendSession($request, $usrObj);
 
             $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
@@ -1081,6 +1089,7 @@ class AuthController extends BaseController
             }
 
             if (Auth::login($user)) {
+                $this->establishFrontendSession($request, $user);
                 return redirect($request->session()->get('url.web_intended'));
             } else {
                 return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('auth.failed'))->with('title', $webLang['error_ttl']);
@@ -1178,10 +1187,7 @@ class AuthController extends BaseController
 
                             if ($mailResp) {
                                 if (Auth::login($store)) {
-                                    $store->update([
-                                        'session_token' => session()->getId(),
-                                        'is_session_active' => true,
-                                    ]);
+                                    $this->establishFrontendSession($request, $store);
                                     return redirect($request->session()->get('url.web_intended'));
                                 } else {
                                     return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('auth.failed'))->with('title', $webLang['error_ttl']);

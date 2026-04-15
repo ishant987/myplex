@@ -16,6 +16,16 @@ use App\Models\Subscription;
 
 class LoginController extends BaseController
 {
+    protected function establishUserSession(Request $request, User $user): void
+    {
+        $request->session()->regenerate();
+
+        $user->update([
+            'session_token' => $request->session()->getId(),
+            'is_session_active' => true,
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $user = Auth::user();
@@ -48,20 +58,11 @@ class LoginController extends BaseController
 
         // dd($credentials);
 
-        $auth = Auth::attempt($credentials);
-
-        // dd($auth);
-
-        //$auth = Auth::attempt($credentials);
-
         if (Auth::attempt($credentials)) 
         {
                  //  dd("ok4");
             $user = Auth::user();
-            $user->update([
-                'session_token' => $request->session()->getId(),
-                'is_session_active' => true,
-            ]);
+            $this->establishUserSession($request, $user);
              //dd($user);
             // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
             if(isset($request->pageurl))
@@ -216,10 +217,7 @@ class LoginController extends BaseController
 
 
                 auth()->login($finduser);
-                $finduser->update([
-                    'session_token' => $request->session()->getId(),
-                    'is_session_active' => true,
-                ]);
+                $this->establishUserSession($request, $finduser);
                 return redirect()->route('user.ratio_dashboard');
             }
             else
@@ -255,9 +253,8 @@ class LoginController extends BaseController
                 $subscription_table['created_id']=$userId;
                 $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
+                $this->establishUserSession($request, $user);
                 $user->update([
-                    'session_token' => $request->session()->getId(),
-                    'is_session_active' => true,
                     'trial_ends_at' => $expiryDate,
                     'subscription_status' => 'trial',
                 ]);
@@ -328,6 +325,7 @@ class LoginController extends BaseController
 
 
                 auth()->login($finduser);
+                $this->establishUserSession($request, $finduser);
                 return redirect()->route('user.ratio_dashboard');
             }
             else
@@ -335,6 +333,7 @@ class LoginController extends BaseController
                 if(isset($finduser->email))
                 {
                     auth()->login($finduser);
+                    $this->establishUserSession($request, $finduser);
                     return redirect()->route('user.ratio_dashboard');
                 }
                 $registrationDate=date('Y-m-d');
@@ -363,6 +362,7 @@ class LoginController extends BaseController
                 $subscription_table['created_id']=$userId;
                 $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
+                $this->establishUserSession($request, $user);
                 return redirect()->route('user.ratio_dashboard');
               //  return redirect()->back();
             }
