@@ -105,6 +105,54 @@ document.addEventListener('DOMContentLoaded', function () {
     var billingCycle = 'monthly';
     var selectedPlan = null;
     var csrfToken = '{{ csrf_token() }}';
+    var paymentModalElement = document.getElementById('paymentModal');
+    var paymentModal = null;
+
+    if (paymentModalElement && window.bootstrap && window.bootstrap.Modal) {
+        paymentModal = new window.bootstrap.Modal(paymentModalElement);
+    }
+
+    function showPaymentModal() {
+        if (paymentModal) {
+            paymentModal.show();
+            return;
+        }
+
+        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) {
+            window.jQuery(paymentModalElement).modal('show');
+        }
+    }
+
+    function hidePaymentModal() {
+        if (paymentModal) {
+            paymentModal.hide();
+            return;
+        }
+
+        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) {
+            window.jQuery(paymentModalElement).modal('hide');
+        }
+    }
+
+    function parseJsonResponse(response) {
+        return response.text().then(function (text) {
+            var data = {};
+
+            if (text) {
+                try {
+                    data = JSON.parse(text);
+                } catch (error) {
+                    data = { message: text };
+                }
+            }
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Request failed. Please check Razorpay configuration and logs.');
+            }
+
+            return data;
+        });
+    }
 
     function updatePrices() {
         document.querySelectorAll('.plan-price').forEach(function (node) {
@@ -137,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 razorpay_signature: signature
             })
         })
-        .then(function (response) { return response.json(); })
+        .then(parseJsonResponse)
         .then(function (data) {
             if (data.redirect) {
                 window.location.href = data.redirect;
@@ -146,8 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             alert(data.message || 'Payment verified successfully.');
         })
-        .catch(function () {
-            alert('Unable to verify payment right now.');
+        .catch(function (error) {
+            alert(error.message || 'Unable to verify payment right now.');
         });
     }
 
@@ -198,13 +246,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('.get-started-btn').forEach(function (button) {
+        document.querySelectorAll('.get-started-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             selectedPlan = button;
             document.getElementById('selectedPlanName').textContent = button.dataset.planName;
             document.getElementById('selectedBillingCycle').textContent = billingCycle;
             document.getElementById('selectedPlanAmount').textContent = billingCycle === 'yearly' ? button.dataset.yearly : button.dataset.monthly;
-            $('#paymentModal').modal('show');
+            showPaymentModal();
         });
     });
 
@@ -227,18 +275,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     billing_cycle: billingCycle
                 })
             })
-            .then(function (response) { return response.json(); })
+            .then(parseJsonResponse)
             .then(function (data) {
                 if (data.order_id) {
-                    $('#paymentModal').modal('hide');
+                    hidePaymentModal();
                     openRazorpayCheckout(data);
                     return;
                 }
 
                 alert(data.message || 'Unable to start checkout.');
             })
-            .catch(function () {
-                alert('Unable to connect to the checkout service.');
+            .catch(function (error) {
+                alert(error.message || 'Unable to connect to the checkout service.');
             });
         });
     }
