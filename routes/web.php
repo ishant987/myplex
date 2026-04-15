@@ -651,6 +651,14 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
             Route::post('/subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
         });
         Route::post('/razorpay/webhook', 'RazorpayWebhookController@handle')->name('razorpay.webhook');
+
+        // Backward-compatible aliases for any stale route() usage without the `web.` prefix.
+        Route::get('/subscription-legacy', 'SubscriptionController@index')->name('subscription.index');
+        Route::middleware(['auth'])->group(function () {
+            Route::post('/subscription/checkout-legacy', 'SubscriptionController@checkout')->name('subscription.checkout');
+            Route::post('/subscription/verify-payment-legacy', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+            Route::post('/subscription/cancel-legacy', 'SubscriptionController@cancel')->name('subscription.cancel');
+        });
     }
 
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
