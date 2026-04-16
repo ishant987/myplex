@@ -14,7 +14,8 @@
         <div class="body_content">
             <div class="content_left">
                 <h2>Preamble</h2>
-                <p class="pre_text">{{ $fundWatch->preamble }}</p>
+               <p class="pre_text">{!! optional($fundWatch)->preamble !!}</p>
+
 
                 <div class="fund_detail mt_15">
                     <div class="single_fund">
