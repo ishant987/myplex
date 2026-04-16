@@ -40,7 +40,9 @@ class MenuComposer
 						if (!$is_external_link && !Route::has($persMethodModels[0]->route_link)) {
 							continue;
 						}
-						$route_link = $is_external_link ? $persMethodModels[0]->route_link : route($persMethodModels[0]->route_link);
+						$route_link = ($is_external_link || !Route::has($persMethodModels[0]->route_link))
+							? ($persMethodModels[0]->route_link ?: '#')
+							: route($persMethodModels[0]->route_link);
 						$target = $is_external_link ? ' target="_blank"' : '';
 						$menu .= '<li class="' . $active . '" ' . $target . '>
 						<a href="' . $route_link . '" class="waves-effect waves-dark">
@@ -78,14 +80,16 @@ class MenuComposer
 						}
 						foreach ($persMethodModels as $keym => $menumethod) {
 							if (in_array($menumethod->method_name, $sameModuleMethodNameArr))
-								$active = (request()->url() == route($menumethod->route_link)) ? 'active' : '';
+								$active = (Route::has($menumethod->route_link) && request()->url() == route($menumethod->route_link)) ? 'active' : '';
 							else
 								$active = request()->routeIs($menumethod->route_link) ? 'active' : '';
 							$is_external_link = $menumethod->is_external_link;
 							if (!$is_external_link && !Route::has($menumethod->route_link)) {
 								continue;
 							}
-							$route_link = $is_external_link ? $menumethod->route_link : route($menumethod->route_link);
+							$route_link = ($is_external_link || !Route::has($menumethod->route_link))
+								? ($menumethod->route_link ?: '#')
+								: route($menumethod->route_link);
 							$target = $is_external_link ? ' target="_blank"' : '';
 							$menu .= '<li class="' . $active . '">
 							<a href="' . $route_link . '" class="waves-effect waves-dark" ' . $target . '> <span class="pcoded-micon"><i class="ti-layout-cta-right"></i><b>A</b></span> <span class="pcoded-mtext" data-i18n="nav.navigate.main">' . $menumethod->title . '</span> <span class="pcoded-mcaret"></span> </a>
@@ -103,7 +107,9 @@ class MenuComposer
 									if (!$is_external_link && !Route::has($childmenumethod->route_link)) {
 										continue;
 									}
-									$route_link = $is_external_link ? $childmenumethod->route_link : route($childmenumethod->route_link);
+									$route_link = ($is_external_link || !Route::has($childmenumethod->route_link))
+										? ($childmenumethod->route_link ?: '#')
+										: route($childmenumethod->route_link);
 									$target = $is_external_link ? ' target="_blank"' : '';
 
 									$menu .= '<li class="' . $active . '">
