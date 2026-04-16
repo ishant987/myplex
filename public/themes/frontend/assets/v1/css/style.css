@@ -3301,16 +3301,23 @@ background-color: #f5f9f7;
 }
 
 .amfi-strip__icon {
-    color: #00665e;
+    background: #00665e;
+    border-radius: 50%;
+    color: #ffffff;
     display: inline-flex;
     flex: 0 0 auto;
+    font-size: 16px;
     height: 28px;
+    align-items: center;
+    justify-content: center;
     width: 28px;
 }
 
-.amfi-strip__icon svg {
-    height: 100%;
-    width: 100%;
+.amfi-strip__icon-mark {
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1;
+    transform: translateY(-1px);
 }
 
 .amfi-strip__lines {
