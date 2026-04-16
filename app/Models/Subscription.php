@@ -94,7 +94,18 @@ class Subscription extends Model
 
     public function isActive(): bool
     {
-        return in_array($this->status, ['a', 'active'], true)
-            && (!$this->ends_at || Carbon::parse($this->ends_at)->isFuture());
+        if (!in_array($this->status, ['a', 'active'], true)) {
+            return false;
+        }
+
+        if (!empty($this->ends_at)) {
+            return Carbon::parse($this->ends_at)->isFuture();
+        }
+
+        if (!empty($this->subscription_expiry_date)) {
+            return Carbon::parse($this->subscription_expiry_date)->isFuture();
+        }
+
+        return false;
     }
 }
