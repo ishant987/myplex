@@ -43,14 +43,14 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         if (config('features.subscription_enabled')) {
             Route::get('/subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
             Route::get('/subscriptions/{subscription}', 'SubscriptionController@show')->name('subscriptions.show');
-            // Route::get('/secure-panel', 'SecurePanelController@login')->name('secure-panel.login');
-            // Route::post('/secure-panel', 'SecurePanelController@authenticate')->name('secure-panel.authenticate');
-            //Route::middleware(['secure.admin'])->prefix('secure-panel')->name('secure-panel.')->group(function () {
-            //     Route::get('/users', 'SecurePanelController@users')->name('users.index');
-            //     Route::get('/users/{user}', 'SecurePanelController@show')->name('users.show');
-            //     Route::get('/users/{user}/edit', 'SecurePanelController@edit')->name('users.edit');
-            //     Route::post('/users/{user}', 'SecurePanelController@update')->name('users.update');
-            //});
+            Route::get('/secure-panel', 'SecurePanelController@login')->name('secure-panel.login');
+            Route::post('/secure-panel', 'SecurePanelController@authenticate')->name('secure-panel.authenticate');
+            Route::middleware(['secure.admin'])->prefix('secure-panel')->name('secure-panel.')->group(function () {
+                Route::get('/users', 'SecurePanelController@users')->name('users.index');
+                Route::get('/users/{user}', 'SecurePanelController@show')->name('users.show');
+                Route::get('/users/{user}/edit', 'SecurePanelController@edit')->name('users.edit');
+                Route::post('/users/{user}', 'SecurePanelController@update')->name('users.update');
+            });
         }
 
         Route::get('/profile', 'AdminController@editprofile')->name('profile');

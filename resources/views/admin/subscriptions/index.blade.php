@@ -32,7 +32,7 @@
                         <td>{{ number_format((float) $subscription->amount, 2) }}</td>
                         <td>
                             <a href="{{ route('admin.subscriptions.show', $subscription->id) }}">Details</a>
-                            @if ($subscription->user)
+                            @if ($subscription->user && Route::has('admin.secure-panel.users.show'))
                             | <a href="{{ route('admin.secure-panel.users.show', $subscription->user->u_id) }}">User</a>
                             @endif
                         </td>
