@@ -44,7 +44,13 @@ class DashboardController extends BaseController
         $moduleAtrArr = ['see_all' => $adminLang['see_all_txt'], 'data_not_available' => __('message.data_not_available'), 'target' => $commonconstants['target_opt1'], "mdfy_dt_frmt" => $commonconstants['dt_tm_frmt2'], "edit_txt" => $adminLang['edit_txt'], "added_date_txt" => $adminLang['added_date_txt'], 'list_txt' => $adminLang['list_txt'], 'char_lngth' => Config('adminconstants.descp_char_lngth')];
 
         $subscriptionStats = [];
-        if (config('features.subscription_enabled') && Schema::hasTable('subscriptions') && Schema::hasTable('payment_transactions')) {
+        if (
+            config('features.subscription_enabled')
+            && Schema::hasTable('subscriptions')
+            && Schema::hasTable('payment_transactions')
+            && Schema::hasColumn('users', 'subscription_status')
+            && Schema::hasColumn('users', 'trial_ends_at')
+        ) {
             $subscriptionStats = [
                 ['title' => 'Active Subscribers', 'total' => User::where('subscription_status', 'active')->count()],
                 ['title' => 'Trial Users', 'total' => User::where('subscription_status', 'trial')->count()],

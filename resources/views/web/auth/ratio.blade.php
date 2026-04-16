@@ -7,16 +7,10 @@
             <div class="inner_padding">
                 <div class="perform">
                     <div class="head_brdcm">
-                        <h1 class="page_heading">Quick ratio</h1>
                         <!-- subscription test start -->
                        
 
                         <!-- subscription test end -->
-                        <ul class="brdcmb">
-                            <li><a href="#
-                            ">Ratio Reports</a></li>
-                            <li>Quick ratio</li>
-                        </ul>
                     </div>
                     <div class="perform_head">
                         <h2>Performance Statistics</h2>

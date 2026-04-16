@@ -3,6 +3,7 @@
 namespace App\Http\View\Composers;
 
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Route;
 
 use App\Models\ModuleModel;
 use App\Models\MenuTypeModel;
@@ -36,6 +37,9 @@ class MenuComposer
 					if ($persMethodModels->count() == 1 && $module->modulechildren->count() == 0) {
 						$active = request()->routeIs($persMethodModels[0]->route_link) ? 'active' : '';
 						$is_external_link = $persMethodModels[0]->is_external_link;
+						if (!$is_external_link && !Route::has($persMethodModels[0]->route_link)) {
+							continue;
+						}
 						$route_link = $is_external_link ? $persMethodModels[0]->route_link : route($persMethodModels[0]->route_link);
 						$target = $is_external_link ? ' target="_blank"' : '';
 						$menu .= '<li class="' . $active . '" ' . $target . '>
@@ -78,6 +82,9 @@ class MenuComposer
 							else
 								$active = request()->routeIs($menumethod->route_link) ? 'active' : '';
 							$is_external_link = $menumethod->is_external_link;
+							if (!$is_external_link && !Route::has($menumethod->route_link)) {
+								continue;
+							}
 							$route_link = $is_external_link ? $menumethod->route_link : route($menumethod->route_link);
 							$target = $is_external_link ? ' target="_blank"' : '';
 							$menu .= '<li class="' . $active . '">
@@ -93,6 +100,9 @@ class MenuComposer
 								foreach ($persChildMethodModels as $keymc => $childmenumethod) {
 									$active = request()->routeIs($childmenumethod->route_link) ? 'active' : '';
 									$is_external_link = $childmenumethod->is_external_link;
+									if (!$is_external_link && !Route::has($childmenumethod->route_link)) {
+										continue;
+									}
 									$route_link = $is_external_link ? $childmenumethod->route_link : route($childmenumethod->route_link);
 									$target = $is_external_link ? ' target="_blank"' : '';
 
