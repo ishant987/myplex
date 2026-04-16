@@ -1,7 +1,44 @@
 @extends('web.layout.app')
 
 @section('content')
-<div class="banner" style="background: linear-gradient(135deg, #0c4a6e, #0369a1);">
+<style>
+    .subscription-page .banner {
+        background: linear-gradient(135deg, #00665e, #16ab6c);
+    }
+
+    .subscription-page .btn-primary,
+    .subscription-page .badge-primary {
+        background-color: #16ab6c;
+        border-color: #16ab6c;
+    }
+
+    .subscription-page .btn-primary:hover,
+    .subscription-page .btn-primary:focus,
+    .subscription-page .btn-primary:active {
+        background-color: #00665e;
+        border-color: #00665e;
+    }
+
+    .subscription-page .btn-outline-primary {
+        color: #00665e;
+        border-color: #00665e;
+    }
+
+    .subscription-page .btn-outline-primary:hover,
+    .subscription-page .btn-outline-primary:focus,
+    .subscription-page .btn-outline-primary.active {
+        color: #fff;
+        background-color: #00665e;
+        border-color: #00665e;
+    }
+
+    .subscription-page .border-primary {
+        border-color: #16ab6c !important;
+    }
+</style>
+
+<div class="subscription-page">
+<div class="banner">
     <div class="container py-5 text-white">
         <h1 class="mb-3">Subscription Plans</h1>
         <p class="mb-0">Unlock deeper mutual fund insights, advisor tools, and portfolio analytics with a MyPlexus plan.</p>
@@ -78,6 +115,7 @@
         </div>
         @endif
     </div>
+</div>
 </div>
 
 <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
