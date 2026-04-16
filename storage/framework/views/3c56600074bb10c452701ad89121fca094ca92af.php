@@ -102,10 +102,7 @@
                     <div class="amfi-strip">
                         <div class="amfi-strip__content">
                             <span class="amfi-strip__icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none">
-                                    <circle cx="12" cy="12" r="12" fill="currentColor"/>
-                                    <path d="M7 12.3L10.2 15.5L17 8.7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
+                                <span class="amfi-strip__icon-mark">&#10003;</span>
                             </span>
                             <div class="amfi-strip__lines">
                                 <span class="amfi-strip__text amfi-strip__text--strong">Registered with AMFI</span>
