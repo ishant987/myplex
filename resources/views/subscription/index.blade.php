@@ -35,6 +35,11 @@
             </div>
         </div>
 
+        @if ($plans->isEmpty())
+        <div class="alert alert-warning">
+            Subscription plans are not available right now. Please add active rows to the <code>subscription_plans</code> table or run the subscription plan seeder.
+        </div>
+        @else
         <div class="row">
             @foreach ($plans as $plan)
             <div class="col-lg-4 mb-4">
@@ -71,6 +76,7 @@
             </div>
             @endforeach
         </div>
+        @endif
     </div>
 </div>
 

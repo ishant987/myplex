@@ -17,6 +17,33 @@ use App\Services\RazorpayService;
 
 class SubscriptionController extends Controller
 {
+    protected array $defaultPlans = [
+        [
+            'name' => 'Basic',
+            'slug' => 'basic',
+            'price_monthly' => 499.00,
+            'price_yearly' => 4999.00,
+            'features' => ['Feature 1', 'Feature 2', 'Feature 3'],
+            'is_active' => true,
+        ],
+        [
+            'name' => 'Standard',
+            'slug' => 'standard',
+            'price_monthly' => 999.00,
+            'price_yearly' => 9999.00,
+            'features' => ['Priority research', 'Monthly insights', 'Advisor support'],
+            'is_active' => true,
+        ],
+        [
+            'name' => 'Premium',
+            'slug' => 'premium',
+            'price_monthly' => 1999.00,
+            'price_yearly' => 19999.00,
+            'features' => ['All Standard features', 'Premium analytics', 'Dedicated onboarding'],
+            'is_active' => true,
+        ],
+    ];
+
     public function __construct(protected RazorpayService $razorpayService)
     {
     }
@@ -24,6 +51,8 @@ class SubscriptionController extends Controller
     public function index()
     {
         abort_unless(config('features.subscription_enabled'), 404);
+
+        $this->ensureDefaultPlans();
 
         $plans = SubscriptionPlan::query()
             ->where('is_active', true)
@@ -41,6 +70,24 @@ class SubscriptionController extends Controller
         }
 
         return view('subscription.index', compact('plans', 'user', 'activeSubscription'));
+    }
+
+    protected function ensureDefaultPlans(): void
+    {
+        if (!Schema::hasTable('subscription_plans')) {
+            return;
+        }
+
+        if (SubscriptionPlan::query()->where('is_active', true)->exists()) {
+            return;
+        }
+
+        foreach ($this->defaultPlans as $plan) {
+            SubscriptionPlan::updateOrCreate(
+                ['slug' => $plan['slug']],
+                $plan
+            );
+        }
     }
 
     public function checkout(Request $request)
