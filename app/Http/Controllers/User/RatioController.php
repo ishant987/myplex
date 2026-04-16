@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\User;
+
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Web\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class RatioController extends Controller
 {
@@ -150,16 +150,27 @@ class RatioController extends Controller
 
     protected function subscriptionViewData($user): array
     {
-        $userdetails = User::where('u_id', $user->u_id)->first();
+        $userdetails = null;
+        if ($user && !empty($user->u_id)) {
+            $userdetails = User::where('u_id', $user->u_id)->first();
+        }
+
+        if (!$userdetails && $user instanceof User) {
+            $userdetails = $user;
+        }
+
         $currentDate = now();
         $expiryDatetime = $this->resolveSubscriptionExpiry($userdetails);
+        $hasActiveSubscription = $userdetails && method_exists($userdetails, 'hasValidAccess')
+            ? $userdetails->hasValidAccess()
+            : false;
         $showRenewWarning = false;
         $showExpiredWarning = false;
 
-        if ($expiryDatetime) {
-            if ($expiryDatetime->isPast() && !$userdetails->hasActiveSubscription()) {
+        if ($expiryDatetime && !$hasActiveSubscription) {
+            if ($expiryDatetime->isPast()) {
                 $showExpiredWarning = true;
-            } elseif ($expiryDatetime->copy()->subDays(5)->lte($currentDate) && !$userdetails->hasActiveSubscription()) {
+            } elseif ($expiryDatetime->copy()->subDays(5)->lte($currentDate)) {
                 $showRenewWarning = true;
             }
         }
@@ -167,36 +178,36 @@ class RatioController extends Controller
         return [
             'userdetails' => $userdetails,
             'expiry_date' => $expiryDatetime ? $expiryDatetime->toDateString() : null,
+            'expiry_date_display' => $expiryDatetime ? $expiryDatetime->format('d/m/Y') : null,
             'current_date' => $currentDate->toDateString(),
             'fiveDaysBeforeExpiry' => $expiryDatetime ? $expiryDatetime->copy()->subDays(5)->toDateString() : null,
-            'has_active_subscription' => $userdetails->hasActiveSubscription(),
+            'has_active_subscription' => $hasActiveSubscription,
             'show_renew_warning' => $showRenewWarning,
             'show_expired_warning' => $showExpiredWarning,
+            'subscription_cta_url' => $this->resolveSubscriptionCtaUrl(),
         ];
     }
 
     protected function resolveSubscriptionExpiry($userdetails): ?Carbon
     {
-        if (!$userdetails) {
+        if (!$userdetails || !method_exists($userdetails, 'accessExpiresAt')) {
             return null;
         }
 
-        if (!empty($userdetails->subscription_expiry_date)) {
-            return Carbon::parse($userdetails->subscription_expiry_date);
+        return $userdetails->accessExpiresAt();
+    }
+
+    protected function resolveSubscriptionCtaUrl(): string
+    {
+        if (config('features.subscription_enabled') && Route::has('web.subscription.index')) {
+            return route('web.subscription.index');
         }
 
-        if (method_exists($userdetails, 'activeSubscription')) {
-            $activeSubscription = $userdetails->activeSubscription()->first();
-            if ($activeSubscription?->ends_at) {
-                return Carbon::parse($activeSubscription->ends_at);
-            }
+        if (Route::has('user.subscription')) {
+            return route('user.subscription', ['cal' => 'subcription']);
         }
 
-        if (!empty($userdetails->trial_ends_at)) {
-            return Carbon::parse($userdetails->trial_ends_at);
-        }
-
-        return null;
+        return '#';
     }
 
 }

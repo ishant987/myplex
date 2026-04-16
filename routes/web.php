@@ -734,13 +734,12 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     // Route::middleware(['auth'])->group(function () {
     Route::middleware(['auth', 'nocache'])->group(function () {
         Route::get('logout', 'LoginController@logout')->name('logout');
-        Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
-        Route::get('auth-dashboard', function () {
-            return redirect()->route('user.ratio_dashboard');
-        })->name('auth-dashboard');
-        Route::get('notifications', 'RatioController@notifications')->name('notifications');
-        // Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
         Route::middleware(['subscription'])->group(function () {
+            Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+            Route::get('auth-dashboard', function () {
+                return redirect()->route('user.ratio_dashboard');
+            })->name('auth-dashboard');
+            Route::get('notifications', 'RatioController@notifications')->name('notifications');
             Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
             Route::get('user-composition-report', 'RatioController@composition_report')->name('composition_report');
             Route::get('user-indies-report', 'RatioController@indies_report')->name('indies_report');

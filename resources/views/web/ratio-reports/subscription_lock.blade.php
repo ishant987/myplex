@@ -6,8 +6,10 @@
     <div class="page_detail">
         <div class="inner_padding">
             <div class="subs_end">
-                <p>Your subscription has expired. Renew now to continue enjoying exclusive contents. </p>
-                <a href="#">Subscribe</a>
+                <p>
+                    {{ !empty($expiry_date_display) ? 'Subscription will expire on ' . $expiry_date_display : 'Your subscription or trial period has ended.' }}
+                </p>
+                <a href="{{ $subscription_cta_url ?? '#' }}">Subscribe</a>
             </div>
         </div>
     </div>

@@ -19,6 +19,7 @@ use App\Models\AdminModel;
 use App\Models\Subscription;
 use App\Models\PaymentTransaction;
 use App\Models\UserSensitiveDetail;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -160,12 +161,47 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasActiveSubscription(): bool
     {
-        return $this->activeSubscription()->exists() || $this->subscription_status === 'active';
+        $activeSubscription = $this->activeSubscription()->first();
+
+        if ($activeSubscription && $activeSubscription->isActive()) {
+            return true;
+        }
+
+        if ($this->subscription_status !== 'active' || empty($this->subscription_expiry_date)) {
+            return false;
+        }
+
+        return Carbon::parse($this->subscription_expiry_date)->isFuture();
     }
 
     public function isOnTrial(): bool
     {
-        return $this->subscription_status === 'trial' && (bool) $this->trial_ends_at;
+        return $this->subscription_status === 'trial'
+            && !empty($this->trial_ends_at)
+            && Carbon::parse($this->trial_ends_at)->isFuture();
+    }
+
+    public function hasValidAccess(): bool
+    {
+        return $this->hasActiveSubscription() || $this->isOnTrial();
+    }
+
+    public function accessExpiresAt(): ?Carbon
+    {
+        if (!empty($this->subscription_expiry_date)) {
+            return Carbon::parse($this->subscription_expiry_date);
+        }
+
+        $activeSubscription = $this->activeSubscription()->first();
+        if ($activeSubscription?->ends_at) {
+            return Carbon::parse($activeSubscription->ends_at);
+        }
+
+        if (!empty($this->trial_ends_at)) {
+            return Carbon::parse($this->trial_ends_at);
+        }
+
+        return null;
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)

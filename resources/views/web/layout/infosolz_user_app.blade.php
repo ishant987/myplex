@@ -43,10 +43,10 @@
                 <div class="subscription_heading">
                     <div class="subs_in">
                         @if(!empty($show_expired_warning))
-                        <!-- red warning--> <i class="fa-solid fa-triangle-exclamation red"></i> <p>Subscription is expired, Please renew</p> <a  href="{{ route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription', ['cal' => 'subcription']) }}">subscription</a> 
+                        <!-- red warning--> <i class="fa-solid fa-triangle-exclamation red"></i> <p>{{ !empty($expiry_date_display) ? 'Subscription will expire on' : 'Subscription has expired' }}</p> {{ $expiry_date_display ?? '' }} <a href="{{ $subscription_cta_url ?? '#' }}">subscription</a> 
                         
                         @elseif(!empty($show_renew_warning))
-                        <!-- yellow last 4 day before warning--> <i class="fa-solid fa-triangle-exclamation yellow"></i>  <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}, Please renew <a  href="{{ route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription', ['cal' => 'subcription']) }}">subscription</a>
+                        <!-- yellow last 4 day before warning--> <i class="fa-solid fa-triangle-exclamation yellow"></i>  <p>Subscription will expire on</p> {{ $expiry_date_display ?? date('d/m/Y', strtotime($expiry_date)) }}, Please renew <a href="{{ $subscription_cta_url ?? '#' }}">subscription</a>
                         @elseif(!empty($expiry_date))
                         <!-- green subscription warning--> <i class="fa-solid fa-bell green"></i> <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}
                         @else

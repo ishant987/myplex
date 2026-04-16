@@ -6,8 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Schema;
 
 class SubscriptionMiddleware
 {
@@ -22,23 +20,13 @@ class SubscriptionMiddleware
     {
         if (Auth::check()) {
             $user = Auth::user();
+            $userdetails = User::where('u_id', $user->u_id)->first() ?: $user;
 
-            if (method_exists($user, 'hasActiveSubscription') && $user->hasActiveSubscription()) {
+            if (method_exists($userdetails, 'hasValidAccess') && $userdetails->hasValidAccess()) {
                 return $next($request);
             }
 
-            $userdetails = User::where('u_id', $user->u_id)->first();
-            $expiryDate = $userdetails?->subscription_expiry_date;
-
-            if (!$expiryDate) {
-                return redirect()->route('user.subscription_lock');
-            }
-
-            $expiry_datetime = Carbon::parse($expiryDate);
-
-            if ($expiry_datetime->isPast()) {
-                return redirect()->route('user.subscription_lock');
-            }
+            return redirect()->route('user.subscription_lock');
         }
 
         return $next($request);
