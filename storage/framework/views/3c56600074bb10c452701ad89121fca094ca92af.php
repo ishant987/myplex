@@ -98,6 +98,27 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                <div class="amfi-strip-wrap">
+                    <div class="amfi-strip">
+                        <div class="amfi-strip__content">
+                            <span class="amfi-strip__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="12" fill="currentColor"/>
+                                    <path d="M7 12.3L10.2 15.5L17 8.7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                            <div class="amfi-strip__lines">
+                                <span class="amfi-strip__text amfi-strip__text--strong">Registered with AMFI</span>
+                                <span class="amfi-strip__divider" aria-hidden="true"></span>
+                                <span class="amfi-strip__text">AMFI Registration No: 2654</span>
+                                <span class="amfi-strip__divider" aria-hidden="true"></span>
+                                <span class="amfi-strip__text">Initial Registration Date: 19th March 2003</span>
+                                <span class="amfi-strip__divider" aria-hidden="true"></span>
+                                <span class="amfi-strip__text">Validity: 14th May 2025 to 23rd May 2028</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="copyright_inner d-sm-flex d-block align-items-center justify-content-between">
                     <p>©Copyright <?php echo e(date('Y')); ?> All Rights Reserved.</p>
                     <div class="copyright_menu">
@@ -111,4 +132,5 @@
             </div>
         </div>
     </div>
-</section><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/layout/includes/footer.blade.php ENDPATH**/ ?>
+</section>
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/layout/includes/footer.blade.php ENDPATH**/ ?>

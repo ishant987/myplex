@@ -3273,7 +3273,74 @@ background-color: #f5f9f7;
     padding: 15px
 }
 
-.copyright_menu ul li a {
+.amfi-strip-wrap {
+    padding: 0 0 22px;
+}
+
+.amfi-strip {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfa 100%);
+    border: 1px solid rgba(0, 84, 77, 0.1);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 44, 40, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    width: 100%;
+    padding: 22px 20px;
+}
+
+.amfi-strip__content {
+    align-items: flex-start;
+    color: #0d5b54;
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 17px;
+    gap: 14px;
+    line-height: 1.5;
+}
+
+.amfi-strip__icon {
+    color: #00665e;
+    display: inline-flex;
+    flex: 0 0 auto;
+    height: 28px;
+    width: 28px;
+}
+
+.amfi-strip__icon svg {
+    height: 100%;
+    width: 100%;
+}
+
+.amfi-strip__lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+}
+
+.amfi-strip__text {
+    color: #2d5f59;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+}
+
+.amfi-strip__text--strong {
+    color: #0b564f;
+    font-weight: 700;
+}
+
+.amfi-strip__divider {
+    background: rgba(13, 91, 84, 0.28);
+    border-radius: 999px;
+    display: block;
+    flex: 0 0 auto;
+    height: 20px;
+    width: 2px;
+}
+
+    .copyright_menu ul li a {
     color: #fff;
     padding: 0px 10px;
     font-size: 14px
@@ -7366,6 +7433,37 @@ ul.reset li a.active {
     .footer_menu {
         margin-bottom: 30px;
         padding: 0
+    }
+
+    .amfi-strip-wrap {
+        padding: 0 0 18px;
+    }
+
+    .amfi-strip {
+        align-items: flex-start;
+        border-radius: 16px;
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px 18px 16px;
+    }
+
+    .amfi-strip__content {
+        font-size: 15px;
+        gap: 10px;
+    }
+
+    .amfi-strip__lines {
+        align-items: flex-start;
+        gap: 8px 10px;
+    }
+
+    .amfi-strip__text {
+        font-size: 15px;
+    }
+
+    .amfi-strip__divider {
+        height: 2px;
+        width: 18px;
     }
 
     .color_inverse {
