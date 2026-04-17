@@ -142,6 +142,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Subscription::class, 'user_id', 'u_id');
     }
 
+    public function latestPaidSubscription()
+    {
+        return $this->hasOne(Subscription::class, 'user_id', 'u_id')
+            ->whereNotNull('plan_id')
+            ->latest('id');
+    }
+
     public function paymentTransactions()
     {
         return $this->hasMany(PaymentTransaction::class, 'user_id', 'u_id');

@@ -178,6 +178,9 @@
                   <th class="cc-w-150"><?php echo e($sortbyArr['created_at']); ?></th>
                   <th><?php echo e($sortbyArr['created_by']); ?></th>
                   <th><?php echo e(__('admin.added_user_txt')); ?></th>
+                  <th>Package</th>
+                  <th>Price Paid</th>
+                  <th>Subscription End On</th>
                   <th class="cc-w-150"><?php echo e($sortbyArr['updated_at']); ?></th>
                   <th class="cc-w-95"><?php echo e($sortbyArr['updated_by']); ?></th>
                   <th><?php echo e(__('admin.mdfy_user_txt')); ?></th>
@@ -306,6 +309,9 @@
                     </select>
                   </td>
                   <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td>
                     <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
 <?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.form.field.text','data' => ['id' => 'fmd','name' => 'fmd','value' => ''.e($fltrDataArr['updated_at'] ?? '').'','class' => 'period']]); ?>
@@ -332,6 +338,7 @@
                 </tr>
                 <?php if( count($dataListModel) > 0 ): ?>
                 <?php $__currentLoopData = $dataListModel; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php ($latestPaidSubscription = $record->latestPaidSubscription); ?>
                 <tr role="row" class="">
                   <?php if($roleRights['delete']): ?>
                   <td class="sorting_{{$key}">
@@ -440,6 +447,40 @@
                     <?php break; ?>
                     <?php endswitch; ?>
                   </td>
+                  <td>
+                    <?php if($latestPaidSubscription): ?>
+                    <?php if(Route::has('admin.subscriptions.show')): ?>
+                    <a href="<?php echo e(route('admin.subscriptions.show', $latestPaidSubscription->id)); ?>">
+                      <?php echo e(optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
+
+                    </a>
+                    <?php else: ?>
+                    <?php echo e(optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
+
+                    <?php endif; ?>
+                    <?php else: ?>
+                    -
+                    <?php endif; ?>
+                  </td>
+                  <td>
+                    <?php if($latestPaidSubscription && $latestPaidSubscription->amount !== null): ?>
+                    <?php echo e($latestPaidSubscription->currency ?: 'INR'); ?> <?php echo e(number_format((float) $latestPaidSubscription->amount, 2)); ?>
+
+                    <?php else: ?>
+                    -
+                    <?php endif; ?>
+                  </td>
+                  <td>
+                    <?php if($latestPaidSubscription && $latestPaidSubscription->subscription_expiry_date): ?>
+                    <?php echo e(\Carbon\Carbon::parse($latestPaidSubscription->subscription_expiry_date)->format('d M Y')); ?>
+
+                    <?php elseif($latestPaidSubscription && $latestPaidSubscription->ends_at): ?>
+                    <?php echo e(optional($latestPaidSubscription->ends_at)->format('d M Y')); ?>
+
+                    <?php else: ?>
+                    -
+                    <?php endif; ?>
+                  </td>
                   <td><?php if($record->updated_at): ?><?php echo e(date($listDataAtrArr['mdfy_dt_frmt'], strtotime($record->updated_at))); ?><?php endif; ?></td>
                   <td><?php if($record->updated_by): ?><?php echo e($moduleAtrArr['cu_by_txt'][$record->updated_by] ?? $listDataAtrArr['unknown_txt']); ?><?php endif; ?></td>
                   <td>
@@ -470,7 +511,7 @@
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <?php else: ?>
                 <tr>
-                  <td colspan="16"><?php echo e(__('message.data_not_available')); ?></td>
+                  <td colspan="19"><?php echo e(__('message.data_not_available')); ?></td>
                 </tr>
                 <?php endif; ?>
               </tbody>
@@ -547,4 +588,5 @@
   }
 </script>
 <?php $__env->stopPush(); ?>
+
 <?php echo $__env->make('themes.backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/backend/pages/subscribeduser/index.blade.php ENDPATH**/ ?>

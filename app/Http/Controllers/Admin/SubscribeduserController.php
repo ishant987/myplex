@@ -78,7 +78,10 @@ class SubscribeduserController extends BaseController
             $sortBy = $request->query('sby');
         }
 
-        $dataListModel = $lstObj::search($fltrDataArr)->orderBy($sortBy, $orderBy)->paginate($perPage);
+        $dataListModel = $lstObj::search($fltrDataArr)
+            ->with(['latestPaidSubscription.plan'])
+            ->orderBy($sortBy, $orderBy)
+            ->paginate($perPage);
 
         $sortbyArr = ['u_id' => __('admin.insertion_txt'), 'f_name' => __('common.f_name_txt'), 'l_name' => __('common.l_name_txt'), 'email' => __('common.email_txt'), 'mobile' => __('common.mobile_txt'), 'acc_type' => __('subscribeduser.acc_type_txt'), 's_acc_medium' => __('subscribeduser.s_acc_medium_txt'), 'created_at' => __('admin.added_date_txt'), 'created_by' => __('admin.added_by_txt'), 'updated_at' => __('admin.mdfy_date_txt'), 'updated_by' => __('admin.mdfy_by_txt')];
         $orderbyArr = ['asc' => 'ASC', 'desc' => 'DESC'];
