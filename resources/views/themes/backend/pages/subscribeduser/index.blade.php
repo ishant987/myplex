@@ -191,7 +191,7 @@
                 </tr>
                 @if( count($dataListModel) > 0 )
                 @foreach( $dataListModel as $key => $record )
-                @php($latestPaidSubscription = $record->latestPaidSubscription)
+                @php($latestPaidSubscription = $supportsPaidSubscriptionDetails ? $record->latestPaidSubscription : null)
                 <tr role="row" class="">
                   @if($roleRights['delete'])
                   <td class="sorting_{{$key}">
@@ -255,10 +255,10 @@
                     @if($latestPaidSubscription)
                     @if(Route::has('admin.subscriptions.show'))
                     <a href="{{ route('admin.subscriptions.show', $latestPaidSubscription->id) }}">
-                      {{ optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
+                      {{ ($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
                     </a>
                     @else
-                    {{ optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
+                    {{ ($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
                     @endif
                     @else
                     -

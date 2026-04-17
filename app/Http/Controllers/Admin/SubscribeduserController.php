@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Validator;
 use Storage;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Schema;
 use DB;
 
 use App\Lib\Core\Useful;
@@ -78,8 +79,29 @@ class SubscribeduserController extends BaseController
             $sortBy = $request->query('sby');
         }
 
-        $dataListModel = $lstObj::search($fltrDataArr)
-            ->with(['latestPaidSubscription.plan'])
+        $hasSubscriptionModel = class_exists('App\\Models\\Subscription');
+        $hasSubscriptionTable = Schema::hasTable('subscriptions');
+        $hasSubscriptionPlanTable = Schema::hasTable('subscription_plans');
+        $subscriptionColumnsAvailable = $hasSubscriptionTable
+            && Schema::hasColumn('subscriptions', 'plan_id')
+            && Schema::hasColumn('subscriptions', 'amount')
+            && Schema::hasColumn('subscriptions', 'subscription_expiry_date');
+
+        $supportsPaidSubscriptionDetails = $hasSubscriptionModel && $subscriptionColumnsAvailable;
+
+        $dataListQuery = $lstObj::search($fltrDataArr);
+
+        if ($supportsPaidSubscriptionDetails) {
+            $with = ['latestPaidSubscription'];
+
+            if ($hasSubscriptionPlanTable) {
+                $with[] = 'latestPaidSubscription.plan';
+            }
+
+            $dataListQuery->with($with);
+        }
+
+        $dataListModel = $dataListQuery
             ->orderBy($sortBy, $orderBy)
             ->paginate($perPage);
 
@@ -92,7 +114,7 @@ class SubscribeduserController extends BaseController
 
         $roleRights = ['add' => App::hasAccessToMethod($this->className, 'admin.subscribeduser.create'), 'edit' => App::hasAccessToMethod($this->className, 'admin.subscribeduser.edit'), 'delete' => App::hasAccessToMethod($this->className, 'admin.deletesubscribeduser')];
 
-        return view('themes.backend.pages.subscribeduser.index', compact('dataListModel', 'data', 'listDataAtrArr', 'moduleAtrArr', 'sortbyArr', 'orderbyArr', 'fltrDataArr', 'perPage', 'sortBy', 'orderBy', 'showEntryArr', 'cFilterArr', 'roleRights'));
+        return view('themes.backend.pages.subscribeduser.index', compact('dataListModel', 'data', 'listDataAtrArr', 'moduleAtrArr', 'sortbyArr', 'orderbyArr', 'fltrDataArr', 'perPage', 'sortBy', 'orderBy', 'showEntryArr', 'cFilterArr', 'roleRights', 'supportsPaidSubscriptionDetails', 'hasSubscriptionPlanTable'));
     }
 
     /**
