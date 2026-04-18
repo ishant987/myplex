@@ -111,7 +111,7 @@
                                 <span class="amfi-strip__divider" aria-hidden="true"></span>
                                 <span class="amfi-strip__text">Initial Registration Date: 19th March 2003</span>
                                 <span class="amfi-strip__divider" aria-hidden="true"></span>
-                                <span class="amfi-strip__text">Validity: 14th May 2025 to 23rd May 2028</span>
+                                <span class="amfi-strip__text">Validity of ARN: 14th May 2025 to 23rd May 2028</span>
                             </div>
                         </div>
                     </div>

@@ -338,7 +338,7 @@
                 </tr>
                 <?php if( count($dataListModel) > 0 ): ?>
                 <?php $__currentLoopData = $dataListModel; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php ($latestPaidSubscription = $record->latestPaidSubscription); ?>
+                <?php ($latestPaidSubscription = $supportsPaidSubscriptionDetails ? $record->latestPaidSubscription : null); ?>
                 <tr role="row" class="">
                   <?php if($roleRights['delete']): ?>
                   <td class="sorting_{{$key}">
@@ -451,11 +451,11 @@
                     <?php if($latestPaidSubscription): ?>
                     <?php if(Route::has('admin.subscriptions.show')): ?>
                     <a href="<?php echo e(route('admin.subscriptions.show', $latestPaidSubscription->id)); ?>">
-                      <?php echo e(optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
+                      <?php echo e(($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
 
                     </a>
                     <?php else: ?>
-                    <?php echo e(optional($latestPaidSubscription->plan)->name ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
+                    <?php echo e(($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-'))); ?>
 
                     <?php endif; ?>
                     <?php else: ?>
