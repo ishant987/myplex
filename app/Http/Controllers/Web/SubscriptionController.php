@@ -112,7 +112,7 @@ class SubscriptionController extends Controller
         $order = $this->razorpayService->createOrder([
             'receipt' => 'mplx_' . $user->u_id . '_' . now()->timestamp,
             'amount' => (int) round($amount * 100),
-            'currency' => config('razorpay.currency', 'INR'),
+            'currency' => $this->razorpayService->getCurrency(),
             'notes' => [
                 'user_id' => $user->u_id,
                 'plan_id' => $plan->id,
@@ -131,7 +131,7 @@ class SubscriptionController extends Controller
             'status' => Subscription::databaseStatusFor('pending'),
             'trial_ends_at' => $user->trial_ends_at,
             'amount' => $amount,
-            'currency' => config('razorpay.currency', 'INR'),
+            'currency' => $this->razorpayService->getCurrency(),
             'created_date' => now()->toDateString(),
             'created_by' => 'u',
             'created_id' => $user->u_id,
@@ -144,7 +144,7 @@ class SubscriptionController extends Controller
             'subscription_id' => $subscription->id,
             'razorpay_order_id' => $order['id'],
             'amount' => $amount,
-            'currency' => config('razorpay.currency', 'INR'),
+            'currency' => $this->razorpayService->getCurrency(),
             'status' => 'pending',
             'metadata' => [
                 'plan_id' => $plan->id,
@@ -157,6 +157,7 @@ class SubscriptionController extends Controller
             'order_id' => $order['id'],
             'amount' => $order['amount'],
             'currency' => $order['currency'],
+            'company_name' => $this->razorpayService->getCompanyName(),
             'plan_name' => $plan->name,
             'user_name' => trim($user->f_name . ' ' . $user->l_name),
             'user_email' => $user->email,

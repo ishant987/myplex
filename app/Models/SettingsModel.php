@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SettingsModel extends Model
 {
+  const CREATED_AT = null;
+  const UPDATED_AT = 'updated_at';
+
   /**
    * The table associated with the model.
    *

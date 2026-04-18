@@ -12,9 +12,136 @@ use Storage;
 use App\Lib\Core\Core;
 
 use App\Models\SettingsModel;
+use Illuminate\Support\Collection;
 
 class SettingsController extends BaseController
 {
+    protected function defaultRazorpaySettings(): array
+    {
+        return [
+            [
+                'field_type' => 'text',
+                'field_label' => 'Razorpay Key ID',
+                'option_key' => 'razorpay_key_id',
+                'option_value' => config('razorpay.key_id'),
+                'options_label' => null,
+                'options_value' => null,
+                'type' => Config('commonconstants.setting_type_options'),
+                'field_info' => 'Public Razorpay key used during checkout.',
+                'is_required' => 'y',
+                'c_order' => 101,
+                'status' => Config('commonconstants.status_val.1'),
+                'updated_id' => self::getLoggedInAdminId() ?: 0,
+                'updated_at' => now(),
+            ],
+            [
+                'field_type' => 'text',
+                'field_label' => 'Razorpay Key Secret',
+                'option_key' => 'razorpay_key_secret',
+                'option_value' => config('razorpay.key_secret'),
+                'options_label' => null,
+                'options_value' => null,
+                'type' => Config('commonconstants.setting_type_options'),
+                'field_info' => 'Secret Razorpay key used for server-side requests.',
+                'is_required' => 'y',
+                'c_order' => 102,
+                'status' => Config('commonconstants.status_val.1'),
+                'updated_id' => self::getLoggedInAdminId() ?: 0,
+                'updated_at' => now(),
+            ],
+            [
+                'field_type' => 'text',
+                'field_label' => 'Razorpay Webhook Secret',
+                'option_key' => 'razorpay_webhook_secret',
+                'option_value' => config('razorpay.webhook_secret'),
+                'options_label' => null,
+                'options_value' => null,
+                'type' => Config('commonconstants.setting_type_options'),
+                'field_info' => 'Webhook secret for verifying Razorpay callbacks.',
+                'is_required' => 'n',
+                'c_order' => 103,
+                'status' => Config('commonconstants.status_val.1'),
+                'updated_id' => self::getLoggedInAdminId() ?: 0,
+                'updated_at' => now(),
+            ],
+            [
+                'field_type' => 'text',
+                'field_label' => 'Razorpay Currency',
+                'option_key' => 'razorpay_currency',
+                'option_value' => config('razorpay.currency', 'INR'),
+                'options_label' => null,
+                'options_value' => null,
+                'type' => Config('commonconstants.setting_type_options'),
+                'field_info' => 'Currency sent while creating Razorpay orders.',
+                'is_required' => 'y',
+                'c_order' => 104,
+                'status' => Config('commonconstants.status_val.1'),
+                'updated_id' => self::getLoggedInAdminId() ?: 0,
+                'updated_at' => now(),
+            ],
+            [
+                'field_type' => 'text',
+                'field_label' => 'Razorpay Company Name',
+                'option_key' => 'razorpay_company_name',
+                'option_value' => config('razorpay.company_name', 'MyPlexus'),
+                'options_label' => null,
+                'options_value' => null,
+                'type' => Config('commonconstants.setting_type_options'),
+                'field_info' => 'Company name shown in the Razorpay checkout.',
+                'is_required' => 'y',
+                'c_order' => 105,
+                'status' => Config('commonconstants.status_val.1'),
+                'updated_id' => self::getLoggedInAdminId() ?: 0,
+                'updated_at' => now(),
+            ],
+        ];
+    }
+
+    protected function razorpaySettingKeys(): array
+    {
+        return [
+            'razorpay_key_id',
+            'razorpay_key_secret',
+            'razorpay_webhook_secret',
+            'razorpay_currency',
+            'razorpay_company_name',
+        ];
+    }
+
+    protected function ensureRazorpaySettingsExist(): void
+    {
+        foreach ($this->defaultRazorpaySettings() as $setting) {
+            SettingsModel::firstOrCreate(
+                ['option_key' => $setting['option_key']],
+                $setting
+            );
+        }
+    }
+
+    protected function getSettingsByKeys(array $keys, int $status)
+    {
+        return SettingsModel::whereIn('option_key', $keys)
+            ->where('status', '=', $status)
+            ->orderBy('c_order', 'ASC')
+            ->get();
+    }
+
+    protected function updateSettingsCollection(Collection $dataObj, array $input, int $loginAdminId, string $type): int
+    {
+        $save = 0;
+
+        foreach ($dataObj as $value) {
+            $store = [
+                'option_value' => $input[$value->option_key] ?? $value->option_value,
+                'updated_id' => $loginAdminId,
+            ];
+
+            $save = SettingsModel::where(['type' => $type, 'option_id' => $value->option_id])->update($store);
+        }
+
+        return $save;
+    }
+
     public function editGeneral()
     {
         $commonconstants = Config('commonconstants');
@@ -131,7 +258,11 @@ class SettingsController extends BaseController
 
         $type = $commonconstants['setting_type_options'];
 
-        $dataObj = SettingsModel::getSettingsFields($type, $commonconstants['status_val']['1']);
+        $dataObj = SettingsModel::where('type', '=', $type)
+            ->where('status', '=', $commonconstants['status_val']['1'])
+            ->whereNotIn('option_key', $this->razorpaySettingKeys())
+            ->orderBy('c_order', 'ASC')
+            ->get();
 
         $moduleAtrArr = self::getModuleVars();
         $editDataAtrArr = ["title" => __('admin.settings.options_txt'), "route" => 'settings.options', "postroute" => 'admin.settings.options.update'];
@@ -168,7 +299,11 @@ class SettingsController extends BaseController
         try {
             $input = $request->except('_method', '_token', 'submit');
 
-            $dataObj = SettingsModel::getSettingsFields( $type, $commonconstants['status_val']['1'] );
+            $dataObj = SettingsModel::where('type', '=', $type)
+                ->where('status', '=', $commonconstants['status_val']['1'])
+                ->whereNotIn('option_key', $this->razorpaySettingKeys())
+                ->orderBy('c_order', 'ASC')
+                ->get();
 
             if($dataObj){
                 $store = [];
@@ -235,6 +370,65 @@ class SettingsController extends BaseController
             else{
                 return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', __('message.error.update'))->with('title', __('admin.error_ttl'));
             }
+        }
+    }
+
+    public function editRazorpay()
+    {
+        $commonconstants = Config('commonconstants');
+        $this->ensureRazorpaySettingsExist();
+
+        $dataObj = $this->getSettingsByKeys($this->razorpaySettingKeys(), $commonconstants['status_val']['1']);
+
+        $moduleAtrArr = self::getModuleVars();
+        $editDataAtrArr = ["title" => __('admin.settings.razorpay_txt'), "route" => 'settings.razorpay', "postroute" => 'admin.settings.razorpay.update'];
+
+        return view('themes.backend.pages.setting.settingform', compact('dataObj', 'moduleAtrArr', 'editDataAtrArr'));
+    }
+
+    public function updateRazorpay(Request $request)
+    {
+        $loginAdminId = self::getLoggedInAdminId();
+        $commonconstants = Config('commonconstants');
+
+        $validator = Validator::make($request->all(), [
+            'razorpay_key_id' => 'required|string|max:255',
+            'razorpay_key_secret' => 'required|string|max:255',
+            'razorpay_webhook_secret' => 'nullable|string|max:255',
+            'razorpay_currency' => 'required|string|max:10',
+            'razorpay_company_name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        \DB::beginTransaction();
+
+        try {
+            $this->ensureRazorpaySettingsExist();
+            $input = $request->except('_method', '_token', 'submit');
+            $dataObj = $this->getSettingsByKeys($this->razorpaySettingKeys(), $commonconstants['status_val']['1']);
+
+            if ($dataObj->isNotEmpty()) {
+                $this->updateSettingsCollection($dataObj, $input, $loginAdminId, $commonconstants['setting_type_options']);
+
+                \DB::commit();
+
+                return back()->with('alert', Config('adminconstants.alert_css.1'))->with('message', __('message.success.update'))->with('title', __('admin.success_ttl'));
+            }
+
+            \DB::rollBack();
+
+            return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', __('message.error.update'))->with('title', __('admin.error_ttl'));
+        } catch (QueryException $exception) {
+            \DB::rollBack();
+
+            if ($loginAdminId == $commonconstants['def_super_admin_id']) {
+                return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', $exception->getMessage())->with('title', __('admin.error_ttl'))->withInput();
+            }
+
+            return back()->with('alert', Config('adminconstants.alert_css.2'))->with('message', __('message.error.update'))->with('title', __('admin.error_ttl'));
         }
     }
 

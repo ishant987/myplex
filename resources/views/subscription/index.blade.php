@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
             amount: orderData.amount,
             currency: orderData.currency,
             order_id: orderData.order_id,
-            name: 'MyPlexus',
+            name: orderData.company_name || 'MyPlexus',
             description: orderData.plan_name,
             prefill: {
                 name: orderData.user_name,

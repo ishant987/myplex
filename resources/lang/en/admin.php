@@ -323,7 +323,7 @@ return [
 
     'settings' => [
         'general_txt' => 'General',
-        'options_txt' => 'Options',
+        'razorpay_txt' => 'Razorpay Settings',
         'mail_txt' => 'Mail',
         'social_txt' => 'Social Settings',
         'custom_txt' => 'Custom Settings',

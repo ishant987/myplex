@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\SettingsModel;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Schema;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\SignatureVerificationError;
 
@@ -12,12 +14,23 @@ class RazorpayService
 
     public function isConfigured(): bool
     {
-        return (bool) (config('razorpay.key_id') && config('razorpay.key_secret'));
+        return (bool) ($this->settingValue('razorpay_key_id', config('razorpay.key_id'))
+            && $this->settingValue('razorpay_key_secret', config('razorpay.key_secret')));
     }
 
     public function getKeyId(): ?string
     {
-        return config('razorpay.key_id');
+        return $this->settingValue('razorpay_key_id', config('razorpay.key_id'));
+    }
+
+    public function getCurrency(): string
+    {
+        return (string) $this->settingValue('razorpay_currency', config('razorpay.currency', 'INR'));
+    }
+
+    public function getCompanyName(): string
+    {
+        return (string) $this->settingValue('razorpay_company_name', config('razorpay.company_name', 'MyPlexus'));
     }
 
     public function createOrder(array $payload): array
@@ -48,12 +61,14 @@ class RazorpayService
 
     public function verifyWebhookSignature(string $payload, ?string $signature): bool
     {
-        if (!$signature || !config('razorpay.webhook_secret')) {
+        $webhookSecret = $this->settingValue('razorpay_webhook_secret', config('razorpay.webhook_secret'));
+
+        if (!$signature || !$webhookSecret) {
             return false;
         }
 
         try {
-            $this->client()->utility->verifyWebhookSignature($payload, $signature, config('razorpay.webhook_secret'));
+            $this->client()->utility->verifyWebhookSignature($payload, $signature, $webhookSecret);
 
             return true;
         } catch (SignatureVerificationError $exception) {
@@ -68,9 +83,28 @@ class RazorpayService
         }
 
         if ($this->client === null) {
-            $this->client = new Api(config('razorpay.key_id'), config('razorpay.key_secret'));
+            $this->client = new Api(
+                $this->settingValue('razorpay_key_id', config('razorpay.key_id')),
+                $this->settingValue('razorpay_key_secret', config('razorpay.key_secret'))
+            );
         }
 
         return $this->client;
+    }
+
+    protected function settingValue(string $key, ?string $fallback = null): ?string
+    {
+        try {
+            if (Schema::hasTable('options')) {
+                $value = SettingsModel::getSettingValue($key);
+
+                if ($value !== '') {
+                    return $value;
+                }
+            }
+        } catch (\Throwable $exception) {
+        }
+
+        return $fallback;
     }
 }

@@ -113,6 +113,11 @@ Breadcrumbs::for('settings.options', function ($trail, $title) {
     $trail->push($title, route('admin.settings.options'));
 });
 
+Breadcrumbs::for('settings.razorpay', function ($trail, $title) {
+    $trail->parent('dashboard');
+    $trail->push($title, route('admin.settings.razorpay'));
+});
+
 Breadcrumbs::for('settings.mail', function ($trail, $title) {
     $trail->parent('dashboard');
     $trail->push($title, route('admin.settings.mail'));

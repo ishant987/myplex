@@ -24,6 +24,8 @@
 <?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
 <?php endif; ?>
 
+        
+
         <form name="eDataFrm" id="eDataFrm" action="<?php echo e(route($editDataAtrArr['postroute'])); ?>" method="POST" enctype="multipart/form-data">
           <?php echo e(csrf_field()); ?>
 
@@ -276,4 +278,5 @@
   </div>
 </div>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('themes.backend.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/backend/pages/setting/settingform.blade.php ENDPATH**/ ?>

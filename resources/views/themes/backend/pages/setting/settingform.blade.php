@@ -14,6 +14,8 @@
       <div class="card-block">
         <x-form.alert type="{{ session()->get('alert') }}" title="{{ session()->get('title') }}" message="{{ session()->get('message') }}" />
 
+        
+
         <form name="eDataFrm" id="eDataFrm" action="{{ route($editDataAtrArr['postroute']) }}" method="POST" enctype="multipart/form-data">
           {{ csrf_field() }}
 

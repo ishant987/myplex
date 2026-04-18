@@ -89,6 +89,8 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         Route::post('/settings/general', 'SettingsController@updateGeneral')->name('settings.general.update');
         Route::get('/settings/options', 'SettingsController@editOptions')->name('settings.options');
         Route::post('/settings/options', 'SettingsController@updateOptions')->name('settings.options.update');
+        Route::get('/settings/razorpay', 'SettingsController@editRazorpay')->name('settings.razorpay');
+        Route::post('/settings/razorpay', 'SettingsController@updateRazorpay')->name('settings.razorpay.update');
         Route::get('/settings/mail_setting', 'SettingsController@editMail')->name('settings.mail');
         Route::post('/settings/mail_setting', 'SettingsController@updateMail')->name('settings.mail.update');
         Route::get('/settings/custom', 'SettingsController@editCustom')->name('settings.custom');
