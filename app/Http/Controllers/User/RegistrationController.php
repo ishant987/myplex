@@ -92,7 +92,7 @@ class RegistrationController extends BaseController
         $registrationDate=date('Y-m-d');
         $registrationDates = Carbon::now(); 
        
-        $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+        $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
        // dd( $expiryDate);
       
        // $registrationDate = Carbon::parse($registrationDate);
@@ -235,4 +235,3 @@ class RegistrationController extends BaseController
     }
 
 }
-

@@ -315,7 +315,7 @@ class AuthController extends BaseController
                 $store->company = $request->company;
                 $store->status           = $commonconstants['status_val'][1];
                 $store->is_approved      = $commonconstants['y_n_val'][1];
-                $store->trial_ends_at    = now()->addDays(14);
+                $store->trial_ends_at    = now()->addDays(0);
                 $store->subscription_status = 'trial';
                 $store->created_by       = $cuBy;
                 $store->created_id       = 0;
@@ -1112,7 +1112,7 @@ class AuthController extends BaseController
             $store->password = bcrypt($password);
             $store->status           = $commonconstants['status_val'][1];
             $store->is_approved      = $commonconstants['y_n_val'][1];
-            $store->trial_ends_at    = now()->addDays(14);
+            $store->trial_ends_at    = now()->addDays(0);
             $store->subscription_status = 'trial';
             $store->u_created_medium = $cuMedium;
             $store->created_by       = $cuBy;

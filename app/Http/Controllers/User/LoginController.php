@@ -230,7 +230,7 @@ class LoginController extends BaseController
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
                
-                $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+                $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
                 $insert['email']=$user_google->email;
@@ -266,7 +266,7 @@ class LoginController extends BaseController
 
 
        
-            $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+            $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
         }
         catch (Exception $e) {
             return redirect()->route('user.user_login')->with('error','Wrong Credentials');
@@ -339,7 +339,7 @@ class LoginController extends BaseController
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
                
-                $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+                $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
                 $insert['email']=$user_facebook->email;
@@ -371,7 +371,7 @@ class LoginController extends BaseController
 
 
        
-            $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+            $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
         }
         catch (Exception $e) 
         {
