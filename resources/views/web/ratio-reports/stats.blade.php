@@ -493,6 +493,31 @@
 @endsection
 
 <script>
+    function selectedFundCount() {
+        var selectedValues = $('#allocation_select_fund').val() || [];
+        return selectedValues.length;
+    }
+
+    function updateFundSelectionState() {
+        var category = $('input[name="Category"]:checked').val() || 'by_category';
+        var count = selectedFundCount();
+
+        if (category !== 'by_fund') {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        if (count >= 2 && count <= 10) {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
+        $('#submit_btn').prop('disabled', true);
+    }
+
     function toggleRankingFields() {
         var ranking = $('input[name="ranking"]:checked').val() || 'range';
         var isAsOn = ranking === 'as_on';
@@ -516,31 +541,7 @@
     }
 
     function set_fund_select_val() {
-
-        var thiss = $('#fund_Category').val();
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-
-        console.log(thiss + '  ' + count);
-
-        if (thiss == 'by_fund') {
-
-            if (count >= 2 && count <= 10) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-
-        } else {
-
-            $('#submit_btn').prop('disabled', false);
-        }
+        updateFundSelectionState();
     }
 
 
@@ -597,35 +598,20 @@
 
     function get_fund_types(thiss) {
         toggleCategoryFields();
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
-        } else if (thiss == 'by_fund') {
-            if (count >= 2 && count <= 10) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-        }
+        updateFundSelectionState();
     }
 
 
     document.addEventListener('DOMContentLoaded', function() {
         toggleRankingFields();
         toggleCategoryFields();
+        updateFundSelectionState();
 
         $('input[name="ranking"]').on('change', toggleRankingFields);
         $('input[name="Category"]').on('change', function() {
             get_fund_types(this.value);
         });
+        $('#allocation_select_fund').on('change', updateFundSelectionState);
 
         var exportButton = document.getElementById('exportPDF');
 
