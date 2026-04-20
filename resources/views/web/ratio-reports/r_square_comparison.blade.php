@@ -95,7 +95,7 @@
                                 <div class="col-md-4 ">
                                     <div class="subs_in bttn_grp w-100 mb-3">
                                         <p>Select Primary </p>   
-                                        <a href="">Scheme</a>         
+                                        <a href="javascript:void(0)">Scheme</a>         
                                     </div>
                                     <div class="form_group">
                                         <select name="scheme_id" class="select2 " id=""

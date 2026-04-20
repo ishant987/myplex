@@ -46,9 +46,15 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.monthly_snapshot')}}">
+                                    <a href="{{route('user.weekly_snapshot_new')}}">
                                         <figure><img src="{{asset('new-images/dh2.png')}}" alt=""></figure>
-                                        <h4>Snapshot</h4>
+                                        <h4>Weekly <span>Snapshot</span></h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{route('user.monthly_snapshot_new')}}">
+                                        <figure><img src="{{asset('new-images/dh2.png')}}" alt=""></figure>
+                                        <h4>Monthly <span>Snapshot</span></h4>
                                     </a>
                                 </li>
                                 <li>
@@ -58,9 +64,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.stats')}}">
+                                    <a href="{{route('user.performance_ratios')}}">
                                         <figure><img src="{{asset('new-images/dh4.png')}}" alt=""></figure>
-                                        <h4>Stats</h4>
+                                        <h4>Performance <span>Ratios</span></h4>
                                     </a>
                                 </li>
                                 <li>
@@ -74,6 +80,18 @@
                                     <a href="{{route('user.comparative')}}">
                                         <figure><img src="{{asset('new-images/dh6.png')}}" alt=""></figure>
                                         <h4>Comparative</h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{route('user.r_square_comparison')}}">
+                                        <figure><img src="{{asset('new-images/dh6.png')}}" alt=""></figure>
+                                        <h4>R-Square <span>Comparison</span></h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{route('user.notifications')}}">
+                                        <figure><img src="{{asset('new-images/dh4.png')}}" alt=""></figure>
+                                        <h4>Notifications</h4>
                                     </a>
                                 </li>
                             </ul>

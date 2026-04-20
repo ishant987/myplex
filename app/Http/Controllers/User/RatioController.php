@@ -4,10 +4,15 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\CurrencyMaster;
+use App\Models\FundMaster;
+use App\Models\FundType;
+use App\Models\IndicesMaster;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Throwable;
 
 class RatioController extends Controller
 {
@@ -28,12 +33,14 @@ class RatioController extends Controller
       return view('web.ratio-reports.generic_page', $data);
     }
 
-    function quick_ratio(){
-        $user = Auth::user();
-        $data = $this->subscriptionViewData($user);
+    function quick_ratio(Request $request){
+      $data = $this->reportViewData($request);
 
-        return view('web.ratio-reports.quick_ratio', $data);
-        
+      if ($request->routeIs('user.performance_ratios')) {
+        return view('web.ratio-reports.stats', $data);
+      }
+
+      return view('web.ratio-reports.quick_ratio_new', $data);
     }
 
     function ratio_analysis(){
@@ -89,55 +96,45 @@ class RatioController extends Controller
 
       return view('web.ratio-reports.generic_page', $data);
     }
-    function monthly_snapshot(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
+    function monthly_snapshot(Request $request){
+      $data = $this->reportViewData($request);
+
+      if ($request->routeIs('user.monthly_snapshot_new')) {
+        return view('web.ratio-reports.monthly_snapshot_new', $data);
+      }
 
       return view('web.ratio-reports.monthly_snapshot', $data);
-      
     }
-    function weekly_snapshot(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
+    function weekly_snapshot(Request $request){
+      $data = $this->reportViewData($request);
+
+      if ($request->routeIs('user.weekly_snapshot_new')) {
+        return view('web.ratio-reports.weekly_snapshot_new', $data);
+      }
 
       return view('web.ratio-reports.weekly_snapshot', $data);
-      
     }
 
-    function fund_factsheet(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Fund Factsheet';
-      $data['page_message'] = 'Fund Factsheet is available in your dashboard module. This page is now clickable and ready for content integration.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function fund_factsheet(Request $request){
+      return view('web.ratio-reports.fund_factsheet', $this->reportViewData($request));
     }
 
-    function stats(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Stats';
-      $data['page_message'] = 'Stats is available in your dashboard module. This page is now clickable and ready for content integration.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function stats(Request $request){
+      return view('web.ratio-reports.stats', $this->reportViewData($request));
     }
 
-    function quartile_decile(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Quartile & Decile';
-      $data['page_message'] = 'Quartile & Decile is available in your dashboard module. This page is now clickable and ready for content integration.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function quartile_decile(Request $request){
+      return view('web.ratio-reports.quartile_decile', $this->reportViewData($request));
     }
 
-    function comparative(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Comparative';
-      $data['page_message'] = 'Comparative is available in your dashboard module. This page is now clickable and ready for content integration.';
+    function comparative(Request $request){
+      $data = $this->reportViewData($request);
 
-      return view('web.ratio-reports.generic_page', $data);
+      if ($request->routeIs('user.r_square_comparison')) {
+        return view('web.ratio-reports.r_square_comparison', $data);
+      }
+
+      return view('web.ratio-reports.comparative', $data);
     }
 
     function subscription_lock(){
@@ -208,6 +205,118 @@ class RatioController extends Controller
         }
 
         return '#';
+    }
+
+    protected function reportViewData(Request $request): array
+    {
+        $today = now();
+        $funds = $this->safeFundList();
+        $currencies = $this->safeCurrencyList();
+        $selectedDate = $request->input('date', $today->format('d-m-Y'));
+
+        return array_merge($this->subscriptionViewData(Auth::user()), [
+            'request' => $request,
+            'message' => null,
+            'disclaimer' => '',
+            'quartile_set' => $request->input('quartile_set', 'quartile'),
+            'report_category' => $request->input('report_category'),
+            'all_fund_types' => $this->safeFundTypeList(),
+            'all_funds' => $funds,
+            'funds' => $funds,
+            'indices' => $this->safeIndicesList(),
+            'currencies' => $currencies,
+            'ratio_array' => [],
+            'quartile_decile_result' => [],
+            'p_one_quartile_decile_result' => [],
+            'p_two_quartile_decile_result' => [],
+            'stat_result' => [],
+            'sortedFundReturns' => [],
+            'fundReturns' => [],
+            'ranks' => [],
+            'rank' => [],
+            'fund_names' => [],
+            'fund_type_name' => null,
+            'request_fund_type' => null,
+            'fund_id' => (array) $request->input('fund_id', []),
+            'fund_type_id' => $request->input('fund_type_id'),
+            'index_id' => (array) $request->input('index_id', []),
+            'currency_id' => (array) $request->input('currency_id', []),
+            'commodity_id' => (array) $request->input('commodity_id', []),
+            'as_on_time_frame_data' => [],
+            'schemeMaterData' => [],
+            'Id' => null,
+            'start_date' => $request->input('start_date', $today->copy()->subDays(6)->toDateString()),
+            'end_date' => $request->input('end_date', $today->toDateString()),
+            'p_one_start_date' => $request->input('p_one_start_date'),
+            'p_one_end_date' => $request->input('p_one_end_date'),
+            'p_two_start_date' => $request->input('p_two_start_date'),
+            'p_two_end_date' => $request->input('p_two_end_date'),
+            'to_date' => $selectedDate,
+            'from_date' => $today->copy()->startOfMonth()->toDateString(),
+            'array_bse' => collect(),
+            'array_nse' => collect(),
+            'array_global_it' => collect(),
+            'changes_currency' => collect(),
+            'changes_commodity' => collect(),
+            'changes_indices' => collect(),
+            'monthly_benchmark' => collect(),
+            'weekly_benchmark' => collect(),
+            'best_schemes' => collect(),
+            'weekly_best_funds' => collect(),
+            'responseArr' => [],
+            'top_industries' => null,
+            'AAUMValue' => null,
+            'top_scrips' => null,
+            'fund_details' => null,
+            'closest_entry_date' => null,
+            'index_name' => null,
+            'jensonAlphaData' => null,
+            'sharpeData' => null,
+            'trackingErrorData' => null,
+            'r_square' => null,
+            'scrip_bias' => null,
+            'industry_bias' => null,
+            'treynorData' => null,
+            'information_ratio' => null,
+            'skewness' => null,
+            'kurtosis' => null,
+        ]);
+    }
+
+    protected function safeFundTypeList()
+    {
+        try {
+            return FundType::query()->orderBy('name')->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function safeFundList()
+    {
+        try {
+            return FundMaster::query()->orderBy('fund_name')->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function safeIndicesList()
+    {
+        try {
+            return IndicesMaster::query()->orderBy('name')->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function safeCurrencyList()
+    {
+        try {
+            return CurrencyMaster::query()->orderBy('name')->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
     }
 
 }

@@ -1,12 +1,11 @@
-@extends('web.layout.infosolz_user_app')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
             <div class="head_brdcm">
                 <ul class="brdcmb">
-                    <li><a href="{{route('user.auth-dashboard')}}">dashboard</a></li>
-                    <li><a href="{{route('user.ratio_dashboard')}}">Ratio Reports</a></li>
+                    <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
+                    <li><a href="<?php echo e(route('user.ratio_dashboard')); ?>">Ratio Reports</a></li>
                     <li>Quick Ratio</li>
                 </ul>
             </div>
@@ -16,18 +15,18 @@
             </div>
 
                 <section class="monthly_snapshop_sec">
-                <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                <a href="<?php echo e(route('user.ratio_dashboard')); ?>" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                     <div class="container">
                         <div class="wm_tab">
                             <ul>
                                 <li>
-                                    @php 
+                                    <?php 
                                     $currentUrl = url()->current();
-                                    @endphp
-                                    <a href="javascript:void(0)" id="tab-weekly" onclick="tabSelect('weekly')" class="@if((isset($request->type) && ($request->type == 'weekly')) || !isset($request->type)) active @endif">Weekly</a>
+                                    ?>
+                                    <a href="javascript:void(0)" id="tab-weekly" onclick="tabSelect('weekly')" class="<?php if((isset($request->type) && ($request->type == 'weekly')) || !isset($request->type)): ?> active <?php endif; ?>">Weekly</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:void(0)" id="tab-monthly" onclick="tabSelect('monthly')" class="@if(isset($request->type) && ($request->type == 'monthly')) active @endif">Monthly</a>
+                                    <a href="javascript:void(0)" id="tab-monthly" onclick="tabSelect('monthly')" class="<?php if(isset($request->type) && ($request->type == 'monthly')): ?> active <?php endif; ?>">Monthly</a>
                                 </li>
                             </ul>
                         </div>
@@ -37,7 +36,7 @@
                                     <div class="col-md-3">
                                         <div class="form_group">
                                             <input type="text" placeholder="As on Date" class="datepicker" name="date"
-                                                id="dateInput" value="@if(isset($request->date)) {{$request->date}} @endif">
+                                                id="dateInput" value="<?php if(isset($request->date)): ?> <?php echo e($request->date); ?> <?php endif; ?>">
 
                                         </div>
                                     </div>
@@ -46,16 +45,24 @@
                                             <select name="fund_type_id" class="select2"
                                             data-placeholder="Select Fund Classification">
                                                 <option value=""></option>
-                                                @foreach ($all_fund_types as $fund_type)
-                                                    <option value="{{ $fund_type->ft_id }}"
-                                                        @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)) selected @endif>
-                                                        {{ $fund_type->name }}
+                                                <?php $__currentLoopData = $all_fund_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($fund_type->ft_id); ?>"
+                                                        <?php if($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)): ?> selected <?php endif; ?>>
+                                                        <?php echo e($fund_type->name); ?>
+
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
-                                            @error('fund_type_id')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['fund_type_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
                                         </div>
                                     </div>
@@ -64,28 +71,35 @@
                                             <select id="report-category" name="report_category"
                                             data-placeholder="Select">
                                                 <option value="">Select</option>
-                                                <option value="return" @if(isset($request->report_category) && $request->report_category == 'return') selected @endif>Return %</option>
-                                                <option value="indices" @if(isset($request->report_category) && $request->report_category == 'indices') selected @endif>Indices</option>
-                                                <option value="return_less_index" @if(isset($request->report_category) && $request->report_category == 'return_less_index') selected @endif>Return Less Index</option>
-                                                @if(isset($request->type) && $request->type == 'monthly')
-                                                <option value="corpus_change" @if(isset($request->report_category) && $request->report_category == 'corpus_change') selected @endif>Corpus Changes</option>
-                                                @endif
+                                                <option value="return" <?php if(isset($request->report_category) && $request->report_category == 'return'): ?> selected <?php endif; ?>>Return %</option>
+                                                <option value="indices" <?php if(isset($request->report_category) && $request->report_category == 'indices'): ?> selected <?php endif; ?>>Indices</option>
+                                                <option value="return_less_index" <?php if(isset($request->report_category) && $request->report_category == 'return_less_index'): ?> selected <?php endif; ?>>Return Less Index</option>
+                                                <?php if(isset($request->type) && $request->type == 'monthly'): ?>
+                                                <option value="corpus_change" <?php if(isset($request->report_category) && $request->report_category == 'corpus_change'): ?> selected <?php endif; ?>>Corpus Changes</option>
+                                                <?php endif; ?>
                                             </select>
-                                            @error('report_category')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['report_category'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
                                         </div>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="bttn_grp">
-                                            @php
+                                            <?php
                                             $type = 'weekly';
                                                 if(isset($request->type) && ($request->type == 'monthly')){
                                                     $type = 'monthly';
                                                 } 
-                                            @endphp
-                                            <input type="hidden" name="type" id="type" value="{{$type}}">
+                                            ?>
+                                            <input type="hidden" name="type" id="type" value="<?php echo e($type); ?>">
                                             <button class="perform-submit money_title_btn btn" type="submit">Search</button>
                                         </div>
                                     </div>
@@ -95,7 +109,7 @@
                         </div>
                         
 
-                        @if(isset($request) && !empty($request->date) && !empty($request->fund_type_id))
+                        <?php if(isset($request) && !empty($request->date) && !empty($request->fund_type_id)): ?>
                         <div class="light_green_bg">
                             <div class="perform-snapshot-points mt-2 bordr-only prfrm-snapst">
                                 <ul>
@@ -106,12 +120,12 @@
                                     </li>
                                     <li>
                                         <p>Type of Fund : 
-                                        <span>@if(isset($request_fund_type->name)) {{$request_fund_type->name}}@endif</span>
+                                        <span><?php if(isset($request_fund_type->name)): ?> <?php echo e($request_fund_type->name); ?><?php endif; ?></span>
                                         </p>
                                     </li>
                                     <li>
                                         <p>As On :
-                                        <span>@if(isset($request->date)) {{date('d/m/Y',strtotime($request->date))}} @endif</span>
+                                        <span><?php if(isset($request->date)): ?> <?php echo e(date('d/m/Y',strtotime($request->date))); ?> <?php endif; ?></span>
                                         </p>
                                     </li>
                                 </ul>
@@ -119,7 +133,7 @@
                             </div>
                         </div>
                         
-                        @endif
+                        <?php endif; ?>
                         <div class="row all_tables" id="pdfData">
                             
                             
@@ -129,14 +143,14 @@
                                     <div class="share_pdf">
                                         <div class="sharethis-inline-share-buttons" ></div>
                                         <a href="javascript:void(0)" id="exportPDF" class="pdf"><img
-                                                src="{{ asset('themes/frontend/assets/infosolz/images/pdf.png') }}"></a>
+                                                src="<?php echo e(asset('themes/frontend/assets/infosolz/images/pdf.png')); ?>"></a>
 
                                     </div>
                                     
                                     <!-- ======Weekly====== -->
-                                    @if(isset($request->type) && ($request->type == 'weekly'))
-                                    @if(isset($responseArr) && ($request->report_category == 'return'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($request->type) && ($request->type == 'weekly')): ?>
+                                    <?php if(isset($responseArr) && ($request->report_category == 'return')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-return">
                                         
                                             <table class="table  datatable">
@@ -152,28 +166,28 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td><a class="text-white" href="/fund-performance?fund_code={{$quickRatio->fund_code}}" target="_blank">{{$quickRatio->fund_name}}</a></td>
-                                                                <td>{{ $quickRatio->indices_name }}</td>
+                                                                <td><a class="text-white" href="/fund-performance?fund_code=<?php echo e($quickRatio->fund_code); ?>" target="_blank"><?php echo e($quickRatio->fund_name); ?></a></td>
+                                                                <td><?php echo e($quickRatio->indices_name); ?></td>
 
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'5DAYS'}))?printValue($quickRatio->{'5DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' ' }}</td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'5DAYS'}))?printValue($quickRatio->{'5DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @if(isset($responseArr) && ($request->report_category == 'indices'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($responseArr) && ($request->report_category == 'indices')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-indices">
                                             <table class="table  datatable">
                                                 <thead>
@@ -186,25 +200,25 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td>{{ $quickRatio->indices_name }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' ' }}</td>
+                                                                <td><?php echo e($quickRatio->indices_name); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @if(isset($responseArr) && ($request->report_category == 'return_less_index'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($responseArr) && ($request->report_category == 'return_less_index')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-return-less-index">
                                             <table class="table  datatable">
                                                 <thead>
@@ -217,31 +231,31 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td><a class="text-white" href="/fund-performance?fund_code={{$quickRatio->fund_code}}" target="_blank">{{$quickRatio->fund_name}}</a></td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' ' }}</td>
+                                                                <td><a class="text-white" href="/fund-performance?fund_code=<?php echo e($quickRatio->fund_code); ?>" target="_blank"><?php echo e($quickRatio->fund_name); ?></a></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'7DAYS'}))?printValue($quickRatio->{'7DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'14DAYS'}))?printValue($quickRatio->{'14DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'30DAYS'}))?printValue($quickRatio->{'30DAYS'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'60DAYS'}))?printValue($quickRatio->{'60DAYS'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @endif
+                                    <?php endif; ?>
 
                                     <!-- ======End Weekly====== -->
                                     <!-- ========Molthly====== -->
                                     
-                                    @if(isset($request->type) && ($request->type == 'monthly'))
-                                    @if(isset($responseArr) && ($request->report_category == 'return'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($request->type) && ($request->type == 'monthly')): ?>
+                                    <?php if(isset($responseArr) && ($request->report_category == 'return')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-return">
                                             <table class="table  datatable">
                                                 <thead>
@@ -255,27 +269,27 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td><a class="text-white" href="/fund-performance?fund_code={{$quickRatio->fund_code}}" target="_blank">{{$quickRatio->fund_name}}</a></td>
-                                                                <td>{{ $quickRatio->indices_name }}</td>
+                                                                <td><a class="text-white" href="/fund-performance?fund_code=<?php echo e($quickRatio->fund_code); ?>" target="_blank"><?php echo e($quickRatio->fund_name); ?></a></td>
+                                                                <td><?php echo e($quickRatio->indices_name); ?></td>
 
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' ' }}</td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @if(isset($responseArr) && ($request->report_category == 'indices'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($responseArr) && ($request->report_category == 'indices')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-indices">
                                             <table class="table  datatable">
                                                 <thead>
@@ -288,25 +302,25 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td>{{ $quickRatio->indices_name }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' ' }}</td>
+                                                                <td><?php echo e($quickRatio->indices_name); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @if(isset($responseArr) && ($request->report_category == 'return_less_index'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                    <?php if(isset($responseArr) && ($request->report_category == 'return_less_index')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-return-less-index">
                                             <table class="table  datatable">
                                                 <thead>
@@ -319,24 +333,24 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td><a class="text-white" href="/fund-performance?fund_code={{$quickRatio->fund_code}}" target="_blank">{{$quickRatio->fund_name}}</a></td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' ' }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' ' }}</td>
+                                                                <td><a class="text-white" href="/fund-performance?fund_code=<?php echo e($quickRatio->fund_code); ?>" target="_blank"><?php echo e($quickRatio->fund_name); ?></a></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'sixmonths'}))?printValue($quickRatio->{'sixmonths'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'oneyear'}))?printValue($quickRatio->{'oneyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'twoyear'}))?printValue($quickRatio->{'twoyear'}):' '); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'threeyear'}))?printValue($quickRatio->{'threeyear'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
-                                    @if(isset($responseArr) && ($request->report_category == 'corpus_change'))
-                                        @if(isset($responseArr['snapshot_data']))
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php if(isset($responseArr) && ($request->report_category == 'corpus_change')): ?>
+                                        <?php if(isset($responseArr['snapshot_data'])): ?>
                                         <div class="weekly-corpus-change">
                                             <table class="table  datatable">
                                                 <thead>
@@ -348,27 +362,27 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td><a class="text-white" href="/fund-performance?fund_code={{$quickRatio->fund_code}}" target="_blank">{{$quickRatio->fund_name}}</a></td>
-                                                                <td class="text_right">{{ printValue($quickRatio->corpus_entry/100) }}</td>
-                                                                <td class="text_right">{{ printValue($quickRatio->corpus_change/100) }}</td>
-                                                                <td class="text_right">{{ is_numeric(printValue($quickRatio->{'percentage_change'}))?printValue($quickRatio->{'percentage_change'}):' ' }}</td>
+                                                                <td><a class="text-white" href="/fund-performance?fund_code=<?php echo e($quickRatio->fund_code); ?>" target="_blank"><?php echo e($quickRatio->fund_name); ?></a></td>
+                                                                <td class="text_right"><?php echo e(printValue($quickRatio->corpus_entry/100)); ?></td>
+                                                                <td class="text_right"><?php echo e(printValue($quickRatio->corpus_change/100)); ?></td>
+                                                                <td class="text_right"><?php echo e(is_numeric(printValue($quickRatio->{'percentage_change'}))?printValue($quickRatio->{'percentage_change'}):' '); ?></td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    @endif
+                                    <?php endif; ?>
 
                                     <!-- ======End Molthly====== -->
                                      
-                                    @if(!isset($responseArr['snapshot_data']))
+                                    <?php if(!isset($responseArr['snapshot_data'])): ?>
                                     <div class="weekly-return-less-index">
                                             <table class="table  datatable">
                                                 <thead>
@@ -381,17 +395,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if(isset($responseArr['snapshot_data']))
-                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                    <?php if(isset($responseArr['snapshot_data'])): ?>
+                                                        <?php $__currentLoopData = $responseArr['snapshot_data']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $quickRatio): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
                                                                 <td colspan="7" class="text-center">No information is available for this search</td>
                                                             </tr>
-                                                        @endforeach
-                                                    @endif
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                     
                                 </div>
                             </div>
@@ -399,13 +413,13 @@
                     </div>
                 </section>
 
-                @if (isset($responseArr))
+                <?php if(isset($responseArr)): ?>
                 <div class="disclaimer">
-                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                    <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                 </div>
            
                     
-            @endif
+            <?php endif; ?>
             </div>
         </div>
     </div>
@@ -422,12 +436,12 @@ function tabSelect(val) {
         $("#tab-monthly").addClass('active');
         
         $('#report-category').append(
-            '<option value="corpus_change" @if(isset($request->report_category) && $request->report_category == "corpus_change") selected @endif>Corpus Changes</option>'
+            '<option value="corpus_change" <?php if(isset($request->report_category) && $request->report_category == "corpus_change"): ?> selected <?php endif; ?>>Corpus Changes</option>'
         );
     }
 }
 </Script>
-@endsection
+<?php $__env->stopSection(); ?>
 
 <style>
     .share_pdf {
@@ -455,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var doc = new jsPDF();
 
             var img = new Image();
-            img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+            img.src = "<?php echo e(asset('themes/frontend/assets/infosolz/images/small_logo.png')); ?>";
             img.onload = function() {
                 var pageWidth = doc.internal.pageSize.getWidth();
                 var imgWidth = 50;
@@ -475,45 +489,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Date and ratio details
                 var startDate =
-                    "{{ isset($request->date) ? date('d/m/Y', strtotime($request->date)) : '00/00/0000' }}";
+                    "<?php echo e(isset($request->date) ? date('d/m/Y', strtotime($request->date)) : '00/00/0000'); ?>";
                 
                     var ratio =
-                    @if (isset($request->report_category))
-                        @switch($request->report_category)
-                            @case('return')
+                    <?php if(isset($request->report_category)): ?>
+                        <?php switch($request->report_category):
+                            case ('return'): ?>
                             'Return %'
-                            @break
+                            <?php break; ?>
 
-                            @case('indices')
+                            <?php case ('indices'): ?>
                             'Indices'
-                            @break
+                            <?php break; ?>
 
-                            @case('return_less_index')
+                            <?php case ('return_less_index'): ?>
                             'Return Less Index'
-                            @break
+                            <?php break; ?>
 
-                            @case('corpus_change')
+                            <?php case ('corpus_change'): ?>
                             'Corpus Change'
-                            @break
+                            <?php break; ?>
                             
-                        @endswitch
-                    @endif ;
+                        <?php endswitch; ?>
+                    <?php endif; ?> ;
 
                     var type =
-                    @if (isset($request->type))
-                        @switch($request->type)
-                            @case('weekly')
+                    <?php if(isset($request->type)): ?>
+                        <?php switch($request->type):
+                            case ('weekly'): ?>
                             'Weekly'
-                            @break
+                            <?php break; ?>
 
-                            @case('monthly')
+                            <?php case ('monthly'): ?>
                             'Monthly'
-                            @break
+                            <?php break; ?>
                             
-                        @endswitch
-                    @endif ;
+                        <?php endswitch; ?>
+                    <?php endif; ?> ;
 
-                var fundClassification = "{{ isset($request_fund_type->name) ? $request_fund_type->name : '' }}";
+                var fundClassification = "<?php echo e(isset($request_fund_type->name) ? $request_fund_type->name : ''); ?>";
 
                 var startX = 15;
                 var lineHeight = 10;
@@ -548,8 +562,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     tableData.push(processedRow);
                 });*/
-                @if (isset($request->type) && $request->type =='weekly')
-                    @if (isset($request->report_category) && $request->report_category =='return')
+                <?php if(isset($request->type) && $request->type =='weekly'): ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='return'): ?>
                         doc.autoTable({
                             head: [
                                 ['Fund Name', 'Index Name', 'Daily', '7 Days', '14 Days', '30 Days', '60 Days']
@@ -569,8 +583,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 6: { halign: 'right' },      
                             }
                         });
-                    @endif
-                    @if (isset($request->report_category) && $request->report_category =='indices')
+                    <?php endif; ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='indices'): ?>
                         doc.autoTable({
                             head: [
                                 ['Index Name', '7 Days', '14 Days', '30 Days', '60 Days']
@@ -589,8 +603,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 4: { halign: 'right' },      
                             }
                         });
-                    @endif
-                    @if (isset($request->report_category) && $request->report_category =='return_less_index')
+                    <?php endif; ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='return_less_index'): ?>
                         doc.autoTable({
                             head: [
                                 ['Fund Name', '7 Days', '14 Days', '30 Days', '60 Days']
@@ -609,11 +623,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 4: { halign: 'right' },      
                             }
                         });
-                    @endif
-                @endif
+                    <?php endif; ?>
+                <?php endif; ?>
 
-                @if (isset($request->type) && $request->type =='monthly')
-                    @if (isset($request->report_category) && $request->report_category =='return')
+                <?php if(isset($request->type) && $request->type =='monthly'): ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='return'): ?>
                         doc.autoTable({
                             head: [
                                 ['Fund Name', 'Index Name', 'Six Months', 'One Year', 'Two Year', 'Three Year']
@@ -632,8 +646,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 5: { halign: 'right' },   
                             }
                         });
-                    @endif
-                    @if (isset($request->report_category) && $request->report_category =='indices')
+                    <?php endif; ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='indices'): ?>
                         doc.autoTable({
                             head: [
                                 ['Index Name', 'Six Months', 'One Year', 'Two Year', 'Three Year']
@@ -652,8 +666,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 4: { halign: 'right' },   
                             }
                         });
-                    @endif
-                    @if (isset($request->report_category) && $request->report_category =='return_less_index')
+                    <?php endif; ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='return_less_index'): ?>
                         doc.autoTable({
                             head: [
                                 ['Fund Name', 'Six Months', 'One Year', 'Two Year', 'Three Year']
@@ -672,8 +686,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 4: { halign: 'right' },   
                             }
                         });
-                    @endif
-                    @if (isset($request->report_category) && $request->report_category =='corpus_change')
+                    <?php endif; ?>
+                    <?php if(isset($request->report_category) && $request->report_category =='corpus_change'): ?>
                         doc.autoTable({
                             head: [
                                 ['Fund Name', 'Current Amount (Rs.in Crores)', 'Change Amount (Rs.in Crores)', '(%) Change']
@@ -691,8 +705,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 3: { halign: 'right' },    
                             }
                         });
-                    @endif
-                @endif
+                    <?php endif; ?>
+                <?php endif; ?>
 
                 var currentDate = new Date();
 
@@ -707,3 +721,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </Script>
 
 
+
+<?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/ratio-reports/quick_ratio_new.blade.php ENDPATH**/ ?>

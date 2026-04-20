@@ -45,9 +45,15 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo e(route('user.monthly_snapshot')); ?>">
+                                    <a href="<?php echo e(route('user.weekly_snapshot_new')); ?>">
                                         <figure><img src="<?php echo e(asset('new-images/dh2.png')); ?>" alt=""></figure>
-                                        <h4>Snapshot</h4>
+                                        <h4>Weekly <span>Snapshot</span></h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo e(route('user.monthly_snapshot_new')); ?>">
+                                        <figure><img src="<?php echo e(asset('new-images/dh2.png')); ?>" alt=""></figure>
+                                        <h4>Monthly <span>Snapshot</span></h4>
                                     </a>
                                 </li>
                                 <li>
@@ -57,9 +63,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo e(route('user.stats')); ?>">
+                                    <a href="<?php echo e(route('user.performance_ratios')); ?>">
                                         <figure><img src="<?php echo e(asset('new-images/dh4.png')); ?>" alt=""></figure>
-                                        <h4>Stats</h4>
+                                        <h4>Performance <span>Ratios</span></h4>
                                     </a>
                                 </li>
                                 <li>
@@ -73,6 +79,18 @@
                                     <a href="<?php echo e(route('user.comparative')); ?>">
                                         <figure><img src="<?php echo e(asset('new-images/dh6.png')); ?>" alt=""></figure>
                                         <h4>Comparative</h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo e(route('user.r_square_comparison')); ?>">
+                                        <figure><img src="<?php echo e(asset('new-images/dh6.png')); ?>" alt=""></figure>
+                                        <h4>R-Square <span>Comparison</span></h4>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo e(route('user.notifications')); ?>">
+                                        <figure><img src="<?php echo e(asset('new-images/dh4.png')); ?>" alt=""></figure>
+                                        <h4>Notifications</h4>
                                     </a>
                                 </li>
                             </ul>

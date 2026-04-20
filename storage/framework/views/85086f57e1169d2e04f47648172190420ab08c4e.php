@@ -3,6 +3,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
             <title>myplexus | Ratio</title>
             <link rel="shortcut icon" href="<?php echo e(asset('themes/frontend/assets/infosolz/images/favicon.png')); ?>" type="image/x-icon">
             <link rel="stylesheet" href="<?php echo e(asset('themes/frontend/assets/infosolz/css/bootstrap.min.css')); ?>">
@@ -10,10 +11,25 @@
             <link rel="stylesheet" href="<?php echo e(asset('themes/frontend/assets/infosolz/css/jquery-ui.css')); ?>">
             <link rel="stylesheet" href="<?php echo e(asset('themes/frontend/assets/infosolz/css/login.css')); ?>">
             <link rel="stylesheet" href="<?php echo e(asset('themes/frontend/assets/infosolz/css/style.css')); ?>">
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
             <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
-            
+            <style>
+                .select2-container {
+                    width: 100% !important;
+                }
+
+                .dataTables_wrapper {
+                    width: 100%;
+                }
+
+                .dataTables_wrapper .dataTables_filter,
+                .dataTables_wrapper .dataTables_length {
+                    margin-bottom: 12px;
+                }
+            </style>
         </head>
         <body>
         <header class="head">
@@ -67,19 +83,42 @@
                     </ul>
                 </nav>
         </header>
+
+            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/jquery.min.js')); ?>"></script>
+            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/bootstrap.min.js')); ?>"></script>
+            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/jquery-ui.js')); ?>"></script>
+            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/icon.js')); ?>"></script>
+            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/main.js')); ?>"></script>
+            <script src="<?php echo e(mix('js/vue-app.js')); ?>"></script>
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+            <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (window.jQuery && $.fn.datepicker) {
+                        $('.datepicker').datepicker({
+                            dateFormat: 'dd-mm-yy',
+                            changeMonth: true,
+                            changeYear: true,
+                            numberOfMonths: 1
+                        });
+                    }
+
+                    if (window.jQuery && $.fn.select2) {
+                        $('.select2').select2();
+                    }
+                });
+            </script>
+
           <?php echo $__env->yieldContent('content'); ?>
           <footer class="main_foot">
             <p>Copyright © <?php echo e(date('Y')); ?> <span>myplexus.com</span>. All Rights Reserved.</p>
           </footer>
 
-            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/bootstrap.min.js')); ?>"></script>
-            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/jquery.min.js')); ?>"></script>
-            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/jquery-ui.js')); ?>"></script>
-            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/icon.js')); ?>"></script>
-            <script src="<?php echo e(asset('themes/frontend/assets/infosolz/js/main.js')); ?>"></script>
-
             <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+            <?php echo $__env->yieldPushContent('scripts'); ?>
         </body>
-        <?php echo $__env->make('web.layout.includes.javascripts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </html>
 <?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/layout/infosolz_user_app.blade.php ENDPATH**/ ?>
