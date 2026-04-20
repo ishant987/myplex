@@ -298,9 +298,12 @@
                         </div>
                     @endif
 
-                    @if (isset($request) &&
+                    @if (($report_data_ready ?? false) &&
+                            isset($request) &&
                             $request->Category != '' &&
-                            $request->report_category != '')
+                            $request->report_category != '' &&
+                            (($request->Category === 'by_category' && !empty($request->fund_type_id)) ||
+                                ($request->Category === 'by_fund' && !empty($fund_names))))
 
 
                         <div class="fund_section new_fund_section">
@@ -474,7 +477,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    @else
+                    @elseif (empty($message))
                         {!! printNoData() !!}
                     @endif
                 </div>

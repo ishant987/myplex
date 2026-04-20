@@ -554,21 +554,27 @@ class RatioController extends Controller
     protected function performanceRatiosViewData(Request $request): array
     {
         $data = $this->reportViewData($request);
+        $availability = $this->reportDataAvailability();
         $selection = $this->resolveFundSelection($request, $data);
 
         $data['fund_type'] = $data['all_fund_types'];
         $data['fund_names'] = $selection['fund_names'];
         $data['fund_type_name'] = $selection['fund_type_name'];
+        $data['report_data_ready'] = $availability['ready'];
 
-        if ($data['all_fund_types']->isEmpty() || $data['all_funds']->isEmpty()) {
-            $data['message'] = DB::connection()->getDriverName() === 'sqlite'
-                ? 'Performance Ratios needs your actual report database. Local SQLite currently has no fund classifications or fund master data loaded.'
-                : 'Fund classification or fund master data is missing in the current database, so this report cannot return results yet.';
+        if (!$availability['ready']) {
+            $data['message'] = $availability['message'];
 
             return $data;
         }
 
         if (!$this->canBuildRatioReport($request, $selection['funds'])) {
+            if ($request->input('Category') === 'by_category' && !$request->input('fund_type_id')) {
+                $data['message'] = 'Choose a fund classification to run this report.';
+            } elseif ($request->input('Category') === 'by_fund' && empty(array_filter((array) $request->input('fund_id', [])))) {
+                $data['message'] = 'Choose at least 2 funds to run this report.';
+            }
+
             return $data;
         }
 
@@ -929,6 +935,63 @@ class RatioController extends Controller
         return (bool) $request->input('report_category')
             && (bool) $request->input('Category')
             && $funds->isNotEmpty();
+    }
+
+    protected function reportDataAvailability(): array
+    {
+        $driver = DB::connection()->getDriverName();
+        $tableChecks = [
+            'fund_type' => DB::getSchemaBuilder()->hasTable('fund_type'),
+            'fund_master' => DB::getSchemaBuilder()->hasTable('fund_master'),
+            'fund_detail' => DB::getSchemaBuilder()->hasTable('fund_detail'),
+            'indices_master' => DB::getSchemaBuilder()->hasTable('indices_master'),
+            'indices_detail' => DB::getSchemaBuilder()->hasTable('indices_detail'),
+            'corpus_entry' => DB::getSchemaBuilder()->hasTable('corpus_entry'),
+        ];
+
+        $missingTables = collect($tableChecks)
+            ->filter(fn ($exists) => !$exists)
+            ->keys()
+            ->values()
+            ->all();
+
+        if (!empty($missingTables)) {
+            return [
+                'ready' => false,
+                'message' => 'Required report tables are missing in the current database: ' . implode(', ', $missingTables) . '.',
+            ];
+        }
+
+        $counts = [
+            'fund_type' => DB::table('fund_type')->count(),
+            'fund_master' => DB::table('fund_master')->count(),
+            'fund_detail' => DB::table('fund_detail')->count(),
+            'indices_master' => DB::table('indices_master')->count(),
+            'indices_detail' => DB::table('indices_detail')->count(),
+            'corpus_entry' => DB::table('corpus_entry')->count(),
+        ];
+
+        $emptyTables = collect($counts)
+            ->filter(fn ($count) => (int) $count === 0)
+            ->keys()
+            ->values()
+            ->all();
+
+        if (!empty($emptyTables)) {
+            $prefix = $driver === 'sqlite'
+                ? 'Your local SQLite database has no imported report data'
+                : 'The current database is missing report rows';
+
+            return [
+                'ready' => false,
+                'message' => $prefix . ' in: ' . implode(', ', $emptyTables) . '.',
+            ];
+        }
+
+        return [
+            'ready' => true,
+            'message' => null,
+        ];
     }
 
     protected function resolveRankingRange(Request $request): array
