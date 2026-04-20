@@ -1,5 +1,12 @@
 <?php $__env->startSection('content'); ?>
 
+    <?php
+        $selectedRanking = old('ranking', $request->ranking ?? 'range');
+        $selectedCategory = old('Category', $request->Category ?? 'by_category');
+        $isAsOnMode = $selectedRanking === 'as_on';
+        $isByFundMode = $selectedCategory === 'by_fund';
+    ?>
+
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -47,9 +54,11 @@ unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="<?php echo e($isAsOnMode ? 'display:none;' : ''); ?>">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="Start date" name="start_date"
+                                            <?php echo e($isAsOnMode ? 'disabled' : ''); ?>
+
                                             value="<?php echo e($request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date')); ?>">
                                         <?php $__errorArgs = ['start_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -64,9 +73,11 @@ unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="<?php echo e($isAsOnMode ? 'display:none;' : ''); ?>">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="End date" name="end_date"
+                                            <?php echo e($isAsOnMode ? 'disabled' : ''); ?>
+
                                             value="<?php echo e($request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date')); ?>">
                                         <?php $__errorArgs = ['end_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -80,15 +91,17 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="<?php echo e($isAsOnMode ? '' : 'display:none;'); ?>">
                                     <div class="form_group">
                                         <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            <?php echo e($isAsOnMode ? '' : 'disabled'); ?>
+
                                             value="<?php echo e(!empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : ''); ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="<?php echo e($isAsOnMode ? '' : 'display:none;'); ?>">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame">
+                                        <select name="as_on_time_frame" <?php echo e($isAsOnMode ? '' : 'disabled'); ?>>
                                             <option value="1_month"
                                                 <?php if(isset($request) && $request->as_on_time_frame == '1_month'): ?> <?php echo e('selected'); ?> <?php endif; ?>>1 Month
                                             </option>
@@ -132,10 +145,10 @@ unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show_1">
+                                <div class="col-md-4 div_show_1" style="<?php echo e($isByFundMode ? 'display:none;' : ''); ?>">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2"
-                                            data-placeholder="Select Fund Classification">
+                                            data-placeholder="Select Fund Classification" <?php echo e($isByFundMode ? 'disabled' : ''); ?>>
                                             <option value=""></option>
                                             <?php $__currentLoopData = $all_fund_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($fund_type->ft_id); ?>"
@@ -190,11 +203,11 @@ unset($__errorArgs, $__bag); ?>
                                                             
                                                         </div> -->
 
-                                <div class="col-md-4 div_hide_1">
+                                <div class="col-md-4 div_hide_1" style="<?php echo e($isByFundMode ? '' : 'display:none;'); ?>">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='fund_multiple(this)'
-                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10">
+                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10" <?php echo e($isByFundMode ? '' : 'disabled'); ?>>
                                             <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($fund->fund_id); ?>"
                                                     <?php if($fund->fund_id == old('fund_id', $request->fund_id)): ?> selected

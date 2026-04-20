@@ -751,7 +751,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('user-filters', 'RatioController@filters')->name('filters');
             Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
             Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
-            Route::get('performance-ratios', 'RatioController@quick_ratio')->name('performance_ratios');
+            Route::get('performance-ratios', 'RatioController@stats')->name('performance_ratios');
             Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
             Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
             Route::get('user-monthly-snapshot-new', 'RatioController@monthly_snapshot')->name('monthly_snapshot_new');

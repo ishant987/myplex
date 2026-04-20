@@ -1,6 +1,13 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
 
+    @php
+        $selectedRanking = old('ranking', $request->ranking ?? 'range');
+        $selectedCategory = old('Category', $request->Category ?? 'by_category');
+        $isAsOnMode = $selectedRanking === 'as_on';
+        $isByFundMode = $selectedCategory === 'by_fund';
+    @endphp
+
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -41,9 +48,10 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="Start date" name="start_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
                                             value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -51,24 +59,26 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="End date" name="end_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
                                             value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            {{ $isAsOnMode ? '' : 'disabled' }}
                                             value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame">
+                                        <select name="as_on_time_frame" {{ $isAsOnMode ? '' : 'disabled' }}>
                                             <option value="1_month"
                                                 @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
                                             </option>
@@ -112,10 +122,10 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show_1">
+                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2"
-                                            data-placeholder="Select Fund Classification">
+                                            data-placeholder="Select Fund Classification" {{ $isByFundMode ? 'disabled' : '' }}>
                                             <option value=""></option>
                                             @foreach ($all_fund_types as $fund_type)
                                                 <option value="{{ $fund_type->ft_id }}"
@@ -155,11 +165,11 @@
                                                             
                                                         </div> -->
 
-                                <div class="col-md-4 div_hide_1">
+                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='fund_multiple(this)'
-                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10">
+                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10" {{ $isByFundMode ? '' : 'disabled' }}>
                                             @foreach ($all_funds as $fund)
                                                 <option value="{{ $fund->fund_id }}"
                                                     @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
