@@ -1,15 +1,14 @@
-@extends('web.layout.infosolz_user_app')
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="new_page">
-                    <!-- {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}} -->
+                    <!--  -->
                     <div class="head_brdcm">
                         <ul class="brdcmb">
-                            <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
-                            <li><a href="{{ route('user.ratio_dashboard') }}">Ratio Reports</a></li>
+                            <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
+                            <li><a href="<?php echo e(route('user.ratio_dashboard')); ?>">Ratio Reports</a></li>
                             <li>Performance Ratios</li>
                         </ul>
                     </div>
@@ -20,75 +19,96 @@
                     <div class="light_green_bg">
                         <form method="GET" action="">
                             <input type="hidden" name="quartile_set" id="quartile_set"
-                                value="{{ isset($quartile_set) ? $quartile_set : 'quartile' }}">
+                                value="<?php echo e(isset($quartile_set) ? $quartile_set : 'quartile'); ?>">
 
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
                                             <input type="radio" name="ranking" value="range"
-                                                {{ old('ranking', $request->ranking ?? 'range') === 'range' ? 'checked' : '' }}>
+                                                <?php echo e(old('ranking', $request->ranking ?? 'range') === 'range' ? 'checked' : ''); ?>>
                                             Range
                                         </label>
                                         <label>
                                             <input type="radio" name="ranking" value="as_on"
-                                                {{ old('ranking', $request->ranking ?? 'range') === 'as_on' ? 'checked' : '' }}>
+                                                <?php echo e(old('ranking', $request->ranking ?? 'range') === 'as_on' ? 'checked' : ''); ?>>
                                             As on
                                         </label>
-                                        @error('ranking')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['ranking'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
                                 <div class="col-md-4 div_show">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="Start date" name="start_date"
-                                            value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
-                                        @error('start_date')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                            value="<?php echo e($request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date')); ?>">
+                                        <?php $__errorArgs = ['start_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
                                 <div class="col-md-4 div_show">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="End date" name="end_date"
-                                            value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
-                                        @error('end_date')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                            value="<?php echo e($request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date')); ?>">
+                                        <?php $__errorArgs = ['end_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-4 div_hide">
                                     <div class="form_group">
                                         <input type="date" name="as_on_date" class="form-control" placeholder="date"
-                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
+                                            value="<?php echo e(!empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : ''); ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-4 div_hide">
                                     <div class="form_group">
                                         <select name="as_on_time_frame">
                                             <option value="1_month"
-                                                @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
+                                                <?php if(isset($request) && $request->as_on_time_frame == '1_month'): ?> <?php echo e('selected'); ?> <?php endif; ?>>1 Month
                                             </option>
                                             <option value="3_months"
-                                                @if (isset($request) && $request->as_on_time_frame == '3_months') {{ 'selected' }} @endif>3 Months
+                                                <?php if(isset($request) && $request->as_on_time_frame == '3_months'): ?> <?php echo e('selected'); ?> <?php endif; ?>>3 Months
                                             </option>
                                             <option value="6_months"
-                                                @if (isset($request) && $request->as_on_time_frame == '6_months') {{ 'selected' }} @endif>6 Months
+                                                <?php if(isset($request) && $request->as_on_time_frame == '6_months'): ?> <?php echo e('selected'); ?> <?php endif; ?>>6 Months
                                             </option>
                                             <option value="1_year"
-                                                @if (isset($request) && $request->as_on_time_frame == '1_year') {{ 'selected' }} @endif>1 Year
+                                                <?php if(isset($request) && $request->as_on_time_frame == '1_year'): ?> <?php echo e('selected'); ?> <?php endif; ?>>1 Year
                                             </option>
                                             <option value="2_year"
-                                                @if (isset($request) && $request->as_on_time_frame == '2_year') {{ 'selected' }} @endif>2 Year
+                                                <?php if(isset($request) && $request->as_on_time_frame == '2_year'): ?> <?php echo e('selected'); ?> <?php endif; ?>>2 Year
                                             </option>
                                             <option value="3_years"
-                                                @if (isset($request) && $request->as_on_time_frame == '3_years') {{ 'selected' }} @endif>3 Years
+                                                <?php if(isset($request) && $request->as_on_time_frame == '3_years'): ?> <?php echo e('selected'); ?> <?php endif; ?>>3 Years
                                             </option>
                                             <option value="5_years"
-                                                @if (isset($request) && $request->as_on_time_frame == '5_years') {{ 'selected' }} @endif>5 Years
+                                                <?php if(isset($request) && $request->as_on_time_frame == '5_years'): ?> <?php echo e('selected'); ?> <?php endif; ?>>5 Years
                                             </option>
                                         </select>
                                     </div>
@@ -99,13 +119,13 @@
                                         <label>
                                             <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
-                                                @if (!isset($request) || empty($request->Category) || $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                <?php if(!isset($request) || empty($request->Category) || $request->Category == 'by_category'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                <?php if(isset($request) && $request->Category == 'by_fund'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
@@ -117,16 +137,24 @@
                                         <select name="fund_type_id" class="select2"
                                             data-placeholder="Select Fund Classification">
                                             <option value=""></option>
-                                            @foreach ($all_fund_types as $fund_type)
-                                                <option value="{{ $fund_type->ft_id }}"
-                                                    @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)) selected @endif>
-                                                    {{ $fund_type->name }}
+                                            <?php $__currentLoopData = $all_fund_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($fund_type->ft_id); ?>"
+                                                    <?php if($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)): ?> selected <?php endif; ?>>
+                                                    <?php echo e($fund_type->name); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
-                                        @error('fund_type_id')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['fund_type_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                 </div>
@@ -136,21 +164,28 @@
                                                                 <select name="report_category">
                                                                     <option value="">Report Category</option>
                                                                     <option value="returns"
-                                                                        @if (old('report_category', $request->report_category) == 'returns') selected @endif>
+                                                                        <?php if(old('report_category', $request->report_category) == 'returns'): ?> selected <?php endif; ?>>
                                                                         Returns %
                                                                     </option>
                                                                     <option value="indices"
-                                                                        @if (old('report_category', $request->report_category) == 'indices') selected @endif>
+                                                                        <?php if(old('report_category', $request->report_category) == 'indices'): ?> selected <?php endif; ?>>
                                                                         Indices
                                                                     </option>
                                                                     <option value="return_less_index"
-                                                                        @if (old('report_category', $request->report_category) == 'return_less_index') selected @endif>
+                                                                        <?php if(old('report_category', $request->report_category) == 'return_less_index'): ?> selected <?php endif; ?>>
                                                                         Return Less Index
                                                                     </option>
                                                                 </select>
-                                                                @error('report_category')
-        <div class="alert alert-danger">{{ $message }}</div>
-    @enderror
+                                                                <?php $__errorArgs = ['report_category'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+        <div class="alert alert-danger"><?php echo e($message); ?></div>
+    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                             </div>
                                                             
                                                         </div> -->
@@ -160,18 +195,26 @@
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='fund_multiple(this)'
                                             data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10">
-                                            @foreach ($all_funds as $fund)
-                                                <option value="{{ $fund->fund_id }}"
-                                                    @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
-                                                @elseif(isset($fund_id) && in_array($fund->fund_id, $fund_id))
-                                                selected @endif>
-                                                    {{ $fund->fund_name }}
+                                            <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($fund->fund_id); ?>"
+                                                    <?php if($fund->fund_id == old('fund_id', $request->fund_id)): ?> selected
+                                                <?php elseif(isset($fund_id) && in_array($fund->fund_id, $fund_id)): ?>
+                                                selected <?php endif; ?>>
+                                                    <?php echo e($fund->fund_name); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
-                                        @error('fund_id')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['fund_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                     <span class="text-danger" id="fund_msgg"></span>
                                 </div>
@@ -182,26 +225,26 @@
                                             <option value="">Ratio</option>
                                             <optgroup label="Return Ratio">
                                                 <option value="returns"
-                                                    @if (old('report_category', $request->report_category) == 'returns') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'returns'): ?> selected <?php endif; ?>>
                                                     Returns/CAGR
                                                 </option>
                                                 <option value="jensens_alpha"
-                                                    @if (old('report_category', $request->report_category) == 'jensens_alpha') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'jensens_alpha'): ?> selected <?php endif; ?>>
                                                     Jensen’s alpha
                                                 </option>
-                                                <option value="sharpe" @if (old('report_category', $request->report_category) == 'sharpe') selected @endif>
+                                                <option value="sharpe" <?php if(old('report_category', $request->report_category) == 'sharpe'): ?> selected <?php endif; ?>>
                                                     Sharpe
                                                 </option>
                                                 <option value="treynor"
-                                                    @if (old('report_category', $request->report_category) == 'treynor') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'treynor'): ?> selected <?php endif; ?>>
                                                     Treynor
                                                 </option>
                                                 <option value="information_ratio"
-                                                    @if (old('report_category', $request->report_category) == 'information_ratio') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'information_ratio'): ?> selected <?php endif; ?>>
                                                     Information Ratio
                                                 </option>
                                                 <option value="one_month_rolling_return"
-                                                    @if (old('report_category', $request->report_category) == 'one_month_rolling_return') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'one_month_rolling_return'): ?> selected <?php endif; ?>>
                                                     1 month Rolling Return
                                                 </option>
                                             </optgroup>
@@ -209,45 +252,52 @@
                                             <optgroup label="Risk Ratio">
 
 
-                                                <option value="beta" @if (old('report_category', $request->report_category) == 'beta') selected @endif>
+                                                <option value="beta" <?php if(old('report_category', $request->report_category) == 'beta'): ?> selected <?php endif; ?>>
                                                     Beta
                                                 </option>
                                                 <option value="volatility"
-                                                    @if (old('report_category', $request->report_category) == 'volatility') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'volatility'): ?> selected <?php endif; ?>>
                                                     Volatility
                                                 </option>
                                                 <option value="tracking_error"
-                                                    @if (old('report_category', $request->report_category) == 'tracking_error') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'tracking_error'): ?> selected <?php endif; ?>>
                                                     Tracking Error
                                                 </option>
                                             </optgroup>
 
                                             <optgroup label="Symmetry Ratio">
                                                 <option value="skewness"
-                                                    @if (old('report_category', $request->report_category) == 'skewness') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'skewness'): ?> selected <?php endif; ?>>
                                                     Skewness
                                                 </option>
                                                 <option value="kurtosis"
-                                                    @if (old('report_category', $request->report_category) == 'kurtosis') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'kurtosis'): ?> selected <?php endif; ?>>
                                                     Kurtosis
                                                 </option>
                                             </optgroup>
 
                                             <optgroup label="Correlation">
                                                 <option value="r_square"
-                                                    @if (old('report_category', $request->report_category) == 'r_square') selected @endif>
+                                                    <?php if(old('report_category', $request->report_category) == 'r_square'): ?> selected <?php endif; ?>>
                                                     R Sqaure
                                                 </option>
                                             </optgroup>
 
                                             <!-- <option value="cagr"
-                                                                        @if (old('report_category', $request->report_category) == 'cagr') selected @endif>
+                                                                        <?php if(old('report_category', $request->report_category) == 'cagr'): ?> selected <?php endif; ?>>
                                                                         CAGR
                                                                     </option> -->
                                         </select>
-                                        @error('report_category')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['report_category'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
 
@@ -255,16 +305,24 @@
                                 <!-- <div class="col-md-4 div_hide_1">
                                                             <div class="form_group">
                                                                 <select name="fund_id">
-                                                                    @foreach ($all_funds as $fund)
-    <option value="{{ $fund->fund_id }}"
-                                                                            @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected @endif>
-                                                                            {{ $fund->fund_name }}
+                                                                    <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <option value="<?php echo e($fund->fund_id); ?>"
+                                                                            <?php if($fund->fund_id == old('fund_id', $request->fund_id)): ?> selected <?php endif; ?>>
+                                                                            <?php echo e($fund->fund_name); ?>
+
                                                                         </option>
-    @endforeach
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                 </select>
-                                                                @error('fund_id')
-        <div class="alert alert-danger">{{ $message }}</div>
-    @enderror
+                                                                <?php $__errorArgs = ['fund_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+        <div class="alert alert-danger"><?php echo e($message); ?></div>
+    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                             </div>
                                                             
                                                         </div> -->
@@ -282,37 +340,38 @@
                         </form>
                     </div>
 
-                    @if (!empty($message))
+                    <?php if(!empty($message)): ?>
                         <div class="alert alert-warning mt-3">
-                            {{ $message }}
-                        </div>
-                    @endif
+                            <?php echo e($message); ?>
 
-                    @if (isset($request) &&
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if(isset($request) &&
                             $request->Category != '' &&
-                            $request->report_category != '')
+                            $request->report_category != ''): ?>
 
 
                         <div class="fund_section new_fund_section">
 
                             <ul>
 
-                                @if (($request->ranking ?? 'range') === 'as_on')
+                                <?php if(($request->ranking ?? 'range') === 'as_on'): ?>
                                     <li>
                                         <p>As on date :</p>
-                                        <span>{{ !empty($request->as_on_date) ? date('d/m/Y', strtotime($request->as_on_date)) : '00/00/0000' }}</span>
+                                        <span><?php echo e(!empty($request->as_on_date) ? date('d/m/Y', strtotime($request->as_on_date)) : '00/00/0000'); ?></span>
                                     </li>
-                                @else
+                                <?php else: ?>
                                     <li>
                                         <p>Start date :</p>
-                                        <span>{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}</span>
+                                        <span><?php echo e(isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000'); ?></span>
                                     </li>
 
                                     <li>
                                         <p>End date :</p>
-                                        <span>{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}</span>
+                                        <span><?php echo e(isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000'); ?></span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
 
 
@@ -320,70 +379,89 @@
                                     <p>By Ratio :</p>
 
                                     <span>
-                                        @if (isset($request->report_category) && $request->report_category == 'returns')
-                                            {{ 'Returns/CAGR' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'jensens_alpha')
-                                            {{ 'Jensen’s alpha' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'sharpe')
-                                            {{ 'Sharpe' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'treynor')
-                                            {{ 'Treynor' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'information_ratio')
-                                            {{ 'Information Ratio' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'one_month_rolling_return')
-                                            {{ '1 month Rolling Return' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'beta')
-                                            {{ 'Beta' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'volatility')
-                                            {{ 'Volatility' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'tracking_error')
-                                            {{ 'Tracking Error' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'skewness')
-                                            {{ 'Skewness' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'kurtosis')
-                                            {{ 'Kurtosis' }}
-                                        @elseif(isset($request->report_category) && $request->report_category == 'r_square')
-                                            {{ 'R Sqaure' }}
-                                        @endif
+                                        <?php if(isset($request->report_category) && $request->report_category == 'returns'): ?>
+                                            <?php echo e('Returns/CAGR'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'jensens_alpha'): ?>
+                                            <?php echo e('Jensen’s alpha'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'sharpe'): ?>
+                                            <?php echo e('Sharpe'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'treynor'): ?>
+                                            <?php echo e('Treynor'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'information_ratio'): ?>
+                                            <?php echo e('Information Ratio'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'one_month_rolling_return'): ?>
+                                            <?php echo e('1 month Rolling Return'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'beta'): ?>
+                                            <?php echo e('Beta'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'volatility'): ?>
+                                            <?php echo e('Volatility'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'tracking_error'): ?>
+                                            <?php echo e('Tracking Error'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'skewness'): ?>
+                                            <?php echo e('Skewness'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'kurtosis'): ?>
+                                            <?php echo e('Kurtosis'); ?>
+
+                                        <?php elseif(isset($request->report_category) && $request->report_category == 'r_square'): ?>
+                                            <?php echo e('R Sqaure'); ?>
+
+                                        <?php endif; ?>
                                     </span>
                                 </li>
 
-                                @if (isset($as_on_time_frame_data))
+                                <?php if(isset($as_on_time_frame_data)): ?>
                                     <li>
                                         <p>Duration :</p>
                                         <span>
-                                            @if (isset($request) && $request->as_on_time_frame == '1_month')
-                                                {{ '1 Month' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '3_months')
-                                                {{ '3 Month' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '6_months')
-                                                {{ '6 Month' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '1_year')
-                                                {{ '1 Year' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '2_year')
-                                                {{ '2 Year' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '3_years')
-                                                {{ '3 Years' }}
-                                            @elseif(isset($request) && $request->as_on_time_frame == '5_years')
-                                                {{ '5 Years' }}
-                                            @endif
+                                            <?php if(isset($request) && $request->as_on_time_frame == '1_month'): ?>
+                                                <?php echo e('1 Month'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '3_months'): ?>
+                                                <?php echo e('3 Month'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '6_months'): ?>
+                                                <?php echo e('6 Month'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '1_year'): ?>
+                                                <?php echo e('1 Year'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '2_year'): ?>
+                                                <?php echo e('2 Year'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '3_years'): ?>
+                                                <?php echo e('3 Years'); ?>
+
+                                            <?php elseif(isset($request) && $request->as_on_time_frame == '5_years'): ?>
+                                                <?php echo e('5 Years'); ?>
+
+                                            <?php endif; ?>
                                         </span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
-                                @if (isset($request) && $request->Category == 'by_category')
+                                <?php if(isset($request) && $request->Category == 'by_category'): ?>
                                     <li>
                                         <p>fund classification :</p>
-                                        <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
+                                        <span><?php echo e(isset($fund_type_name) ? $fund_type_name : ''); ?></span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
-                                @if (isset($request) && $request->Category == 'by_fund')
+                                <?php if(isset($request) && $request->Category == 'by_fund'): ?>
                                     <li>
                                         <p>fund name :</p>
-                                        <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
+                                        <span><?php echo e(isset($fund_names) ? $fund_names : ''); ?></span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
                             </ul>
                         </div>
@@ -398,7 +476,7 @@
                                 <!-- <div class="sharethis-inline-share-buttons" id="shareThisWidget" style="visibility: hidden; height: 0;"></div> -->
                                 <div class="sharethis-inline-share-buttons"></div>
                                 <a href="javascript:void(0)" id="exportPDF" class="pdf"><img
-                                        src="{{ asset('themes/frontend/assets/infosolz/images/pdf.png') }}"></a>
+                                        src="<?php echo e(asset('themes/frontend/assets/infosolz/images/pdf.png')); ?>"></a>
 
                             </div>
                             <table class="table datatable" id="pdfData">
@@ -410,8 +488,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0)
-                                        @php
+                                    <?php if(isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0): ?>
+                                        <?php
                                             $fundReturns = $stat_result['fund_absolute_return'];
 
                                             // dd($request->report_category,$fundReturns);
@@ -441,46 +519,47 @@
                                                 }
                                             }
 
-                                        @endphp
-                                    @endif
-                                    @php
+                                        ?>
+                                    <?php endif; ?>
+                                    <?php
                                         //print_r($sortedFundReturns);
-                                    @endphp
-                                    @if (isset($sortedFundReturns) && count($sortedFundReturns) > 0)
-                                        @foreach ($sortedFundReturns as $fundId => $value)
+                                    ?>
+                                    <?php if(isset($sortedFundReturns) && count($sortedFundReturns) > 0): ?>
+                                        <?php $__currentLoopData = $sortedFundReturns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fundId => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td class="text_left">
-                                                    {{ getNameTable('fund_master', 'fund_name', 'fund_id', $fundId) }}</td>
+                                                    <?php echo e(getNameTable('fund_master', 'fund_name', 'fund_id', $fundId)); ?></td>
                                                 <td class="text_right">
-                                                    {{ is_numeric(printValue($value)) ? printValue($value) : ' ' }}</td>
-                                                <td class="text_right">{{ printRank($ranks[$fundId]) }}</td>
+                                                    <?php echo e(is_numeric(printValue($value)) ? printValue($value) : ' '); ?></td>
+                                                <td class="text_right"><?php echo e(printRank($ranks[$fundId])); ?></td>
                                             </tr>
-                                        @endforeach
-                                    @else
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php else: ?>
                                         <tr>
                                             <td colspan="3">No information available for this search</td>
                                         </tr>
-                                    @endif
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
-                    @else
-                        {!! printNoData() !!}
-                    @endif
+                    <?php else: ?>
+                        <?php echo printNoData(); ?>
+
+                    <?php endif; ?>
                 </div>
-                @if (isset($sortedFundReturns))
+                <?php if(isset($sortedFundReturns)): ?>
                     <div class="disclaimer">
                         <p><strong>Note : </strong>For the calculations, the first working day is considered in case of
                             Starting and Ending day.</p>
                     </div>
                     <div class="disclaimer">
-                        <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                        <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
 <script>
     function toggleRankingFields() {
@@ -630,7 +709,7 @@
             var doc = new jsPDF();
 
             var img = new Image();
-            img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+            img.src = "<?php echo e(asset('themes/frontend/assets/infosolz/images/small_logo.png')); ?>";
             img.onload = function() {
                 var pageWidth = doc.internal.pageSize.getWidth();
                 var imgWidth = 50;
@@ -650,100 +729,100 @@
 
                 // Date and ratio details
                 var startDate =
-                    "{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}";
+                    "<?php echo e(isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000'); ?>";
                 var endDate =
-                    "{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}";
+                    "<?php echo e(isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000'); ?>";
                 var ratio =
-                    @if (isset($request->report_category))
-                        @switch($request->report_category)
-                            @case('returns')
+                    <?php if(isset($request->report_category)): ?>
+                        <?php switch($request->report_category):
+                            case ('returns'): ?>
                             'Returns/CAGR'
-                            @break
+                            <?php break; ?>
 
-                            @case('jensens_alpha')
+                            <?php case ('jensens_alpha'): ?>
                             'Jensen’s alpha'
-                            @break
+                            <?php break; ?>
 
-                            @case('sharpe')
+                            <?php case ('sharpe'): ?>
                             'Sharpe'
-                            @break
+                            <?php break; ?>
 
-                            @case('treynor')
+                            <?php case ('treynor'): ?>
                             'Treynor'
-                            @break
+                            <?php break; ?>
 
-                            @case('information_ratio')
+                            <?php case ('information_ratio'): ?>
                             'Information Ratio'
-                            @break
+                            <?php break; ?>
 
-                            @case('one_month_rolling_return')
+                            <?php case ('one_month_rolling_return'): ?>
                             '1 month Rolling Return'
-                            @break
+                            <?php break; ?>
 
-                            @case('beta')
+                            <?php case ('beta'): ?>
                             'Beta'
-                            @break
+                            <?php break; ?>
 
-                            @case('volatility')
+                            <?php case ('volatility'): ?>
                             'Volatility'
-                            @break
+                            <?php break; ?>
 
-                            @case('tracking_error')
+                            <?php case ('tracking_error'): ?>
                             'Tracking Error'
-                            @break
+                            <?php break; ?>
 
-                            @case('skewness')
+                            <?php case ('skewness'): ?>
                             'Skewness'
-                            @break
+                            <?php break; ?>
 
-                            @case('kurtosis')
+                            <?php case ('kurtosis'): ?>
                             'Kurtosis'
-                            @break
+                            <?php break; ?>
 
-                            @case('r_square')
+                            <?php case ('r_square'): ?>
                             'R Sqaure'
-                            @break
-                        @endswitch
-                    @endif ;
+                            <?php break; ?>
+                        <?php endswitch; ?>
+                    <?php endif; ?> ;
                 var duration =
-                    @if (isset($as_on_time_frame_data))
-                        @switch($request->as_on_time_frame)
-                            @case('1_month')
+                    <?php if(isset($as_on_time_frame_data)): ?>
+                        <?php switch($request->as_on_time_frame):
+                            case ('1_month'): ?>
                             '1 Month'
-                            @break
+                            <?php break; ?>
 
-                            @case('3_months')
+                            <?php case ('3_months'): ?>
                             '3 Months'
-                            @break
+                            <?php break; ?>
 
-                            @case('6_months')
+                            <?php case ('6_months'): ?>
                             '6 Months'
-                            @break
+                            <?php break; ?>
 
-                            @case('1_year')
+                            <?php case ('1_year'): ?>
                             '1 Year'
-                            @break
+                            <?php break; ?>
 
-                            @case('2_year')
+                            <?php case ('2_year'): ?>
                             '2 Years'
-                            @break
+                            <?php break; ?>
 
-                            @case('3_years')
+                            <?php case ('3_years'): ?>
                             '3 Years'
-                            @break
+                            <?php break; ?>
 
-                            @case('5_years')
+                            <?php case ('5_years'): ?>
                             '5 Years'
-                            @break
+                            <?php break; ?>
 
-                            @default
+                            <?php default: ?>
                             null
-                        @endswitch
-                    @else
+                        <?php endswitch; ?>
+                    <?php else: ?>
                         null
-                    @endif ;
+                    <?php endif; ?> ;
 
-                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name : '' }}";
+                var fundClassification = "<?php echo e(isset($fund_type_name) ? $fund_type_name : ''); ?>";
 
                 var startX = 15;
                 var lineHeight = 10;
@@ -758,7 +837,7 @@
                     doc.text(`Duration: ${duration}`, startX + 100, tableStartY - 10);
                 }
 
-                if ("{{ $request->Category }}" == 'by_category') {
+                if ("<?php echo e($request->Category); ?>" == 'by_category') {
                     doc.text(`Fund Classification: ${fundClassification}`, startX, tableStartY);
                 }
 
@@ -791,3 +870,5 @@
         });
     });
 </script>
+
+<?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/ratio-reports/stats.blade.php ENDPATH**/ ?>

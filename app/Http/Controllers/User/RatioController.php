@@ -560,6 +560,14 @@ class RatioController extends Controller
         $data['fund_names'] = $selection['fund_names'];
         $data['fund_type_name'] = $selection['fund_type_name'];
 
+        if ($data['all_fund_types']->isEmpty() || $data['all_funds']->isEmpty()) {
+            $data['message'] = DB::connection()->getDriverName() === 'sqlite'
+                ? 'Performance Ratios needs your actual report database. Local SQLite currently has no fund classifications or fund master data loaded.'
+                : 'Fund classification or fund master data is missing in the current database, so this report cannot return results yet.';
+
+            return $data;
+        }
+
         if (!$this->canBuildRatioReport($request, $selection['funds'])) {
             return $data;
         }
