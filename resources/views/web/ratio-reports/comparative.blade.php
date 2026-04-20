@@ -64,9 +64,9 @@
                                         <label>1st period</label>
                                         <div class="col-md-6">
                                             <div class="form_group">
-                                                <input type="text" placeholder="Start Date" class="datepicker"
-                                                    name="p_one_start_date" readonly required
-                                                    value="{{ old('p_one_start_date', isset($p_one_start_date) ? date('d-m-Y', strtotime($p_one_start_date)) : '') }}">
+                                                <input type="date" placeholder="Start Date" class="form-control"
+                                                    name="p_one_start_date" required
+                                                    value="{{ old('p_one_start_date', isset($p_one_start_date) ? date('Y-m-d', strtotime($p_one_start_date)) : '') }}">
                                                 @error('p_one_start_date')
                                                     <div class="alert alert-danger">{{ $message }}</div>
                                                 @enderror
@@ -74,9 +74,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form_group">
-                                                <input type="text" placeholder="End Date" class="datepicker"
-                                                    name="p_one_end_date" readonly required
-                                                    value="{{ old('p_one_end_date', isset($p_one_end_date) ? date('d-m-Y', strtotime($p_one_end_date)) : '') }}">
+                                                <input type="date" placeholder="End Date" class="form-control"
+                                                    name="p_one_end_date" required
+                                                    value="{{ old('p_one_end_date', isset($p_one_end_date) ? date('Y-m-d', strtotime($p_one_end_date)) : '') }}">
 
                                                 @error('p_one_end_date')
                                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -91,9 +91,9 @@
                                         <label>2nd period</label>
                                         <div class="col-md-6">
                                             <div class="form_group">
-                                                <input type="text" placeholder="Start Date" class="datepicker"
-                                                    name="p_two_start_date" readonly required
-                                                    value="{{ old('p_two_start_date', isset($p_two_start_date) ? date('d-m-Y', strtotime($p_two_start_date)) : '') }}">
+                                                <input type="date" placeholder="Start Date" class="form-control"
+                                                    name="p_two_start_date" required
+                                                    value="{{ old('p_two_start_date', isset($p_two_start_date) ? date('Y-m-d', strtotime($p_two_start_date)) : '') }}">
 
                                                 @error('p_two_start_date')
                                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -102,9 +102,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form_group">
-                                                <input type="text" placeholder="End Date" class="datepicker"
-                                                    name="p_two_end_date" readonly required
-                                                    value="{{ old('p_two_end_date', isset($p_two_end_date) ? date('d-m-Y', strtotime($p_two_end_date)) : '') }}">
+                                                <input type="date" placeholder="End Date" class="form-control"
+                                                    name="p_two_end_date" required
+                                                    value="{{ old('p_two_end_date', isset($p_two_end_date) ? date('Y-m-d', strtotime($p_two_end_date)) : '') }}">
 
                                                 @error('p_two_end_date')
                                                     <div class="alert alert-danger">{{ $message }}</div>

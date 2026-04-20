@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Web\BetaController;
+use App\Http\Controllers\Web\CagrController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\InformationratioController;
+use App\Http\Controllers\Web\JensonsalphaController;
+use App\Http\Controllers\Web\KurtosisController;
+use App\Http\Controllers\Web\RollingreturnController;
+use App\Http\Controllers\Web\rsquereController;
+use App\Http\Controllers\Web\SharpeController;
+use App\Http\Controllers\Web\SkewnessController;
+use App\Http\Controllers\Web\TrackingerrorController;
+use App\Http\Controllers\Web\TreynorController;
+use App\Http\Controllers\Web\VolatilityController;
+use App\Models\CorpusEntry;
+use App\Models\FundDetail;
 use Illuminate\Http\Request;
 use App\Models\CurrencyMaster;
 use App\Models\FundMaster;
 use App\Models\FundType;
+use App\Models\IndicesDetail;
 use App\Models\IndicesMaster;
 use App\Models\User;
+use Carbon\CarbonInterface;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Collection;
 use Throwable;
 
 class RatioController extends Controller
@@ -117,19 +135,21 @@ class RatioController extends Controller
     }
 
     function fund_factsheet(Request $request){
-      return view('web.ratio-reports.fund_factsheet', $this->reportViewData($request));
+      return view('web.ratio-reports.fund_factsheet', $this->fundFactsheetViewData($request));
     }
 
     function stats(Request $request){
-      return view('web.ratio-reports.stats', $this->reportViewData($request));
+      return view('web.ratio-reports.stats', $this->performanceRatiosViewData($request));
     }
 
     function quartile_decile(Request $request){
-      return view('web.ratio-reports.quartile_decile', $this->reportViewData($request));
+      return view('web.ratio-reports.quartile_decile', $this->quartileDecileViewData($request));
     }
 
     function comparative(Request $request){
-      $data = $this->reportViewData($request);
+      $data = $request->routeIs('user.r_square_comparison')
+          ? $this->reportViewData($request)
+          : $this->comparativeViewData($request);
 
       if ($request->routeIs('user.r_square_comparison')) {
         return view('web.ratio-reports.r_square_comparison', $data);
@@ -529,6 +549,586 @@ class RatioController extends Controller
         $name = strtoupper($name);
 
         return str_contains($name, 'NSE') || str_contains($name, 'NIFTY');
+    }
+
+    protected function performanceRatiosViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $selection = $this->resolveFundSelection($request, $data);
+
+        $data['fund_type'] = $data['all_fund_types'];
+        $data['fund_names'] = $selection['fund_names'];
+        $data['fund_type_name'] = $selection['fund_type_name'];
+
+        if (!$this->canBuildRatioReport($request, $selection['funds'])) {
+            return $data;
+        }
+
+        $range = $this->resolveRankingRange($request);
+        $ratioMap = $this->buildRatioMap($selection['funds'], (string) $request->input('report_category'), $range['start'], $range['end']);
+
+        $data['start_date'] = $range['start']->toDateString();
+        $data['end_date'] = $range['end']->toDateString();
+        $data['stat_result'] = [
+            'fund_absolute_return' => $ratioMap,
+        ];
+
+        if ($range['mode'] === 'as_on') {
+            $data['as_on_time_frame_data'] = [$request->input('as_on_time_frame')];
+        }
+
+        return $data;
+    }
+
+    protected function quartileDecileViewData(Request $request): array
+    {
+        $data = $this->performanceRatiosViewData($request);
+        $ratioMap = $data['stat_result']['fund_absolute_return'] ?? [];
+        $reportCategory = (string) $request->input('report_category');
+
+        if (empty($ratioMap) || !$reportCategory) {
+            return $data;
+        }
+
+        $data['quartile_decile_result'] = [
+            'fund_absolute_return' => $ratioMap,
+            'quartile' => $this->buildRankBuckets($ratioMap, 4, $this->isLowerBetterRatio($reportCategory)),
+            'decile' => $this->buildRankBuckets($ratioMap, 10, $this->isLowerBetterRatio($reportCategory)),
+        ];
+
+        return $data;
+    }
+
+    protected function comparativeViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $selection = $this->resolveFundSelection($request, $data);
+
+        $data['fund_type'] = $data['all_fund_types'];
+        $data['fund_names'] = $selection['fund_names'];
+        $data['fund_type_name'] = $selection['fund_type_name'];
+
+        if (
+            !$request->input('report_category') ||
+            !$request->input('Category') ||
+            $selection['funds']->isEmpty()
+        ) {
+            return $data;
+        }
+
+        $periodOne = $this->resolveExplicitDateRange($request->input('p_one_start_date'), $request->input('p_one_end_date'));
+        $periodTwo = $this->resolveExplicitDateRange($request->input('p_two_start_date'), $request->input('p_two_end_date'));
+
+        if (!$periodOne || !$periodTwo) {
+            return $data;
+        }
+
+        $reportCategory = (string) $request->input('report_category');
+        $ascending = $this->isLowerBetterRatio($reportCategory);
+
+        $periodOneRatios = $this->buildRatioMap($selection['funds'], $reportCategory, $periodOne['start'], $periodOne['end']);
+        $periodTwoRatios = $this->buildRatioMap($selection['funds'], $reportCategory, $periodTwo['start'], $periodTwo['end']);
+
+        $allFundIds = array_unique(array_merge(array_keys($periodOneRatios), array_keys($periodTwoRatios)));
+        foreach ($allFundIds as $fundId) {
+            $periodOneRatios[$fundId] = $periodOneRatios[$fundId] ?? 'N/A';
+            $periodTwoRatios[$fundId] = $periodTwoRatios[$fundId] ?? 'N/A';
+        }
+
+        $data['report_category'] = $reportCategory;
+        $data['p_one_start_date'] = $periodOne['start']->toDateString();
+        $data['p_one_end_date'] = $periodOne['end']->toDateString();
+        $data['p_two_start_date'] = $periodTwo['start']->toDateString();
+        $data['p_two_end_date'] = $periodTwo['end']->toDateString();
+        $data['p_one_quartile_decile_result'] = [
+            'fund_absolute_return' => $periodOneRatios,
+            'quartile' => $this->buildRankBuckets($periodOneRatios, 4, $ascending),
+            'decile' => $this->buildRankBuckets($periodOneRatios, 10, $ascending),
+        ];
+        $data['p_two_quartile_decile_result'] = [
+            'fund_absolute_return' => $periodTwoRatios,
+            'quartile' => $this->buildRankBuckets($periodTwoRatios, 4, $ascending),
+            'decile' => $this->buildRankBuckets($periodTwoRatios, 10, $ascending),
+        ];
+
+        return $data;
+    }
+
+    protected function fundFactsheetViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $fundId = (int) $request->input('fund_id');
+        $selectedDate = $this->normalizeInputDate($request->input('to_date')) ?? now()->startOfDay();
+        $data['request']->merge(['to_date' => $selectedDate->toDateString()]);
+
+        if ($fundId <= 0) {
+            return $data;
+        }
+
+        $fund = FundMaster::with('fundtype')->find($fundId);
+        if (!$fund) {
+            return $data;
+        }
+
+        $closestEntry = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '<=', $selectedDate->toDateString())
+            ->orderByDesc('entry_date')
+            ->first();
+
+        if (!$closestEntry) {
+            $closestEntry = FundDetail::query()
+                ->where('fund_code', $fund->fund_code)
+                ->where('publish', 'y')
+                ->orderByDesc('entry_date')
+                ->first();
+        }
+
+        if (!$closestEntry) {
+            return $data;
+        }
+
+        $effectiveDate = Carbon::parse($closestEntry->entry_date)->startOfDay();
+        $data['fund_details'] = $fund;
+        $data['closest_entry_date'] = $effectiveDate->toDateString();
+        $data['index_name'] = $this->resolveIndexName($fund, $effectiveDate);
+
+        $periods = [
+            'six_months' => 182,
+            'one_year' => 366,
+            'two_year' => 731,
+            'three_year' => 1096,
+            'five_year' => 1827,
+        ];
+
+        $jensenAlphaData = [];
+        $sharpeData = [];
+        $trackingErrorData = [];
+        $treynorData = [];
+        $informationRatio = [];
+        $skewness = [];
+        $kurtosis = [];
+        $rSquare = [];
+
+        foreach ($periods as $label => $days) {
+            $startDate = $effectiveDate->copy()->subDays($days);
+            $jensenAlphaData[$label] = $this->extractRatioMetrics($fund, 'jensens_alpha', $startDate, $effectiveDate, [
+                'fund_return_absolute',
+                'index_return_absolute',
+                'jensens_alpha',
+                'beta',
+            ]);
+            $sharpeData[$label] = $this->extractRatioMetrics($fund, 'sharpe', $startDate, $effectiveDate, [
+                'sharpe',
+                'volatility',
+            ]);
+            $trackingErrorData[$label] = $this->extractRatioMetrics($fund, 'tracking_error', $startDate, $effectiveDate, [
+                'tracking_error',
+            ]);
+            $treynorData[$label] = $this->extractRatioMetrics($fund, 'treynor', $startDate, $effectiveDate, [
+                'treynor',
+            ]);
+            $informationRatio[$label] = $this->calculateRatioForFund($fund, 'information_ratio', $startDate, $effectiveDate);
+            $skewness[$label] = $this->calculateRatioForFund($fund, 'skewness', $startDate, $effectiveDate);
+            $kurtosis[$label] = $this->calculateRatioForFund($fund, 'kurtosis', $startDate, $effectiveDate);
+        }
+
+        $rSquare['1_year_report'] = $this->extractRatioMetrics($fund, 'r_square', $effectiveDate->copy()->subDays(366), $effectiveDate, ['r_squere']);
+        $rSquare['2_year_report'] = $this->extractRatioMetrics($fund, 'r_square', $effectiveDate->copy()->subDays(731), $effectiveDate, ['r_squere']);
+        $rSquare['3_year_report'] = $this->extractRatioMetrics($fund, 'r_square', $effectiveDate->copy()->subDays(1096), $effectiveDate, ['r_squere']);
+        $rSquare['5_year_report'] = $this->extractRatioMetrics($fund, 'r_square', $effectiveDate->copy()->subDays(1827), $effectiveDate, ['r_squere']);
+
+        $portfolioData = $this->buildFundFactsheetPortfolioData($fund, $effectiveDate);
+        $aaumValue = $this->buildAaumChartData($fund->fund_code, $effectiveDate);
+
+        $data['top_scrips'] = json_encode($portfolioData['top_scrip_chart']);
+        $data['top_industries'] = json_encode($portfolioData['top_industry_chart']);
+        $data['AAUMValue'] = json_encode($aaumValue);
+        $data['scrip_bias'] = $portfolioData['scrip_bias'];
+        $data['industry_bias'] = $portfolioData['industry_bias'];
+        $data['jensonAlphaData'] = $jensenAlphaData;
+        $data['sharpeData'] = $sharpeData;
+        $data['trackingErrorData'] = $trackingErrorData;
+        $data['treynorData'] = $treynorData;
+        $data['information_ratio'] = $informationRatio;
+        $data['skewness'] = $skewness;
+        $data['kurtosis'] = $kurtosis;
+        $data['r_square'] = $rSquare;
+
+        return $data;
+    }
+
+    protected function buildFundFactsheetPortfolioData(FundMaster $fund, Carbon $effectiveDate): array
+    {
+        $month = (int) $effectiveDate->format('n');
+        $year = (int) $effectiveDate->format('Y');
+        $scriptRows = collect();
+        $industryRows = collect();
+
+        if ($this->supportsStoredProcedures()) {
+            try {
+                $scriptRows = collect(DB::select('CALL sp_fund_search_portfolio_top_script(?, ?, ?, ?)', [$month, $year, $fund->fund_code, 20]));
+                $industryRows = collect(DB::select('CALL sp_fund_search_portfolio_top_industry(?, ?, ?, ?)', [$month, $year, $fund->fund_code, 20]));
+            } catch (Throwable $e) {
+                $scriptRows = collect();
+                $industryRows = collect();
+            }
+        }
+
+        $topScriptChart = $scriptRows->take(10)->map(function ($row) {
+            return [
+                'scrip_name' => $row->scrip_name ?? 'N/A',
+                'holdings' => round((float) ($row->content_per ?? 0), 2),
+            ];
+        })->values()->all();
+
+        $topIndustryChart = $industryRows->take(10)->map(function ($row) {
+            return [
+                'industry' => $row->industry ?? 'N/A',
+                'holdings' => round((float) ($row->industry_content_per ?? 0), 2),
+            ];
+        })->values()->all();
+
+        return [
+            'top_scrip_chart' => $topScriptChart,
+            'top_industry_chart' => $topIndustryChart,
+            'scrip_bias' => $this->buildBiasPayload($scriptRows, 'content_per', 'percentage', 'scrip_name'),
+            'industry_bias' => $this->buildBiasPayload($industryRows, 'industry_content_per', 'total_percentage', 'industry'),
+        ];
+    }
+
+    protected function buildBiasPayload(Collection $rows, string $fundColumn, string $indexColumn, string $nameColumn): array
+    {
+        $segments = [
+            'top_ten' => $rows->slice(0, 10)->values(),
+            'eleven_to_twenty' => $rows->slice(10, 10)->values(),
+            'remaining' => $rows->slice(20)->values(),
+        ];
+
+        $payload = [
+            'top_ten_bias' => null,
+            'top_twenty_bias' => null,
+            'rest_of_bias' => null,
+        ];
+
+        foreach ($segments as $key => $segment) {
+            $items = $segment->map(function ($row) use ($fundColumn, $indexColumn, $nameColumn) {
+                $fundValue = (float) ($row->{$fundColumn} ?? 0);
+                $indexValue = (float) ($row->{$indexColumn} ?? 0);
+
+                return (object) [
+                    $nameColumn => $row->{$nameColumn} ?? 'N/A',
+                    'fund_value' => $fundValue,
+                    'index_value' => $indexValue,
+                    'bias' => $fundValue - $indexValue,
+                ];
+            })->all();
+
+            $totalBias = round(collect($items)->sum('bias'), 2);
+
+            if ($key === 'top_ten') {
+                $payload['top_ten_bias'] = $totalBias;
+            } elseif ($key === 'eleven_to_twenty') {
+                $payload['top_twenty_bias'] = $totalBias;
+            } else {
+                $payload['rest_of_bias'] = $totalBias;
+            }
+
+            $payload[$key] = $items;
+        }
+
+        return $payload;
+    }
+
+    protected function buildAaumChartData(string $fundCode, Carbon $effectiveDate): array
+    {
+        $rows = CorpusEntry::query()
+            ->where('fund_code', $fundCode)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '<=', $effectiveDate->toDateString())
+            ->orderByDesc('entry_date')
+            ->limit(4)
+            ->get(['entry_date', 'corpus_entry'])
+            ->sortBy('entry_date')
+            ->values();
+
+        $chart = [['Month', 'AAUM']];
+
+        foreach ($rows as $row) {
+            $chart[] = [
+                Carbon::parse($row->entry_date)->format('M Y'),
+                round((float) $row->corpus_entry, 2),
+            ];
+        }
+
+        return $chart;
+    }
+
+    protected function resolveIndexName(FundMaster $fund, Carbon $effectiveDate): ?string
+    {
+        try {
+            $indexName = $fund->indices_name;
+            $correlation = DB::table('mpx_indices_corelation')->where('name', $indexName)->value('corelation');
+            $lookupNames = array_filter([$correlation, $indexName]);
+
+            $record = IndicesDetail::query()
+                ->whereIn('name', $lookupNames)
+                ->where('publish', 'y')
+                ->whereDate('entry_date', '<=', $effectiveDate->toDateString())
+                ->orderByDesc('entry_date')
+                ->first();
+
+            return $record?->name ?? $indexName;
+        } catch (Throwable $e) {
+            return $fund->indices_name;
+        }
+    }
+
+    protected function resolveFundSelection(Request $request, array $data): array
+    {
+        $category = $request->input('Category');
+        $fundIds = array_filter(array_map('intval', (array) $request->input('fund_id', [])));
+        $fundTypeId = (int) $request->input('fund_type_id');
+        $funds = collect();
+        $fundTypeName = null;
+        $fundNames = '';
+
+        if ($category === 'by_category' && $fundTypeId > 0) {
+            $funds = FundMaster::query()
+                ->where('fund_type_id', $fundTypeId)
+                ->orderBy('fund_name')
+                ->get();
+            $fundType = $data['all_fund_types']->firstWhere('ft_id', $fundTypeId);
+            $fundTypeName = $fundType?->name;
+        } elseif ($category === 'by_fund' && !empty($fundIds)) {
+            $funds = FundMaster::query()
+                ->whereIn('fund_id', $fundIds)
+                ->orderBy('fund_name')
+                ->get();
+            $fundNames = $funds->pluck('fund_name')->implode(', ');
+        }
+
+        return [
+            'funds' => $funds,
+            'fund_names' => $fundNames,
+            'fund_type_name' => $fundTypeName,
+        ];
+    }
+
+    protected function canBuildRatioReport(Request $request, Collection $funds): bool
+    {
+        return (bool) $request->input('report_category')
+            && (bool) $request->input('Category')
+            && $funds->isNotEmpty();
+    }
+
+    protected function resolveRankingRange(Request $request): array
+    {
+        $rankingMode = $request->input('ranking', 'range');
+
+        if ($rankingMode === 'as_on') {
+            $asOnDate = $this->normalizeInputDate($request->input('as_on_date')) ?? now()->startOfDay();
+            $timeFrame = $request->input('as_on_time_frame', '1_year');
+            $startDate = $this->startDateForTimeFrame($asOnDate, $timeFrame);
+
+            return [
+                'mode' => 'as_on',
+                'start' => $startDate,
+                'end' => $asOnDate,
+            ];
+        }
+
+        $explicitRange = $this->resolveExplicitDateRange($request->input('start_date'), $request->input('end_date'));
+        if ($explicitRange) {
+            return [
+                'mode' => 'range',
+                'start' => $explicitRange['start'],
+                'end' => $explicitRange['end'],
+            ];
+        }
+
+        $fallbackEnd = now()->startOfDay();
+
+        return [
+            'mode' => 'range',
+            'start' => $fallbackEnd->copy()->subYear(),
+            'end' => $fallbackEnd,
+        ];
+    }
+
+    protected function resolveExplicitDateRange(?string $startDate, ?string $endDate): ?array
+    {
+        $start = $this->normalizeInputDate($startDate);
+        $end = $this->normalizeInputDate($endDate);
+
+        if (!$start || !$end) {
+            return null;
+        }
+
+        if ($start->gt($end)) {
+            [$start, $end] = [$end, $start];
+        }
+
+        return [
+            'start' => $start,
+            'end' => $end,
+        ];
+    }
+
+    protected function startDateForTimeFrame(Carbon $asOnDate, string $timeFrame): Carbon
+    {
+        return match ($timeFrame) {
+            '1_month' => $asOnDate->copy()->subMonth(),
+            '3_months' => $asOnDate->copy()->subMonths(3),
+            '6_months' => $asOnDate->copy()->subMonths(6),
+            '1_year' => $asOnDate->copy()->subYear(),
+            '2_year' => $asOnDate->copy()->subYears(2),
+            '3_years' => $asOnDate->copy()->subYears(3),
+            '5_years' => $asOnDate->copy()->subYears(5),
+            default => $asOnDate->copy()->subYear(),
+        };
+    }
+
+    protected function buildRatioMap(Collection $funds, string $reportCategory, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        $ratioMap = [];
+
+        foreach ($funds as $fund) {
+            $ratioMap[$fund->fund_id] = $this->calculateRatioForFund($fund, $reportCategory, $startDate, $endDate);
+        }
+
+        return $ratioMap;
+    }
+
+    protected function calculateRatioForFund(FundMaster $fund, string $reportCategory, CarbonInterface $startDate, CarbonInterface $endDate)
+    {
+        $controllerMap = [
+            'returns' => [CagrController::class, 'cagr_calculator', 'fund_return_absolute'],
+            'jensens_alpha' => [JensonsalphaController::class, 'jensonsalpha_calculator', 'jensens_alpha'],
+            'sharpe' => [SharpeController::class, 'sharpe_calculator', 'sharpe'],
+            'treynor' => [TreynorController::class, 'treynor_calculator', 'treynor'],
+            'information_ratio' => [InformationratioController::class, 'information_ratio_calculator', 'information_ratio'],
+            'beta' => [BetaController::class, 'beta_calculator', 'beta'],
+            'volatility' => [VolatilityController::class, 'volatility_calculator', 'volatility'],
+            'tracking_error' => [TrackingerrorController::class, 'tracking_error_calculator', 'tracking_error'],
+            'skewness' => [SkewnessController::class, 'skewness_calculator', 'skewness'],
+            'kurtosis' => [KurtosisController::class, 'kurtosis_calculator', 'kurtosis'],
+            'r_square' => [rsquereController::class, 'r_squere_calculator', 'r_squere'],
+            'one_month_rolling_return' => [RollingreturnController::class, 'rolling_return_calculator', 'avg_of_twelve_month_rolling_return'],
+        ];
+
+        if (!isset($controllerMap[$reportCategory]) || empty($fund->fund_code)) {
+            return 'N/A';
+        }
+
+        [$controllerClass, $method, $dataKey] = $controllerMap[$reportCategory];
+
+        try {
+            $request = new Request([
+                'search' => 'Search',
+                'search_fund_name' => $fund->fund_code,
+                'search_indices_name' => $fund->indices_name,
+                'search_from_date' => $startDate->toDateString(),
+                'search_to_date' => $endDate->toDateString(),
+            ]);
+
+            /** @var ViewContract $view */
+            $view = app($controllerClass)->{$method}($request);
+            $payload = method_exists($view, 'getData') ? $view->getData() : [];
+            $value = $payload[$dataKey] ?? null;
+
+            if (is_numeric($value)) {
+                return round((float) $value, 4);
+            }
+
+            return $value === null || $value === '' ? 'N/A' : $value;
+        } catch (Throwable $e) {
+            return 'N/A';
+        }
+    }
+
+    protected function extractRatioMetrics(FundMaster $fund, string $reportCategory, CarbonInterface $startDate, CarbonInterface $endDate, array $keys): array
+    {
+        $controllerMap = [
+            'jensens_alpha' => [JensonsalphaController::class, 'jensonsalpha_calculator'],
+            'sharpe' => [SharpeController::class, 'sharpe_calculator'],
+            'tracking_error' => [TrackingerrorController::class, 'tracking_error_calculator'],
+            'treynor' => [TreynorController::class, 'treynor_calculator'],
+            'r_square' => [rsquereController::class, 'r_squere_calculator'],
+        ];
+
+        $result = [];
+        foreach ($keys as $key) {
+            $result[$key] = 'N/A';
+        }
+
+        if (!isset($controllerMap[$reportCategory])) {
+            return $result;
+        }
+
+        [$controllerClass, $method] = $controllerMap[$reportCategory];
+
+        try {
+            $request = new Request([
+                'search' => 'Search',
+                'search_fund_name' => $fund->fund_code,
+                'search_indices_name' => $fund->indices_name,
+                'search_from_date' => $startDate->toDateString(),
+                'search_to_date' => $endDate->toDateString(),
+            ]);
+
+            /** @var ViewContract $view */
+            $view = app($controllerClass)->{$method}($request);
+            $payload = method_exists($view, 'getData') ? $view->getData() : [];
+
+            foreach ($keys as $key) {
+                $value = $payload[$key] ?? null;
+                $result[$key] = is_numeric($value) ? round((float) $value, 4) : ($value === null || $value === '' ? 'N/A' : $value);
+            }
+        } catch (Throwable $e) {
+            return $result;
+        }
+
+        return $result;
+    }
+
+    protected function buildRankBuckets(array $values, int $bucketCount, bool $ascending): array
+    {
+        $numericValues = collect($values)
+            ->filter(fn ($value) => is_numeric($value))
+            ->map(fn ($value) => (float) $value);
+
+        if ($numericValues->isEmpty()) {
+            return [];
+        }
+
+        $sorted = $ascending
+            ? $numericValues->sort()
+            : $numericValues->sortDesc();
+
+        $total = max($sorted->count(), 1);
+        $buckets = [];
+        $rank = 0;
+
+        foreach ($sorted as $fundId => $value) {
+            $rank++;
+            $bucket = (int) ceil(($rank / $total) * $bucketCount);
+            $buckets[$fundId] = min(max($bucket, 1), $bucketCount);
+        }
+
+        foreach ($values as $fundId => $value) {
+            if (!is_numeric($value)) {
+                $buckets[$fundId] = 'N/A';
+            }
+        }
+
+        return $buckets;
+    }
+
+    protected function isLowerBetterRatio(string $reportCategory): bool
+    {
+        return in_array($reportCategory, ['beta', 'volatility', 'tracking_error'], true);
     }
 
     protected function supportsStoredProcedures(): bool

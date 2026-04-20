@@ -41,8 +41,8 @@
                                 </div>
                                 <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="text" class="datepicker" placeholder="Start date" name="start_date"
-                                            value="{{ $request->has('start_date') ? $request->start_date : old('start_date') }}">
+                                        <input type="date" class="form-control" placeholder="Start date" name="start_date"
+                                            value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
@@ -51,8 +51,8 @@
                                 </div>
                                 <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="text" class="datepicker" placeholder="End date" name="end_date"
-                                            value="{{ $request->has('end_date') ? $request->end_date : old('end_date') }}">
+                                        <input type="date" class="form-control" placeholder="End date" name="end_date"
+                                            value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
@@ -60,8 +60,8 @@
                                 </div>
                                 <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
-                                            value="{{ $request->as_on_date }}">
+                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4 div_hide">
@@ -695,7 +695,7 @@
                         null
                     @endif ;
 
-                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
+                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name : '' }}";
 
                 var startX = 15;
                 var lineHeight = 10;
