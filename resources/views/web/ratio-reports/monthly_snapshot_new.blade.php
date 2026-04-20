@@ -48,6 +48,11 @@
 
                             </form>
                         </div>
+                        @if(!empty($message))
+                        <div class="alert alert-warning mt-3">
+                            {{ $message }}
+                        </div>
+                        @endif
                         <input type="hidden" value="monthly" name="type" id="type">
                         <div class="fund_section new_fund_section monthly_new">
                             <ul>
@@ -428,5 +433,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </Script>
-
 

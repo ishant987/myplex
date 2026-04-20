@@ -10,6 +10,7 @@ use App\Models\FundType;
 use App\Models\IndicesMaster;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Throwable;
@@ -34,7 +35,7 @@ class RatioController extends Controller
     }
 
     function quick_ratio(Request $request){
-      $data = $this->reportViewData($request);
+      $data = $this->quickRatioViewData($request);
 
       if ($request->routeIs('user.performance_ratios')) {
         return view('web.ratio-reports.stats', $data);
@@ -97,7 +98,7 @@ class RatioController extends Controller
       return view('web.ratio-reports.generic_page', $data);
     }
     function monthly_snapshot(Request $request){
-      $data = $this->reportViewData($request);
+      $data = $this->monthlySnapshotViewData($request);
 
       if ($request->routeIs('user.monthly_snapshot_new')) {
         return view('web.ratio-reports.monthly_snapshot_new', $data);
@@ -106,7 +107,7 @@ class RatioController extends Controller
       return view('web.ratio-reports.monthly_snapshot', $data);
     }
     function weekly_snapshot(Request $request){
-      $data = $this->reportViewData($request);
+      $data = $this->weeklySnapshotViewData($request);
 
       if ($request->routeIs('user.weekly_snapshot_new')) {
         return view('web.ratio-reports.weekly_snapshot_new', $data);
@@ -317,6 +318,227 @@ class RatioController extends Controller
         } catch (Throwable $e) {
             return collect();
         }
+    }
+
+    protected function quickRatioViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $normalizedDate = $this->normalizeInputDate($request->input('date'));
+        $fundTypeId = (int) $request->input('fund_type_id');
+        $reportCategory = $request->input('report_category');
+        $type = $request->input('type', 'weekly');
+
+        $data['request_fund_type'] = $fundTypeId > 0
+            ? $data['all_fund_types']->firstWhere('ft_id', $fundTypeId)
+            : null;
+
+        if (!$normalizedDate || $fundTypeId <= 0 || !$reportCategory) {
+            return $data;
+        }
+
+        if (!$this->supportsStoredProcedures()) {
+            $data['message'] = $this->storedProcedureUnavailableMessage();
+
+            return $data;
+        }
+
+        $data['request']->merge([
+            'date' => $normalizedDate->format('d-m-Y'),
+            'type' => $type,
+        ]);
+
+        try {
+            $snapshotData = [];
+
+            if ($type === 'weekly') {
+                if ($reportCategory === 'return') {
+                    $snapshotData = DB::select('CALL sp_weekly_funds(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                } elseif ($reportCategory === 'indices') {
+                    $snapshotData = DB::select('CALL sp_weekly_indices(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                } elseif ($reportCategory === 'return_less_index') {
+                    $snapshotData = DB::select('CALL sp_weekly_return_less_index(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                }
+            } elseif ($type === 'monthly') {
+                if ($reportCategory === 'return') {
+                    $snapshotData = DB::select('CALL sp_monthly_funds(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                } elseif ($reportCategory === 'indices') {
+                    $snapshotData = DB::select('CALL sp_monthly_indices(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                } elseif ($reportCategory === 'return_less_index') {
+                    $snapshotData = DB::select('CALL sp_monthly_return_less_index(?, ?)', [$normalizedDate->toDateString(), $fundTypeId]);
+                } elseif ($reportCategory === 'corpus_change') {
+                    $latestAaumRow = DB::selectOne(
+                        'SELECT entry_date FROM mpx_corpus_entry WHERE fund_code IN (SELECT fund_code FROM mpx_fund_master WHERE fund_type_id = ?) ORDER BY entry_date DESC LIMIT 1',
+                        [$fundTypeId]
+                    );
+
+                    if ($latestAaumRow && !empty($latestAaumRow->entry_date)) {
+                        $snapshotData = DB::select('CALL sp_monthly_corpus_change(?, ?)', [$latestAaumRow->entry_date, $fundTypeId]);
+                        $data['responseArr']['aaum_date'] = $latestAaumRow->entry_date;
+                    }
+                }
+            }
+
+            $data['responseArr']['snapshot_data'] = collect($snapshotData);
+        } catch (Throwable $e) {
+            $data['message'] = 'Unable to load quick ratio data right now.';
+        }
+
+        return $data;
+    }
+
+    protected function weeklySnapshotViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $range = $this->resolveWeeklyRange($request->input('date'));
+
+        $data['start_date'] = $range['end']->toDateString();
+        $data['end_date'] = $range['start']->toDateString();
+
+        if (!$this->supportsStoredProcedures()) {
+            $data['message'] = $this->storedProcedureUnavailableMessage();
+
+            return $data;
+        }
+
+        try {
+            $allIndices = collect($this->safeSnapshotIndexData('GET_INDICES', $range['start']->toDateString(), $range['days']));
+            $data['array_bse'] = $allIndices->filter(fn ($item) => $this->isBseIndex($item->name ?? ''))->values();
+            $data['array_nse'] = $allIndices->filter(fn ($item) => $this->isNseIndex($item->name ?? ''))->values();
+            $data['array_global_it'] = $allIndices
+                ->reject(fn ($item) => $this->isBseIndex($item->name ?? '') || $this->isNseIndex($item->name ?? ''))
+                ->values();
+            $data['changes_indices'] = $allIndices;
+            $data['changes_currency'] = collect($this->safeSnapshotIndexData('GET_CURRENCY', $range['start']->toDateString(), $range['days']));
+            $data['changes_commodity'] = collect($this->safeSnapshotIndexData('GET_COMMODITY', $range['start']->toDateString(), $range['days']));
+            $data['weekly_benchmark'] = collect(DB::select('CALL sp_snapshot_weekly_benchmark(?)', [$range['start']->toDateString()]));
+            $data['weekly_best_funds'] = collect(DB::select('CALL sp_snapshot_weekly_fund(?)', [$range['start']->toDateString()]));
+        } catch (Throwable $e) {
+            $data['message'] = 'Unable to load weekly snapshot data right now.';
+        }
+
+        return $data;
+    }
+
+    protected function monthlySnapshotViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $range = $this->resolveMonthlyRange($request->input('date'));
+
+        $data['from_date'] = $range['start']->toDateString();
+        $data['to_date'] = $range['end']->format('d-m-Y');
+
+        if (!$this->supportsStoredProcedures()) {
+            $data['message'] = $this->storedProcedureUnavailableMessage();
+
+            return $data;
+        }
+
+        try {
+            $allIndices = collect($this->safeSnapshotIndexData('GET_INDICES', $range['end']->toDateString(), $range['days']));
+            $data['array_bse'] = $allIndices->filter(fn ($item) => $this->isBseIndex($item->name ?? ''))->values();
+            $data['array_nse'] = $allIndices->filter(fn ($item) => $this->isNseIndex($item->name ?? ''))->values();
+            $data['array_global_it'] = $allIndices
+                ->reject(fn ($item) => $this->isBseIndex($item->name ?? '') || $this->isNseIndex($item->name ?? ''))
+                ->values();
+            $data['changes_indices'] = $allIndices;
+            $data['changes_currency'] = collect($this->safeSnapshotIndexData('GET_CURRENCY', $range['end']->toDateString(), $range['days']));
+            $data['changes_commodity'] = collect($this->safeSnapshotIndexData('GET_COMMODITY', $range['end']->toDateString(), $range['days']));
+            $data['monthly_benchmark'] = collect(DB::select('CALL sp_snapshot_monthly_benchmark(?)', [$range['end']->toDateString()]));
+            $data['best_schemes'] = collect(DB::select('CALL sp_snapshot_monthly_best_fund(?)', [$range['end']->toDateString()]));
+        } catch (Throwable $e) {
+            $data['message'] = 'Unable to load monthly snapshot data right now.';
+        }
+
+        return $data;
+    }
+
+    protected function normalizeInputDate(?string $date): ?Carbon
+    {
+        if (!$date) {
+            return null;
+        }
+
+        foreach (['d-m-Y', 'Y-m-d', 'd/m/Y'] as $format) {
+            try {
+                return Carbon::createFromFormat($format, $date)->startOfDay();
+            } catch (Throwable $e) {
+                continue;
+            }
+        }
+
+        try {
+            return Carbon::parse($date)->startOfDay();
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    protected function resolveWeeklyRange(?string $inputDate): array
+    {
+        $anchor = $this->normalizeInputDate($inputDate) ?? now()->startOfDay();
+        $offsets = [
+            'Monday' => [3, 9],
+            'Tuesday' => [4, 10],
+            'Wednesday' => [5, 11],
+            'Thursday' => [6, 12],
+            'Friday' => [0, 6],
+            'Saturday' => [1, 7],
+            'Sunday' => [2, 8],
+        ];
+
+        [$startOffset, $endOffset] = $offsets[$anchor->format('l')] ?? [0, 6];
+
+        return [
+            'start' => $anchor->copy()->subDays($startOffset),
+            'end' => $anchor->copy()->subDays($endOffset),
+            'days' => 6,
+        ];
+    }
+
+    protected function resolveMonthlyRange(?string $inputDate): array
+    {
+        $anchor = $this->normalizeInputDate($inputDate) ?? now()->startOfDay();
+        $end = $anchor->copy()->endOfMonth();
+        $start = $end->copy()->startOfMonth();
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'days' => $start->diffInDays($end),
+        ];
+    }
+
+    protected function safeSnapshotIndexData(string $mode, string $date, int $days): array
+    {
+        try {
+            return DB::select('CALL sp_snapshot_indices_currency_commodity(?, ?, ?)', [$mode, $date, $days]);
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+
+    protected function isBseIndex(string $name): bool
+    {
+        $name = strtoupper($name);
+
+        return str_contains($name, 'BSE') || str_contains($name, 'SENSEX');
+    }
+
+    protected function isNseIndex(string $name): bool
+    {
+        $name = strtoupper($name);
+
+        return str_contains($name, 'NSE') || str_contains($name, 'NIFTY');
+    }
+
+    protected function supportsStoredProcedures(): bool
+    {
+        return DB::connection()->getDriverName() === 'mysql';
+    }
+
+    protected function storedProcedureUnavailableMessage(): string
+    {
+        return 'These reports need the MySQL production database and its stored procedures. Your local app is currently using SQLite, so search results cannot load yet.';
     }
 
 }

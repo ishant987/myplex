@@ -93,6 +93,11 @@
 
                             </form>
                         </div>
+                        @if(!empty($message))
+                        <div class="alert alert-warning mt-3">
+                            {{ $message }}
+                        </div>
+                        @endif
                         
 
                         @if(isset($request) && !empty($request->date) && !empty($request->fund_type_id))
@@ -705,5 +710,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </Script>
-
 
