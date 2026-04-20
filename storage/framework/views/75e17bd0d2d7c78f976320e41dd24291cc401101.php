@@ -35,8 +35,8 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form_group">
-                                            <input type="text" placeholder="As on Date" class="datepicker" name="date"
-                                                id="dateInput" value="<?php if(isset($request->date)): ?> <?php echo e($request->date); ?> <?php endif; ?>">
+                                            <input type="date" class="form-control" name="date"
+                                                id="dateInput" value="<?php if(isset($request->date) && !empty($request->date)): ?> <?php echo e(\Carbon\Carbon::parse($request->date)->format('Y-m-d')); ?> <?php endif; ?>">
 
                                         </div>
                                     </div>

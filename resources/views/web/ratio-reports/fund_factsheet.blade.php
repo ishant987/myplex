@@ -35,8 +35,8 @@
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form_group">
-                                            <input type="text" id="from" class="datepicker" name="to_date" readonly
-                                                value="{{ $_GET['to_date'] ?? '' }}">
+                                            <input type="date" id="from" class="form-control" name="to_date"
+                                                value="{{ !empty($_GET['to_date']) ? \Carbon\Carbon::parse($_GET['to_date'])->format('Y-m-d') : '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
