@@ -21,6 +21,28 @@
                     width: 100% !important;
                 }
 
+                .datepicker {
+                    cursor: pointer;
+                }
+
+                .share_pdf .pdf,
+                .new-share-pdf .pdf {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 44px;
+                    height: 44px;
+                    flex: 0 0 44px;
+                }
+
+                .share_pdf .pdf img,
+                .new-share-pdf .pdf img {
+                    width: 100%;
+                    max-width: 44px;
+                    height: auto;
+                    display: block;
+                }
+
                 .dataTables_wrapper {
                     width: 100%;
                 }
@@ -97,11 +119,20 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     if (window.jQuery && $.fn.datepicker) {
-                        $('.datepicker').datepicker({
+                        $('.datepicker').attr('readonly', true);
+
+                        $('.datepicker').datepicker('destroy').datepicker({
                             dateFormat: 'dd-mm-yy',
                             changeMonth: true,
                             changeYear: true,
-                            numberOfMonths: 1
+                            numberOfMonths: 1,
+                            showButtonPanel: true,
+                            yearRange: '-100:+20',
+                            constrainInput: false
+                        });
+
+                        $('.datepicker').on('focus click', function () {
+                            $(this).datepicker('show');
                         });
                     }
 
