@@ -8,7 +8,7 @@
     <style>
         .r-square-toggle {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             align-items: center;
             gap: 12px;
         }
@@ -16,12 +16,10 @@
         .r-square-toggle p {
             margin: 0;
             font-weight: 600;
-            white-space: nowrap;
         }
 
         .r-square-toggle a {
-            min-width: 0;
-            flex: 1 1 0;
+            min-width: 112px;
             text-align: center;
         }
 
@@ -34,20 +32,6 @@
 
         .r-square-form .subs_in.bttn_grp p {
             margin: 0;
-        }
-
-        @media (max-width: 991px) {
-            .r-square-toggle {
-                flex-wrap: wrap;
-            }
-
-            .r-square-toggle p {
-                width: 100%;
-            }
-
-            .r-square-toggle a {
-                flex: 1 1 calc(50% - 12px);
-            }
         }
     </style>
 
@@ -63,10 +47,7 @@
                             <li>R-Square Ratios Reports</li>
                         </ul>
                     </div>
-                    <div class="perform_head">
-                        <h2>R-Square Ratios Reports</h2>
-                    </div>
-
+                 
                     <div class="light_green_bg r-square-form">
                         <form method="GET" action="">
                             <input type="hidden" name="quartile_set" id="quartile_set"
