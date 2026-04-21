@@ -16,6 +16,7 @@ use App\Http\Controllers\Web\TrackingerrorController;
 use App\Http\Controllers\Web\TreynorController;
 use App\Http\Controllers\Web\VolatilityController;
 use App\Models\CorpusEntry;
+use App\Models\CurrencyDetail;
 use App\Models\FundDetail;
 use Illuminate\Http\Request;
 use App\Models\CurrencyMaster;
@@ -148,7 +149,7 @@ class RatioController extends Controller
 
     function comparative(Request $request){
       $data = $request->routeIs('user.r_square_comparison')
-          ? $this->reportViewData($request)
+          ? $this->rSquareComparisonViewData($request)
           : $this->comparativeViewData($request);
 
       if ($request->routeIs('user.r_square_comparison')) {
@@ -264,7 +265,7 @@ class RatioController extends Controller
             'currency_id' => (array) $request->input('currency_id', []),
             'commodity_id' => (array) $request->input('commodity_id', []),
             'as_on_time_frame_data' => [],
-            'schemeMaterData' => [],
+            'schemeMaterData' => null,
             'Id' => null,
             'start_date' => $request->input('start_date', $today->copy()->subDays(6)->toDateString()),
             'end_date' => $request->input('end_date', $today->toDateString()),
@@ -668,6 +669,53 @@ class RatioController extends Controller
         return $data;
     }
 
+    protected function rSquareComparisonViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $data['report_category'] = 'r_square';
+        $data['request']->merge([
+            'Category' => 'by_fund',
+            'report_category' => 'r_square',
+            'compare_type' => $request->input('compare_type', 'Scheme'),
+        ]);
+
+        $primaryFundId = (int) $request->input('scheme_id');
+        $compareType = (string) $request->input('compare_type', 'Scheme');
+        $range = $this->resolveRankingRange($request);
+
+        $data['start_date'] = $range['start']->toDateString();
+        $data['end_date'] = $range['end']->toDateString();
+
+        if ($range['mode'] === 'as_on') {
+            $data['as_on_time_frame_data'] = [$request->input('as_on_time_frame')];
+        }
+
+        if ($primaryFundId <= 0) {
+            return $data;
+        }
+
+        $primaryFund = FundMaster::query()->find($primaryFundId);
+        if (!$primaryFund) {
+            return $data;
+        }
+
+        $data['schemeMaterData'] = $primaryFund;
+
+        [$compareItems, $compareNames] = $this->resolveRComparisonSelection($request, $compareType);
+        $data['fund_names'] = $compareNames;
+
+        if ($compareItems->isEmpty()) {
+            return $data;
+        }
+
+        $ratioMap = $this->buildRSquareComparisonMap($primaryFund, $compareItems, $compareType, $range['start'], $range['end']);
+        $data['stat_result'] = [
+            'fund_absolute_return' => $ratioMap,
+        ];
+
+        return $data;
+    }
+
     protected function fundFactsheetViewData(Request $request): array
     {
         $data = $this->reportViewData($request);
@@ -930,6 +978,47 @@ class RatioController extends Controller
         ];
     }
 
+    protected function resolveRComparisonSelection(Request $request, string $compareType): array
+    {
+        return match ($compareType) {
+            'Index' => $this->resolveNamedSelection(
+                IndicesMaster::query()->whereIn('idc_id', array_filter(array_map('intval', (array) $request->input('index_id', []))))->orderBy('name')->get(),
+                'name',
+            ),
+            'Currency' => $this->resolveNamedSelection(
+                CurrencyMaster::query()
+                    ->where('is_comodity', '0')
+                    ->whereIn('cm_id', array_filter(array_map('intval', (array) $request->input('currency_id', []))))
+                    ->orderBy('name')
+                    ->get(),
+                'name',
+            ),
+            'Commodity' => $this->resolveNamedSelection(
+                CurrencyMaster::query()
+                    ->where('is_comodity', '1')
+                    ->whereIn('cm_id', array_filter(array_map('intval', (array) $request->input('commodity_id', []))))
+                    ->orderBy('name')
+                    ->get(),
+                'name',
+            ),
+            default => $this->resolveNamedSelection(
+                FundMaster::query()
+                    ->whereIn('fund_id', array_filter(array_map('intval', (array) $request->input('fund_id', []))))
+                    ->orderBy('fund_name')
+                    ->get(),
+                'fund_name',
+            ),
+        };
+    }
+
+    protected function resolveNamedSelection(Collection $items, string $nameKey): array
+    {
+        return [
+            $items,
+            $items->pluck($nameKey)->implode(', '),
+        ];
+    }
+
     protected function canBuildRatioReport(Request $request, Collection $funds): bool
     {
         return (bool) $request->input('report_category')
@@ -1070,6 +1159,130 @@ class RatioController extends Controller
         }
 
         return $ratioMap;
+    }
+
+    protected function buildRSquareComparisonMap(
+        FundMaster $primaryFund,
+        Collection $compareItems,
+        string $compareType,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate
+    ): array {
+        $ratioMap = [];
+        $primarySeries = $this->buildFundReturnSeries($primaryFund, $startDate, $endDate);
+
+        foreach ($compareItems as $item) {
+            $compareSeries = match ($compareType) {
+                'Index' => $this->buildIndexReturnSeries((string) $item->name, $startDate, $endDate),
+                'Currency', 'Commodity' => $this->buildCurrencyReturnSeries((int) $item->cm_id, $startDate, $endDate),
+                default => $this->buildFundReturnSeries($item, $startDate, $endDate),
+            };
+
+            $ratioMap[$this->rSquareComparisonKey($item, $compareType)] = $this->calculateRCorrelationSquare($primarySeries, $compareSeries);
+        }
+
+        return $ratioMap;
+    }
+
+    protected function rSquareComparisonKey($item, string $compareType): int
+    {
+        return match ($compareType) {
+            'Index' => (int) $item->idc_id,
+            'Currency', 'Commodity' => (int) $item->cm_id,
+            default => (int) $item->fund_id,
+        };
+    }
+
+    protected function buildFundReturnSeries(FundMaster $fund, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        if (empty($fund->fund_code)) {
+            return [];
+        }
+
+        $points = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate->toDateString())
+            ->where('entry_date', '>=', $startDate->copy()->subDays(35)->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_nav']);
+
+        return $this->buildReturnSeriesFromPoints($points, 'entry_date', 'closing_nav');
+    }
+
+    protected function buildIndexReturnSeries(string $indexName, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        if ($indexName === '') {
+            return [];
+        }
+
+        $points = IndicesDetail::query()
+            ->where('name', $indexName)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate->toDateString())
+            ->where('entry_date', '>=', $startDate->copy()->subDays(35)->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_value']);
+
+        return $this->buildReturnSeriesFromPoints($points, 'entry_date', 'closing_value');
+    }
+
+    protected function buildCurrencyReturnSeries(int $currencyId, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        if ($currencyId <= 0) {
+            return [];
+        }
+
+        $points = CurrencyDetail::query()
+            ->where('cm_id', $currencyId)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate->toDateString())
+            ->where('entry_date', '>=', $startDate->copy()->subDays(35)->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'entry_value']);
+
+        return $this->buildReturnSeriesFromPoints($points, 'entry_date', 'entry_value');
+    }
+
+    protected function buildReturnSeriesFromPoints(Collection $points, string $dateKey, string $valueKey): array
+    {
+        $series = [];
+        $previousValue = null;
+
+        foreach ($points as $point) {
+            $currentValue = data_get($point, $valueKey);
+            $entryDate = data_get($point, $dateKey);
+
+            if (!is_numeric($currentValue) || $currentValue <= 0 || !$entryDate) {
+                continue;
+            }
+
+            if ($previousValue !== null && $previousValue > 0) {
+                $series[$entryDate] = (($currentValue - $previousValue) / $previousValue) * 100;
+            }
+
+            $previousValue = (float) $currentValue;
+        }
+
+        return $series;
+    }
+
+    protected function calculateRCorrelationSquare(array $primarySeries, array $compareSeries)
+    {
+        $sharedDates = array_values(array_intersect(array_keys($primarySeries), array_keys($compareSeries)));
+        if (count($sharedDates) < 2) {
+            return 'N/A';
+        }
+
+        $primaryValues = array_map(fn ($date) => (float) $primarySeries[$date], $sharedDates);
+        $compareValues = array_map(fn ($date) => (float) $compareSeries[$date], $sharedDates);
+        $correlation = app(rsquereController::class)->correlation($primaryValues, $compareValues);
+
+        if ($correlation === null || !is_numeric($correlation)) {
+            return 'N/A';
+        }
+
+        return round($correlation * $correlation, 4);
     }
 
     protected function calculateRatioForFund(FundMaster $fund, string $reportCategory, CarbonInterface $startDate, CarbonInterface $endDate)

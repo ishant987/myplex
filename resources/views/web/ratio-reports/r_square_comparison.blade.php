@@ -1,5 +1,55 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
+    @php
+        $selectedRanking = old('ranking', $request->ranking ?? 'range');
+        $selectedCompareType = old('compare_type', $request->compare_type ?? 'Scheme');
+        $isAsOnMode = $selectedRanking === 'as_on';
+    @endphp
+    <style>
+        .r-square-toggle {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .r-square-toggle p {
+            margin: 0;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .r-square-toggle a {
+            min-width: 0;
+            flex: 1 1 0;
+            text-align: center;
+        }
+
+        .r-square-form .subs_in.bttn_grp {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .r-square-form .subs_in.bttn_grp p {
+            margin: 0;
+        }
+
+        @media (max-width: 991px) {
+            .r-square-toggle {
+                flex-wrap: wrap;
+            }
+
+            .r-square-toggle p {
+                width: 100%;
+            }
+
+            .r-square-toggle a {
+                flex: 1 1 calc(50% - 12px);
+            }
+        }
+    </style>
 
     <div class="inner_main">
         <div class="page_detail">
@@ -17,7 +67,7 @@
                         <h2>R-Square Ratios Reports</h2>
                     </div>
 
-                    <div class="light_green_bg">
+                    <div class="light_green_bg r-square-form">
                         <form method="GET" action="">
                             <input type="hidden" name="quartile_set" id="quartile_set"
                                 value="{{ isset($quartile_set) ? $quartile_set : 'quartile' }}">
@@ -26,11 +76,13 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" name="ranking" value="range" checked>
+                                            <input type="radio" name="ranking" value="range"
+                                                {{ $selectedRanking === 'range' ? 'checked' : '' }}>
                                             Range
                                         </label>
                                         <label>
-                                            <input type="radio" name="ranking" value="as_on">
+                                            <input type="radio" name="ranking" value="as_on"
+                                                {{ $selectedRanking === 'as_on' ? 'checked' : '' }}>
                                             As on
                                         </label>
                                         @error('ranking')
@@ -39,34 +91,37 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
-                                        <input type="text" class="datepicker" placeholder="Start date" name="start_date"
-                                            value="{{ $request->has('start_date') ? $request->start_date : old('start_date') }}">
+                                        <input type="date" class="form-control" placeholder="Start date" name="start_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
+                                            value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
-                                        <input type="text" class="datepicker" placeholder="End date" name="end_date"
-                                            value="{{ $request->has('end_date') ? $request->end_date : old('end_date') }}">
+                                        <input type="date" class="form-control" placeholder="End date" name="end_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
+                                            value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
-                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
-                                            value="{{ $request->as_on_date }}">
+                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            {{ $isAsOnMode ? '' : 'disabled' }}
+                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame">
+                                        <select name="as_on_time_frame" {{ $isAsOnMode ? '' : 'disabled' }}>
                                             <option value="1_month"
                                                 @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
                                             </option>
@@ -120,12 +175,12 @@
 
                                 <div class="col-md-8 ">
                                     
-                                    <div class="subs_in bttn_grp w-100 mb-3" style="z-index:1;">
+                                    <div class="subs_in bttn_grp w-100 mb-3 r-square-toggle" style="z-index:1;">
                                         <p>Compare With </p>
-                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Scheme');selectCompareTypeList('Scheme');" class="@if (old('compare_type', $request->compare_type) == 'Scheme') bg-secondary @endif">Scheme</a>
-                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Index');selectCompareTypeList('Index');" class="@if (old('compare_type', $request->compare_type) == 'Index') bg-secondary @endif">Index</a>
-                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Currency');selectCompareTypeList('Currency');" class="@if (old('compare_type', $request->compare_type) == 'Currency') bg-secondary @endif">Currency</a>
-                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Commodity');selectCompareTypeList('Commodity');" class="@if (old('compare_type', $request->compare_type) == 'Commodity') bg-secondary @endif">Commodity</a>                                    
+                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Scheme');selectCompareTypeList('Scheme');" class="@if ($selectedCompareType == 'Scheme') bg-secondary @endif">Scheme</a>
+                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Index');selectCompareTypeList('Index');" class="@if ($selectedCompareType == 'Index') bg-secondary @endif">Index</a>
+                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Currency');selectCompareTypeList('Currency');" class="@if ($selectedCompareType == 'Currency') bg-secondary @endif">Currency</a>
+                                        <a href="javascript:void(0)" onclick="$('#compare_type').val('Commodity');selectCompareTypeList('Commodity');" class="@if ($selectedCompareType == 'Commodity') bg-secondary @endif">Commodity</a>                                    
                                     </div>
                                     <div class="form_group d-none">
                                         <select name="compare_type" id="compare_type" onchange=" selectCompareTypeList(this.value);">
@@ -140,7 +195,7 @@
                                     </div>
                                     <div class="form_group">
                                         
-                                        <div id="fund_wrapper" class="@if ($request->compare_type != 'Scheme' && !empty($request->compare_type) ) d-none @endif">
+                                        <div id="fund_wrapper" class="@if ($selectedCompareType != 'Scheme') d-none @endif">
                                             <select name="fund_id[]" class=" select2  multiple" multiple
                                                 id="allocation_select_fund" onchange ='fund_multiple(this,"scheme")'
                                                 data-placeholder="Select Schemes" data-min="1"  data-max="10" style="">
@@ -155,7 +210,7 @@
                                                 
                                             </select>
                                         </div>
-                                        <div id="index_wrapper" class="@if (old('compare_type', $request->compare_type) != 'Index') d-none @endif">
+                                        <div id="index_wrapper" class="@if ($selectedCompareType != 'Index') d-none @endif">
                                             <select name="index_id[]" class=" select2  multiple " multiple
                                                 id="allocation_select_index" onchange ='fund_multiple(this,"index")'
                                                 data-placeholder="Select Indexes" data-min="1"  data-max="10" style="">
@@ -170,7 +225,7 @@
                                                 
                                             </select>
                                         </div>
-                                        <div id="currency_wrapper" class="@if (old('compare_type', $request->compare_type) != 'Currency') d-none @endif">
+                                        <div id="currency_wrapper" class="@if ($selectedCompareType != 'Currency') d-none @endif">
                                             <select name="currency_id[]" class="  select2 multiple " multiple
                                                 id="allocation_select_currency" onchange ='fund_multiple(this,"currency")'
                                                 data-placeholder="Select Currencies" data-min="1"  data-max="10" style="">  
@@ -187,7 +242,7 @@
                                             </select>
                                         </div>
 
-                                        <div id="commodity_wrapper" class="@if (old('compare_type', $request->compare_type) != 'Commodity') d-none @endif">
+                                        <div id="commodity_wrapper" class="@if ($selectedCompareType != 'Commodity') d-none @endif">
                                             <select name="commodity_id[]" class=" select2  multiple" multiple
                                                 id="allocation_select_commodity" onchange ='fund_multiple(this,"commodity")'
                                                 data-placeholder="Select Commodities" data-min="1"  data-max="10" style="">  
@@ -213,19 +268,7 @@
                                     
                                 </div>
 
-                                <div class="col-md-4 d-none">
-                                    <div class="form_group">
-                                        <select name="report_category">
-                                            <option value="r_square"
-                                                @if (old('report_category', $request->report_category) == 'r_square') selected @endif>
-                                                R Sqaure
-                                            </option>
-                                        </select>
-                                        @error('report_category')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+                                <input type="hidden" name="report_category" value="r_square">
 
 
                                 
@@ -273,7 +316,7 @@
                                     </span>
                                 </li>
 
-                                @if (isset($as_on_time_frame_data))
+                                @if (!empty($as_on_time_frame_data))
                                     <li>
                                         <p>Duration :</p>
                                         <span>
@@ -301,12 +344,12 @@
                                 
                                     <li>
                                         <p>primary Fund Name :</p>
-                                        <span>{{ isset($schemeMaterData) ? $schemeMaterData->fund_name : '' }}</span>
+                                        <span>{{ $schemeMaterData->fund_name ?? '' }}</span>
                                     </li>
                                 
                                 @if (isset($request) && $request->Category == 'by_fund')
                                     <li>
-                                        <p>Compare Fund Names :</p>
+                                        <p>Compare {{ strtolower($request->compare_type ?? 'scheme') }} names :</p>
                                         <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
                                     </li>
                                 @endif
@@ -418,111 +461,83 @@
 @endsection
 
 <script>
-    
-    function set_fund_select_val() {
+    function selectedCompareCount(type) {
+        var map = {
+            Scheme: '#allocation_select_fund',
+            Index: '#allocation_select_index',
+            Currency: '#allocation_select_currency',
+            Commodity: '#allocation_select_commodity'
+        };
 
-        var thiss = $('#fund_Category').val();
+        return ($(map[type]).val() || []).length;
+    }
 
-        var count = $('#allocation_select_fund').select2('data').length;
+    function toggleRankingFields() {
+        var ranking = $('input[name="ranking"]:checked').val() || 'range';
+        var isAsOn = ranking === 'as_on';
 
+        $('.div_show').toggle(!isAsOn);
+        $('.div_hide').toggle(isAsOn);
 
-        console.log(thiss + '  ' + count);
+        $('input[name="start_date"], input[name="end_date"]').prop('disabled', isAsOn);
+        $('input[name="as_on_date"], select[name="as_on_time_frame"]').prop('disabled', !isAsOn);
+    }
 
-        if (thiss == 'by_fund') {
+    function selectCompareTypeList(type) {
+        $('#compare_type').val(type);
+        $('#fund_wrapper, #index_wrapper, #currency_wrapper, #commodity_wrapper').addClass('d-none');
 
-            if (count >= 2 && count <= 10) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
+        if (type === 'Scheme') {
+            $('#fund_wrapper').removeClass('d-none');
+        } else if (type === 'Index') {
+            $('#index_wrapper').removeClass('d-none');
+        } else if (type === 'Currency') {
+            $('#currency_wrapper').removeClass('d-none');
+        } else if (type === 'Commodity') {
+            $('#commodity_wrapper').removeClass('d-none');
+        }
 
+        $('.r-square-toggle a').removeClass('bg-secondary');
+        $('.r-square-toggle a').filter(function() {
+            return $(this).text().trim() === type;
+        }).addClass('bg-secondary');
 
-        } else {
+        updateCompareSelectionState();
+    }
 
+    function updateCompareSelectionState() {
+        var type = $('#compare_type').val() || 'Scheme';
+        var count = selectedCompareCount(type);
+
+        if (count >= 1 && count <= 10) {
+            $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
+            return;
         }
+
+        $('#fund_msgg').html('<p>Selection limit minimum 1 and maximum 10 for <b>' + type + '</b></p>');
+        $('#submit_btn').prop('disabled', true);
     }
 
-
-    function get_date(thiss) {
-
-        if (thiss == 'Range') {
-
-            $('#from_date_div').show();
-            $('#year_month').prop('required', false);
-            $('#year_month_div').attr('style', 'display:none');
-            $('#to_date').attr('placeholder', 'End Date');
-
-
-        } else if (thiss == 'As on') {
-
-            $('#from_date_div').hide(); // $('#from_date_div').val('');
-
-            $('#from_date').prop('required', false);
-            $('#year_month_div').removeAttr('style');
-            $('#year_month').prop('required', true);
-            $('#to_date').attr('placeholder', 'Date');
-
-        }
-
-    }
-
-    function get_classification(thiss) {
-
-        if (thiss == 'classification') {
-
-            $('#fund_type_div').removeAttr('style');
-            $('#fund_type').prop('required', true);
-
-
-            $('#fund_master').prop('required', false);
-
-            $('#fund_name_div').attr('style', 'display:none');
-
-        } else if (thiss == 'fund') {
-
-            $('#fund_type_div').attr('style', 'display:none');
-            $('#fund_type').prop('required', false);
-
-
-            $('#fund_master').prop('required', true);
-
-            $('#fund_name_div').removeAttr('style');
-
-
-        }
-
-    }
-
-
-    function get_fund_types(thiss) {
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
-        } else if (thiss == 'by_fund') {
-            if (count >= 2 && count <= 10) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-        }
+    function fund_multiple() {
+        updateCompareSelectionState();
     }
 
 
     document.addEventListener('DOMContentLoaded', function() {
+        toggleRankingFields();
+        selectCompareTypeList($('#compare_type').val() || 'Scheme');
+
+        $('input[name="ranking"]').on('change', toggleRankingFields);
+        $('#allocation_select_fund, #allocation_select_index, #allocation_select_currency, #allocation_select_commodity').on('change', function() {
+            updateCompareSelectionState();
+        });
+
         var exportButton = document.getElementById('exportPDF');
+
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
             var {

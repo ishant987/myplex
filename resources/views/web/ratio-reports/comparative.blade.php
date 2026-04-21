@@ -222,7 +222,7 @@
                                 <div class="col-md-6">
                                     <div class="form_group">
                                         <select name="report_category">
-                                            <option value="">Ratio</option>
+                                        
                                             <optgroup label="Return Ratio">
                                                 <option value="returns" @if (old(
                                                         'report_category',
