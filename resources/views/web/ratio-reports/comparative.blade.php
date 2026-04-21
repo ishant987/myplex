@@ -6,31 +6,33 @@
         $isByFundMode = $selectedCategory === 'by_fund';
     @endphp
     <style>
-        .comparative-summary {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .fund_section.new_fund_section ul.comparative-summary {
+            display: flex !important;
+            flex-wrap: wrap;
             gap: 24px;
+            align-items: flex-start;
         }
 
-        .comparative-summary li {
+        .fund_section.new_fund_section ul.comparative-summary > li {
             min-width: 0;
+            float: none !important;
         }
 
-        .comparative-summary li:nth-child(1) {
-            grid-column: 1;
+        .fund_section.new_fund_section ul.comparative-summary > li.summary-period {
+            width: calc(50% - 12px);
         }
 
-        .comparative-summary li:nth-child(2) {
-            grid-column: 2;
+        .fund_section.new_fund_section ul.comparative-summary > li.summary-detail {
+            width: calc(50% - 12px);
         }
 
-        .comparative-summary li:nth-child(n + 3) {
-            grid-column: span 1;
+        .fund_section.new_fund_section ul.comparative-summary > li.summary-period:nth-child(2) {
+            margin-left: 0;
         }
 
         .comparative-summary .summary-period {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 18px;
             align-items: flex-start;
         }
@@ -55,14 +57,13 @@
         }
 
         @media (max-width: 991px) {
-            .comparative-summary {
-                grid-template-columns: 1fr;
+            .fund_section.new_fund_section ul.comparative-summary > li.summary-period,
+            .fund_section.new_fund_section ul.comparative-summary > li.summary-detail {
+                width: 100%;
             }
 
-            .comparative-summary li:nth-child(1),
-            .comparative-summary li:nth-child(2),
-            .comparative-summary li:nth-child(n + 3) {
-                grid-column: auto;
+            .comparative-summary .summary-period {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -76,9 +77,7 @@
                         <li>Comparative</li>
                     </ul>
                 </div>
-                <div class="perform_head">
-                    <h2>Comparative</h2>
-                </div>
+                
                 <div class="new_page">
                     <div class="wm_tab">
                         <ul class="tabs">
