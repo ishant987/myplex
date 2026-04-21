@@ -7,6 +7,16 @@
         $isAsOnMode = $selectedRanking === 'as_on';
         $isByFundMode = $selectedCategory === 'by_fund';
     @endphp
+    <style>
+        .fund_section.new_fund_section ul li.fund-name-item span {
+            display: block;
+            max-width: 100%;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            line-height: 1.45;
+        }
+    </style>
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -18,9 +28,7 @@
                     </ul>
                 </div>
 
-                <div class="perform_head">
-                    <h2>Quartile & Decile</h2>
-                </div>
+            
 
                 <div class="new_page">
 
@@ -312,7 +320,7 @@
                                             </span>
                                         </li>
 
-                                        @if (isset($as_on_time_frame_data))
+                                        @if (!empty($as_on_time_frame_data))
                                             <li>
                                                 <p>Duration :</p>
                                                 <span>
@@ -351,7 +359,7 @@
                                         @endif
 
                                         @if (isset($request) && $request->Category == 'by_fund')
-                                            <li>
+                                            <li class="fund-name-item">
                                                 <p>fund name :</p>
                                                 <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
                                             </li>
@@ -471,7 +479,7 @@
                                         </li>
 
 
-                                        @if (isset($as_on_time_frame_data))
+                                        @if (!empty($as_on_time_frame_data))
                                             <li>
                                                 <p>Duration :</p>
                                                 <span>
@@ -510,7 +518,7 @@
                                         @endif
 
                                         @if (isset($request) && $request->Category == 'by_fund')
-                                            <li>
+                                            <li class="fund-name-item">
                                                 <p>fund name :</p>
                                                 <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
                                             </li>

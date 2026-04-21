@@ -1,7 +1,71 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
-    {{-- @php asort($p_one_quartile_decile_result['quartile']) @endphp
-    @dd($p_one_quartile_decile_result) --}}
+    @php
+        $selectedCategory = old('Category', $request->Category ?? 'by_category');
+        $selectedQuartileSet = old('quartile_set', $quartile_set ?? 'quartile');
+        $isByFundMode = $selectedCategory === 'by_fund';
+    @endphp
+    <style>
+        .comparative-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .comparative-summary li {
+            min-width: 0;
+        }
+
+        .comparative-summary li:nth-child(1) {
+            grid-column: 1;
+        }
+
+        .comparative-summary li:nth-child(2) {
+            grid-column: 2;
+        }
+
+        .comparative-summary li:nth-child(n + 3) {
+            grid-column: span 1;
+        }
+
+        .comparative-summary .summary-period {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .comparative-summary .summary-period b {
+            min-width: 108px;
+            font-size: 18px;
+        }
+
+        .comparative-summary .summary-period figure,
+        .comparative-summary .summary-detail {
+            margin: 0;
+            min-width: 0;
+        }
+
+        .comparative-summary .summary-detail span {
+            display: block;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 991px) {
+            .comparative-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .comparative-summary li:nth-child(1),
+            .comparative-summary li:nth-child(2),
+            .comparative-summary li:nth-child(n + 3) {
+                grid-column: auto;
+            }
+        }
+    </style>
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -45,14 +109,14 @@
                                 <div class="col-md-12">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" name="Category" checked value="by_category"
-                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                            <input type="radio" name="Category" value="by_category"
+                                                {{ $selectedCategory === 'by_category' ? 'checked' : '' }}
                                                 onclick='get_fund_types_js(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                {{ $selectedCategory === 'by_fund' ? 'checked' : '' }}
                                                 onclick='get_fund_types_js(this.value)'>
                                             By Fund
                                         </label>
@@ -113,10 +177,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 div_show_1">
+                                <div class="col-md-6 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <select name="fund_type_id" id="fund_type" class="select2"
-                                            data-placeholder="Select Fund Classification">
+                                            data-placeholder="Select Fund Classification"
+                                            {{ $isByFundMode ? 'disabled' : '' }}>
                                             <option value=""></option>
                                             @if (isset($fund_type))
                                                 @foreach ($fund_type as $val)
@@ -133,10 +198,11 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 div_hide_1">
+                                <div class="col-md-6 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group multiple_select">
                                         <select name="fund_id[]" class="select2 multiple" id="select_fund_multiple"
-                                            data-max="20" multiple onchange='fund_multiple(this)'>
+                                            data-max="20" data-min="{{ $selectedQuartileSet === 'decile' ? 10 : 4 }}"
+                                            multiple onchange='fund_multiple(this)' {{ $isByFundMode ? '' : 'disabled' }}>
                                             <option value="">Select Fund</option>
                                             @if (isset($all_funds))
                                                 @foreach ($all_funds as $val)
@@ -273,8 +339,8 @@
                             isset($p_two_quartile_decile_result) &&
                             isset($p_two_quartile_decile_result['fund_absolute_return']))
                         <div class="fund_section new_fund_section">
-                            <ul>
-                                <li>
+                            <ul class="comparative-summary">
+                                <li class="summary-period">
                                     <b>1st period -</b>
                                     <figure>
                                         <p>start date :</p>
@@ -285,7 +351,7 @@
                                         <span>{{ isset($p_one_end_date) ? date('d-m-Y', strtotime($p_one_end_date)) : 'N/A' }}</span>
                                     </figure>
                                 </li>
-                                <li>
+                                <li class="summary-period">
                                     <b>2nd period -</b>
                                     <figure>
                                         <p>start date :</p>
@@ -296,17 +362,17 @@
                                         <span>{{ isset($p_two_end_date) ? date('d-m-Y', strtotime($p_two_end_date)) : 'N/A' }}</span>
                                     </figure>
                                 </li>
-                                <li>
+                                <li class="summary-detail">
                                     <p>by functions :</p>
                                     <span>{{ ucwords(str_replace('_', ' ', $report_category ?? 'N/A')) }}</span>
                                 </li>
                                 @if (isset($fund_type_id))
-                                    <li>
+                                    <li class="summary-detail">
                                         <p>fund classification :</p>
                                         <span>{{ getNameTable('fund_type', 'name', 'ft_id', $fund_type_id) }}</span>
                                     </li>
                                 @elseif(isset($fund_id))
-                                    <li>
+                                    <li class="summary-detail">
                                         <p>fund names :</p>
                                         <span>
                                             @foreach ($fund_id as $item)
@@ -451,60 +517,62 @@
     </div>
 @endsection
 <script>
+    function currentComparativeMode() {
+        return $('#quartile_set').val() || 'quartile';
+    }
+
+    function selectedFundCount() {
+        return ($('#select_fund_multiple').val() || []).length;
+    }
+
+    function toggleCategoryFields() {
+        var category = $('input[name="Category"]:checked').val() || 'by_category';
+        var isByFund = category === 'by_fund';
+
+        $('.div_show_1').toggle(!isByFund);
+        $('.div_hide_1').toggle(isByFund);
+
+        $('select[name="fund_type_id"]').prop('disabled', isByFund);
+        $('select[name="fund_id[]"]').prop('disabled', !isByFund);
+    }
+
+    function updateComparativeSelectionState() {
+        var category = $('input[name="Category"]:checked').val() || 'by_category';
+        var mode = currentComparativeMode();
+        var count = selectedFundCount();
+        var min = mode === 'decile' ? 10 : 4;
+
+        $('#select_fund_multiple').attr('data-min', min);
+
+        if (category !== 'by_fund') {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        if (count >= min && count <= 20) {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        $('#fund_msgg').html('<p>Selection limit minimum ' + min + ' and maximum 20 for <b>' + (mode === 'decile' ? 'Decile' : 'Quartile') + '</b></p>');
+        $('#submit_btn').prop('disabled', true);
+    }
+
     function max_min_fund(element) {
         var value = element.getAttribute('data-value');
 
         $('#quartile_set').val(value);
-
-        var selectedOptions = $('#select_fund_multiple').val() || []; // Get selected options or empty array
-        var selectedCategory = $('input[name="Category"]:checked').val();
-
-        var status = $('#quartile_status').val();
-
-        // No need for console.log here (unless for debugging purposes)
-
-        var min = 0;
-        var message = '';
-
-        if (value === 'quartile') {
-            $('#select_fund_multiple').attr('data-min', 4);
-            min = 4;
-            message = '<p>You need to select at least ' + min + ' and maximum 20 funds.</p>';
-        } else if (value === 'decile') {
-            $('#select_fund_multiple').attr('data-min', 10);
-            min = 10;
-            message = '<p>You need to select at least ' + min + ' and maximum 20 funds.</p>';
-        }
-
-        $('#fund_msgg').html(message);
-
-        // Logical errors in the original conditions
-        if ((status === 'quartile' && value === 'decile') || (status === 'decile' && value === 'quartile')) {
-            // Hide elements with class 'data' and show 'no-data'
-            $('.table.comp tbody .data').hide();
-            $('.table.comp tbody .no-data').show();
-        } else {
-            // Show elements with class 'data' and hide 'no-data' (assuming they exist)
-            $('.table.comp tbody .data').show();
-            $('.table.comp tbody .no-data').hide();
-        }
-
-
-        if (selectedCategory == 'by_fund') {
-            if (selectedOptions.length >= min) {
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                $('#submit_btn').prop('disabled', true);
-            }
-        } else {
-            $('#submit_btn').prop('disabled', false);
-        }
+        $('#quartile_tab').toggleClass('active', value === 'quartile');
+        $('#decile_tab').toggleClass('active', value === 'decile');
+        updateComparativeSelectionState();
     }
 
-    window.addEventListener('load', function() {
-        document.getElementById('select_fund_multiple').setAttribute('data-min', 4);
-        var value = document.getElementById('quartile_set').value;
-    });
+    function get_fund_types_js(thiss) {
+        toggleCategoryFields();
+        updateComparativeSelectionState();
+    }
 
     // function get_fund_types(thiss) {
 
@@ -551,7 +619,19 @@
 
 
     document.addEventListener('DOMContentLoaded', function() {
+        toggleCategoryFields();
+        updateComparativeSelectionState();
+
+        $('input[name="Category"]').on('change', function() {
+            get_fund_types_js(this.value);
+        });
+        $('#select_fund_multiple').on('change', updateComparativeSelectionState);
+
         var exportButton = document.getElementById('exportPDFquartile');
+
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
             var {
