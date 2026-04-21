@@ -255,7 +255,7 @@ class RatioController extends Controller
             'fundReturns' => [],
             'ranks' => [],
             'rank' => [],
-            'fund_names' => [],
+            'fund_names' => '',
             'fund_type_name' => null,
             'request_fund_type' => null,
             'fund_id' => (array) $request->input('fund_id', []),
