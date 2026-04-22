@@ -23,6 +23,7 @@ use App\Models\CurrencyMaster;
 use App\Models\FundMaster;
 use App\Models\FundType;
 use App\Models\IndicesDetail;
+use App\Models\IndicesComposition;
 use App\Models\IndicesMaster;
 use App\Models\User;
 use Carbon\CarbonInterface;
@@ -172,11 +173,11 @@ class RatioController extends Controller
     }
 
     function indices_boomers(Request $request){
-      return view('web.indices-reports.boomers', $this->indicesReportViewData($request));
+      return view('web.indices-reports.boomers', $this->indicesMoversViewData($request));
     }
 
     function indices_busters(Request $request){
-      return view('web.indices-reports.busters', $this->indicesReportViewData($request));
+      return view('web.indices-reports.busters', $this->indicesMoversViewData($request));
     }
 
     function index_vs_nav(Request $request){
@@ -614,6 +615,76 @@ class RatioController extends Controller
         return $data;
     }
 
+    protected function indicesMoversViewData(Request $request): array
+    {
+        $data = $this->indicesReportViewData($request);
+        $selectedValues = array_values(array_filter((array) $request->input('indices', [])));
+        $periodOne = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+        $periodTwo = $this->resolveMonthYearPeriod($request->input('month_second'), $request->input('year_second'));
+
+        if (empty($selectedValues) || !$periodOne || !$periodTwo) {
+            return $data;
+        }
+
+        $selectedIndices = IndicesMaster::query()
+            ->whereIn('corelation', $selectedValues)
+            ->orWhereIn('name', $selectedValues)
+            ->orderBy('name')
+            ->get();
+
+        $selectedIndexMap = $selectedIndices->flatMap(function ($index) {
+            $keys = array_values(array_unique(array_filter([
+                $index->corelation ?? null,
+                $index->name ?? null,
+            ])));
+
+            return collect($keys)->mapWithKeys(fn ($key) => [$key => $index]);
+        });
+
+        $data['indices_records'] = collect($selectedValues)->map(function ($value) use ($selectedIndexMap) {
+            $index = $selectedIndexMap->get($value);
+
+            return (object) [
+                'name' => $index->name ?? $value,
+                'corelation' => $index->corelation ?? $value,
+            ];
+        });
+
+        $resultsScrips = collect();
+        $resultsIndustry = collect();
+
+        foreach ($selectedValues as $selectedValue) {
+            $selectedIndex = $selectedIndexMap->get($selectedValue);
+            $lookupNames = array_values(array_unique(array_filter([
+                $selectedValue,
+                $selectedIndex->corelation ?? null,
+                $selectedIndex->name ?? null,
+            ])));
+
+            if (empty($lookupNames)) {
+                continue;
+            }
+
+            $displayName = $selectedIndex->name ?? $selectedValue;
+            $periodOneRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodOne['end']);
+            $periodTwoRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodTwo['end']);
+
+            $resultsScrips = $resultsScrips->concat(
+                $this->buildIndicesMoverRows($periodOneRows, $periodTwoRows, 'scrip_name', $displayName)
+            );
+
+            $resultsIndustry = $resultsIndustry->concat(
+                $this->buildIndicesMoverRows($periodOneRows, $periodTwoRows, 'industry', $displayName)
+            );
+        }
+
+        $data['results_scrips'] = $resultsScrips->values();
+        $data['results_industry'] = $resultsIndustry->values();
+        $data['results_industries'] = $data['results_industry'];
+
+        return $data;
+    }
+
     protected function populateIndicesHistoryData(Request $request, array $data): array
     {
         $selectedCorrelations = array_values(array_filter((array) $request->input('indices', [])));
@@ -908,6 +979,69 @@ class RatioController extends Controller
             'end' => $end,
             'days' => $start->diffInDays($end),
         ];
+    }
+
+    protected function resolveMonthYearPeriod($month, $year): ?array
+    {
+        if (!$month || !$year) {
+            return null;
+        }
+
+        try {
+            $start = Carbon::createFromDate((int) $year, (int) $month, 1)->startOfMonth();
+            $end = $start->copy()->endOfMonth();
+
+            return [
+                'start' => $start,
+                'end' => $end,
+            ];
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    protected function fetchLatestIndicesCompositionRows(array $lookupNames, CarbonInterface $periodEnd): Collection
+    {
+        $rows = IndicesComposition::query()
+            ->whereIn('indices_name', $lookupNames)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '<=', $periodEnd->toDateString())
+            ->orderByDesc('entry_date')
+            ->get(['entry_date', 'indices_name', 'scrip_name', 'industry', 'percentage']);
+
+        if ($rows->isEmpty()) {
+            return collect();
+        }
+
+        $latestDate = $rows->first()->entry_date;
+
+        return $rows->where('entry_date', $latestDate)->values();
+    }
+
+    protected function buildIndicesMoverRows(Collection $oldRows, Collection $newRows, string $groupKey, string $displayName): Collection
+    {
+        $oldMap = $oldRows
+            ->filter(fn ($row) => filled(data_get($row, $groupKey)))
+            ->keyBy(fn ($row) => mb_strtolower(trim((string) data_get($row, $groupKey))));
+
+        $newMap = $newRows
+            ->filter(fn ($row) => filled(data_get($row, $groupKey)))
+            ->keyBy(fn ($row) => mb_strtolower(trim((string) data_get($row, $groupKey))));
+
+        $allKeys = $oldMap->keys()->merge($newMap->keys())->unique()->values();
+
+        return $allKeys->map(function ($key) use ($oldMap, $newMap, $groupKey, $displayName) {
+            $oldRow = $oldMap->get($key);
+            $newRow = $newMap->get($key);
+            $label = data_get($newRow, $groupKey) ?? data_get($oldRow, $groupKey);
+
+            return (object) [
+                $groupKey => $label,
+                'correlation_new' => $displayName,
+                'percentage_old' => (float) (data_get($oldRow, 'percentage') ?? 0),
+                'percentage_new' => (float) (data_get($newRow, 'percentage') ?? 0),
+            ];
+        })->filter(fn ($row) => filled(data_get($row, $groupKey)));
     }
 
     protected function safeSnapshotIndexData(string $mode, string $date, int $days): array
