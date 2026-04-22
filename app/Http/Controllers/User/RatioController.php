@@ -201,6 +201,7 @@ class RatioController extends Controller
       return view('web.filters.index', $this->filtersRatiosViewData($request));
     }
 
+
     function filters_composition(Request $request){
       return view('web.filters.composition', $this->reportViewData($request));
     }

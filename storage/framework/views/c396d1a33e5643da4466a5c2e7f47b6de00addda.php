@@ -2,6 +2,7 @@
     <?php
         $history = session()->has('history') ? session('history') : [];
         $disable = count($history) > 0 ? true : false;
+        $isByFundMode = isset($Category) && $Category === 'by_fund';
         // echo '<pre>';
         // print_r($history);
         // exit();
@@ -161,7 +162,8 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show_1">
+                                    <div class="col-md-4 div_show_1"
+                                        style="<?php echo e($isByFundMode ? 'display: none;' : ''); ?>">
                                         <div class="form_group">
                                             <select name="fund_type" id="fund_type" class="select2"
                                                 data-placeholder="Select Fund Classification"
@@ -189,12 +191,13 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide_1">
+                                    <div class="col-md-4 div_hide_1"
+                                        style="<?php echo e($isByFundMode ? '' : 'display: none;'); ?>">
                                         <div class="form_group multiple_select">
                                             <select name="fund_id[]" class="select2 multiple" multiple
                                                 id="select_fund_multiple" data-max="20" data-min="4"
                                                 onchange='fund_multiple(this)' data-placeholder="Select Fund"
-                                                <?php echo e($disable ? 'disabled' : ''); ?>>
+                                                <?php echo e($disable ? 'disabled' : ''); ?> <?php echo e($isByFundMode ? '' : 'disabled'); ?>>
                                                 <option value="">Select Fund</option>
                                                 <?php if(isset($all_funds)): ?>
                                                     <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -221,7 +224,7 @@ unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                     <div class="col-md-4"
-                                        style="<?php echo e(isset($records) || old('records') ? '' : 'display: none;'); ?>"
+                                        style="<?php echo e(!$isByFundMode && (isset($records) || old('records')) ? '' : 'display: none;'); ?>"
                                         id="record">
                                         <div class="form_group">
                                             <input type="number" placeholder="Records" name="records" id="record_val"
