@@ -181,7 +181,7 @@ class RatioController extends Controller
     }
 
     function index_vs_nav(Request $request){
-      return view('web.indices-reports.index-vs-NAV', $this->indicesReportViewData($request));
+      return view('web.indices-reports.index-vs-NAV', $this->indexVsNavViewData($request));
     }
 
     function model_portfolio(){
@@ -685,6 +685,49 @@ class RatioController extends Controller
         return $data;
     }
 
+    protected function indexVsNavViewData(Request $request): array
+    {
+        $data = $this->indicesReportViewData($request);
+        $dateRange = $this->resolveExplicitDateRange($request->input('from_date'), $request->input('to_date'));
+
+        $data['indices_vals_1'] = [];
+
+        if (!$dateRange) {
+            return $data;
+        }
+
+        $primary = $this->resolveIndexVsNavSelection(
+            (string) $request->input('main_select', 'scheme'),
+            (string) $request->input('scheme_main', ''),
+            (string) $request->input('index_main', ''),
+            $dateRange['start'],
+            $dateRange['end']
+        );
+
+        $compare = $this->resolveIndexVsNavSelection(
+            (string) $request->input('select_1', 'scheme'),
+            (string) $request->input('scheme_1', ''),
+            (string) $request->input('index_1', ''),
+            $dateRange['start'],
+            $dateRange['end']
+        );
+
+        if (!empty($primary['series'])) {
+            $data['indices_vals_1'][$primary['label']] = $primary['series'];
+        }
+
+        if (!empty($compare['series'])) {
+            $label = $compare['label'];
+            if (array_key_exists($label, $data['indices_vals_1'])) {
+                $label .= ' (Compare)';
+            }
+
+            $data['indices_vals_1'][$label] = $compare['series'];
+        }
+
+        return $data;
+    }
+
     protected function populateIndicesHistoryData(Request $request, array $data): array
     {
         $selectedCorrelations = array_values(array_filter((array) $request->input('indices', [])));
@@ -1016,6 +1059,106 @@ class RatioController extends Controller
         $latestDate = $rows->first()->entry_date;
 
         return $rows->where('entry_date', $latestDate)->values();
+    }
+
+    protected function resolveIndexVsNavSelection(
+        string $selectionType,
+        string $schemeCode,
+        string $indexValue,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate
+    ): array {
+        if ($selectionType === 'index') {
+            return $this->buildIndexChartSelection($indexValue, $startDate, $endDate);
+        }
+
+        return $this->buildSchemeChartSelection($schemeCode, $startDate, $endDate);
+    }
+
+    protected function buildSchemeChartSelection(string $fundCode, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        $fund = $fundCode !== ''
+            ? FundMaster::query()->where('fund_code', $fundCode)->first(['fund_name', 'fund_code'])
+            : null;
+
+        if (!$fund || empty($fund->fund_code)) {
+            return ['label' => 'Scheme', 'series' => []];
+        }
+
+        $points = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '>=', $startDate->toDateString())
+            ->whereDate('entry_date', '<=', $endDate->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_nav']);
+
+        return [
+            'label' => $fund->fund_name,
+            'series' => $this->buildChartSeriesFromPoints($points, 'entry_date', 'closing_nav'),
+        ];
+    }
+
+    protected function buildIndexChartSelection(string $indexValue, CarbonInterface $startDate, CarbonInterface $endDate): array
+    {
+        if ($indexValue === '') {
+            return ['label' => 'Index', 'series' => []];
+        }
+
+        $index = IndicesMaster::query()
+            ->where('corelation', $indexValue)
+            ->orWhere('name', $indexValue)
+            ->first(['name', 'corelation']);
+
+        $lookupNames = array_values(array_unique(array_filter([
+            $indexValue,
+            $index?->name,
+            $index?->corelation,
+        ])));
+
+        $points = IndicesDetail::query()
+            ->where(function ($query) use ($lookupNames) {
+                $query->whereIn('name', $lookupNames);
+
+                if ($this->columnExists('indices_detail', 'correlation_new')) {
+                    $query->orWhereIn('correlation_new', $lookupNames);
+                }
+            })
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '>=', $startDate->toDateString())
+            ->whereDate('entry_date', '<=', $endDate->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_value']);
+
+        return [
+            'label' => $index?->name ?? $indexValue,
+            'series' => $this->buildChartSeriesFromPoints($points, 'entry_date', 'closing_value'),
+        ];
+    }
+
+    protected function buildChartSeriesFromPoints(Collection $points, string $dateKey, string $valueKey): array
+    {
+        return $points
+            ->filter(function ($point) use ($dateKey, $valueKey) {
+                return data_get($point, $dateKey) && is_numeric(data_get($point, $valueKey));
+            })
+            ->map(function ($point) use ($dateKey, $valueKey) {
+                return [
+                    Carbon::parse(data_get($point, $dateKey))->toDateString(),
+                    round((float) data_get($point, $valueKey), 2),
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    protected function columnExists(string $table, string $column): bool
+    {
+        try {
+            return DB::getSchemaBuilder()->hasColumn($table, $column);
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     protected function buildIndicesMoverRows(Collection $oldRows, Collection $newRows, string $groupKey, string $displayName): Collection
