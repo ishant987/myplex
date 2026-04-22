@@ -216,7 +216,7 @@ class RatioController extends Controller
     }
 
     function filters_volatility(Request $request){
-      return view('web.filters.volatility', $this->reportViewData($request));
+      return view('web.filters.volatility', $this->filtersVolatilityViewData($request));
     }
 
     function filters_fund_count(Request $request)
@@ -868,6 +868,11 @@ class RatioController extends Controller
     }
 
     protected function filtersBetaViewData(Request $request): array
+    {
+        return $this->filtersJensensViewData($request);
+    }
+
+    protected function filtersVolatilityViewData(Request $request): array
     {
         return $this->filtersJensensViewData($request);
     }
