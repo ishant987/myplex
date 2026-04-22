@@ -123,7 +123,52 @@ class RatioController extends Controller
     }
 
     function schemes_associated_with_index(Request $request){
-      return view('web.indices-reports.schemes-associated-with-index', $this->indicesReportViewData($request));
+      $data = $this->indicesReportViewData($request);
+      $selectedIndex = trim((string) $request->input('selected_index', ''));
+      $selectedDate = $this->normalizeInputDate($request->input('date'));
+
+      if ($selectedIndex !== '') {
+          $funds = FundMaster::query()
+              ->where('indices_name', $selectedIndex)
+              ->orderBy('fund_name')
+              ->get(['fund_id', 'fund_name', 'fund_code', 'classification', 'indices_name']);
+
+          $data['all_schemes'] = $funds
+              ->map(function ($fund) use ($selectedDate) {
+                  if (empty($fund->fund_code)) {
+                      return null;
+                  }
+
+                  $detailQuery = FundDetail::query()
+                      ->where('fund_code', $fund->fund_code)
+                      ->where('publish', 'y');
+
+                  if ($selectedDate) {
+                      $detailQuery->whereDate('entry_date', '<=', $selectedDate->toDateString());
+                  }
+
+                  $detail = $detailQuery
+                      ->orderByDesc('entry_date')
+                      ->first(['entry_date', 'closing_nav']);
+
+                  if (!$detail) {
+                      return null;
+                  }
+
+                  return (object) [
+                      'fund_id' => $fund->fund_id,
+                      'fund_name' => $fund->fund_name,
+                      'classification' => $fund->classification,
+                      'fund_code' => $fund->fund_code,
+                      'entry_date' => $detail->entry_date,
+                      'closing_nav' => $detail->closing_nav,
+                  ];
+              })
+              ->filter()
+              ->values();
+      }
+
+      return view('web.indices-reports.schemes-associated-with-index', $data);
     }
 
     function indices_boomers(Request $request){
