@@ -76,7 +76,10 @@ class RatioController extends Controller
     }
 
     function indices_history(Request $request){
-      return view('web.indices-reports.indices-history', $this->indicesReportViewData($request));
+      $data = $this->indicesReportViewData($request);
+      $data = $this->populateIndicesHistoryData($request, $data);
+
+      return view('web.indices-reports.indices-history', $data);
     }
 
     function indices_composition(Request $request){
@@ -508,7 +511,7 @@ class RatioController extends Controller
     {
         $data = $this->reportViewData($request);
 
-        return array_merge($data, [
+        $data = array_merge($data, [
             'indices' => $this->safeIndicesList(),
             'schemes' => $this->safeFundList(),
             'months' => range(1, 12),
@@ -526,6 +529,63 @@ class RatioController extends Controller
             'results_industries' => null,
             'indices_records' => collect(),
         ]);
+
+        return $data;
+    }
+
+    protected function populateIndicesHistoryData(Request $request, array $data): array
+    {
+        $selectedCorrelations = array_values(array_filter((array) $request->input('indices', [])));
+        $dateRange = $this->resolveExplicitDateRange($request->input('start_date'), $request->input('end_date'));
+
+        if (empty($selectedCorrelations) || !$dateRange) {
+            return $data;
+        }
+
+        $selectedIndices = collect($data['indices'])
+            ->filter(fn ($index) => in_array($index->corelation, $selectedCorrelations, true))
+            ->values();
+
+        if ($selectedIndices->isEmpty()) {
+            return $data;
+        }
+
+        $data['indices_records'] = $selectedIndices;
+        $data['indices_vals'] = [];
+
+        foreach ($selectedIndices as $index) {
+            $lookupNames = array_values(array_unique(array_filter([
+                $index->corelation ?? null,
+                $index->name ?? null,
+            ])));
+
+            if (empty($lookupNames)) {
+                continue;
+            }
+
+            $points = IndicesDetail::query()
+                ->whereIn('name', $lookupNames)
+                ->where('publish', 'y')
+                ->whereDate('entry_date', '>=', $dateRange['start']->toDateString())
+                ->whereDate('entry_date', '<=', $dateRange['end']->toDateString())
+                ->orderBy('entry_date')
+                ->get(['entry_date', 'closing_value']);
+
+            $series = $points
+                ->filter(fn ($point) => is_numeric($point->closing_value) && $point->closing_value !== null)
+                ->map(fn ($point) => [
+                    Carbon::parse($point->entry_date)->toDateString(),
+                    round((float) $point->closing_value, 2),
+                ])
+                ->values()
+                ->all();
+
+            if (!empty($series)) {
+                $data['indices_vals'][$index->name] = $series;
+            }
+        }
+
+        return $data;
     }
 
     protected function safeFundTypeList()
