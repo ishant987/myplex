@@ -1,10 +1,7 @@
-@extends('web.layout.infosolz_user_app')
-
-@section('content')
-    @php
+<?php $__env->startSection('content'); ?>
+    <?php
         $history = session()->has('history') ? session('history') : [];
         $disable = count($history) > 0 ? true : false;
-        $isByFundMode = isset($Category) && $Category === 'by_fund';
         // echo '<pre>';
         // print_r($history);
         // exit();
@@ -24,14 +21,14 @@
             }
         }
         // dd($fund_absolute_return);
-    @endphp
+    ?>
 
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="head_brdcm">
                     <ul class="brdcmb">
-                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
+                        <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
                         <li>filters</li>
                     </ul>
                 </div>
@@ -43,163 +40,193 @@
                     </div>
                     <div class="light_green_bg">
                         <form class="mb-4" action="">
-                            <input type="hidden" name="disable" value="{{ $disable }}">
+                            <input type="hidden" name="disable" value="<?php echo e($disable); ?>">
                             <div class="row">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="ranking" value="range"
-                                                    {{ $disable ? 'disabled' : '' }} checked>
+                                                    <?php echo e($disable ? 'disabled' : ''); ?> checked>
                                                 Range
                                             </label>
                                             <label>
                                                 <input type="radio" name="ranking" value="as_on"
-                                                    {{ $disable ? 'disabled' : '' }}>
+                                                    <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 As on
                                             </label>
-                                            @error('ranking')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['ranking'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class={{ $disable ? '' : 'datepicker' }}
+                                            <input type="text" class=<?php echo e($disable ? '' : 'datepicker'); ?>
+
                                                 placeholder="Start date" name="start_date"
-                                                value="{{ old('start_date', $start_date ?? '') }}" readonly>
-                                            @error('start_date')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                                value="<?php echo e(old('start_date', $start_date ?? '')); ?>" readonly>
+                                            <?php $__errorArgs = ['start_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class={{ $disable ? '' : 'datepicker' }}
+                                            <input type="text" class=<?php echo e($disable ? '' : 'datepicker'); ?>
+
                                                 placeholder="End date" name="end_date"
-                                                value="{{ old('end_date', $end_date ?? '') }}" readonly>
-                                            @error('end_date')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                                value="<?php echo e(old('end_date', $end_date ?? '')); ?>" readonly>
+                                            <?php $__errorArgs = ['end_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 div_hide">
                                         <div class="form_group">
                                             <input type="text" name="as_on_date"
-                                                class={{ $disable ? '' : 'datepicker' }} placeholder="date"
-                                                value="{{ old('as_on_date', $as_on_date ?? '') }}" readonly>
+                                                class=<?php echo e($disable ? '' : 'datepicker'); ?> placeholder="date"
+                                                value="<?php echo e(old('as_on_date', $as_on_date ?? '')); ?>" readonly>
                                         </div>
                                     </div>
 
                                     <input type="hidden" id="checkedFundIds" value=""
                                         name="checkedFundIds">
 
-                                    <input type="hidden" id="fundIds" value="{{ $checkedFundIds ?? '' }}"
+                                    <input type="hidden" id="fundIds" value="<?php echo e($checkedFundIds ?? ''); ?>"
                                         name="allfundIds">
 
                                     <div class="col-md-4 div_hide">
                                         <div class="form_group">
-                                            <select name="as_on_time_frame" {{ $disable ? 'disabled' : '' }}>
-                                                <option value="1_month" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '1_month') selected @endif>1
+                                            <select name="as_on_time_frame" <?php echo e($disable ? 'disabled' : ''); ?>>
+                                                <option value="1_month" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '1_month'): ?> selected <?php endif; ?>>1
                                                     Month</option>
-                                                <option value="3_months" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '3_months') selected @endif>3
+                                                <option value="3_months" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '3_months'): ?> selected <?php endif; ?>>3
                                                     Months</option>
-                                                <option value="6_months" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '6_months') selected @endif>6
+                                                <option value="6_months" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '6_months'): ?> selected <?php endif; ?>>6
                                                     Months</option>
-                                                <option value="1_year" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '1_year') selected @endif>1
+                                                <option value="1_year" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '1_year'): ?> selected <?php endif; ?>>1
                                                     Year</option>
-                                                <option value="2_years" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '2_years') selected @endif>2
+                                                <option value="2_years" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '2_years'): ?> selected <?php endif; ?>>2
                                                     Years</option>
-                                                <option value="3_years" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '3_years') selected @endif>3
+                                                <option value="3_years" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '3_years'): ?> selected <?php endif; ?>>3
                                                     Years</option>
-                                                <option value="5_years" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '5_years') selected @endif>5
+                                                <option value="5_years" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '5_years'): ?> selected <?php endif; ?>>5
                                                     Years</option>
                                             </select>
                                         </div>
                                     </div>
 
-                                    {{-- <div class="col-md-3">
-                                        <div class="form_group">
-                                            <select>
-                                                <option value="">Duration</option>
-                                            </select>
-                                        </div>
-                                    </div> --}}
+                                    
                                     <div class="col-md-4">
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="Category" value="by_category"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    @if (!isset($Category) || (isset($Category) && $Category == 'by_category')) {{ 'Checked' }} @endif
-                                                    {{ $disable ? 'disabled' : '' }}>
+                                                    <?php if(!isset($Category) || (isset($Category) && $Category == 'by_category')): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                    <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 By Category
                                             </label>
                                             <label>
                                                 <input type="radio" name="Category" value="by_fund"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    @if (isset($Category) && $Category == 'by_fund') {{ 'Checked' }} @endif
-                                                    {{ $disable ? 'disabled' : '' }}>
+                                                    <?php if(isset($Category) && $Category == 'by_fund'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                    <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 By Fund
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show_1"
-                                        style="{{ $isByFundMode ? 'display: none;' : '' }}">
+                                    <div class="col-md-4 div_show_1">
                                         <div class="form_group">
                                             <select name="fund_type" id="fund_type" class="select2"
                                                 data-placeholder="Select Fund Classification"
-                                                onchange="fund_type_change(this)" {{ $disable ? 'disabled' : '' }}>
+                                                onchange="fund_type_change(this)" <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 <option value="">Select Fund Classification</option>
-                                                @if (isset($all_fund_types))
-                                                    @foreach ($all_fund_types as $val)
-                                                        <option value="{{ $val->ft_id }}"
-                                                            {{ isset($fund_type) && $fund_type == $val->ft_id ? 'selected' : '' }}>
-                                                            {{ $val->name }}</option>
-                                                    @endforeach
-                                                @endif
+                                                <?php if(isset($all_fund_types)): ?>
+                                                    <?php $__currentLoopData = $all_fund_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($val->ft_id); ?>"
+                                                            <?php echo e(isset($fund_type) && $fund_type == $val->ft_id ? 'selected' : ''); ?>>
+                                                            <?php echo e($val->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php endif; ?>
                                             </select>
-                                            @error('fund_type')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['fund_type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             <span class="" id="fund_type_msgg" style="color:#379962;"></span>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide_1"
-                                        style="{{ $isByFundMode ? '' : 'display: none;' }}">
+                                    <div class="col-md-4 div_hide_1">
                                         <div class="form_group multiple_select">
                                             <select name="fund_id[]" class="select2 multiple" multiple
                                                 id="select_fund_multiple" data-max="20" data-min="4"
                                                 onchange='fund_multiple(this)' data-placeholder="Select Fund"
-                                                {{ $disable ? 'disabled' : '' }} {{ $isByFundMode ? '' : 'disabled' }}>
+                                                <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 <option value="">Select Fund</option>
-                                                @if (isset($all_funds))
-                                                    @foreach ($all_funds as $val)
-                                                        <option value="{{ $val->fund_id }}"
-                                                            @if (isset($fund_id) && is_array($fund_id) && in_array($val->fund_id, $fund_id)) selected @endif>
-                                                            {{ $val->fund_name }}
+                                                <?php if(isset($all_funds)): ?>
+                                                    <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($val->fund_id); ?>"
+                                                            <?php if(isset($fund_id) && is_array($fund_id) && in_array($val->fund_id, $fund_id)): ?> selected <?php endif; ?>>
+                                                            <?php echo e($val->fund_name); ?>
+
                                                         </option>
-                                                    @endforeach
-                                                @endif
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <?php endif; ?>
                                             </select>
-                                            @error('fund_id')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['fund_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                         <span class="text-danger" id="fund_msgg"></span>
                                     </div>
 
                                     <div class="col-md-4"
-                                        style="{{ !$isByFundMode && (isset($records) || old('records')) ? '' : 'display: none;' }}"
+                                        style="<?php echo e(isset($records) || old('records') ? '' : 'display: none;'); ?>"
                                         id="record">
                                         <div class="form_group">
                                             <input type="number" placeholder="Records" name="records" id="record_val"
-                                                value="{{ old('records', $records ?? '') }}"
-                                                {{ $disable ? 'disabled' : '' }}>
+                                                value="<?php echo e(old('records', $records ?? '')); ?>"
+                                                <?php echo e($disable ? 'disabled' : ''); ?>>
                                         </div>
                                     </div>
 
@@ -209,12 +236,12 @@
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="filter" value="by_ratio"
-                                                    {{ !isset($filter) || (isset($filter) && $filter == 'by_ratio') ? 'checked' : '' }}>
+                                                    <?php echo e(!isset($filter) || (isset($filter) && $filter == 'by_ratio') ? 'checked' : ''); ?>>
                                                 By Ratio
                                             </label>
                                             <label>
                                                 <input type="radio" name="filter" value="by_composition"
-                                                    @if (isset($filter) && $filter == 'by_composition') {{ 'checked' }} @endif>
+                                                    <?php if(isset($filter) && $filter == 'by_composition'): ?> <?php echo e('checked'); ?> <?php endif; ?>>
                                                 By Composition
                                             </label>
                                         </div>
@@ -226,49 +253,56 @@
                                                 <option value="">Ratio</option>
                                                 <optgroup label="Return Ratio">
                                                     <option value="returns"
-                                                        {{ old('report_category', request('report_category')) == 'returns' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'returns' ? 'selected' : ''); ?>>
                                                         Returns/CAGR
                                                     </option>
                                                     <option value="jensens_alpha"
-                                                        {{ old('report_category', request('report_category')) == 'jensens_alpha' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'jensens_alpha' ? 'selected' : ''); ?>>
                                                         Jensen’s alpha
                                                     </option>
                                                     <option value="sharpe"
-                                                        {{ old('report_category', request('report_category')) == 'sharpe' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'sharpe' ? 'selected' : ''); ?>>
                                                         Sharpe
                                                     </option>
                                                     <option value="treynor"
-                                                        {{ old('report_category', request('report_category')) == 'treynor' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'treynor' ? 'selected' : ''); ?>>
                                                         Treynor
                                                     </option>
                                                     <option value="information_ratio"
-                                                        {{ old('report_category', request('report_category')) == 'information_ratio' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'information_ratio' ? 'selected' : ''); ?>>
                                                         Information Ratio
                                                     </option>
                                                     <option value="one_month_rolling_return"
-                                                        {{ old('report_category', request('report_category')) == 'one_month_rolling_return' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'one_month_rolling_return' ? 'selected' : ''); ?>>
                                                         1 month Rolling Return
                                                     </option>
                                                 </optgroup>
 
                                                 <optgroup label="Risk Ratio">
                                                     <option value="beta"
-                                                        {{ old('report_category', request('report_category')) == 'beta' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'beta' ? 'selected' : ''); ?>>
                                                         Beta
                                                     </option>
                                                     <option value="volatility"
-                                                        {{ old('report_category', request('report_category')) == 'volatility' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'volatility' ? 'selected' : ''); ?>>
                                                         Volatility
                                                     </option>
                                                     <option value="tracking_error"
-                                                        {{ old('report_category', request('report_category')) == 'tracking_error' ? 'selected' : '' }}>
+                                                        <?php echo e(old('report_category', request('report_category')) == 'tracking_error' ? 'selected' : ''); ?>>
                                                         Tracking Error
                                                     </option>
                                                 </optgroup>
                                             </select>
-                                            @error('report_category')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['report_category'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
@@ -277,170 +311,169 @@
                                             <select name="composition" id="composition_value">
                                                 <option value="">Select Composition</option>
                                                 <option value="scrip"
-                                                    {{ old('composition', request('composition')) == 'scrip' ? 'selected' : '' }}>
+                                                    <?php echo e(old('composition', request('composition')) == 'scrip' ? 'selected' : ''); ?>>
                                                     Scrip</option>
                                                 <option value="industry"
-                                                    {{ old('composition', request('composition')) == 'industry' ? 'selected' : '' }}>
+                                                    <?php echo e(old('composition', request('composition')) == 'industry' ? 'selected' : ''); ?>>
                                                     Industry</option>
                                                 <option value="aum"
-                                                    {{ old('composition', request('composition')) == 'aum' ? 'selected' : '' }}>
+                                                    <?php echo e(old('composition', request('composition')) == 'aum' ? 'selected' : ''); ?>>
                                                     AUM</option>
                                                 <option value="fund_manager"
-                                                    {{ old('composition', request('composition')) == 'fund_manager' ? 'selected' : '' }}>
+                                                    <?php echo e(old('composition', request('composition')) == 'fund_manager' ? 'selected' : ''); ?>>
                                                     Fund Manager</option>
                                             </select>
                                         </div>
-                                        @error('composition')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['composition'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
 
                                     <div class="col-md-4" id="scrip"
-                                        style="display: {{ $errors->has('fund_scrips') || old('fund_scrips') || request('fund_scrips') ? 'block' : 'none' }}">
+                                        style="display: <?php echo e($errors->has('fund_scrips') || old('fund_scrips') || request('fund_scrips') ? 'block' : 'none'); ?>">
                                         <div class="form_group">
                                             <select class="select2" name="fund_scrips" data-placeholder="select scrips">
                                                 <option value="">select scrips</option>
-                                                @foreach ($mpx_fund_scrips as $scr)
-                                                    <option value="{{ $scr->actual_scrip }}"
-                                                        {{ old('fund_scrips', request('fund_scrips', isset($getData['fund_scrips']) ? $getData['fund_scrips'] : '')) == $scr->actual_scrip ? 'selected' : '' }}>
-                                                        {{ $scr->actual_scrip }}
+                                                <?php $__currentLoopData = $mpx_fund_scrips; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scr): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($scr->actual_scrip); ?>"
+                                                        <?php echo e(old('fund_scrips', request('fund_scrips', isset($getData['fund_scrips']) ? $getData['fund_scrips'] : '')) == $scr->actual_scrip ? 'selected' : ''); ?>>
+                                                        <?php echo e($scr->actual_scrip); ?>
+
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
-                                            @error('fund_scrips')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['fund_scrips'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             <span class="text-danger" id="fund_msgg"></span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4" id="industry"
-                                        style="display: {{ $errors->has('industry') || old('industry') || request('industry') ? 'block' : 'none' }}">
+                                        style="display: <?php echo e($errors->has('industry') || old('industry') || request('industry') ? 'block' : 'none'); ?>">
                                         <div class="form_group">
                                             <select class="select2" name="industry" data-placeholder="select industries">
                                                 <option value="">select industries</option>
-                                                @foreach ($industries as $industry)
-                                                    <option value="{{ $industry->industry }}"
-                                                        {{ old('industry', request('industry', isset($getData['industry']) ? $getData['industry'] : '')) == $industry->industry ? 'selected' : '' }}>
-                                                        {{ $industry->industry }}
+                                                <?php $__currentLoopData = $industries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $industry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($industry->industry); ?>"
+                                                        <?php echo e(old('industry', request('industry', isset($getData['industry']) ? $getData['industry'] : '')) == $industry->industry ? 'selected' : ''); ?>>
+                                                        <?php echo e($industry->industry); ?>
+
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
-                                            @error('industry')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['industry'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    {{-- <div class="col-md-3">
-                                        <div class="form_group">
-                                            <select>
-                                                <option value="">Return Ratio</option>
-                                            </select>
-                                        </div>
-                                    </div> --}}
+                                    
 
                                     <div class="col-md-12">
                                         <div class="bttn_grp">
-                                            @error('checkedFundIds')
-                                                <div class="alert alert-danger">{{ $message }}</div>
-                                            @enderror
+                                            <?php $__errorArgs = ['checkedFundIds'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             <button type="submit" name="search" id="submit_btn"
                                                 value="search">Search</button>
-                                            <a href="{{ route('user.filters') }}" id="fund_type_btn">Reset</a>
-                                            {{-- <button type="submit" name="search" id="fund_type_btn"
-                                                value="search">Reset</button> --}}
+                                            <a href="<?php echo e(route('user.filters')); ?>" id="fund_type_btn">Reset</a>
+                                            
                                         </div>
                                     </div>
                                 </div>
                         </form>
                     </div>
-                    @if (isset($fund_absolute_return))
+                    <?php if(isset($fund_absolute_return)): ?>
 
-                        {{-- <div class="fund_section new_fund_section">
-                            <ul>
-                                <li>
-                                    @if (isset($fund_id) && count($fund_id) > 0)
-                                        <p>Fund Names : </p>
-                                        <span>
-                                            @foreach ($fund_id as $item)
-                                                {{ getNameTable('fund_master', 'fund_name', 'fund_id', $item) }},
-                                            @endforeach
-                                        </span>
-                                    @elseif(isset($fund_type))
-                                        <p>Fund Type : </p>
-                                        <span>{{ getNameTable('fund_type', 'name', 'ft_id', $fund_type) }}</span>
-                                    @endif
-                                </li>
-                                <li>
-                                    <p>Composition : </p>
-                                    <span>{{ isset($composition) ? str_replace('_', ' ', $composition) : 'N/A' }}</span>
-                                </li>
-                                <li>
-                                    <p>Return Ratio : </p>
-                                    <span>{{ isset($report_category) ? str_replace('_', ' ', $report_category) : 'N/A' }}</span>
-                                </li>
-                            </ul>
-                        </div> --}}
+                        
 
-                        @if (isset($history))
-                            @foreach ($history as $key => $h)
-                                {{-- {{$key}} --}}
+                        <?php if(isset($history)): ?>
+                            <?php $__currentLoopData = $history; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $h): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                
                                 <div class="fund_section new_fund_section">
                                     <ul>
-                                        @if (isset($h['filter']) && $h['filter'] == 'by_composition')
+                                        <?php if(isset($h['filter']) && $h['filter'] == 'by_composition'): ?>
                                             <li>
-                                                @php
+                                                <?php
                                                     $monthName = date('F', strtotime($h['last_date']));
                                                     $year = date('Y', strtotime($h['last_date']));
-                                                @endphp
+                                                ?>
                                                 <p>Date : </p>
-                                                <span>for the month of {{ $monthName }}, {{ $year }}</span>
+                                                <span>for the month of <?php echo e($monthName); ?>, <?php echo e($year); ?></span>
                                             </li>
-                                        @elseif(isset($h['filter']) && $h['filter'] == 'by_ratio')
+                                        <?php elseif(isset($h['filter']) && $h['filter'] == 'by_ratio'): ?>
                                             <li>
                                                 <p>Start Date : </p>
-                                                <span>{{ date('d-m-Y', strtotime($h['start_date'])) }}</span>
+                                                <span><?php echo e(date('d-m-Y', strtotime($h['start_date']))); ?></span>
                                             </li>
                                             <li>
                                                 <p>End Date : </p>
-                                                <span>{{ date('d-m-Y', strtotime($h['end_date'])) }}</span>
+                                                <span><?php echo e(date('d-m-Y', strtotime($h['end_date']))); ?></span>
                                             </li>
-                                        @endif
+                                        <?php endif; ?>
                                         <li>
-                                            @if (isset($h['Category']) && $h['Category'] == 'by_fund')
+                                            <?php if(isset($h['Category']) && $h['Category'] == 'by_fund'): ?>
                                                 <p>Fund Names : </p>
                                                 <span>
-                                                    @foreach ($h['fund_id'] as $item)
-                                                        {{ getNameTable('fund_master', 'fund_name', 'fund_id', $item) }},
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $h['fund_id']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <?php echo e(getNameTable('fund_master', 'fund_name', 'fund_id', $item)); ?>,
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </span>
-                                            @elseif(isset($h['Category']) && $h['Category'] == 'by_category')
+                                            <?php elseif(isset($h['Category']) && $h['Category'] == 'by_category'): ?>
                                                 <p>Fund Type : </p>
-                                                <span>{{ getNameTable('fund_type', 'name', 'ft_id', $h['fund_type']) }}</span>
-                                            @endif
+                                                <span><?php echo e(getNameTable('fund_type', 'name', 'ft_id', $h['fund_type'])); ?></span>
+                                            <?php endif; ?>
                                         </li>
-                                        @if (isset($h['filter']))
+                                        <?php if(isset($h['filter'])): ?>
                                             <li>
                                                 <p>Filtered : </p>
-                                                <span>{{ isset($h['filter']) ? str_replace('_', ' ', $h['filter']) : 'N/A' }}</span>
+                                                <span><?php echo e(isset($h['filter']) ? str_replace('_', ' ', $h['filter']) : 'N/A'); ?></span>
                                             </li>
-                                            @if ($h['filter'] == 'by_ratio')
+                                            <?php if($h['filter'] == 'by_ratio'): ?>
                                                 <li>
                                                     <p>Return Ratio : </p>
-                                                    <span>{{ isset($h['report_category']) ? str_replace('_', ' ', $h['report_category']) : 'N/A' }}</span>
+                                                    <span><?php echo e(isset($h['report_category']) ? str_replace('_', ' ', $h['report_category']) : 'N/A'); ?></span>
                                                 </li>
-                                            @elseif($h['filter'] == 'by_composition')
+                                            <?php elseif($h['filter'] == 'by_composition'): ?>
                                                 <li>
                                                     <p>Composition : </p>
-                                                    <span>{{ isset($h['composition']) ? str_replace('_', ' ', $h['composition']) : 'N/A' }}</span>
+                                                    <span><?php echo e(isset($h['composition']) ? str_replace('_', ' ', $h['composition']) : 'N/A'); ?></span>
                                                 </li>
-                                            @endif
-                                        @endif
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </ul>
                                 </div>
-                            @endforeach
-                        @endif
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
 
                         <div class="graph_table">
                             <table class="table filter_datatable">
@@ -450,58 +483,61 @@
                                         </th>
                                         <th>Fund name</th>
                                         <th class="text_center">Value</th>
-                                        @if (!isset($composition) || (isset($composition) && $composition != 'fund_manager'))
+                                        <?php if(!isset($composition) || (isset($composition) && $composition != 'fund_manager')): ?>
                                             <th class="text_center">Rank</th>
-                                        @endif
+                                        <?php endif; ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($fund_absolute_return) > 0)
-                                        @php $i = 1 @endphp
-                                        @foreach ($fund_absolute_return as $fund_id => $fund_return)
+                                    <?php if(count($fund_absolute_return) > 0): ?>
+                                        <?php $i = 1 ?>
+                                        <?php $__currentLoopData = $fund_absolute_return; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund_id => $fund_return): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
-                                                <td><input type="checkbox" id="checkbox_{{ $fund_id }}"
-                                                        onclick='selectDynamicFund({{ $fund_id }})' class="fundCheck"></td>
-                                                {{-- <td><input type="checkbox" id="checkbox_{{ $fund_id }}"
-                                                        class="fundCheck" data-fundId="{{ $fund_id }}"></td> --}}
+                                                <td><input type="checkbox" id="checkbox_<?php echo e($fund_id); ?>"
+                                                        onclick='selectDynamicFund(<?php echo e($fund_id); ?>)' class="fundCheck"></td>
+                                                
 
-                                                <td>{{ getNameTable('fund_master', 'fund_name', 'fund_id', $fund_id) }}
+                                                <td><?php echo e(getNameTable('fund_master', 'fund_name', 'fund_id', $fund_id)); ?>
+
                                                 </td>
 
                                                 <td class="text_right">
-                                                    {{ is_numeric($fund_return) ? printValue($fund_return) : 'N/A' }}
+                                                    <?php echo e(is_numeric($fund_return) ? printValue($fund_return) : 'N/A'); ?>
+
                                                 </td>
 
-                                                @if (!isset($composition) || (isset($composition) && $composition != 'fund_manager'))
+                                                <?php if(!isset($composition) || (isset($composition) && $composition != 'fund_manager')): ?>
                                                     <td class="text_right">
-                                                        {{-- {{ ($fund_return != 'N/A' || $fund_return > 0) ? $i : 'N/A' }} --}}
-                                                        {{ is_numeric($fund_return) ? $i : 'N/A' }}
+                                                        
+                                                        <?php echo e(is_numeric($fund_return) ? $i : 'N/A'); ?>
+
 
                                                     </td>
-                                                @endif
+                                                <?php endif; ?>
 
                                             </tr>
-                                            @php $i++ @endphp
-                                        @endforeach
-                                    @else
+                                            <?php $i++ ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php else: ?>
                                         <tr>
                                             <td class="text_center" colspan="4">
                                                 No data available in table
                                             </td>
                                         </tr>
-                                    @endif
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
-                    @else
-                        {!! printNoData() !!}
-                    @endif
+                    <?php else: ?>
+                        <?php echo printNoData(); ?>
+
+                    <?php endif; ?>
                 </div>
-                @if (isset($fund_absolute_return))
+                <?php if(isset($fund_absolute_return)): ?>
                 <div class="disclaimer">
-                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                    <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                 </div>
-              @endif
+              <?php endif; ?>
             </div>
         </div>
     </div>
@@ -671,4 +707,6 @@
             document.getElementById('composition_value').addEventListener('change', updateCompositionDisplay);
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/filters/index.blade.php ENDPATH**/ ?>

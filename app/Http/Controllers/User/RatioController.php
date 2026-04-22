@@ -198,7 +198,7 @@ class RatioController extends Controller
     }
 
     function filters_ratios(Request $request){
-      return view('web.filters.ratios', $this->reportViewData($request));
+      return view('web.filters.index', $this->filtersRatiosViewData($request));
     }
 
     function filters_composition(Request $request){
@@ -587,6 +587,48 @@ class RatioController extends Controller
             'fund_ids' => (array) $request->input('fund_id', []),
             'fund_composition' => null,
         ]);
+    }
+
+    protected function filtersRatiosViewData(Request $request): array
+    {
+        $request->merge([
+            'filter' => 'by_ratio',
+            'Category' => $request->input('Category', 'by_fund'),
+            'fund_type_id' => $request->input('fund_type_id', $request->input('fund_type')),
+        ]);
+
+        $data = array_merge($this->reportViewData($request), [
+            'filter' => 'by_ratio',
+            'Category' => $request->input('Category', 'by_fund'),
+            'fund_type' => $request->input('fund_type', $request->input('fund_type_id')),
+            'checkedFundIds' => (string) $request->input('checkedFundIds', ''),
+            'records' => $request->input('records'),
+            'getData' => $request->all(),
+            'industries' => collect(),
+            'mpx_fund_scrips' => collect(),
+            'fund_absolute_return' => [],
+        ]);
+
+        if (!$request->filled('report_category')) {
+            return $data;
+        }
+
+        $ratioData = $this->performanceRatiosViewData($request);
+
+        $data['message'] = $ratioData['message'] ?? $data['message'];
+        $data['fund_names'] = $ratioData['fund_names'] ?? $data['fund_names'];
+        $data['fund_type_name'] = $ratioData['fund_type_name'] ?? $data['fund_type_name'];
+        $data['request_fund_type'] = $ratioData['request_fund_type'] ?? $data['request_fund_type'];
+        $data['start_date'] = $ratioData['start_date'] ?? $data['start_date'];
+        $data['end_date'] = $ratioData['end_date'] ?? $data['end_date'];
+        $data['as_on_time_frame_data'] = $ratioData['as_on_time_frame_data'] ?? $data['as_on_time_frame_data'];
+        $data['fund_absolute_return'] = $ratioData['stat_result']['fund_absolute_return'] ?? [];
+
+        if (empty($data['checkedFundIds']) && !empty($data['fund_absolute_return'])) {
+            $data['checkedFundIds'] = implode(',', array_keys($data['fund_absolute_return']));
+        }
+
+        return $data;
     }
 
     protected function indicesReportViewData(Request $request): array
@@ -1165,11 +1207,11 @@ class RatioController extends Controller
     {
         $oldMap = $oldRows
             ->filter(fn ($row) => filled(data_get($row, $groupKey)))
-            ->keyBy(fn ($row) => mb_strtolower(trim((string) data_get($row, $groupKey))));
+            ->keyBy(fn ($row) => strtolower(trim((string) data_get($row, $groupKey))));
 
         $newMap = $newRows
             ->filter(fn ($row) => filled(data_get($row, $groupKey)))
-            ->keyBy(fn ($row) => mb_strtolower(trim((string) data_get($row, $groupKey))));
+            ->keyBy(fn ($row) => strtolower(trim((string) data_get($row, $groupKey))));
 
         $allKeys = $oldMap->keys()->merge($newMap->keys())->unique()->values();
 
