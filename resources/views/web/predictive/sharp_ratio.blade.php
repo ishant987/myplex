@@ -15,7 +15,8 @@
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
 
                     <div class="light_green_bg">
-                        <form action="">
+                        <form action="{{ route('user.predictive.sharp-ratio') }}" method="GET">
+                            <input type="hidden" name="duration" id="duration_input" value="{{ $duration ?? '6' }}">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form_group">
@@ -23,7 +24,7 @@
                                             onchange="set_fund_select_val(this.value)">
                                             @foreach ($fundMasterData as $fund)
                                                 <option value="{{ $fund->fund_id }}"
-                                                    @if ($fund->fund_id == old('fund_id', data_get($getData ?? [], 'fund_id'))) selected @endif>
+                                                    {{ (int) ($selected_fund_id ?? 0) === (int) $fund->fund_id ? 'selected' : '' }}>
                                                     {{ $fund->fund_name }}
                                                 </option>
                                             @endforeach
@@ -59,8 +60,14 @@
                                 <input type="hidden" name="current_date" id="current_date">
                                 <div class="col-md-2">
                                     <div class="bttn_grp alpha_btn">
-                                        <button type="submit" name="duration" value="6">6m</button>
-                                        <button type="submit" name="duration" value="1">1y</button>
+                                        <button type="submit" data-duration="6"
+                                            {{ ($duration ?? '6') === '6' ? 'style=background:#379962;color:#fff;' : '' }}>
+                                            6m
+                                        </button>
+                                        <button type="submit" data-duration="1"
+                                            {{ ($duration ?? '6') === '1' ? 'style=background:#379962;color:#fff;' : '' }}>
+                                            1y
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +115,7 @@
                         </div>
                     @elseif (!empty($fund_series) || !empty($index_series))
                         <div class="graph_section">
-                            <div id="container1"></div>
+                            <div id="container1" style="width: 100%; min-height: 420px;"></div>
                         </div>
                     @else
                         <div class="graph_table">
@@ -151,6 +158,15 @@
         document.addEventListener("DOMContentLoaded", function() {
             var fund_id = document.getElementById('allocation_select_fund').value;
             set_fund_select_val(fund_id);
+
+            document.querySelectorAll('.alpha_btn button[data-duration]').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var durationInput = document.getElementById('duration_input');
+                    if (durationInput) {
+                        durationInput.value = this.getAttribute('data-duration');
+                    }
+                });
+            });
         });
     </script>
 

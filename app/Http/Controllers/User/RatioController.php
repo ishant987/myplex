@@ -583,6 +583,7 @@ class RatioController extends Controller
         $data = array_merge($this->reportViewData($request), [
             'fundMasterData' => $this->safeFundList(),
             'getData' => $request->all(),
+            'selected_fund_id' => $selectedFundId,
             'expected_index' => $request->input('expected_index'),
             'indices_details' => null,
             'fund_details' => null,
