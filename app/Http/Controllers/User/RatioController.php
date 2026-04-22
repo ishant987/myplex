@@ -18,6 +18,7 @@ use App\Http\Controllers\Web\VolatilityController;
 use App\Models\CorpusEntry;
 use App\Models\CurrencyDetail;
 use App\Models\FundDetail;
+use App\Models\FundComposition;
 use Illuminate\Http\Request;
 use App\Models\CurrencyMaster;
 use App\Models\FundMaster;
@@ -203,7 +204,7 @@ class RatioController extends Controller
 
 
     function filters_composition(Request $request){
-      return view('web.filters.composition', $this->reportViewData($request));
+      return view('web.filters.composition', $this->filtersIndexViewData($request, 'by_composition'));
     }
 
     function filters_jensens(Request $request){
@@ -637,6 +638,86 @@ class RatioController extends Controller
         $data['end_date'] = $ratioData['end_date'] ?? $data['end_date'];
         $data['as_on_time_frame_data'] = $ratioData['as_on_time_frame_data'] ?? $data['as_on_time_frame_data'];
         $data['fund_absolute_return'] = $ratioData['stat_result']['fund_absolute_return'] ?? [];
+
+        if (empty($data['checkedFundIds']) && !empty($data['fund_absolute_return'])) {
+            $data['checkedFundIds'] = implode(',', array_keys($data['fund_absolute_return']));
+        }
+
+        return $data;
+    }
+
+    protected function filtersIndexViewData(Request $request, string $filter = 'by_ratio'): array
+    {
+        if ($filter === 'by_composition') {
+            return $this->filtersCompositionViewData($request);
+        }
+
+        return $this->filtersRatiosViewData($request);
+    }
+
+    protected function filtersCompositionViewData(Request $request): array
+    {
+        $request->merge([
+            'filter' => 'by_composition',
+            'Category' => $request->input('Category', 'by_fund'),
+            'fund_type_id' => $request->input('fund_type_id', $request->input('fund_type')),
+        ]);
+
+        $data = array_merge($this->reportViewData($request), [
+            'filter' => 'by_composition',
+            'Category' => $request->input('Category', 'by_fund'),
+            'fund_type' => $request->input('fund_type', $request->input('fund_type_id')),
+            'checkedFundIds' => (string) $request->input('checkedFundIds', ''),
+            'records' => $request->input('records'),
+            'getData' => $request->all(),
+            'industries' => $this->safeFundCompositionIndustryList(),
+            'mpx_fund_scrips' => $this->safeFundCompositionScripList(),
+            'fund_absolute_return' => [],
+        ]);
+
+        $selection = $this->resolveFundSelection($request, $data);
+        $data['fund_names'] = $selection['fund_names'];
+        $data['fund_type_name'] = $selection['fund_type_name'];
+
+        $composition = (string) $request->input('composition', '');
+        if ($composition === '') {
+            return $data;
+        }
+
+        if ($selection['funds']->isEmpty()) {
+            $data['message'] = $request->input('Category') === 'by_category'
+                ? 'Choose a fund classification to run this report.'
+                : 'Choose at least 1 fund to run this report.';
+
+            return $data;
+        }
+
+        if (
+            ($composition === 'scrip' && !filled($request->input('fund_scrips'))) ||
+            ($composition === 'industry' && !filled($request->input('industry')))
+        ) {
+            return $data;
+        }
+
+        $range = $this->resolveRankingRange($request);
+        $data['start_date'] = $range['start']->toDateString();
+        $data['end_date'] = $range['end']->toDateString();
+
+        if ($range['mode'] === 'as_on') {
+            $data['as_on_time_frame_data'] = [$request->input('as_on_time_frame')];
+        }
+
+        $data['fund_absolute_return'] = $this->buildCompositionFilterMap(
+            $selection['funds'],
+            $composition,
+            $range['start'],
+            $range['end'],
+            $range['mode'],
+            [
+                'fund_scrips' => $request->input('fund_scrips'),
+                'industry' => $request->input('industry'),
+            ]
+        );
 
         if (empty($data['checkedFundIds']) && !empty($data['fund_absolute_return'])) {
             $data['checkedFundIds'] = implode(',', array_keys($data['fund_absolute_return']));
@@ -1117,6 +1198,40 @@ class RatioController extends Controller
         return $rows->where('entry_date', $latestDate)->values();
     }
 
+    protected function fetchLatestFundCompositionRows(
+        string $fundCode,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        string $mode = 'range'
+    ): Collection {
+        try {
+            $query = FundComposition::query()
+                ->where('fund_code', $fundCode)
+                ->where('publish', 'y');
+
+            if ($mode === 'as_on') {
+                $query->whereDate('entry_date', '<=', $endDate->toDateString());
+            } else {
+                $query->whereDate('entry_date', '>=', $startDate->toDateString())
+                    ->whereDate('entry_date', '<=', $endDate->toDateString());
+            }
+
+            $rows = $query
+                ->orderByDesc('entry_date')
+                ->get(['entry_date', 'scrip_name', 'industry', 'content_per', 'amount']);
+
+            if ($rows->isEmpty()) {
+                return collect();
+            }
+
+            $latestDate = $rows->first()->entry_date;
+
+            return $rows->where('entry_date', $latestDate)->values();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
     protected function resolveIndexVsNavSelection(
         string $selectionType,
         string $schemeCode,
@@ -1206,6 +1321,137 @@ class RatioController extends Controller
             })
             ->values()
             ->all();
+    }
+
+    protected function safeFundCompositionScripList(): Collection
+    {
+        try {
+            return FundComposition::query()
+                ->where('publish', 'y')
+                ->whereNotNull('scrip_name')
+                ->where('scrip_name', '!=', '')
+                ->selectRaw('scrip_name as actual_scrip')
+                ->distinct()
+                ->orderBy('actual_scrip')
+                ->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function safeFundCompositionIndustryList(): Collection
+    {
+        try {
+            return FundComposition::query()
+                ->where('publish', 'y')
+                ->whereNotNull('industry')
+                ->where('industry', '!=', '')
+                ->select('industry')
+                ->distinct()
+                ->orderBy('industry')
+                ->get();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function buildCompositionFilterMap(
+        Collection $funds,
+        string $composition,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        string $mode,
+        array $filters = []
+    ): array {
+        $result = [];
+
+        foreach ($funds as $fund) {
+            if (empty($fund->fund_id) || empty($fund->fund_code)) {
+                continue;
+            }
+
+            $value = match ($composition) {
+                'scrip' => $this->resolveFundCompositionValue(
+                    $fund->fund_code,
+                    'scrip_name',
+                    (string) ($filters['fund_scrips'] ?? ''),
+                    $startDate,
+                    $endDate,
+                    $mode
+                ),
+                'industry' => $this->resolveFundCompositionValue(
+                    $fund->fund_code,
+                    'industry',
+                    (string) ($filters['industry'] ?? ''),
+                    $startDate,
+                    $endDate,
+                    $mode
+                ),
+                'aum' => $this->resolveFundAumValue($fund->fund_code, $startDate, $endDate, $mode),
+                'fund_manager' => trim((string) ($fund->fund_manager ?? '')),
+                default => null,
+            };
+
+            if ($value === null || $value === '' || (!is_string($value) && (float) $value <= 0)) {
+                continue;
+            }
+
+            $result[$fund->fund_id] = is_numeric($value) ? round((float) $value, 2) : $value;
+        }
+
+        return $result;
+    }
+
+    protected function resolveFundCompositionValue(
+        string $fundCode,
+        string $column,
+        string $matchValue,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        string $mode
+    ): ?float {
+        if ($matchValue === '') {
+            return null;
+        }
+
+        $rows = $this->fetchLatestFundCompositionRows($fundCode, $startDate, $endDate, $mode);
+        if ($rows->isEmpty()) {
+            return null;
+        }
+
+        $value = $rows
+            ->filter(fn ($row) => strcasecmp(trim((string) data_get($row, $column)), trim($matchValue)) === 0)
+            ->sum(fn ($row) => (float) ($row->content_per ?? 0));
+
+        return $value > 0 ? $value : null;
+    }
+
+    protected function resolveFundAumValue(
+        string $fundCode,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        string $mode
+    ): ?float {
+        try {
+            $query = CorpusEntry::query()
+                ->where('fund_code', $fundCode)
+                ->where('publish', 'y');
+
+            if ($mode === 'as_on') {
+                $query->whereDate('entry_date', '<=', $endDate->toDateString());
+            } else {
+                $query->whereDate('entry_date', '>=', $startDate->toDateString())
+                    ->whereDate('entry_date', '<=', $endDate->toDateString());
+            }
+
+            $row = $query
+                ->orderByDesc('entry_date')
+                ->first(['corpus_entry']);
+
+            return $row && is_numeric($row->corpus_entry) ? (float) $row->corpus_entry : null;
+        } catch (Throwable $e) {
+            return null;
+        }
     }
 
     protected function columnExists(string $table, string $column): bool

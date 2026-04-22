@@ -270,7 +270,6 @@ unset($__errorArgs, $__bag); ?>
                                         style="<?php echo e($selectedFilter === 'by_ratio' ? '' : 'display:none;'); ?>">
                                         <div class="form_group">
                                             <select name="report_category">
-                                                <option value="">Ratio</option>
                                                 <optgroup label="Return Ratio">
                                                     <option value="returns"
                                                         <?php echo e(old('report_category', request('report_category')) == 'returns' ? 'selected' : ''); ?>>
