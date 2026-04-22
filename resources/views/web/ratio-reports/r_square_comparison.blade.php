@@ -39,7 +39,7 @@
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="new_page">
-                    <!-- {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}} -->
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                     <div class="head_brdcm">
                         <ul class="brdcmb">
                             <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>

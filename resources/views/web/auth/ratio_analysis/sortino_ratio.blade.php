@@ -12,10 +12,7 @@
                     </ul>
                 </div>
                 <div class="new_page">
-                    {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}}
-                    <div class="perform_head">
-                        <h2>Sortino Ratio</h2>
-                    </div>
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
 
                     <div class="light_green_bg">
                         <form method="GET" action="">
@@ -115,8 +112,8 @@
                                 
                                 {{-- <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
-                                            value="{{ $request->as_on_date }}">
+                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
                                     </div>
                                 </div> --}}
                                 {{-- <div class="col-md-4 div_hide">

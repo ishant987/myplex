@@ -10,12 +10,12 @@
                         <li>Fund Factsheet</li>
                     </ul>
                 </div>
+                <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                 <div class="perform">
 
                     <h1 class="page_heading">Fund Factsheet</h1>
                     <div class="perform_head">
                         <h2>Fund Factsheet</h2>
-                        <!-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> -->
                     </div>
                     <div class="fund_section new_fund_section fund_fact">
                         <form method="GET" action="{{ route('user.fund_factsheet') }}">

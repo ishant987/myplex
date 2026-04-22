@@ -158,6 +158,44 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
+                    var ratioDashboardUrl = @json(route('user.ratio_dashboard'));
+
+                    document.querySelectorAll('.head_brdcm').forEach(function (breadcrumb) {
+                        var newPage = breadcrumb.nextElementSibling;
+
+                        if (!newPage || !newPage.classList.contains('new_page')) {
+                            return;
+                        }
+
+                        var backButton = newPage.querySelector(':scope > a.back_btn:first-child');
+
+                        if (!backButton || breadcrumb.querySelector(':scope > a.back_btn')) {
+                            return;
+                        }
+
+                        breadcrumb.prepend(backButton);
+                    });
+
+                    document.querySelectorAll('a.back_btn').forEach(function (backButton) {
+                        backButton.setAttribute('aria-label', 'Go back');
+
+                        backButton.addEventListener('click', function (event) {
+                            var hasUsableHistory = window.history.length > 1 && document.referrer;
+                            var sameOriginReferrer = hasUsableHistory && document.referrer.indexOf(window.location.origin) === 0;
+
+                            if (sameOriginReferrer) {
+                                event.preventDefault();
+                                window.history.back();
+                                return;
+                            }
+
+                            if (backButton.getAttribute('href') === '#' || !backButton.getAttribute('href')) {
+                                event.preventDefault();
+                                window.location.href = ratioDashboardUrl;
+                            }
+                        });
+                    });
+
                     if (window.jQuery && $.fn.datepicker) {
                         $('.datepicker').each(function () {
                             const $input = $(this);

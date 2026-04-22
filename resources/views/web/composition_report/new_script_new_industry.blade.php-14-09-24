@@ -1,0 +1,607 @@
+@extends('web.layout.infosolz_user_app')
+@section('content')
+
+    <div class="inner_main">
+        <div class="page_detail">
+            <div class="inner_padding">
+                <div class="head_brdcm">
+                    <ul class="brdcmb">
+                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
+                        <li><a href="{{ route('user.composition_report') }}">composition report</a></li>
+                        <li>New Scrips<br> New Industries</li>
+                    </ul>
+                </div>
+                <div class="new_page">
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>New Scrips New Industries</h2>
+                    </div>
+
+                    <div class="light_green_bg">
+                        <form action="">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form_group radio_btn">
+                                        <label>
+                                            <input type="radio" id="type_Category" name="Category" checked
+                                                value="by_category"
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                onclick='get_fund_types(this.value)'>
+                                            By Category
+                                        </label>
+                                        <label>
+                                            <input type="radio" id="fund_Category" name="Category" value="by_fund"
+                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                onclick='get_fund_types(this.value)'>
+                                            By Fund
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {{-- <div class="col-md-5">
+                                    <div class="form_group radio_btn">
+                                        <label>
+                                            <input type="radio" name="classification" id="range"
+                                                value="classification" onclick="get_classification(this.value)"
+                                                {{ isset($classification) && $classification == 'classification' ? 'checked' : 'checked' }}>
+                                            By category
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="classification" id="as_on" value="fund"
+                                                onclick="get_classification(this.value)"
+                                                {{ isset($classification) && $classification == 'fund' ? 'checked' : '' }}>
+                                            By fund
+                                        </label>
+                                    </div>
+                                </div> --}}
+
+                                {{-- <div class="col-md-6" id="fund_type_div"
+                                    @if (isset($classification) && $classification == 'fund') style='display:none' @endif>
+                                    <div class="form_group">
+                                        <select class="select2" name="fund_type" id="fund_type" required>
+                                            <option value="">Select Fund Classification</option>
+                                            @if (isset($fund_type))
+                                                @foreach ($fund_type as $val)
+                                                    <option value="{{ $val->ft_id }}"
+                                                        {{ isset($get_fund_type) && $get_fund_type == $val->ft_id ? 'selected' : '' }}>
+                                                        {{ $val->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-7"
+                                    @if (isset($classification) && $classification == 'classification') style='display:none'
+                                
+                                @elseif(isset($classification) && $classification == 'fund')
+    
+                                style=""
+                                
+                                @else style="display: none" @endif
+                                    id="fund_name_div">
+                                    <div class="form_group">
+                                        <select class="select2" name="fund_master" id="fund_master">
+                                            <option>select any funds</option>
+                                            @if (isset($fund_master))
+                                                @foreach ($fund_master as $val)
+                                                    <option value="{{ $val->fund_code }}"
+                                                        {{ isset($get_fund_master) && $get_fund_master == $val->fund_code ? 'selected' : '' }}>
+                                                        {{ $val->fund_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-md-6 div_show_1">
+                                    <div class="form_group">
+                                        <select name="fund_type" id="fund_type" class="select2"
+                                            data-placeholder="Select Fund Classification">
+
+                                            @if (isset($all_fund_types))
+                                                @foreach ($all_fund_types as $fund_type)
+                                                    <option value=""></option>
+                                                    <option value="{{ $fund_type->ft_id }}"
+                                                        @if ($fund_type->ft_id == old('fund_type_id', isset($fund_type_id) ? $fund_type_id : '')) selected @endif>
+                                                        {{ $fund_type->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    @error('fund_type')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 div_hide_1">
+                                    <div class="form_group multiple_select">
+                                        <select name="fund_id[]" class="select2 multiple" multiple
+                                            id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
+                                            <option value="">Select Fund</option>
+                                            @if (isset($all_funds))
+                                                @foreach ($all_funds as $fund)
+                                                    <option value="{{ $fund->fund_id }}"
+                                                        @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
+                                            @elseif(isset($fund_id) && in_array($fund->fund_id, $fund_id))
+                                            selected @endif>
+                                                        {{ $fund->fund_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    @error('fund_id')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                    @enderror
+                                    <span class="text-danger" id="fund_msgg"></span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="row date_sec">
+                                        <label>1st period</label>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="month" id="month" required>
+                                                    <option value="">select month</option>
+                                                    @foreach ($months as $m)
+                                                        <option value="{{ $m }}"
+                                                            {{ isset($month) && $month == $m ? 'selected' : '' }}>
+                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
+                                                    @endforeach
+                                                    @error('month')
+                                                        <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="year" id="year" required
+                                                    onchange="get_second_month_year(this.value)">
+                                                    <option value="">select year</option>
+                                                    @foreach ($years as $y)
+                                                        <option
+                                                            value="{{ $y }}"{{ isset($year) && $year == $y ? 'selected' : '' }}>
+                                                            {{ $y }}</option>
+                                                    @endforeach
+                                                    @error('year')
+                                                        <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row date_sec">
+                                        <label>2nd period</label>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="month_second" id="month_second" required
+                                                    onchange="get_second_period(this.value)">
+                                                    <option value="">select month</option>
+                                                    @foreach ($months as $m)
+                                                        <option value="{{ $m }}"
+                                                            {{ isset($month_second) && $month_second == $m ? 'selected' : '' }}>
+                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
+                                                    @endforeach
+                                                    @error('month_second')
+                                                        <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="year_second" id="year_second" required>
+                                                    <option value="">select year</option>
+                                                    @foreach ($years as $y)
+                                                        <option
+                                                            value="{{ $y }}"{{ isset($year_second) && $year_second == $y ? 'selected' : '' }}>
+                                                            {{ $y }}</option>
+                                                    @endforeach
+                                                    @error('year_second')
+                                                        <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    <div class="bttn_grp">
+                                        <button type="submit" name="search" id="fund_type_btn"
+                                            value="search">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <input type="hidden" name="fund_codes" id="fund_codes" value="{{ isset($fundCodes) ? json_encode($fundCodes) : ''}}">
+                    <input type="hidden" name="lastDate" id="lastDate" value="{{ isset($lastDate) ? $lastDate : ''}}">
+
+                    @if (isset($month) && isset($year) && isset($month_second) && isset($year_second) && $request->Category != '')
+
+                        <div class="wm_tab">
+                            <ul class="tabs">
+                                <li>
+                                    <a class="active" href="javascript:void(0)">Scrips</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">Industries</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="tabsct">
+                            <div class="tab">
+                                <div class="fund_section new_fund_section">
+                                    <ul>
+                                        <li>
+                                            <p>Top scrips :</p>
+                                            <span>From the month of
+                                                {{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : 'N/A' }},
+                                                {{ isset($year) ? $year : 'N/A' }} to
+                                                {{ isset($month_second) ? date('F', mktime(0, 0, 0, $month_second, 10)) : 'N/A' }},
+                                                {{ isset($year_second) ? $year_second : 'N/A' }}</span>
+                                        </li>
+
+                                        @if (isset($request) && $request->Category == 'by_category')
+                                            <li>
+                                                <p>fund classification :</p>
+                                                <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
+                                            </li>
+                                        @endif
+
+                                        @if (isset($fund_id) && $request->Category == 'by_fund')
+                                            <li>
+                                                <p>fund name :</p>
+                                                @foreach ($fund_id as $id)
+                                                    <span>{{ getNameTable('fund_master', 'fund_name', 'fund_id', $id) }},
+                                                    </span>
+                                                @endforeach
+                                            </li>
+                                        @endif
+
+                                    </ul>
+                                </div>
+
+                                <div class="graph_table">
+                                    <table class="table datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>name of the scrips</th>
+                                                <th class="text_center">content %</th>
+                                                <th class="text_center">Ammount (in lacs.)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (isset($scrips) && count($scrips) > 0)
+                                                @foreach ($scrips as $sc)
+                                                    <tr>
+                                                        <td>{{ isset($sc->scrip_name) ? $sc->scrip_name : 'N/A' }}</td>
+                                                        <td class="text_right open-popup-scrip-industry"
+                                                            data-category="content_per" data-using="scrip"
+                                                            data-parameter="{{ $sc->scrip_name }}">
+                                                            {{ isset($sc->content_per) ? number_format($sc->content_per, 2) : '0' }}
+                                                        </td>
+                                                        <td class="text_right open-popup-scrip-industry"
+                                                            data-using="scrip" data-category="amount"
+                                                            data-parameter="{{ $sc->scrip_name }}">
+                                                            {{ printValue($sc->amount) }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="3">No information available for this search</td>
+                                                </tr>
+                                            @endif
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab">
+                                <div class="fund_section new_fund_section">
+                                    <ul>
+                                        <li>
+                                            <p>Top Industries :</p>
+                                            <span>From the month of
+                                                {{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : 'N/A' }},
+                                                {{ isset($year) ? $year : 'N/A' }} to
+                                                {{ isset($month_second) ? date('F', mktime(0, 0, 0, $month_second, 10)) : 'N/A' }},
+                                                {{ isset($year_second) ? $year_second : 'N/A' }}</span>
+                                        </li>
+
+                                        @if (isset($request) && $request->Category == 'by_category')
+                                            <li>
+                                                <p>fund classification :</p>
+                                                <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
+                                            </li>
+                                        @endif
+
+                                        @if (isset($request) && $request->Category == 'by_fund')
+                                            <li>
+                                                <p>fund name :</p>
+                                                <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
+                                            </li>
+                                        @endif
+
+                                    </ul>
+                                </div>
+
+                                <div class="graph_table">
+                                    <table class="table datatable">
+                                        <thead>
+                                            <tr>
+                                                <th class="text_left">name of the Industries</th>
+                                                <th class="text_center">content %</th>
+                                                <th class="text_center">Ammount (in lacs.)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (isset($industry) && count($industry) > 0)
+                                                @foreach ($industry as $inds)
+                                                    <tr>
+                                                        <td class="text_left">
+                                                            {{ isset($inds->industry) ? $inds->industry : 'N/A' }}</td>
+                                                        <td class="text_left open-popup-scrip-industry" data-using="industry" data-category="content_per" data-parameter="{{$inds->industry}}">
+                                                            {{ isset($inds->content_per) ? number_format($inds->content_per, 2) : '0' }}
+                                                        </td>
+                                                        <td class="text_left open-popup-scrip-industry" data-using="industry" data-category="amount" data-parameter="{{$inds->industry}}">
+                                                            {{ isset($inds->amount) ? number_format($inds->amount) : '0' }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td colspan="3">No information available for this search</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        {!! printNoData() !!}
+                    @endif
+
+
+                </div>
+            </div>
+            <div class="popup-overlay"></div>
+            <div class="table_popup">
+                <div class="graph_table">
+                    <h4>Fund Changes</h4>
+                    <div class="table_overflow table_height">
+                        <table class="table datatable">
+                            <thead>
+                                <tr>
+                                    <th>Fund Name </th>
+                                    <th>% Change </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button class="close_popup"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+@endsection
+
+<script>
+    function set_fund_select_val() {
+
+        var thiss = $('#fund_Category').val();
+        var count = $('#allocation_select_fund').select2('data').length;
+
+        console.log(thiss + '  ' + count);
+
+        if (thiss == 'by_fund') {
+
+            if (count >= 2 && count <= 20) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+
+        } else {
+            $('#submit_btn').prop('disabled', false);
+        }
+    }
+
+
+    function get_fund_types(thiss) {
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+        if (thiss == 'by_category') {
+
+            $('#submit_btn').prop('disabled', false);
+        } else if (thiss == 'by_fund') {
+
+            if (count >= 2 && count <= 20) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+        }
+    }
+
+
+    function get_second_month_year(thiss) {
+
+        var first_year = thiss;
+
+        var first_month = parseInt($('#month').val());
+
+        var currentDate = new Date();
+
+        // Get the current year
+        var currentYear = currentDate.getFullYear();
+
+        // Get the current month number (0-11, where 0 is January and 11 is December)
+        var currentMonth = currentDate.getMonth() + 1; //
+
+        var month_opt = '';
+        var year_opt = '';
+
+        if ((first_year == currentYear) && (first_month == currentMonth)) { //for 2nd month//
+
+
+
+            month_opt += '<option value="">Please select proper first period month</option>';
+
+            year_opt += '<option value="">Please select proper first period year</option>';
+
+
+
+        } else if ((first_year < currentYear) && (first_month < currentMonth)) {
+
+            for (var i = currentYear; i >= first_year; i--) {
+
+                year_opt += '<option value="' + i + '">' + i + '</option>';
+            }
+
+
+            for (var m = 1; m <= 12; m++) {
+
+                month_opt += '<option value="' + m + '">' + getMonthName(m) + '</option>';
+
+            }
+
+
+
+
+        } else if ((first_year == currentYear) && (first_month < currentMonth)) {
+
+
+
+            year_opt += '<option value="' + first_year + '">' + first_year + '</option>';
+
+
+
+            for (var m = (first_month + 1); m <= currentMonth; m++) {
+
+                month_opt += '<option value="' + m + '">' + getMonthName(m) + '</option>';
+
+            }
+
+
+        }
+
+        $('#month_second').html(month_opt);
+
+        $('#year_second').html(year_opt);
+
+
+
+
+    }
+
+
+
+    function get_second_period(second_month) {
+
+        var first_month = parseInt($('#month').val());
+        var first_year = parseInt($('#year').val());
+
+        var currentDate = new Date();
+
+        // Get the current year
+        var currentYear = currentDate.getFullYear();
+
+        // Get the current month number (0-11, where 0 is January and 11 is December)
+        var currentMonth = currentDate.getMonth() + 1; //
+
+        var options = '';
+
+        if (second_month > first_month) {
+            for (var i = currentYear; i >= (first_year); i--) {
+
+                options += '<option value="' + i + '">' + i + '</option>';
+            }
+
+        } else {
+
+            for (var i = currentYear; i >= (first_year + 1); i--) {
+                options += '<option value="' + i + '">' + i + '</option>';
+            }
+
+        }
+
+        $('#year_second').html(options);
+
+    }
+
+    function getMonthName(monthNumber) {
+
+        var monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        // Subtract 1 from monthNumber to get the correct index (0-11)
+        return monthNames[monthNumber - 1];
+    }
+</script>
+
+
+{{-- <script>
+    function get_classification(thiss) {
+
+        if (thiss == 'classification') {
+
+            $('#fund_type_div').removeAttr('style');
+            $('#fund_type').prop('required', true);
+
+
+            $('#fund_master').prop('required', false);
+            $('#fund_master').val('0');
+
+
+            $('#fund_name_div').attr('style', 'display:none');
+
+        } else if (thiss == 'fund') {
+
+            $('#fund_type_div').attr('style', 'display:none');
+            $('#fund_type').prop('required', false);
+
+            $('#fund_type').val('0');
+
+
+            $('#fund_master').prop('required', true);
+
+            $('#fund_name_div').removeAttr('style');
+
+
+        }
+
+
+    }
+</script> --}}

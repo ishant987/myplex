@@ -63,31 +63,40 @@ class RatioController extends Controller
       return view('web.ratio-reports.quick_ratio_new', $data);
     }
 
-    function ratio_analysis(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Ratio Analysis';
-      $data['page_message'] = 'Ratio Analysis is now available from the sidebar. This section is ready for detailed dashboard content.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function ratio_analysis(Request $request){
+      return view('web.auth.ratio_analysis.index', $this->subscriptionViewData(Auth::user()));
     }
 
-    function composition_report(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Composition Report';
-      $data['page_message'] = 'Composition Report is now available from the sidebar. This section is ready for detailed dashboard content.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function composition_report(Request $request){
+      return view('web.auth.composition_report.index', $this->subscriptionViewData(Auth::user()));
     }
 
-    function indies_report(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Indies Report';
-      $data['page_message'] = 'Indies Report is now available from the sidebar. This section is ready for detailed dashboard content.';
+    function indies_report(Request $request){
+      return view('web.auth.indices_report.index', $this->subscriptionViewData(Auth::user()));
+    }
 
-      return view('web.ratio-reports.generic_page', $data);
+    function indices_history(Request $request){
+      return view('web.indices-reports.indices-history', $this->indicesReportViewData($request));
+    }
+
+    function indices_composition(Request $request){
+      return view('web.indices-reports.indices-composition', $this->indicesReportViewData($request));
+    }
+
+    function schemes_associated_with_index(Request $request){
+      return view('web.indices-reports.schemes-associated-with-index', $this->indicesReportViewData($request));
+    }
+
+    function indices_boomers(Request $request){
+      return view('web.indices-reports.boomers', $this->indicesReportViewData($request));
+    }
+
+    function indices_busters(Request $request){
+      return view('web.indices-reports.busters', $this->indicesReportViewData($request));
+    }
+
+    function index_vs_nav(Request $request){
+      return view('web.indices-reports.index-vs-NAV', $this->indicesReportViewData($request));
     }
 
     function model_portfolio(){
@@ -99,22 +108,155 @@ class RatioController extends Controller
       return view('web.ratio-reports.generic_page', $data);
     }
 
-    function filters(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Filters';
-      $data['page_message'] = 'Filters is now available from the sidebar. This section is ready for detailed dashboard content.';
-
-      return view('web.ratio-reports.generic_page', $data);
+    function filters(Request $request){
+      return view('web.auth.filters.index', $this->reportViewData($request));
     }
 
-    function predictive(){
-      $user = Auth::user();
-      $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Predictive';
-      $data['page_message'] = 'Predictive is now available from the sidebar. This section is ready for detailed dashboard content.';
+    function filters_ratios(Request $request){
+      return view('web.filters.ratios', $this->reportViewData($request));
+    }
 
-      return view('web.ratio-reports.generic_page', $data);
+    function filters_composition(Request $request){
+      return view('web.filters.composition', $this->reportViewData($request));
+    }
+
+    function filters_jensens(Request $request){
+      return view('web.filters.jensens', $this->reportViewData($request));
+    }
+
+    function filters_beta(Request $request){
+      return view('web.filters.beta', $this->reportViewData($request));
+    }
+
+    function filters_volatility(Request $request){
+      return view('web.filters.volatility', $this->reportViewData($request));
+    }
+
+    function risk_ratio(Request $request){
+      return view('web.auth.ratio_analysis.risk_ratio', $this->performanceRatiosViewData($request));
+    }
+
+    function return_ratio(Request $request){
+      return view('web.auth.ratio_analysis.return_ratio', $this->performanceRatiosViewData($request));
+    }
+
+    function sortino_ratio(Request $request){
+      $request->merge([
+          'Category' => $request->input('Category', 'by_fund'),
+          'report_category' => $request->input('report_category', 'sortino'),
+      ]);
+
+      $data = $this->reportViewData($request);
+      $selection = $this->resolveFundSelection($request, $data);
+
+      $data['fund_type'] = $data['all_fund_types'];
+      $data['fund_names'] = $selection['fund_names'];
+      $data['fund_type_name'] = $selection['fund_type_name'];
+      $data['months'] = range(1, 12);
+      $data['years'] = range((int) now()->format('Y'), 1950);
+      $data['month'] = $request->input('month');
+      $data['year'] = $request->input('year');
+      $data['month_second'] = $request->input('month_second');
+      $data['year_second'] = $request->input('year_second');
+
+      if ($data['month'] && $data['year']) {
+          $data['start_date'] = Carbon::createFromDate((int) $data['year'], (int) $data['month'], 1)->startOfMonth()->toDateString();
+      } else {
+          $data['start_date'] = null;
+      }
+
+      if ($data['month_second'] && $data['year_second']) {
+          $data['end_date'] = Carbon::createFromDate((int) $data['year_second'], (int) $data['month_second'], 1)->endOfMonth()->toDateString();
+      } else {
+          $data['end_date'] = null;
+      }
+
+      return view('web.auth.ratio_analysis.sortino_ratio', $data);
+    }
+
+    function predictive(Request $request){
+      return view('web.predictive.index', $this->subscriptionViewData(Auth::user()));
+    }
+
+    function predictive_jensen_alpha(Request $request){
+      return view('web.predictive.jensen_alpha', $this->predictiveViewData($request));
+    }
+
+    function predictive_sharp_ratio(Request $request){
+      return view('web.predictive.sharp_ratio', $this->predictiveViewData($request));
+    }
+
+    function predictive_trenyor(Request $request){
+      return view('web.predictive.trenyor', $this->predictiveViewData($request));
+    }
+
+    function allocation_snapshot(Request $request){
+      return view('web.composition_report.allocation_snapshot', $this->compositionReportViewData($request));
+    }
+
+    function scheme_portfolio(Request $request){
+      return view('web.composition_report.scheme_portfolio', $this->compositionReportViewData($request));
+    }
+
+    function occurrence_report(Request $request){
+      return view('web.composition_report.occurrence_report', $this->compositionReportViewData($request));
+    }
+
+    function top_script_rop_industry(Request $request){
+      return view('web.composition_report.top_script_rop_industry', $this->compositionReportViewData($request));
+    }
+
+    function new_script_new_industry(Request $request){
+      return view('web.composition_report.new_script_new_industry', $this->compositionReportViewData($request));
+    }
+
+    function boomers(Request $request){
+      return view('web.composition_report.boomers', $this->compositionReportViewData($request));
+    }
+
+    function busters(Request $request){
+      return view('web.composition_report.busters', $this->compositionReportViewData($request));
+    }
+
+    function predictive_fund_details(Request $request)
+    {
+        $fundId = (int) $request->input('id');
+        $fund = $fundId > 0 ? FundMaster::query()->find($fundId) : null;
+
+        if (!$fund) {
+            return response()->json([
+                'entry_date' => 'N/A',
+                'name' => 'N/A',
+                'closing_value' => '0.0',
+            ]);
+        }
+
+        $detail = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->orderByDesc('entry_date')
+            ->first();
+
+        return response()->json([
+            'entry_date' => $detail?->entry_date ? Carbon::parse($detail->entry_date)->format('d-m-Y') : 'N/A',
+            'name' => $fund->indices_name ?? 'N/A',
+            'closing_value' => $detail?->nav ?? '0.0',
+        ]);
+    }
+
+    function composition_get_funds(Request $request)
+    {
+        $fundTypeId = (int) $request->input('type_id');
+        $funds = $fundTypeId > 0
+            ? FundMaster::query()->where('fund_type_id', $fundTypeId)->orderBy('fund_name')->get(['fund_id', 'fund_name', 'fund_code'])
+            : collect();
+
+        return response()->json($funds);
+    }
+
+    function composition_get_fund_by_scrips(Request $request)
+    {
+        return response()->json([]);
     }
     function monthly_snapshot(Request $request){
       $data = $this->monthlySnapshotViewData($request);
@@ -302,6 +444,87 @@ class RatioController extends Controller
             'information_ratio' => null,
             'skewness' => null,
             'kurtosis' => null,
+        ]);
+    }
+
+    protected function predictiveViewData(Request $request): array
+    {
+        return array_merge($this->reportViewData($request), [
+            'fundMasterData' => $this->safeFundList(),
+            'getData' => $request->all(),
+            'expected_index' => $request->input('expected_index'),
+            'indices_details' => null,
+            'fund_details' => null,
+            'graph_date' => [],
+            'nav_value' => [],
+            'closing_value' => [],
+        ]);
+    }
+
+    protected function compositionReportViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+        $months = range(1, 12);
+        $years = range((int) now()->format('Y'), 1950);
+        $getData = array_merge([
+            'scrip_industry' => 'scrip',
+            'Category' => $request->input('Category', 'by_category'),
+            'fund_id' => [],
+            'fund_type_id' => null,
+            'industry' => null,
+            'fund_scrips' => null,
+            'year' => $request->input('year'),
+            'month' => $request->input('month'),
+        ], $request->all());
+
+        return array_merge($data, [
+            'fund_type' => $data['all_fund_types'],
+            'fund_master' => $data['all_funds'],
+            'months' => $months,
+            'years' => $years,
+            'month' => $request->input('month'),
+            'year' => $request->input('year'),
+            'month_second' => $request->input('month_second'),
+            'year_second' => $request->input('year_second'),
+            'limit' => $request->input('limit'),
+            'getData' => $getData,
+            'industries' => collect(),
+            'mpx_fund_scrips' => collect(),
+            'scrips' => collect(),
+            'total_corpus_entry' => null,
+            'top_scrips' => null,
+            'top_industries' => null,
+            'monthName' => $request->filled('month') ? date('F', mktime(0, 0, 0, (int) $request->input('month'), 10)) : null,
+            'lastDate' => null,
+            'active_tab' => $request->input('active_tab'),
+            'fund_type_get_data' => null,
+            'fund_details' => [],
+            'fund_ids' => (array) $request->input('fund_id', []),
+            'fund_composition' => null,
+        ]);
+    }
+
+    protected function indicesReportViewData(Request $request): array
+    {
+        $data = $this->reportViewData($request);
+
+        return array_merge($data, [
+            'indices' => $this->safeIndicesList(),
+            'schemes' => $this->safeFundList(),
+            'months' => range(1, 12),
+            'years' => range((int) now()->format('Y'), 1950),
+            'month' => $request->input('month'),
+            'year' => $request->input('year'),
+            'month_second' => $request->input('month_second'),
+            'year_second' => $request->input('year_second'),
+            'limit' => $request->input('limit'),
+            'indices_name' => $request->input('indices', []),
+            'indices_vals' => [],
+            'indices_composition' => null,
+            'all_schemes' => collect(),
+            'results_scrips' => null,
+            'results_industries' => null,
+            'indices_records' => collect(),
         ]);
     }
 

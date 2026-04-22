@@ -79,6 +79,7 @@
                 </div>
                 
                 <div class="new_page">
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                     <div class="wm_tab">
                         <ul class="tabs">
                             <li>
@@ -91,11 +92,6 @@
                             </li>
                         </ul>
                     </div>
-                    {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    <div class="perform_head">
-                        <h2>Comparative Quartile & Decile</h2>
-                    </div> --}}
-
                     <input type="hidden" name="quartile_status" id="quartile_status"
                         value="{{ isset($quartile_set) ? $quartile_set : '' }}">
 

@@ -1,0 +1,592 @@
+@extends('web.layout.infosolz_user_app')
+
+@section('content')
+    <div class="inner_main">
+        <div class="page_detail">
+            <div class="inner_padding">
+                <div class="head_brdcm">
+                    <ul class="brdcmb">
+                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
+                        <li><a href="{{ route('user.indices_report') }}">indices report</a></li>
+                        <li>Index vs NAV</li>
+                    </ul>
+                </div>
+                <div class="new_page">
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <form action="" method="get">
+                        <div class="index_nav">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="nav_in">
+                                        <p><strong>Primary</strong></p>
+                                        <div class="wm_tab">
+                                            <ul class="">
+                                                <li>
+                                                    <a href="javascript:void(0)" id="main_select_scheme"
+                                                        onclick="main_select('scheme')"
+                                                        class="{{ (isset($request['main_select']) && $request['main_select'] == 'scheme') || !isset($request['main_select']) ? 'active' : '' }}">Schemes</a>
+                                                    <input type="hidden" id="main_select" name="main_select"
+                                                        value="{{ isset($request['main_select']) ? $request['main_select'] : '' }}">
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)" id="main_select_index"
+                                                        onclick="main_select('index')"
+                                                        class="{{ isset($request['main_select']) && $request['main_select'] == 'index' ? 'active' : '' }}">Index</a>
+                                                </li>
+
+
+
+                                            </ul>
+                                        </div>
+
+                                        <div class="">
+
+                                            <div id="main_scheme" class="tab"
+                                                style="{{ isset($request['main_select']) && $request['main_select'] == 'index' ? 'display:none' : '' }}">
+                                                <div class="form_group">
+                                                    <select name="scheme_main" class="select2"
+                                                        data-placeholder="Select Scheme" onchange="main_drpdown('scheme')">
+                                                        <option value="">Select Scheme</option>
+                                                        @isset($schemes)
+                                                            @foreach ($schemes as $scheme)
+                                                                <option value="{{ $scheme->fund_code }}"
+                                                                    @if (isset($request['scheme_main']) && $scheme->fund_code == $request['scheme_main']) selected @endif>
+                                                                    {{ $scheme->fund_name }}</option>
+                                                            @endforeach
+                                                        @endisset
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div id="main_index" class="tab"
+                                                style="{{ (isset($request['main_select']) && $request['main_select'] == 'scheme') || !isset($request['main_select']) ? 'display:none' : '' }}">
+                                                <div class="form_group">
+                                                    <select name="index_main" class="select2"
+                                                        data-placeholder="Select Index" onchange="main_drpdown('index')">
+                                                        <option value="">Select Index</option>
+                                                        @isset($indices)
+                                                            @foreach ($indices as $index)
+                                                                <option value="{{ $index->corelation }}"
+                                                                    @if (isset($request['index_main']) && $index->corelation == $request['index_main']) selected @endif>
+                                                                    {{ $index->name }}</option>
+                                                            @endforeach
+                                                        @endisset
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row date_sec">
+                                        <div class="col-md-6">
+                                            <label>From date</label>
+                                            <div class="form_group">
+                                                <input type="date" name="from_date" class="form-control"
+                                                    value="{{ !empty($request['from_date']) ? \Carbon\Carbon::parse($request['from_date'])->format('Y-m-d') : '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>To date</label>
+                                            <div class="form_group">
+                                                <input type="date" name="to_date" class="form-control"
+                                                    value="{{ !empty($request['to_date']) ? \Carbon\Carbon::parse($request['to_date'])->format('Y-m-d') : '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="index_five">
+
+                                        <div class="single_index">
+                                            <p><strong>Compare With</strong></p>
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_1('scheme')"
+                                                            id="select_scheme_1"
+                                                            class="{{ (isset($request['select_1']) && $request['select_1'] == 'scheme') || !isset($request['select_1']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_1" name="select_1"
+                                                            value="{{ isset($request['select_1']) ? $request['select_1'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_1('index')"
+                                                            id="select_index_1"
+                                                            class="{{ isset($request['select_1']) && $request['select_1'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+
+                                            <div class="tabsct">
+
+                                                <div id="scheme_1" class=""
+                                                    style="{{ isset($request['select_1']) && $request['select_1'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_1" class="select2"
+                                                            data-placeholder="Select Scheme" onchange="drpdown_1('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_1']) && $scheme->fund_code == $request['scheme_1']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="" id="index_1"
+                                                    style="{{ (isset($request['select_1']) && $request['select_1'] == 'scheme') || !isset($request['select_1']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_1" class="select2"
+                                                            onchange="drpdown_1('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_1']) && $index->corelation == $request['index_1']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+
+                                        {{-- ===============4========= --}}
+
+
+                                        {{-- ===============5========= --}}
+
+
+
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="bttn_grp">
+                                        <input type="hidden" id="indices_graph_1"
+                                            value="{{ isset($indices_vals_1) ? json_encode($indices_vals_1) : '' }}">
+                                        <button class="btn btn-success" type="submit">Compare</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    
+                    @if (isset($indices_vals_1))
+                    <div class="share_pdf">
+                        <div class="sharethis-inline-share-buttons" ></div>
+                        {{-- <a href="javascript:void(0)" id="exportPDF" class="pdf"><img
+                                src="{{ asset('themes/frontend/assets/infosolz/images/pdf.png') }}"></a> --}}
+
+                    </div>
+                    @endif
+
+                    @if (isset($indices_vals_1) && count($indices_vals_1) != 0)
+                        <div class="graph_section">
+                            <div id="chartContainer_1" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @else
+                        <div class="graph_section">
+                            <p style="text-align: center;">Please search above to show the results</p>
+                        </div>
+                    @endif
+
+
+                </div>
+                @if (isset($indices_vals_1))
+                <div class="disclaimer">
+                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                </div>
+              @endif
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function main_select(val) {
+            // alert(val);
+
+            $("#main_select").val(val);
+            if (val == 'index') {
+                $("#main_index").show();
+                $("#main_select_index").addClass('active');
+                $("#main_select_scheme").removeClass('active');
+                $("#main_scheme").hide();
+            } else {
+                $("#main_scheme").show();
+                $("#main_select_index").removeClass('active');
+                $("#main_select_scheme").addClass('active');
+                $("#main_index").hide();
+            }
+
+        }
+
+        function select_1(val) {
+            // alert(val);
+            $("#select_1").val(val);
+            if (val == 'index') {
+                $("#index_1").show();
+                $("#select_index_1").addClass('active');
+                $("#select_scheme_1").removeClass('active');
+                $("#scheme_1").hide();
+            } else {
+                $("#scheme_1").show();
+                $("#select_index_1").removeClass('active');
+                $("#select_scheme_1").addClass('active');
+                $("#index_1").hide();
+            }
+        }
+
+        function select_2(val) {
+            // alert("select 2");
+            $("#select_2").val(val);
+            if (val == 'index') {
+                $("#index_2").show();
+                $("#select_index_2").addClass('active');
+                $("#select_scheme_2").removeClass('active');
+                $("#scheme_2").hide();
+            } else {
+                $("#scheme_2").show();
+                $("#select_index_2").removeClass('active');
+                $("#select_scheme_2").addClass('active');
+                $("#index_2").hide();
+            }
+        }
+
+        function select_3(val) {
+            // alert("select 3");
+            $("#select_3").val(val);
+            if (val == 'index') {
+                $("#index_3").show();
+                $("#select_index_3").addClass('active');
+                $("#select_scheme_3").removeClass('active');
+                $("#scheme_3").hide();
+            } else {
+                $("#scheme_3").show();
+                $("#select_index_3").removeClass('active');
+                $("#select_scheme_3").addClass('active');
+                $("#index_3").hide();
+            }
+        }
+
+        function select_4(val) {
+            // alert(val);
+            $("#select_4").val(val);
+            if (val == 'index') {
+                $("#index_4").show();
+                $("#select_index_4").addClass('active');
+                $("#select_scheme_4").removeClass('active');
+                $("#scheme_4").hide();
+            } else {
+                $("#scheme_4").show();
+                $("#select_index_4").removeClass('active');
+                $("#select_scheme_4").addClass('active');
+                $("#index_4").hide();
+            }
+        }
+
+        function select_5(val) {
+            // alert(val);
+            $("#select_5").val(val);
+            if (val == 'index') {
+                $("#index_5").show();
+                $("#select_index_5").addClass('active');
+                $("#select_scheme_5").removeClass('active');
+                $("#scheme_5").hide();
+            } else {
+                $("#scheme_5").show();
+                $("#select_index_5").removeClass('active');
+                $("#select_scheme_5").addClass('active');
+                $("#index_5").hide();
+            }
+        }
+
+        function select_6(val) {
+            // alert(val);
+            $("#select_6").val(val);
+            if (val == 'index') {
+                $("#index_6").show();
+                $("#select_index_6").addClass('active');
+                $("#select_scheme_6").removeClass('active');
+                $("#scheme_6").hide();
+            } else {
+                $("#scheme_6").show();
+                $("#select_index_6").removeClass('active');
+                $("#select_scheme_6").addClass('active');
+                $("#index_6").hide();
+            }
+        }
+
+        function main_drpdown(val) {
+            if (val == 'index') {
+                $("#main_select").val('index');
+            } else if (val == 'scheme') {
+                $("#main_select").val('scheme');
+            }
+        }
+
+        function drpdown_1(val) {
+            if (val == 'index') {
+                $("#select_1").val('index');
+            } else if (val == 'scheme') {
+                $("#select_1").val('scheme');
+            }
+        }
+
+        function drpdown_2(val) {
+            if (val == 'index') {
+                $("#select_2").val('index');
+            } else if (val == 'scheme') {
+                $("#select_2").val('scheme');
+            }
+        }
+
+        function drpdown_3(val) {
+            if (val == 'index') {
+                $("#select_3").val('index');
+            } else if (val == 'scheme') {
+                $("#select_3").val('scheme');
+            }
+        }
+
+        function drpdown_4(val) {
+            if (val == 'index') {
+                $("#select_4").val('index');
+            } else if (val == 'scheme') {
+                $("#select_4").val('scheme');
+            }
+        }
+
+        function drpdown_5(val) {
+            if (val == 'index') {
+                $("#select_5").val('index');
+            } else if (val == 'scheme') {
+                $("#select_5").val('scheme');
+            }
+        }
+
+        function drpdown_6(val) {
+            if (val == 'index') {
+                $("#select_6").val('index');
+            } else if (val == 'scheme') {
+                $("#select_6").val('scheme');
+            }
+        }
+    </script>
+
+
+    <!-- Highcharts library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            function initializeChart(graphId, containerId) {
+                let indicesGraphData = document.getElementById(graphId).value;
+
+                if (indicesGraphData !== '') {
+                    try {
+                        indicesGraphData = JSON.parse(indicesGraphData);
+
+                        let seriesData = [];
+
+                        var graph_data1_date = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01',
+                            '2023-05-01'
+                        ];
+                        var graph_data1_value = [65, 59, 80, 81, 56];
+                        var graph_data2_date = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01',
+                            '2023-05-01'
+                        ];
+                        var graph_data2_value = [28, 48, 40, 19, 86];
+
+                        var index_name = [];
+                        var graph_data_date = [];
+                        var graph_data_value = [];
+
+                        // Prepare series data for each index
+                        for (let index in indicesGraphData) {
+
+                            if (indicesGraphData.hasOwnProperty(index)) {
+
+                                index_name.push(index);
+
+                                graph_data_date[index] = [];
+                                graph_data_value[index] = [];
+
+                                indicesGraphData[index].forEach((item) => {
+
+                                    let date = new Date(item[0]).getTime();
+                                    let value = parseFloat(item[1]);
+
+                                    graph_data_date[index].push(date);
+                                    graph_data_value[index].push(value);
+                                });
+
+                            }
+                        }
+
+                        // console.log('graph_data_date', graph_data_date[index_name[0]]);
+                        // console.log('graph_data_value', graph_data_value);
+
+                        Highcharts.chart(containerId, {
+                            accessibility: {
+                                enabled: false
+                            },
+                            chart: {
+                                type: 'spline',
+                                zoomType: 'xy'
+                            },
+
+                            title: {
+                                text: ''
+                            },
+
+                            xAxis: {
+                                type: 'datetime',
+                                labels: {
+                                    formatter: function() {
+                                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
+                                    }
+                                }
+                            },
+
+                            yAxis: [{
+                                    labels: {
+                                        format: '{value}',
+                                        style: {
+                                            color: Highcharts.getOptions().colors[0]
+                                        }
+                                    },
+                                    title: {
+                                        text: index_name[0], // Corrected to index_name[0]
+                                        style: {
+                                            color: Highcharts.getOptions().colors[0]
+                                        }
+                                    }
+                                },
+                                {
+                                    labels: {
+                                        format: '{value}',
+                                        style: {
+                                            color: Highcharts.getOptions().colors[1]
+                                        }
+                                    },
+                                    title: {
+                                        text: index_name[1], // Corrected to index_name[1]
+                                        style: {
+                                            color: Highcharts.getOptions().colors[1]
+                                        }
+                                    },
+                                    opposite: true
+                                }
+                            ],
+                            time: {
+                                useUTC: false
+                            },
+
+                            plotOptions: {
+                                column: {
+                                    pointPadding: 0.2,
+                                    borderWidth: 0
+                                }
+                            },
+
+                            legend: {
+                                title: {
+                                    text: ''
+                                }
+                            },
+
+                            series: [{
+                                    yAxis: 0,
+                                    name: index_name[0], // Corrected to index_name[0]
+                                    marker: {
+                                        enabled: true,
+                                        symbol: 'circle'
+                                    },
+                                    data: (function() {
+                                        return graph_data_date[index_name[0]].map(function(date,
+                                            i) {
+                                            return [date, graph_data_value[index_name[
+                                                0]][i]]; // Directly use date
+                                        });
+                                    })(),
+                                    /*data: (function() {
+                                        return graph_data_date.map(function(date,
+                                            i) {
+                                            return [date, graph_data_value[index_name[
+                                                0]][i]]; // Directly use date
+                                        });
+                                    })(),*/
+                                    color: 'red',
+                                    lineWidth: 1
+                                },
+                                {
+                                    name: index_name[1], // Corrected to index_name[1]
+                                    yAxis: 1,
+                                    marker: {
+                                        enabled: true,
+                                        symbol: 'circle'
+                                    },
+                                    data: (function() {
+                                        return graph_data_date[index_name[1]].map(function(date,
+                                            i) {
+                                            return [date, graph_data_value[index_name[
+                                                1]][i]]; // Directly use date
+                                        });
+                                    })(),
+                                    color: 'blue',
+                                    lineWidth: 1
+                                }
+                            ]
+                        });
+
+                    } catch (error) {
+                        console.error('Error parsing or processing data:', error);
+                    }
+                } else {
+                    console.error(`No data found for ${graphId}.`);
+                }
+
+                $('.highcharts-credits').hide();
+            }
+
+            initializeChart('indices_graph_1', 'chartContainer_1');
+        });
+    </script>
+    <style type="text/css">
+    
+.highcharts-label.highcharts-series-label{
+    display: none;
+}
+
+.share_pdf {
+    position: static;
+    right: 0;
+    top: -38px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: end;
+    padding-bottom: 10px;
+}
+
+</style>
+@endsection
