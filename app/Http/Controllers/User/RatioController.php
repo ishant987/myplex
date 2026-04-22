@@ -589,7 +589,10 @@ class RatioController extends Controller
             'graph_date' => [],
             'nav_value' => [],
             'closing_value' => [],
+            'fund_series' => [],
+            'index_series' => [],
             'duration' => $duration,
+            'message' => null,
         ]);
 
         if ($selectedFundId <= 0) {
@@ -658,21 +661,16 @@ class RatioController extends Controller
         $fundSeries = $this->buildChartSeriesFromPoints($fundPoints, 'entry_date', 'closing_nav');
         $indexSeries = $this->buildChartSeriesFromPoints($indexPoints, 'entry_date', 'closing_value');
 
-        $graphDates = collect($fundSeries)
-            ->pluck(0)
-            ->intersect(collect($indexSeries)->pluck(0))
-            ->values();
-
         $data['indices_details'] = $index ?? (object) ['name' => $fund->indices_name, 'corelation' => $fund->indices_name];
-        $data['graph_date'] = $graphDates->all();
-        $data['nav_value'] = $graphDates
-            ->map(fn ($date) => collect($fundSeries)->firstWhere(0, $date)[1] ?? null)
-            ->values()
-            ->all();
-        $data['closing_value'] = $graphDates
-            ->map(fn ($date) => collect($indexSeries)->firstWhere(0, $date)[1] ?? null)
-            ->values()
-            ->all();
+        $data['fund_series'] = $fundSeries;
+        $data['index_series'] = $indexSeries;
+        $data['graph_date'] = collect($fundSeries)->pluck(0)->all();
+        $data['nav_value'] = collect($fundSeries)->pluck(1)->all();
+        $data['closing_value'] = collect($indexSeries)->pluck(1)->all();
+
+        if ($request->has('duration') && empty($fundSeries) && empty($indexSeries)) {
+            $data['message'] = 'No graph data is available for the selected period.';
+        }
 
         return $data;
     }

@@ -90,11 +90,19 @@ unset($__errorArgs, $__bag); ?>
 
                     
 
-                    <div class="graph_section">
-                        
-
-                        <div id="container1"></div>
-                    </div>
+                    <?php if(!empty($message)): ?>
+                        <div class="graph_table">
+                            <p><?php echo e($message); ?></p>
+                        </div>
+                    <?php elseif(!empty($fund_series) || !empty($index_series)): ?>
+                        <div class="graph_section">
+                            <div id="container1"></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="graph_table">
+                            <p>Select a scheme and period to view the graph.</p>
+                        </div>
+                    <?php endif; ?>
 
                 </div>
 
@@ -135,136 +143,64 @@ unset($__errorArgs, $__bag); ?>
         });
     </script>
 
-    <script>
-        var indicesName = document.getElementById('indices_details_name').value || 'Index';
-        var fundName = document.getElementById('fund_details_name').value || 'Fund NAV';
+    <?php if(!empty($fund_series) || !empty($index_series)): ?>
+        <script>
+            var indexSeries = <?php echo json_encode($index_series ?? [], 15, 512) ?>;
+            var fundSeries = <?php echo json_encode($fund_series ?? [], 15, 512) ?>;
 
-        var graphDates = <?php echo json_encode($graph_date ?? [], 15, 512) ?>;
-        var navValues = <?php echo json_encode($nav_value ?? [], 15, 512) ?>;
-        var closingValues = <?php echo json_encode($closing_value ?? [], 15, 512) ?>;
+            indexSeries = (indexSeries || []).map(function(point) {
+                return [Date.parse(point[0]), point[1]];
+            }).filter(function(point) {
+                return !isNaN(point[0]) && point[1] !== null;
+            });
 
-        // console.log("Indices Name:", indicesName);
-        // console.log("Fund Name:", fundName);
-        // console.log("Graph Dates:", graphDates);
-        // console.log("NAV Values:", navValues);
-        // console.log("Closing Values:", closingValues);
+            fundSeries = (fundSeries || []).map(function(point) {
+                return [Date.parse(point[0]), point[1]];
+            }).filter(function(point) {
+                return !isNaN(point[0]) && point[1] !== null;
+            });
 
-        var value1_text = indicesName;
-        var value2_text = fundName;
-        var graph_data1_date = graphDates;
-        var graph_data1_value = closingValues;
-        var graph_data2_date = graphDates;
-        var graph_data2_value = navValues;
-
-        Highcharts.chart('container1', {
-            chart: {
-                type: 'spline',
-                zoomType: 'xy'
-            },
-
-            title: {
-                text: ''
-            },
-
-            xAxis: {
-                type: 'datetime',
-                labels: {
-                    formatter: function() {
-                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
-                    }
+            Highcharts.chart('container1', {
+                chart: {
+                    type: 'spline',
+                    zoomType: 'x'
                 },
-                tickPositioner: function() {
-                    // Combine both graph_data1_date and graph_data2_date to show all available dates
-                    let allDates = graph_data1_date.concat(graph_data2_date).map(function(date) {
-                        return Date.parse(date);
-                    });
-
-                    // Sort the dates and return unique values
-                    allDates = Array.from(new Set(allDates.sort(function(a, b) {
-                        return a - b;
-                    })));
-
-                    return allDates;
-                }
-            },
-
-            yAxis: [{
-                    labels: {
-                        format: '{value}',
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
-                    },
-                    title: {
-                        text: value1_text,
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
-                    }
-                },
-                {
-                    labels: {
-                        format: '{value}',
-                        style: {
-                            color: Highcharts.getOptions().colors[1]
-                        }
-                    },
-                    title: {
-                        text: value2_text,
-                        style: {
-                            color: Highcharts.getOptions().colors[1]
-                        }
-                    },
-                    opposite: true
-                }
-            ],
-            time: {
-                useUTC: false
-            },
-
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-
-            legend: {
                 title: {
                     text: ''
-                }
-            },
-
-            series: [{
-                    yAxis: 0,
-                    name: value1_text,
-                    marker: {
-                        enabled: true,
-                        symbol: 'circle'
-                    },
-                    data: graph_data1_date.map(function(date, i) {
-                        return [Date.parse(date), graph_data1_value[i]];
-                    }),
-                    color: 'red',
-                    lineWidth: 1
                 },
-                {
-                    name: value2_text,
-                    yAxis: 1,
-                    marker: {
-                        enabled: true,
-                        symbol: 'circle'
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: [{
+                    title: {
+                        text: '<?php echo e(addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index'))); ?>'
+                    }
+                }, {
+                    title: {
+                        text: '<?php echo e(addslashes($fund_details->fund_name ?? 'Fund NAV')); ?>'
                     },
-                    data: graph_data2_date.map(function(date, i) {
-                        return [Date.parse(date), graph_data2_value[i]];
-                    }),
-                    color: 'blue',
-                    lineWidth: 1,
-                    type: 'spline' // Ensures this part is curved
-                }
-            ]
-        });
-    </script>
+                    opposite: true
+                }],
+                time: {
+                    useUTC: false
+                },
+                tooltip: {
+                    shared: true
+                },
+                series: [{
+                    name: '<?php echo e(addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index'))); ?>',
+                    yAxis: 0,
+                    data: indexSeries,
+                    color: '#d94f30'
+                }, {
+                    name: '<?php echo e(addslashes($fund_details->fund_name ?? 'Fund NAV')); ?>',
+                    yAxis: 1,
+                    data: fundSeries,
+                    color: '#1f5f99'
+                }]
+            });
+        </script>
+    <?php endif; ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/predictive/jensen_alpha.blade.php ENDPATH**/ ?>
