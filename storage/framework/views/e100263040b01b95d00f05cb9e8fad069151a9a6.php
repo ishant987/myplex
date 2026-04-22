@@ -33,14 +33,24 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="Start Date" name="start_date"
-                                            value="<?php echo e(!empty($request['start_date']) ? \Carbon\Carbon::parse($request['start_date'])->format('Y-m-d') : ''); ?>">
+                                        <input type="text" class="form-control datepicker indices-history-datepicker"
+                                            placeholder="Start Date" name="start_date"
+                                            value="<?php echo e($request['start_date'] ?? ''); ?>">
+                                        <button type="button" class="datepicker-trigger indices-history-trigger"
+                                            aria-label="Open calendar" data-target="start_date">
+                                                <i class="fa-solid fa-calendar-days"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="End Date" name="end_date"
-                                            value="<?php echo e(!empty($request['end_date']) ? \Carbon\Carbon::parse($request['end_date'])->format('Y-m-d') : ''); ?>">
+                                        <input type="text" class="form-control datepicker indices-history-datepicker"
+                                            placeholder="End Date" name="end_date"
+                                            value="<?php echo e($request['end_date'] ?? ''); ?>">
+                                        <button type="button" class="datepicker-trigger indices-history-trigger"
+                                            aria-label="Open calendar" data-target="end_date">
+                                                <i class="fa-solid fa-calendar-days"></i>
+                                        </button>
                                         <input type="hidden" id="indices_graph" value="<?php echo e(json_encode($indices_vals)); ?>">
                                     </div>
                                 </div>
@@ -82,95 +92,149 @@
         </div>
     </div>
 
-    <!-- Highcharts library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+        function initIndicesHistoryDatepickers() {
+            var $dateInputs = $('#searchForm .indices-history-datepicker');
 
+            if (!window.jQuery || !$dateInputs.length) {
+                return;
+            }
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-    let indicesGraphData = document.getElementById('indices_graph').value;
-
-    if (indicesGraphData !== '') {
-        indicesGraphData = JSON.parse(indicesGraphData);
-
-        let seriesData = [];
-        console.log('indicesGraphData====',indicesGraphData);
-        
-
-        // Prepare series data for each index
-        for (let index in indicesGraphData) {
-            if (indicesGraphData.hasOwnProperty(index)) {
-                let series = {
-                    name: index,
-                    data: [],
-                    dataLabels: {
-                        enabled: false // Ensure data labels are disabled
-                    }
-                };
-
-                indicesGraphData[index].forEach((item) => {
-                    // Ensure date is parsed correctly (example assumes item[0] is the date)
-                    let date = new Date(item[0]).getTime(); // Convert to timestamp
-                    let value = parseFloat(item[1]); // Convert value to number
-
-                    if (!isNaN(value)) { // Check if value is a valid number
-                        series.data.push([date, value]);
-                    } else {
-                        console.warn(`Invalid data value encountered: ${item[1]}`);
-                    }
+            if ($.fn.datepicker) {
+                $dateInputs.attr('readonly', true);
+                $dateInputs.datepicker('destroy').datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    numberOfMonths: 1,
+                    showButtonPanel: true,
+                    yearRange: '-100:+20',
+                    constrainInput: false
                 });
 
-                seriesData.push(series);
+                $dateInputs.off('focus.indicesHistory click.indicesHistory').on('focus.indicesHistory click.indicesHistory', function() {
+                    $(this).datepicker('show');
+                });
+            }
+
+            $('#searchForm .indices-history-trigger').off('click.indicesHistory').on('click.indicesHistory', function(event) {
+                event.preventDefault();
+
+                var inputName = $(this).data('target');
+                var $input = $('#searchForm input[name="' + inputName + '"]');
+
+                if ($input.length) {
+                    if ($.fn.datepicker) {
+                        $input.datepicker('show');
+                        $input.trigger('focus');
+                    } else if ($input[0].showPicker) {
+                        $input[0].showPicker();
+                    } else {
+                        $input.trigger('focus');
+                    }
+                }
+            });
+
+            $dateInputs.off('mousedown.indicesHistory').on('mousedown.indicesHistory', function() {
+                if ($.fn.datepicker) {
+                    $(this).datepicker('show');
+                }
+            });
+        }
+
+        function initIndicesHistoryPage() {
+            initIndicesHistoryDatepickers();
+
+            var indicesGraphField = document.getElementById('indices_graph');
+
+            if (!indicesGraphField) {
+                return;
+            }
+
+            var indicesGraphData = indicesGraphField.value;
+
+            if (indicesGraphData !== '') {
+                indicesGraphData = JSON.parse(indicesGraphData);
+
+                var seriesData = [];
+
+                for (var index in indicesGraphData) {
+                    if (Object.prototype.hasOwnProperty.call(indicesGraphData, index)) {
+                        var series = {
+                            name: index,
+                            data: [],
+                            dataLabels: {
+                                enabled: false
+                            }
+                        };
+
+                        indicesGraphData[index].forEach(function(item) {
+                            var date = new Date(item[0]).getTime();
+                            var value = parseFloat(item[1]);
+
+                            if (!isNaN(value)) {
+                                series.data.push([date, value]);
+                            }
+                        });
+
+                        seriesData.push(series);
+                    }
+                }
+
+                Highcharts.chart('chartContainer', {
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'Indices History'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        min: 0
+                    },
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    },
+                    plotOptions: {
+                        line: {
+                            dataLabels: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    series: seriesData
+                });
+            }
+
+            if (window.jQuery) {
+                $('.highcharts-credits').hide();
             }
         }
 
-        // Initialize Highcharts chart
-        Highcharts.chart('chartContainer', {
-            chart: {
-                type: 'line'
-            },
-            title: {
-                text: 'Indices History'
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Date'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Value'
-                },
-                min: 0 // Adjust as needed
-            },
-            legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
-            },
-            plotOptions: {
-                line: {
-                    dataLabels: {
-                        enabled: false // Disable data labels for the line chart
-                    }
-                }
-            },
-            series: seriesData, // Assign series data
-            
-        });
-    } else {
-        console.error('No data found for indicesGraphData.');
-    }
-
-    $('.highcharts-credits').hide();
-});
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initIndicesHistoryPage);
+        } else {
+            initIndicesHistoryPage();
+        }
     </script>
-<?php $__env->stopSection(); ?>
+<?php $__env->stopPush(); ?>
 
 <style type="text/css">
     
