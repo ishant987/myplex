@@ -11,9 +11,7 @@
                 </ul>
             </div>
 
-            <div class="perform_head">
-                        <h2>Monthly snapshot</h2>
-            </div>
+          
 
                 <section class="monthly_snapshop_sec">
                 <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
@@ -272,10 +270,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var exportButton = document.getElementById('exportPDF');
 
-    if (!exportButton) {
-        return;
-    }
-
     exportButton.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
         var doc = new jsPDF();
@@ -302,11 +296,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var yPosition = 70;
 
             // 1. BSE, NSE, Global and Sectoral Index (Separate Tables)
-            @if(($array_bse ?? collect())->isNotEmpty())
+            @if($array_bse)
                 doc.text('BSE Index', 15, yPosition);
                 yPosition += 10;
                 var bseData = [];
-                @foreach (($array_bse ?? collect()) as $indices_details)
+                @foreach ($array_bse as $indices_details)
                     bseData.push(['{{ $indices_details->name }}', '{{ printValue($indices_details->cur_value) }}', '{{ printValue($indices_details->PER_CHANGE) }}']);
                 @endforeach
                 // Sort BSE Data (you can change the sorting criteria as needed)
@@ -320,11 +314,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 yPosition = doc.lastAutoTable.finalY + 10;
             @endif
 
-            @if(($array_nse ?? collect())->isNotEmpty())
+            @if($array_nse)
                 doc.text('NSE Index', 15, yPosition);
                 yPosition += 10;
                 var nseData = [];
-                @foreach (($array_nse ?? collect()) as $indices_details)
+                @foreach ($array_nse as $indices_details)
                     nseData.push(['{{ $indices_details->name }}', '{{ printValue($indices_details->cur_value) }}', '{{ printValue($indices_details->PER_CHANGE) }}']);
                 @endforeach
                 // Sort NSE Data
@@ -338,11 +332,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 yPosition = doc.lastAutoTable.finalY + 10;
             @endif
 
-            @if(($array_global_it ?? collect())->isNotEmpty())
+            @if($array_global_it)
                 doc.text('Global & Sectoral Index', 15, yPosition);
                 yPosition += 10;
                 var globalData = [];
-                @foreach (($array_global_it ?? collect()) as $indices_details)
+                @foreach ($array_global_it as $indices_details)
                     globalData.push(['{{ $indices_details->name }}', '{{ printValue($indices_details->cur_value) }}', '{{ printValue($indices_details->PER_CHANGE) }}']);
                 @endforeach
                 // Sort Global Data
@@ -358,11 +352,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Continue with the rest of your tables in a similar fashion
             // For Currency Changes
-            @if(($changes_currency ?? collect())->isNotEmpty())
+            @if($changes_currency)
                 doc.text('Currency Changes', 15, yPosition);
                 yPosition += 10;
                 var currencyData = [];
-                @foreach (($changes_currency ?? collect()) as $curr_details)
+                @foreach ($changes_currency as $curr_details)
                     currencyData.push(['{{ $curr_details->name }}', '{{ printValue($curr_details->cur_value) }}', '{{ printValue($curr_details->PER_CHANGE) }}']);
                 @endforeach
                 // Sort Currency Data
@@ -381,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
             doc.text('Commodity Changes', 15, yPosition);
             yPosition += 10;
             var commodityData = [];
-            @foreach (($changes_commodity ?? collect()) as $commodity_details)
+            @foreach ($changes_commodity as $commodity_details)
                 commodityData.push(['{{ $commodity_details->name }}', '{{ number_format($commodity_details->cur_value, 2) }}', '{{ number_format($commodity_details->PER_CHANGE, 2) }}']);
             @endforeach
             doc.autoTable({
@@ -396,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
             doc.text('Percentage Change by Category of Funds (Returns)', 15, yPosition);
             yPosition += 10;
             var benchmarkData = [];
-            @foreach (($monthly_benchmark ?? collect()) as $benchmark_details)
+            @foreach ($monthly_benchmark as $benchmark_details)
                 benchmarkData.push(['{{ $benchmark_details->FUNDTYPE }}', '{{ number_format($benchmark_details->CHANGEVALUE, 2) }}', '{{ number_format($benchmark_details->MEDIANVAL, 2) }}']);
             @endforeach
             doc.autoTable({
@@ -411,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
             doc.text('10 Best Performing Schemes', 15, yPosition);
             yPosition += 10;
             var schemeData = [];
-            @foreach (($best_schemes ?? collect()) as $scheme_details)
+            @foreach ($best_schemes as $scheme_details)
                 schemeData.push(['{{ $scheme_details->fund_name }}', '{{ $scheme_details->name }}', '{{ number_format($scheme_details->monthly_change, 2) }}']);
             @endforeach
             doc.autoTable({
