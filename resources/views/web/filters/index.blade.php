@@ -4,7 +4,14 @@
     @php
         $history = session()->has('history') ? session('history') : [];
         $disable = count($history) > 0 ? true : false;
-        $isByFundMode = isset($Category) && $Category === 'by_fund';
+        $selectedRanking = old('ranking', request('ranking', 'range'));
+        $selectedCategory = old('Category', request('Category', 'by_category'));
+        $isAsOnMode = $selectedRanking === 'as_on';
+        $isByFundMode = $selectedCategory === 'by_fund';
+        $selectedFilter = old('filter', request('filter', 'by_ratio'));
+        $hasSearchCriteria =
+            ($selectedFilter === 'by_ratio' && filled(old('report_category', request('report_category')))) ||
+            ($selectedFilter === 'by_composition' && filled(old('composition', request('composition'))));
         // echo '<pre>';
         // print_r($history);
         // exit();
@@ -49,11 +56,15 @@
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="ranking" value="range"
-                                                    {{ $disable ? 'disabled' : '' }} checked>
+                                                    onchange="toggleRankingFields()"
+                                                    {{ $selectedRanking === 'range' ? 'checked' : '' }}
+                                                    {{ $disable ? 'disabled' : '' }}>
                                                 Range
                                             </label>
                                             <label>
                                                 <input type="radio" name="ranking" value="as_on"
+                                                    onchange="toggleRankingFields()"
+                                                    {{ $selectedRanking === 'as_on' ? 'checked' : '' }}
                                                     {{ $disable ? 'disabled' : '' }}>
                                                 As on
                                             </label>
@@ -63,33 +74,36 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show">
+                                    <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                         <div class="form_group">
-                                            <input type="text" class="datepicker"
+                                            <input type="date" class="form-control"
                                                 placeholder="Start date" name="start_date"
-                                                value="{{ old('start_date', $start_date ?? '') }}" readonly>
+                                                {{ $isAsOnMode ? 'disabled' : '' }}
+                                                value="{{ request()->has('start_date') ? \Carbon\Carbon::parse(request('start_date'))->format('Y-m-d') : (old('start_date') ? \Carbon\Carbon::parse(old('start_date'))->format('Y-m-d') : '') }}">
                                             @error('start_date')
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show">
+                                    <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                         <div class="form_group">
-                                            <input type="text" class="datepicker"
+                                            <input type="date" class="form-control"
                                                 placeholder="End date" name="end_date"
-                                                value="{{ old('end_date', $end_date ?? '') }}" readonly>
+                                                {{ $isAsOnMode ? 'disabled' : '' }}
+                                                value="{{ request()->has('end_date') ? \Carbon\Carbon::parse(request('end_date'))->format('Y-m-d') : (old('end_date') ? \Carbon\Carbon::parse(old('end_date'))->format('Y-m-d') : '') }}">
                                             @error('end_date')
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide">
+                                    <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                         <div class="form_group">
-                                            <input type="text" name="as_on_date"
-                                                class="datepicker" placeholder="date"
-                                                value="{{ old('as_on_date', $as_on_date ?? '') }}" readonly>
+                                            <input type="date" name="as_on_date"
+                                                class="form-control" placeholder="date"
+                                                {{ $isAsOnMode ? '' : 'disabled' }}
+                                                value="{{ request()->has('as_on_date') ? \Carbon\Carbon::parse(request('as_on_date'))->format('Y-m-d') : (old('as_on_date') ? \Carbon\Carbon::parse(old('as_on_date'))->format('Y-m-d') : '') }}">
                                         </div>
                                     </div>
 
@@ -99,9 +113,9 @@
                                     <input type="hidden" id="fundIds" value="{{ $checkedFundIds ?? '' }}"
                                         name="allfundIds">
 
-                                    <div class="col-md-4 div_hide">
+                                    <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                         <div class="form_group">
-                                            <select name="as_on_time_frame" {{ $disable ? 'disabled' : '' }}>
+                                            <select name="as_on_time_frame" {{ $disable || !$isAsOnMode ? 'disabled' : '' }}>
                                                 <option value="1_month" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '1_month') selected @endif>1
                                                     Month</option>
                                                 <option value="3_months" @if (old('as_on_time_frame', $as_on_time_frame ?? '') == '3_months') selected @endif>3
@@ -132,14 +146,14 @@
                                             <label>
                                                 <input type="radio" name="Category" value="by_category"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    @if (!isset($Category) || (isset($Category) && $Category == 'by_category')) {{ 'Checked' }} @endif
+                                                    @if ($selectedCategory == 'by_category') {{ 'Checked' }} @endif
                                                     {{ $disable ? 'disabled' : '' }}>
                                                 By Category
                                             </label>
                                             <label>
                                                 <input type="radio" name="Category" value="by_fund"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    @if (isset($Category) && $Category == 'by_fund') {{ 'Checked' }} @endif
+                                                    @if ($selectedCategory == 'by_fund') {{ 'Checked' }} @endif
                                                     {{ $disable ? 'disabled' : '' }}>
                                                 By Fund
                                             </label>
@@ -208,21 +222,21 @@
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="filter" value="by_ratio"
-                                                    {{ !isset($filter) || (isset($filter) && $filter == 'by_ratio') ? 'checked' : '' }}>
+                                                    {{ $selectedFilter == 'by_ratio' ? 'checked' : '' }}>
                                                 By Ratio
                                             </label>
                                             <label>
                                                 <input type="radio" name="filter" value="by_composition"
-                                                    @if (isset($filter) && $filter == 'by_composition') {{ 'checked' }} @endif>
+                                                    @if ($selectedFilter == 'by_composition') {{ 'checked' }} @endif>
                                                 By Composition
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show_2" id="ratio">
+                                    <div class="col-md-4 div_show_2" id="ratio"
+                                        style="{{ $selectedFilter === 'by_ratio' ? '' : 'display:none;' }}">
                                         <div class="form_group">
                                             <select name="report_category">
-                                                <option value="">Ratio</option>
                                                 <optgroup label="Return Ratio">
                                                     <option value="returns"
                                                         {{ old('report_category', request('report_category')) == 'returns' ? 'selected' : '' }}>
@@ -271,7 +285,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide_2" id="composition">
+                                    <div class="col-md-4 div_hide_2" id="composition"
+                                        style="{{ $selectedFilter === 'by_composition' ? '' : 'display:none;' }}">
                                         <div class="form_group">
                                             <select name="composition" id="composition_value">
                                                 <option value="">Select Composition</option>
@@ -354,7 +369,7 @@
                                 </div>
                         </form>
                     </div>
-                    @if (isset($fund_absolute_return))
+                    @if ($hasSearchCriteria && isset($fund_absolute_return))
 
                         {{-- <div class="fund_section new_fund_section">
                             <ul>
@@ -493,10 +508,12 @@
                             </table>
                         </div>
                     @else
-                        {!! printNoData() !!}
+                        @if ($hasSearchCriteria)
+                            {!! printNoData() !!}
+                        @endif
                     @endif
                 </div>
-                @if (isset($fund_absolute_return))
+                @if ($hasSearchCriteria && isset($fund_absolute_return))
                 <div class="disclaimer">
                     <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
                 </div>
@@ -506,6 +523,34 @@
     </div>
 
     <script>
+        function toggleRankingFields() {
+            var selectedRanking = document.querySelector('input[name="ranking"]:checked');
+            var isAsOn = selectedRanking && selectedRanking.value === 'as_on';
+
+            document.querySelectorAll('.div_show').forEach(function(element) {
+                element.style.display = isAsOn ? 'none' : 'block';
+            });
+
+            document.querySelectorAll('.div_hide').forEach(function(element) {
+                element.style.display = isAsOn ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('input[name="start_date"], input[name="end_date"]').forEach(function(element) {
+                element.disabled = isAsOn;
+            });
+
+            var asOnDate = document.querySelector('input[name="as_on_date"]');
+            var asOnTimeFrame = document.querySelector('select[name="as_on_time_frame"]');
+
+            if (asOnDate) {
+                asOnDate.disabled = !isAsOn;
+            }
+
+            if (asOnTimeFrame) {
+                asOnTimeFrame.disabled = !isAsOn;
+            }
+        }
+
         function toggleFilterCategoryFields() {
             var selectedCategory = document.querySelector('input[name="Category"]:checked');
             var isByFund = selectedCategory && selectedCategory.value === 'by_fund';
@@ -618,6 +663,7 @@
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            toggleRankingFields();
             toggleFilterCategoryFields();
             fund_multiple();
 
@@ -671,7 +717,10 @@
 
             updateCompositionDisplay();
 
-            document.getElementById('composition_value').addEventListener('change', updateCompositionDisplay);
+            var compositionValueElement = document.getElementById('composition_value');
+            if (compositionValueElement) {
+                compositionValueElement.addEventListener('change', updateCompositionDisplay);
+            }
         });
     </script>
 @endsection

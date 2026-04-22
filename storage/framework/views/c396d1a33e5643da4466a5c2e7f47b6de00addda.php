@@ -2,7 +2,14 @@
     <?php
         $history = session()->has('history') ? session('history') : [];
         $disable = count($history) > 0 ? true : false;
-        $isByFundMode = isset($Category) && $Category === 'by_fund';
+        $selectedRanking = old('ranking', request('ranking', 'range'));
+        $selectedCategory = old('Category', request('Category', 'by_category'));
+        $isAsOnMode = $selectedRanking === 'as_on';
+        $isByFundMode = $selectedCategory === 'by_fund';
+        $selectedFilter = old('filter', request('filter', 'by_ratio'));
+        $hasSearchCriteria =
+            ($selectedFilter === 'by_ratio' && filled(old('report_category', request('report_category')))) ||
+            ($selectedFilter === 'by_composition' && filled(old('composition', request('composition'))));
         // echo '<pre>';
         // print_r($history);
         // exit();
@@ -30,15 +37,14 @@
                 <div class="head_brdcm">
                     <ul class="brdcmb">
                         <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
-                        <li>filters</li>
+                        <li>Filters</li>
+                        <li>By Ratio</li>
                     </ul>
                 </div>
 
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    <div class="perform_head">
-                        <h2>filters</h2>
-                    </div>
+                    
                     <div class="light_green_bg">
                         <form class="mb-4" action="">
                             <input type="hidden" name="disable" value="<?php echo e($disable); ?>">
@@ -48,11 +54,17 @@
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="ranking" value="range"
-                                                    <?php echo e($disable ? 'disabled' : ''); ?> checked>
+                                                    onchange="toggleRankingFields()"
+                                                    <?php echo e($selectedRanking === 'range' ? 'checked' : ''); ?>
+
+                                                    <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 Range
                                             </label>
                                             <label>
                                                 <input type="radio" name="ranking" value="as_on"
+                                                    onchange="toggleRankingFields()"
+                                                    <?php echo e($selectedRanking === 'as_on' ? 'checked' : ''); ?>
+
                                                     <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 As on
                                             </label>
@@ -69,11 +81,13 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show">
+                                    <div class="col-md-4 div_show" style="<?php echo e($isAsOnMode ? 'display:none;' : ''); ?>">
                                         <div class="form_group">
-                                            <input type="text" class="datepicker"
+                                            <input type="date" class="form-control"
                                                 placeholder="Start date" name="start_date"
-                                                value="<?php echo e(old('start_date', $start_date ?? '')); ?>" readonly>
+                                                <?php echo e($isAsOnMode ? 'disabled' : ''); ?>
+
+                                                value="<?php echo e(request()->has('start_date') ? \Carbon\Carbon::parse(request('start_date'))->format('Y-m-d') : (old('start_date') ? \Carbon\Carbon::parse(old('start_date'))->format('Y-m-d') : '')); ?>">
                                             <?php $__errorArgs = ['start_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -87,11 +101,13 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show">
+                                    <div class="col-md-4 div_show" style="<?php echo e($isAsOnMode ? 'display:none;' : ''); ?>">
                                         <div class="form_group">
-                                            <input type="text" class="datepicker"
+                                            <input type="date" class="form-control"
                                                 placeholder="End date" name="end_date"
-                                                value="<?php echo e(old('end_date', $end_date ?? '')); ?>" readonly>
+                                                <?php echo e($isAsOnMode ? 'disabled' : ''); ?>
+
+                                                value="<?php echo e(request()->has('end_date') ? \Carbon\Carbon::parse(request('end_date'))->format('Y-m-d') : (old('end_date') ? \Carbon\Carbon::parse(old('end_date'))->format('Y-m-d') : '')); ?>">
                                             <?php $__errorArgs = ['end_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -105,11 +121,13 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide">
+                                    <div class="col-md-4 div_hide" style="<?php echo e($isAsOnMode ? '' : 'display:none;'); ?>">
                                         <div class="form_group">
-                                            <input type="text" name="as_on_date"
-                                                class="datepicker" placeholder="date"
-                                                value="<?php echo e(old('as_on_date', $as_on_date ?? '')); ?>" readonly>
+                                            <input type="date" name="as_on_date"
+                                                class="form-control" placeholder="date"
+                                                <?php echo e($isAsOnMode ? '' : 'disabled'); ?>
+
+                                                value="<?php echo e(request()->has('as_on_date') ? \Carbon\Carbon::parse(request('as_on_date'))->format('Y-m-d') : (old('as_on_date') ? \Carbon\Carbon::parse(old('as_on_date'))->format('Y-m-d') : '')); ?>">
                                         </div>
                                     </div>
 
@@ -119,9 +137,9 @@ unset($__errorArgs, $__bag); ?>
                                     <input type="hidden" id="fundIds" value="<?php echo e($checkedFundIds ?? ''); ?>"
                                         name="allfundIds">
 
-                                    <div class="col-md-4 div_hide">
+                                    <div class="col-md-4 div_hide" style="<?php echo e($isAsOnMode ? '' : 'display:none;'); ?>">
                                         <div class="form_group">
-                                            <select name="as_on_time_frame" <?php echo e($disable ? 'disabled' : ''); ?>>
+                                            <select name="as_on_time_frame" <?php echo e($disable || !$isAsOnMode ? 'disabled' : ''); ?>>
                                                 <option value="1_month" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '1_month'): ?> selected <?php endif; ?>>1
                                                     Month</option>
                                                 <option value="3_months" <?php if(old('as_on_time_frame', $as_on_time_frame ?? '') == '3_months'): ?> selected <?php endif; ?>>3
@@ -146,14 +164,14 @@ unset($__errorArgs, $__bag); ?>
                                             <label>
                                                 <input type="radio" name="Category" value="by_category"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    <?php if(!isset($Category) || (isset($Category) && $Category == 'by_category')): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                    <?php if($selectedCategory == 'by_category'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
                                                     <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 By Category
                                             </label>
                                             <label>
                                                 <input type="radio" name="Category" value="by_fund"
                                                     onclick='get_fund_types_js(this.value)'
-                                                    <?php if(isset($Category) && $Category == 'by_fund'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                    <?php if($selectedCategory == 'by_fund'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
                                                     <?php echo e($disable ? 'disabled' : ''); ?>>
                                                 By Fund
                                             </label>
@@ -237,18 +255,19 @@ unset($__errorArgs, $__bag); ?>
                                         <div class="form_group radio_btn">
                                             <label>
                                                 <input type="radio" name="filter" value="by_ratio"
-                                                    <?php echo e(!isset($filter) || (isset($filter) && $filter == 'by_ratio') ? 'checked' : ''); ?>>
+                                                    <?php echo e($selectedFilter == 'by_ratio' ? 'checked' : ''); ?>>
                                                 By Ratio
                                             </label>
                                             <label>
                                                 <input type="radio" name="filter" value="by_composition"
-                                                    <?php if(isset($filter) && $filter == 'by_composition'): ?> <?php echo e('checked'); ?> <?php endif; ?>>
+                                                    <?php if($selectedFilter == 'by_composition'): ?> <?php echo e('checked'); ?> <?php endif; ?>>
                                                 By Composition
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_show_2" id="ratio">
+                                    <div class="col-md-4 div_show_2" id="ratio"
+                                        style="<?php echo e($selectedFilter === 'by_ratio' ? '' : 'display:none;'); ?>">
                                         <div class="form_group">
                                             <select name="report_category">
                                                 <option value="">Ratio</option>
@@ -307,7 +326,8 @@ unset($__errorArgs, $__bag); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 div_hide_2" id="composition">
+                                    <div class="col-md-4 div_hide_2" id="composition"
+                                        style="<?php echo e($selectedFilter === 'by_composition' ? '' : 'display:none;'); ?>">
                                         <div class="form_group">
                                             <select name="composition" id="composition_value">
                                                 <option value="">Select Composition</option>
@@ -413,7 +433,7 @@ unset($__errorArgs, $__bag); ?>
                                 </div>
                         </form>
                     </div>
-                    <?php if(isset($fund_absolute_return)): ?>
+                    <?php if($hasSearchCriteria && isset($fund_absolute_return)): ?>
 
                         
 
@@ -530,11 +550,13 @@ unset($__errorArgs, $__bag); ?>
                             </table>
                         </div>
                     <?php else: ?>
-                        <?php echo printNoData(); ?>
+                        <?php if($hasSearchCriteria): ?>
+                            <?php echo printNoData(); ?>
 
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
-                <?php if(isset($fund_absolute_return)): ?>
+                <?php if($hasSearchCriteria && isset($fund_absolute_return)): ?>
                 <div class="disclaimer">
                     <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                 </div>
@@ -544,6 +566,34 @@ unset($__errorArgs, $__bag); ?>
     </div>
 
     <script>
+        function toggleRankingFields() {
+            var selectedRanking = document.querySelector('input[name="ranking"]:checked');
+            var isAsOn = selectedRanking && selectedRanking.value === 'as_on';
+
+            document.querySelectorAll('.div_show').forEach(function(element) {
+                element.style.display = isAsOn ? 'none' : 'block';
+            });
+
+            document.querySelectorAll('.div_hide').forEach(function(element) {
+                element.style.display = isAsOn ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('input[name="start_date"], input[name="end_date"]').forEach(function(element) {
+                element.disabled = isAsOn;
+            });
+
+            var asOnDate = document.querySelector('input[name="as_on_date"]');
+            var asOnTimeFrame = document.querySelector('select[name="as_on_time_frame"]');
+
+            if (asOnDate) {
+                asOnDate.disabled = !isAsOn;
+            }
+
+            if (asOnTimeFrame) {
+                asOnTimeFrame.disabled = !isAsOn;
+            }
+        }
+
         function toggleFilterCategoryFields() {
             var selectedCategory = document.querySelector('input[name="Category"]:checked');
             var isByFund = selectedCategory && selectedCategory.value === 'by_fund';
@@ -656,6 +706,7 @@ unset($__errorArgs, $__bag); ?>
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            toggleRankingFields();
             toggleFilterCategoryFields();
             fund_multiple();
 
@@ -709,7 +760,10 @@ unset($__errorArgs, $__bag); ?>
 
             updateCompositionDisplay();
 
-            document.getElementById('composition_value').addEventListener('change', updateCompositionDisplay);
+            var compositionValueElement = document.getElementById('composition_value');
+            if (compositionValueElement) {
+                compositionValueElement.addEventListener('change', updateCompositionDisplay);
+            }
         });
     </script>
 <?php $__env->stopSection(); ?>
