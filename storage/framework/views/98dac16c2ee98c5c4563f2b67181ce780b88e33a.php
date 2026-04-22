@@ -1,14 +1,12 @@
-@extends('web.layout.infosolz_user_app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="head_brdcm">
                     <ul class="brdcmb">
-                        <li><a href="{{route('user.auth-dashboard')}}">dashboard</a></li>
-                        <li><a href="{{route('user.predictive')}}">Predictive</a></li>
-                        <li>By Jensen’s</li>
+                        <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
+                        <li><a href="<?php echo e(route('user.predictive')); ?>">Predictive</a></li>
+                        <li>By Sharp Ratio</li>
                     </ul>
                 </div>
                 <div class="new_page">
@@ -21,16 +19,26 @@
                                     <div class="form_group">
                                         <select name="fund_id" class="select2" id="allocation_select_fund"
                                             onchange="set_fund_select_val(this.value)">
-                                            @foreach ($fundMasterData as $fund)
-                                                <option value="{{ $fund->fund_id }}"
-                                                    @if ($fund->fund_id == old('fund_id', data_get($getData ?? [], 'fund_id'))) selected @endif>
-                                                    {{ $fund->fund_name }}
+                                            <?php $__currentLoopData = $fundMasterData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($fund->fund_id); ?>"
+                                                    <?php if($fund->fund_id == old('fund_id', data_get($getData ?? [], 'fund_id'))): ?> selected <?php endif; ?>>
+                                                    <?php echo e($fund->fund_name); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
-                                        @error('fund_id')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+
+
+                                        <?php $__errorArgs = ['fund_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -51,7 +59,7 @@
                                 <div class="col-md-3">
                                     <div class="form_group">
                                         <input type="number" name="expected_index" placeholder="Expected Future Index"
-                                            value="{{ $expected_index ?? '' }}">
+                                            value="<?php echo e($expected_index ?? ''); ?>">
                                     </div>
                                 </div>
                                 <input type="hidden" name="current_date" id="current_date">
@@ -65,54 +73,38 @@
                         </form>
                     </div>
 
+
                     <div class="share_pdf">
                                 
                         <div class="sharethis-inline-share-buttons" ></div>
                         
                     </div>
-
+                    
                     <input type="hidden" name="indices_name" id="indices_details_name"
-                        value="{{ isset($indices_details) ? $indices_details->name : '' }}">
+                        value="<?php echo e(isset($indices_details) ? $indices_details->name : ''); ?>">
                     <input type="hidden" name="fund_name" id="fund_details_name"
-                        value="{{ isset($fund_details) ? $fund_details->fund_name : '' }}">
+                        value="<?php echo e(isset($fund_details) ? $fund_details->fund_name : ''); ?>">
                     <input type="hidden" name="graph_date[]" id="graph_date"
-                        value="{{ isset($graph_date) ? json_encode($graph_date) : '' }}">
+                        value="<?php echo e(isset($graph_date) ? json_encode($graph_date) : ''); ?>">
                     <input type="hidden" name="nav_value[]" id="nav_value"
-                        value="{{ isset($nav_value) ? json_encode($nav_value) : '' }}">
+                        value="<?php echo e(isset($nav_value) ? json_encode($nav_value) : ''); ?>">
                     <input type="hidden" name="closing_value[]" id="closing_value"
-                        value="{{ isset($closing_value) ? json_encode($closing_value) : '' }}">
+                        value="<?php echo e(isset($closing_value) ? json_encode($closing_value) : ''); ?>">
 
-                    {{-- <div class="fund_section new_fund_section">
-                        <ul>
-                            <li>
-                                <p>Current daye :</p>
-                                <span>00/00/0000</span>
-                            </li>
-                            <li>
-                                <p>Index name :</p>
-                                <span>abc</span>
-                            </li>
-                            <li>
-                                <p>Current value :</p>
-                                <span>11.5</span>
-                            </li>
-                        </ul>
-                    </div> --}}
+                    
 
                     <div class="graph_section">
-                        {{-- <img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/graph.png"
-                            alt=""> --}}
+                        
 
                         <div id="container1"></div>
                     </div>
 
                 </div>
-
-                @if (isset($indices_details))
+                <?php if(isset($indices_details)): ?>
                 <div class="disclaimer">
-                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                    <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                 </div>
-              @endif
+              <?php endif; ?>
             </div>
         </div>
 
@@ -125,7 +117,7 @@
         function set_fund_select_val(fundId) {
 
             $.ajax({
-                url: '{{ url('fund-details') }}?id=' + fundId,
+                url: 'fund-details' + '?id=' + fundId,
                 type: 'GET',
                 success: function(data) {
                     $('#date').html(data.entry_date);
@@ -264,7 +256,7 @@
                 },
                 {
                     yAxis: 0,
-                    name: value1_text,
+                    name: value1_text ,
                     marker: {
                         enabled: true,
                         symbol: 'circle'
@@ -298,7 +290,7 @@
                     type: 'spline' // Ensures this part is curved
                 },
                 {
-                    name: value2_text,
+                    name: value2_text ,
                     yAxis: 1,
                     marker: {
                         enabled: true,
@@ -318,4 +310,6 @@
             ]
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/predictive/sharp_ratio.blade.php ENDPATH**/ ?>

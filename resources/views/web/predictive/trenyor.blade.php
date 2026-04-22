@@ -23,7 +23,7 @@
                                             onchange="set_fund_select_val(this.value)">
                                             @foreach ($fundMasterData as $fund)
                                                 <option value="{{ $fund->fund_id }}"
-                                                    @if ($fund->fund_id == old('fund_id', isset($getData) ? $getData['fund_id'] : null)) selected @endif>
+                                                    @if ($fund->fund_id == old('fund_id', data_get($getData ?? [], 'fund_id'))) selected @endif>
                                                     {{ $fund->fund_name }}
                                                 </option>
                                             @endforeach
@@ -129,7 +129,7 @@
         function set_fund_select_val(fundId) {
 
             $.ajax({
-                url: 'fund-details' + '?id=' + fundId,
+                url: '{{ url('fund-details') }}?id=' + fundId,
                 type: 'GET',
                 success: function(data) {
                     $('#date').html(data.entry_date);
