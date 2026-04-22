@@ -772,6 +772,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('user-filters-jensens', 'RatioController@filters_jensens')->name('filters.jensens');
             Route::get('user-filters-beta', 'RatioController@filters_beta')->name('filters.beta');
             Route::get('user-filters-volatility', 'RatioController@filters_volatility')->name('filters.volatility');
+            Route::get('user-filters-fund-count', 'RatioController@filters_fund_count')->name('filters.fund-count');
             Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
             Route::get('user-predictive-jensen-alpha', 'RatioController@predictive_jensen_alpha')->name('predictive.jensen-alpha');
             Route::get('user-predictive-sharp-ratio', 'RatioController@predictive_sharp_ratio')->name('predictive.sharp-ratio');

@@ -32,15 +32,14 @@
                 <div class="head_brdcm">
                     <ul class="brdcmb">
                         <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
-                        <li>filters</li>
+                        <li>Filters</li>
+                        <li>By Ratio</li>
                     </ul>
                 </div>
 
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    <div class="perform_head">
-                        <h2>filters</h2>
-                    </div>
+                    
                     <div class="light_green_bg">
                         <form class="mb-4" action="">
                             <input type="hidden" name="disable" value="{{ $disable }}">
@@ -66,7 +65,7 @@
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class={{ $disable ? '' : 'datepicker' }}
+                                            <input type="text" class="datepicker"
                                                 placeholder="Start date" name="start_date"
                                                 value="{{ old('start_date', $start_date ?? '') }}" readonly>
                                             @error('start_date')
@@ -77,7 +76,7 @@
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class={{ $disable ? '' : 'datepicker' }}
+                                            <input type="text" class="datepicker"
                                                 placeholder="End date" name="end_date"
                                                 value="{{ old('end_date', $end_date ?? '') }}" readonly>
                                             @error('end_date')
@@ -89,7 +88,7 @@
                                     <div class="col-md-4 div_hide">
                                         <div class="form_group">
                                             <input type="text" name="as_on_date"
-                                                class={{ $disable ? '' : 'datepicker' }} placeholder="date"
+                                                class="datepicker" placeholder="date"
                                                 value="{{ old('as_on_date', $as_on_date ?? '') }}" readonly>
                                         </div>
                                     </div>
@@ -551,20 +550,24 @@
             var selectedValue = selectElement.value;
 
             $.ajax({
-                url: '/filters/fund_count',
+                url: '{{ route('user.filters.fund-count') }}',
                 type: 'GET',
+                dataType: 'json',
                 data: {
                     fund_type_id: selectedValue,
                 },
                 success: function(response) {
-                    $('#fund_type_msgg').html('There are ' + response +
+                    var count = response && typeof response.count !== 'undefined' ? response.count : 0;
+
+                    $('#fund_type_msgg').text('There are ' + count +
                         ' funds in this fund type. Select How many records you want to show.');
-                    $('#record_val').val(response);
+                    $('#record_val').val(count);
                     toggleFilterCategoryFields();
 
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX request failed:", error);
+                    $('#fund_type_msgg').text('Unable to fetch fund count right now.');
                 }
             });
         }

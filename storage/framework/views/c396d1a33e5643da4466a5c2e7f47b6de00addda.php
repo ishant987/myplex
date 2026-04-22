@@ -71,8 +71,7 @@ unset($__errorArgs, $__bag); ?>
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class=<?php echo e($disable ? '' : 'datepicker'); ?>
-
+                                            <input type="text" class="datepicker"
                                                 placeholder="Start date" name="start_date"
                                                 value="<?php echo e(old('start_date', $start_date ?? '')); ?>" readonly>
                                             <?php $__errorArgs = ['start_date'];
@@ -90,8 +89,7 @@ unset($__errorArgs, $__bag); ?>
 
                                     <div class="col-md-4 div_show">
                                         <div class="form_group">
-                                            <input type="text" class=<?php echo e($disable ? '' : 'datepicker'); ?>
-
+                                            <input type="text" class="datepicker"
                                                 placeholder="End date" name="end_date"
                                                 value="<?php echo e(old('end_date', $end_date ?? '')); ?>" readonly>
                                             <?php $__errorArgs = ['end_date'];
@@ -110,7 +108,7 @@ unset($__errorArgs, $__bag); ?>
                                     <div class="col-md-4 div_hide">
                                         <div class="form_group">
                                             <input type="text" name="as_on_date"
-                                                class=<?php echo e($disable ? '' : 'datepicker'); ?> placeholder="date"
+                                                class="datepicker" placeholder="date"
                                                 value="<?php echo e(old('as_on_date', $as_on_date ?? '')); ?>" readonly>
                                         </div>
                                     </div>
@@ -590,20 +588,24 @@ unset($__errorArgs, $__bag); ?>
             var selectedValue = selectElement.value;
 
             $.ajax({
-                url: '/filters/fund_count',
+                url: '<?php echo e(route('user.filters.fund-count')); ?>',
                 type: 'GET',
+                dataType: 'json',
                 data: {
                     fund_type_id: selectedValue,
                 },
                 success: function(response) {
-                    $('#fund_type_msgg').html('There are ' + response +
+                    var count = response && typeof response.count !== 'undefined' ? response.count : 0;
+
+                    $('#fund_type_msgg').text('There are ' + count +
                         ' funds in this fund type. Select How many records you want to show.');
-                    $('#record_val').val(response);
+                    $('#record_val').val(count);
                     toggleFilterCategoryFields();
 
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX request failed:", error);
+                    $('#fund_type_msgg').text('Unable to fetch fund count right now.');
                 }
             });
         }

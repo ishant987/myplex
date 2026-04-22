@@ -4,6 +4,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta name="csrf-token" content="{{ csrf_token() }}">
+            <meta name="myplexus-layout-version" content="filters-debug-2026-04-22-01">
             <title>myplexus | Ratio</title>
             <link rel="shortcut icon" href="{{asset('themes/frontend/assets/infosolz/images/favicon.png')}}" type="image/x-icon">
             <link rel="stylesheet" href="{{asset('themes/frontend/assets/infosolz/css/bootstrap.min.css')}}">
@@ -160,45 +161,54 @@
                 document.addEventListener('DOMContentLoaded', function () {
                     var ratioDashboardUrl = @json(route('user.ratio_dashboard'));
 
-                    document.querySelectorAll('.head_brdcm').forEach(function (breadcrumb) {
-                        var newPage = breadcrumb.nextElementSibling;
+                    function initializeBackButtons() {
+                        document.querySelectorAll('.head_brdcm').forEach(function (breadcrumb) {
+                            var newPage = breadcrumb.nextElementSibling;
 
-                        if (!newPage || !newPage.classList.contains('new_page')) {
-                            return;
-                        }
-
-                        var backButton = newPage.querySelector(':scope > a.back_btn:first-child');
-
-                        if (!backButton || breadcrumb.querySelector(':scope > a.back_btn')) {
-                            return;
-                        }
-
-                        breadcrumb.prepend(backButton);
-                    });
-
-                    document.querySelectorAll('a.back_btn').forEach(function (backButton) {
-                        backButton.setAttribute('aria-label', 'Go back');
-
-                        backButton.addEventListener('click', function (event) {
-                            var hasUsableHistory = window.history.length > 1 && document.referrer;
-                            var sameOriginReferrer = hasUsableHistory && document.referrer.indexOf(window.location.origin) === 0;
-
-                            if (sameOriginReferrer) {
-                                event.preventDefault();
-                                window.history.back();
+                            if (!newPage || !newPage.classList.contains('new_page')) {
                                 return;
                             }
 
-                            if (backButton.getAttribute('href') === '#' || !backButton.getAttribute('href')) {
-                                event.preventDefault();
-                                window.location.href = ratioDashboardUrl;
-                            }
-                        });
-                    });
+                            var directChildren = Array.prototype.slice.call(newPage.children || []);
+                            var backButton = directChildren.find(function (child) {
+                                return child.matches && child.matches('a.back_btn');
+                            });
 
-                    if (window.jQuery && $.fn.datepicker) {
+                            if (!backButton || breadcrumb.querySelector('a.back_btn')) {
+                                return;
+                            }
+
+                            breadcrumb.prepend(backButton);
+                        });
+
+                        document.querySelectorAll('a.back_btn').forEach(function (backButton) {
+                            backButton.setAttribute('aria-label', 'Go back');
+
+                            backButton.addEventListener('click', function (event) {
+                                var hasUsableHistory = window.history.length > 1 && document.referrer;
+                                var sameOriginReferrer = hasUsableHistory && document.referrer.indexOf(window.location.origin) === 0;
+
+                                if (sameOriginReferrer) {
+                                    event.preventDefault();
+                                    window.history.back();
+                                    return;
+                                }
+
+                                if (backButton.getAttribute('href') === '#' || !backButton.getAttribute('href')) {
+                                    event.preventDefault();
+                                    window.location.href = ratioDashboardUrl;
+                                }
+                            });
+                        });
+                    }
+
+                    function initializeDatepickers() {
+                        if (!(window.jQuery && $.fn.datepicker)) {
+                            return;
+                        }
+
                         $('.datepicker').each(function () {
-                            const $input = $(this);
+                            var $input = $(this);
 
                             if ($input.parent().hasClass('datepicker-wrap')) {
                                 return;
@@ -221,14 +231,14 @@
                             constrainInput: false
                         });
 
-                        $('.datepicker').on('focus click', function () {
+                        $('.datepicker').off('focus click').on('focus click', function () {
                             $(this).datepicker('show');
                         });
 
-                        $(document).on('click', '.datepicker-trigger', function (event) {
+                        $(document).off('click.datepickerTrigger').on('click.datepickerTrigger', '.datepicker-trigger', function (event) {
                             event.preventDefault();
 
-                            const $input = $(this).siblings('.datepicker');
+                            var $input = $(this).siblings('.datepicker');
 
                             if ($input.length) {
                                 $input.datepicker('show');
@@ -236,18 +246,32 @@
                             }
                         });
 
-                        $(document).on('click', '.datepicker-wrap', function (event) {
+                        $(document).off('click.datepickerWrap').on('click.datepickerWrap', '.datepicker-wrap', function (event) {
                             if ($(event.target).hasClass('datepicker-trigger')) {
                                 return;
                             }
 
-                            const $input = $(this).find('.datepicker');
+                            var $input = $(this).find('.datepicker');
 
                             if ($input.length) {
                                 $input.datepicker('show');
                             }
                         });
                     }
+
+                    try {
+                        initializeBackButtons();
+                    } catch (error) {
+                        console.error('Back button initialization failed:', error);
+                    }
+
+                    try {
+                        initializeDatepickers();
+                    } catch (error) {
+                        console.error('Datepicker initialization failed:', error);
+                    }
+
+                    console.log('Myplexus layout version:', 'filters-debug-2026-04-22-01');
 
                     if (window.jQuery && $.fn.select2) {
                         $('.select2').select2();

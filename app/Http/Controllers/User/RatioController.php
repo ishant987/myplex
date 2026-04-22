@@ -218,6 +218,19 @@ class RatioController extends Controller
       return view('web.filters.volatility', $this->reportViewData($request));
     }
 
+    function filters_fund_count(Request $request)
+    {
+        $fundTypeId = (int) $request->input('fund_type_id');
+
+        $count = $fundTypeId > 0
+            ? FundMaster::query()->where('fund_type_id', $fundTypeId)->count()
+            : 0;
+
+        return response()->json([
+            'count' => $count,
+        ]);
+    }
+
     function risk_ratio(Request $request){
       return view('web.auth.ratio_analysis.risk_ratio', $this->performanceRatiosViewData($request));
     }

@@ -4,6 +4,7 @@
     @php
         $history = session()->has('history') ? session('history') : [];
         $disable = count($history) > 0 ? true : false;
+        $isByFundMode = !isset($Category) || $Category === 'by_fund';
         // echo '<pre>';
         // print_r($history);
         // exit();
@@ -45,6 +46,7 @@
                     <div class="light_green_bg">
                         <form class="mb-4" action="" id="filter_form">
                             <input type="hidden" name="disable" value="{{ $disable }}">
+                            <input type="hidden" name="Category" value="{{ $isByFundMode ? 'by_fund' : 'by_category' }}">
                             <div class="row">
                                 <input type="hidden" name="start_date" value="{{ old('start_date', $start_date ?? '') }}"
                                     readonly>
@@ -59,6 +61,61 @@
 
 
                                 <div class="clearfix"></div>
+
+                                <div class="col-md-4">
+                                    <div class="form_group radio_btn">
+                                        <label>
+                                            <input type="radio" name="Category_selector" value="by_fund"
+                                                {{ $isByFundMode ? 'checked' : '' }}>
+                                            By Fund
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="Category_selector" value="by_category"
+                                                {{ !$isByFundMode ? 'checked' : '' }}>
+                                            By Category
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 div_show_1"
+                                    style="{{ $isByFundMode ? 'display: none;' : '' }}">
+                                    <div class="form_group">
+                                        <select name="fund_type" id="fund_type" class="select2"
+                                            data-placeholder="Select Fund Classification"
+                                            onchange="fund_type_change(this)" {{ $disable ? 'disabled' : '' }}>
+                                            <option value="">Select Fund Classification</option>
+                                            @if (isset($all_fund_types))
+                                                @foreach ($all_fund_types as $val)
+                                                    <option value="{{ $val->ft_id }}"
+                                                        {{ isset($fund_type) && $fund_type == $val->ft_id ? 'selected' : '' }}>
+                                                        {{ $val->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <span class="" id="fund_type_msgg" style="color:#379962;"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 div_hide_1"
+                                    style="{{ $isByFundMode ? '' : 'display: none;' }}">
+                                    <div class="form_group multiple_select">
+                                        <select name="fund_id[]" class="select2 multiple" multiple
+                                            id="select_fund_multiple" data-max="20" data-min="2"
+                                            onchange='fund_multiple(this)' data-placeholder="Select Fund"
+                                            {{ $disable ? 'disabled' : '' }} {{ $isByFundMode ? '' : 'disabled' }}>
+                                            <option value="">Select Fund</option>
+                                            @if (isset($all_funds))
+                                                @foreach ($all_funds as $val)
+                                                    <option value="{{ $val->fund_id }}"
+                                                        @if (isset($fund_id) && is_array($fund_id) && in_array($val->fund_id, $fund_id)) selected @endif>
+                                                        {{ $val->fund_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <span class="text-danger" id="fund_msgg"></span>
+                                </div>
 
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn radio_btn_checked">
@@ -152,7 +209,8 @@
 
 
 
-                                <div class="col-md-4" id="record">
+                                <div class="col-md-4" id="record"
+                                    style="{{ $isByFundMode ? 'display: none;' : '' }}">
                                     <div class="form_group">
                                         <input type="number" placeholder="Records" name="records" id="record_val"
                                             value="">
@@ -447,6 +505,65 @@
     </div>
 
     <script>
+        function toggleLegacyFilterCategoryFields() {
+            var selectedCategory = document.querySelector('input[name="Category_selector"]:checked');
+            var isByFund = !selectedCategory || selectedCategory.value === 'by_fund';
+
+            document.querySelector('input[name="Category"]').value = isByFund ? 'by_fund' : 'by_category';
+
+            document.querySelectorAll('.div_show_1').forEach(function(element) {
+                element.style.display = isByFund ? 'none' : 'block';
+            });
+
+            document.querySelectorAll('.div_hide_1').forEach(function(element) {
+                element.style.display = isByFund ? 'block' : 'none';
+            });
+
+            var fundTypeSelect = document.getElementById('fund_type');
+            var fundSelect = document.getElementById('select_fund_multiple');
+            var recordSection = document.getElementById('record');
+
+            if (fundTypeSelect) {
+                fundTypeSelect.disabled = isByFund;
+            }
+
+            if (fundSelect) {
+                fundSelect.disabled = !isByFund;
+            }
+
+            if (recordSection) {
+                recordSection.style.display = isByFund ? 'none' : 'block';
+            }
+        }
+
+        function fund_multiple() {
+            var selectedFunds = $('#select_fund_multiple').val() || [];
+            $('#checkedFundIds').val(selectedFunds.join(','));
+        }
+
+        function fund_type_change(selectElement) {
+            var selectedValue = selectElement.value;
+
+            $.ajax({
+                url: '{{ route('user.filters.fund-count') }}',
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    fund_type_id: selectedValue,
+                },
+                success: function(response) {
+                    var count = response && typeof response.count !== 'undefined' ? response.count : 0;
+
+                    $('#fund_type_msgg').text('There are ' + count +
+                        ' funds in this fund type. Select how many records you want to show.');
+                    $('#record_val').val(count);
+                },
+                error: function() {
+                    $('#fund_type_msgg').text('Unable to fetch fund count right now.');
+                }
+            });
+        }
+
         function allcheck() {
             var isChecked = $('#all_check').prop('checked');
             var fundIds = $('#fundIds').val().split(',').filter(Boolean);
@@ -466,6 +583,22 @@
 
 
         function submitForm() {
+            var selectedCategory = document.querySelector('input[name="Category_selector"]:checked');
+            var isByFund = !selectedCategory || selectedCategory.value === 'by_fund';
+
+            if (isByFund) {
+                var selectedFunds = $('#select_fund_multiple').val() || [];
+
+                if (selectedFunds.length >= 2) {
+                    $('#checkedFundIds').val(selectedFunds.join(','));
+                    $('#filter_form').submit();
+                } else {
+                    $('#fund_msgg').html('Select at least 2 funds.');
+                    $('.preloader').hide();
+                }
+
+                return;
+            }
 
             var checkedIds = [];
             var records = null;
@@ -498,6 +631,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            toggleLegacyFilterCategoryFields();
+            fund_multiple();
+
+            document.querySelectorAll('input[name="Category_selector"]').forEach(function(radio) {
+                radio.addEventListener('change', toggleLegacyFilterCategoryFields);
+            });
 
             function updateDisplay() {
                 var selectedValue = document.querySelector('input[name="filter"]:checked').value;
