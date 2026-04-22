@@ -12,9 +12,7 @@
                 </ul>
             </div>
 
-            <div class="perform_head">
-                <h2>Weekly snapshot</h2>
-            </div>
+            
             <section class="monthly_snapshop_sec">
             <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                 <div class="container">

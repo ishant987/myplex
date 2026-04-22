@@ -1,0 +1,741 @@
+@extends('web.layout.infosolz_user_app')
+@section('content')
+
+    <div class="inner_main">
+        <div class="page_detail">
+            <div class="inner_padding">
+                <div class="head_brdcm">
+                    <ul class="brdcmb">
+                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
+                        <li><a href="{{ route('user.ratio_analysis') }}"> Ratio Analysis</a></li>
+                        <li>Sortino Ratio</li>
+                    </ul>
+                </div>
+                <div class="new_page">
+                    {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}}
+                    <div class="perform_head">
+                        <h2>Sortino Ratio</h2>
+                    </div>
+
+                    <div class="light_green_bg">
+                        <form method="GET" action="">
+                            <input type="hidden" name="quartile_set" id="quartile_set"
+                                value="{{ isset($quartile_set) ? $quartile_set : 'quartile' }}">
+
+                            <div class="row">
+                                {{-- <div class="col-md-4">
+                                    <div class="form_group radio_btn">
+                                        <label>
+                                            <input type="radio" name="ranking" value="range" checked>
+                                            Range
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="ranking" value="as_on">
+                                            As on
+                                        </label>
+                                        @error('ranking')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                </div> --}}
+                                <input type="hidden" name="ranking" value="range">
+
+                                <div class="col-md-6">
+                                    <div class="row date_sec">
+                                        <label>Starting period</label>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="month" id="month" required data-placeholder="Select month">
+                                                    <option value="">select month</option>
+                                                    @foreach ($months as $m)
+                                                        <option value="{{ $m }}"
+                                                            {{ isset($month) && $month == $m ? 'selected' : '' }}>
+                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
+                                                    @endforeach
+                                                    @error('month')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="year" id="year" required onchange="get_second_month_year()" data-placeholder="Select Year">
+                                                    <option value="">select year</option>
+                                                    @foreach ($years as $y)
+                                                        <option
+                                                            value="{{ $y }}"{{ isset($year) && $year == $y ? 'selected' : '' }}>
+                                                            {{ $y }}</option>
+                                                    @endforeach
+                                                    @error('year')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row date_sec">
+                                        <label>Ending period</label>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="month_second" id="month_second" required
+                                                    onchange="get_second_period(this.value)" data-placeholder="Select Month">
+                                                    <option value="">select month</option>
+                                                    @foreach ($months as $m)
+                                                        <option value="{{ $m }}"
+                                                            {{ isset($month_second) && $month_second == $m ? 'selected' : '' }}>
+                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
+                                                    @endforeach
+                                                    @error('month_second')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form_group">
+                                                <select class="select2" name="year_second" id="year_second" required data-placeholder="Select Year">
+                                                    <option value="">select year</option>
+                                                    @foreach ($years as $y)
+                                                        <option
+                                                            value="{{ $y }}"{{ isset($year_second) && $year_second == $y ? 'selected' : '' }}>
+                                                            {{ $y }}</option>
+                                                    @endforeach
+                                                    @error('year_second')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                    @enderror
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {{-- <div class="col-md-4 div_hide">
+                                    <div class="form_group">
+                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
+                                            value="{{ $request->as_on_date }}">
+                                    </div>
+                                </div> --}}
+                                {{-- <div class="col-md-4 div_hide">
+                                    <div class="form_group">
+                                        <select name="as_on_time_frame">
+                                            <option value="1_month"
+                                                @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
+                                            </option>
+                                            <option value="3_months"
+                                                @if (isset($request) && $request->as_on_time_frame == '3_months') {{ 'selected' }} @endif>3 Months
+                                            </option>
+                                            <option value="6_months"
+                                                @if (isset($request) && $request->as_on_time_frame == '6_months') {{ 'selected' }} @endif>6 Months
+                                            </option>
+                                            <option value="1_year"
+                                                @if (isset($request) && $request->as_on_time_frame == '1_year') {{ 'selected' }} @endif>1 Year
+                                            </option>
+                                            <option value="2_year"
+                                                @if (isset($request) && $request->as_on_time_frame == '2_year') {{ 'selected' }} @endif>2 Year
+                                            </option>
+                                            <option value="3_years"
+                                                @if (isset($request) && $request->as_on_time_frame == '3_years') {{ 'selected' }} @endif>3 Years
+                                            </option>
+                                            <option value="5_years"
+                                                @if (isset($request) && $request->as_on_time_frame == '5_years') {{ 'selected' }} @endif>5 Years
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                {{--  <div class="col-md-4">
+                                    <div class="form_group radio_btn">
+                                        <label>
+                                            <input type="radio" id="type_Category" name="Category" checked
+                                                value="by_category"
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                onclick='get_fund_types(this.value)'>
+                                            By Category
+                                        </label>
+                                        <label>
+                                            <input type="radio" id="fund_Category" name="Category" value="by_fund"
+                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                onclick='get_fund_types(this.value)'>
+                                            By Fund
+                                        </label>
+                                    </div>  
+
+
+                                </div> --}}
+                                {{--  <div class="col-md-4 div_show_1">
+                                    <div class="form_group">
+                                        <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification">
+                                            <option value=""></option>
+                                            @foreach ($all_fund_types as $fund_type)
+                                                <option value="{{ $fund_type->ft_id }}"
+                                                    @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)) selected @endif>
+                                                    {{ $fund_type->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('fund_type_id')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                </div>  --}}             
+                                
+                                <input type="hidden" name="Category" id="fund_Category" value="by_fund">
+
+
+                                <div class="col-md-4">
+                                    <div class="form_group">
+                                        <select name="fund_id[]" class="select2 multiple" multiple
+                                            id="allocation_select_fund" onchange ='set_fund_select_val(this.value)' data-placeholder="Select Fund">
+                                            <option value=""></option>
+                                            @foreach ($all_funds as $fund)
+                                                <option value="{{ $fund->fund_id }}"
+                                                    @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
+                                                @elseif(isset($fund_id) && in_array($fund->fund_id, $fund_id))
+                                                selected @endif>
+                                                    {{ $fund->fund_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('fund_id')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <span class="text-danger" id="fund_msgg"></span>
+                                </div>
+
+                                {{-- <div class="col-md-4">
+                                    <div class="form_group">
+                                        <select name="report_category">
+                                            <!-- <option value="">Ratio</option> -->
+
+                                            <option value="sortino" selected>
+                                                Sortino
+                                            </option>
+                                            <!-- <option value="upside_potential"
+                                                @if (old('report_category', $request->report_category) == 'upside_potential') selected @endif>
+                                                Upside Potential
+                                            </option>
+                                            <option value="downside_risk"
+                                                @if (old('report_category', $request->report_category) == 'downside_risk') selected @endif>
+                                                Downside Risk
+                                            </option>                                        -->
+
+                                        </select>
+                                        @error('report_category')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div> --}}
+
+                                <input type="hidden" name="report_category" value="sortino">
+
+                                <div class="col-md-4">
+                                    <div class="form_group">
+                                        <input type="number" name="limit" placeholder="Annual minimum Acceptable Rate (in %) " value="{{isset($request->limit)?$request->limit:''}}">
+
+                                        @error('limit')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+
+                                <!-- <div class="col-md-4 div_hide_1">
+                                    <div class="form_group">
+                                        <select name="fund_id">
+                                            @foreach ($all_funds as $fund)
+    <option value="{{ $fund->fund_id }}"
+                                                    @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected @endif>
+                                                    {{ $fund->fund_name }}
+                                                </option>
+    @endforeach
+                                        </select>
+                                        @error('fund_id')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+                                    </div>
+                                    
+                                </div> -->
+
+
+
+
+                                <div class="col-md-12">
+                                    <div class="bttn_grp">
+                                        <button type="submit" id="submit_btn">Search</button>
+                                        <!-- <button type="submit" name="submit" value="search_by_fund">show by fund</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                    @if(isset($request)&& isset($start_date) && isset($end_date) &&  $request->Category !='' && $request->report_category !='')
+                        <div class="fund_section new_fund_section">
+                            <ul>
+                                <li>
+                                    <p>Start Month & Year :</p>
+                                    <span>{{ isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000' }}</span>
+                                </li>
+                                <li>
+                                    <p>End Month & Year :</p>
+                                    <span>{{ isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000' }}</span>
+                                </li>
+
+
+
+                                <li>
+                                    <p>By Ratio :</p>
+
+                                    <span>
+                                        @if (isset($request->report_category) && $request->report_category == 'sortino')
+                                            {{ 'Sortino' }}
+                                        @elseif(isset($request->report_category) && $request->report_category == 'upside_potential')
+                                            {{ 'Upside Potential' }}
+                                        @elseif(isset($request->report_category) && $request->report_category == 'downside_risk')
+                                            {{ 'Downside Risk' }}
+                                        @endif
+                                    </span>
+                                </li>
+
+                                @if (isset($as_on_time_frame_data))
+                                    <li>
+                                        <p>Duration :</p>
+                                        <span>
+                                            @if (isset($request) && $request->as_on_time_frame == '1_month')
+                                                {{ '1 Month' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '3_months')
+                                                {{ '3 Month' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '6_months')
+                                                {{ '6 Month' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '1_year')
+                                                {{ '1 Year' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '2_year')
+                                                {{ '2 Year' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '3_years')
+                                                {{ '3 Years' }}
+                                            @elseif(isset($request) && $request->as_on_time_frame == '5_years')
+                                                {{ '5 Years' }}
+                                            @endif
+                                        </span>
+                                    </li>
+                                @endif
+
+                                @if(isset($request->limit))
+                                    <li>
+                                        <p>Minimum Acceptable Rate (in %)  :</p>
+                                        <span>{{$request->limit}}</span>
+                                    </li>
+                                @endif
+
+                                @if (isset($request) && $request->Category == 'by_category')
+                                <li>
+                                    <p>fund classification :</p>
+                                    <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
+                                </li>
+                            @endif
+
+                                @if (isset($request) && $request->Category == 'by_fund')
+                                <li>
+                                    <p>fund name :</p>
+                                    <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
+                                </li>
+                            @endif
+
+                            </ul>
+                        </div>
+
+                        <div class="graph_table">
+                            <div class="share_pdf">
+                                
+                                <div class="sharethis-inline-share-buttons" ></div>
+                                <a href="javascript:void(0)" id="exportPDF" class="pdf"><img src="{{asset('themes/frontend/assets/infosolz/images/pdf.png')}}" ></a>
+                                
+                            </div>
+                            <table class="table datatable"  id="pdfData">
+                                <thead>
+                                    <tr>
+                                        <th class="text_left">Fund Name</th>
+                                        <th class="text_center">Upside Potential</th>
+                                        <th class="text_center">Downside Risk</th>
+                                        <th class="text_center">Sortino Ratio</th>
+                                        <th class="text_center">Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0)
+                                    @php
+                                        $fundReturns = $stat_result['fund_absolute_return'];
+
+                                        // $sortedFundReturns = collect($fundReturns)->sortDesc()->toArray();
+
+                                        // dd($fundReturns);
+
+                                        arsort($fundReturns);
+
+                                        // Convert the sorted array to a collection if needed
+                                        $sortedFundReturns = collect($fundReturns)->toArray();
+
+                                        $ranks = [];
+
+                                        $rank = 1;
+                                        foreach ($sortedFundReturns as $key => $value) {
+
+                                            if($value == 'N/A' || $value =''){
+                                                
+                                                $ranks[$key] = 'N/A';
+                                            }else{
+                                                $ranks[$key] = $rank++;
+                                            }
+                                          
+                                        }
+
+                                        // dd($fundReturns);
+
+                                    @endphp
+                                    @endif
+
+                                    @if (!empty($fund_all_return))
+                                        @foreach ($sortedFundReturns as $fundId => $value)
+                                            <tr>
+                                                <td class="text_left">
+                                                    {{ getNameTable('fund_master', 'fund_name', 'fund_id', $fundId) }}</td>
+                                                <td class="text_right">
+                                                    {{ printValue($fund_all_return[$fundId]['upside_potential']) }}</td>
+                                                <td class="text_right">
+                                                    {{ printValue($fund_all_return[$fundId]['downside_risk']) }}</td>
+                                                <td class="text_right">{{ printValue($value) }}</td>
+                                                <td class="text_right">{{ printRank($ranks[$fundId]) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        {{-- @else
+                                        <tr>
+                                            <td colspan="5">No records found</td>
+                                        </tr> --}}
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        {{-- <div class="graph_section">
+                            <p style="text-align: center;">Please search above to show the results</p>
+                        </div> --}}
+                        {!! printNoData() !!}
+                    @endif
+
+                </div>
+                @if (isset($stat_result['fund_absolute_return']))
+                <div class="disclaimer">
+                    <p><strong>Note : </strong>For the calculations, the first working day is considered in case of Starting
+                        and Ending day.</p>
+                </div>
+                <div class="disclaimer">
+                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                </div>
+           
+                    
+            @endif
+            </div>
+        </div>
+    </div>
+@endsection
+
+<script>
+    function get_date(thiss) {
+
+        if (thiss == 'Range') {
+
+            $('#from_date_div').show();
+            $('#year_month').prop('required', false);
+            $('#year_month_div').attr('style', 'display:none');
+            $('#to_date').attr('placeholder', 'End Date');
+
+
+        } else if (thiss == 'As on') {
+
+            $('#from_date_div').hide(); // $('#from_date_div').val('');
+
+            $('#from_date').prop('required', false);
+            $('#year_month_div').removeAttr('style');
+            $('#year_month').prop('required', true);
+            $('#to_date').attr('placeholder', 'Date');
+
+
+
+
+        }
+
+    }
+
+    function get_classification(thiss) {
+
+        if (thiss == 'classification') {
+
+            $('#fund_type_div').removeAttr('style');
+            $('#fund_type').prop('required', true);
+
+
+            $('#fund_master').prop('required', false);
+
+            $('#fund_name_div').attr('style', 'display:none');
+
+        } else if (thiss == 'fund') {
+
+            $('#fund_type_div').attr('style', 'display:none');
+            $('#fund_type').prop('required', false);
+
+
+            $('#fund_master').prop('required', true);
+
+            $('#fund_name_div').removeAttr('style');
+
+
+        }
+
+    }
+
+
+
+
+    function set_fund_select_val() {
+
+        var thiss = $('#fund_Category').val();
+        var count = $('#allocation_select_fund').select2('data').length;
+
+
+
+        console.log(thiss + '  ' + count);
+
+        if (thiss == 'by_fund') {
+
+            if (count >= 2 && count <= 20) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+
+        } else {
+
+            $('#submit_btn').prop('disabled', false);
+        }
+    }
+
+    function get_fund_types(thiss) {
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+        if (thiss == 'by_category') {
+
+            $('#submit_btn').prop('disabled', false);
+        } else if (thiss == 'by_fund') {
+
+            if (count >= 2 && count <= 20) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+        }
+    }
+
+    function get_second_month_year() {
+    var firstYear = parseInt($('#year').val());
+    var firstMonth = parseInt($('#month').val());
+    var currentYear = new Date().getFullYear();
+    var currentMonth = new Date().getMonth() + 1; // getMonth returns 0-indexed month
+
+    if (isNaN(firstMonth)) {
+        $('#month_second').html('<option value="">Please select the first period month</option>');
+        $('#year_second').html('<option value="">Please select the first period year</option>');
+        return;
+    }
+
+    var monthOptions = '';
+    var yearOptions = '';
+
+    var startMonth = firstMonth + 5;
+    if (startMonth > 12) {
+        startMonth = startMonth - 12;
+        firstYear += 1; 
+    }
+
+    // Generate year options
+    for (var y = firstYear; y <= firstYear + 3 && y <= currentYear; y++) {
+        yearOptions += '<option value="' + y + '">' + y + '</option>';
+    }
+
+    $('#year_second').html(yearOptions);
+
+    // Generate month options based on selected year
+    $('#year_second').change(function() {
+        var selectedYear = parseInt($('#year_second').val());
+        monthOptions = '';
+        if (selectedYear > firstYear) {
+            for (var m = 1; m <= (selectedYear == currentYear ? currentMonth : 12); m++) {
+                monthOptions += '<option value="' + m + '">' + getMonthName(m) + '</option>';
+            }
+        } else {
+            for (var m = startMonth; m <= 12; m++) {
+                monthOptions += '<option value="' + m + '">' + getMonthName(m) + '</option>';
+            }
+        }
+        $('#month_second').html(monthOptions);
+    });
+
+    $('#year_second').trigger('change');
+}
+
+function get_second_period(selectedMonth) {
+    var firstMonth = parseInt($('#month').val());
+    var firstYear = parseInt($('#year').val());
+
+    if (isNaN(firstYear) || isNaN(firstMonth)) {
+        $('#year_second').html('<option value="">Please select the first period</option>');
+        return;
+    }
+
+    var currentYear = new Date().getFullYear();
+    var yearOptions = '';
+
+    for (var y = firstYear; y <= firstYear + 3 && y <= currentYear; y++) {
+        yearOptions += '<option value="' + y + '">' + y + '</option>';
+    }
+
+    $('#year_second').html(yearOptions);
+}
+
+function getMonthName(monthNumber) {
+    var monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    return monthNames[monthNumber - 1];
+}
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var exportButton = document.getElementById('exportPDF');
+
+    exportButton.addEventListener('click', function() {
+        var { jsPDF } = window.jspdf;
+        var doc = new jsPDF();
+
+        var img = new Image();
+        img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+        img.onload = function() {
+            var pageWidth = doc.internal.pageSize.getWidth();
+            var imgWidth = 50;
+            var imgHeight = 20;
+            var centerX = (pageWidth - imgWidth) / 2;
+
+            doc.addImage(img, 'PNG', centerX, 10, imgWidth, imgHeight);
+
+            doc.setFontSize(16);
+            doc.setTextColor(45, 135, 23);
+            doc.text('Sortino Ratios', pageWidth / 2, 35, { align: 'center' });
+
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+
+            var startX = 15;
+            var yPosition = 70;
+
+            // Extracted values from the provided HTML structure
+            var startDate = "{{ isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000' }}";
+            var endDate = "{{ isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000' }}";
+            
+            var ratio = @if (isset($request->report_category))
+                            @if ($request->report_category == 'sortino')
+                                'Sortino'
+                            @elseif ($request->report_category == 'upside_potential')
+                                'Upside Potential'
+                            @elseif ($request->report_category == 'downside_risk')
+                                'Downside Risk'
+                            @endif
+                         @else
+                            ''
+                         @endif;
+
+            var duration = @if (isset($as_on_time_frame_data))
+                            @switch($request->as_on_time_frame)
+                                @case('1_month') '1 Month' @break
+                                @case('3_months') '3 Months' @break
+                                @case('6_months') '6 Months' @break
+                                @case('1_year') '1 Year' @break
+                                @case('2_year') '2 Years' @break
+                                @case('3_years') '3 Years' @break
+                                @case('5_years') '5 Years' @break
+                            @endswitch
+                         @else
+                            ''
+                         @endif;
+
+            var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
+            var fundNames = "{{ isset($fund_names) ? $fund_names : '' }}";
+            var minimumAcceptableRate = "{{ isset($request->limit) ? $request->limit : '' }}";
+
+            // Add data to the PDF
+            doc.text('Start Month & Year: ' + startDate, startX, yPosition);
+            doc.text('End Month & Year: ' + endDate, startX + 100, yPosition);
+            yPosition += 10;
+
+            doc.text('By Ratio: ' + ratio, startX, yPosition); // Left side
+            if (minimumAcceptableRate !== '') {
+                doc.text('Minimum Acceptable Rate (in %): ' + minimumAcceptableRate, startX + 100, yPosition); // Right side
+            }
+            yPosition += 10;
+
+            if (fundNames !== '') {
+                var wrappedFundNames = doc.splitTextToSize(fundNames, 180); // 180 defines the max width of text before breaking
+                doc.text('Fund Name:', startX, yPosition);
+                yPosition += 10;
+                doc.text(wrappedFundNames, startX, yPosition);  // Write the wrapped text
+                yPosition += (wrappedFundNames.length * 7); // Adjust yPosition based on the number of lines
+            }
+
+            
+
+            // Add table data (example from your DataTable logic)
+            var table = new DataTable('#pdfData');
+            var tableData = [];
+            table.rows({ search: 'applied' }).data().each(function(row) {
+                tableData.push(row);
+            });
+
+            doc.autoTable({
+                head: [['Fund Name', 'Upside Potential','Downside Risk','Sortino Ratio', 'Rank']],
+                body: tableData,
+                startX: startX,
+                startY: yPosition + 10,
+                headStyles: { fillColor: [45, 135, 23] }
+            });
+
+            var currentDate = new Date();
+            var fileName = 'Sortino-Ratios-' + currentDate + '.pdf';
+
+            doc.save(fileName);
+        };
+    });
+});
+
+
+</script>

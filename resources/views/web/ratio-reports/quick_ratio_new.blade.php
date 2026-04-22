@@ -11,9 +11,7 @@
                 </ul>
             </div>
 
-            <div class="perform_head">
-                        <h2>Quick Ratio</h2>
-            </div>
+         
 
                 <section class="monthly_snapshop_sec">
                 <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
