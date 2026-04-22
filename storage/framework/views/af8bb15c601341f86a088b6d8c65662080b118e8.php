@@ -14,7 +14,7 @@
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
 
                     <div class="light_green_bg">
-                        <form action="">
+                        <form action="<?php echo e(route('user.schemes-associated-with-index')); ?>" method="get">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="form_group">
@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" name="date" placeholder="Date"
+                                        <input type="date" id="schemes-associated-date" class="form-control" name="date" placeholder="Date"
                                             value="<?php echo e(!empty($request->date) ? \Carbon\Carbon::parse($request->date)->format('Y-m-d') : ''); ?>">
                                     </div>
                                 </div>
@@ -102,10 +102,22 @@
 
 <?php $__env->stopSection(); ?>
 
-
+<?php $__env->startPush('scripts'); ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var dateInput = document.getElementById('schemes-associated-date');
+        if (dateInput && typeof dateInput.showPicker === 'function') {
+            ['click', 'focus'].forEach(function(eventName) {
+                dateInput.addEventListener(eventName, function() {
+                    this.showPicker();
+                });
+            });
+        }
+
         var exportButton = document.getElementById('exportPDF-schemes-associated');
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
             var { jsPDF } = window.jspdf;
@@ -142,6 +154,9 @@
 
                 // Get table data
                 var table = document.getElementById('pdfData-schemes-associated');
+                if (!table) {
+                    return;
+                }
                 var tableData = [];
 
                 table.querySelectorAll('tbody tr').forEach(function(row) {
@@ -173,9 +188,7 @@
             };
         });
     });
-
-
-
 </script>
+<?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/indices-reports/schemes-associated-with-index.blade.php ENDPATH**/ ?>
