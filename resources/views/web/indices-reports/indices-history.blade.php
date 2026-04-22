@@ -24,8 +24,8 @@
                                             onchange='fund_multiple(this)'>
                                             <option value="">Select Indices</option>
                                             @foreach ($indices as $index)
-                                                <option value="{{ $index->corelation }}"
-                                                    @if (isset($request['indices']) && in_array($index->corelation, $request['indices'])) selected @endif>{{ $index->name }}
+                                                <option value="{{ $index->name }}"
+                                                    @if (isset($request['indices']) && in_array($index->name, $request['indices'])) selected @endif>{{ $index->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -65,6 +65,10 @@
                     @if (count($indices_vals) != 0)
                         <div class="graph_section">
                             <div id="chartContainer" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @elseif (!empty($request['indices']) && !empty($request['start_date']) && !empty($request['end_date']))
+                        <div class="graph_section">
+                            <p style="text-align: center;">No data found for the selected indices and date range.</p>
                         </div>
                     @else
                         <div class="graph_section">

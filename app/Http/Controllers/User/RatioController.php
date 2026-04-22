@@ -77,7 +77,43 @@ class RatioController extends Controller
 
     function indices_history(Request $request){
       $data = $this->indicesReportViewData($request);
-      $data = $this->populateIndicesHistoryData($request, $data);
+      $selectedValues = array_values(array_filter((array) $request->input('indices', [])));
+      $dateRange = $this->resolveExplicitDateRange($request->input('start_date'), $request->input('end_date'));
+
+      $data['indices_vals'] = [];
+      $data['indices_records'] = collect();
+
+      if (!empty($selectedValues) && $dateRange) {
+          $data['indices_records'] = collect($selectedValues)->map(function ($value) {
+              return (object) [
+                  'name' => $value,
+                  'corelation' => $value,
+              ];
+          });
+
+          foreach ($selectedValues as $selectedValue) {
+              $points = IndicesDetail::query()
+                  ->where('name', $selectedValue)
+                  ->where('publish', 'y')
+                  ->whereDate('entry_date', '>=', $dateRange['start']->toDateString())
+                  ->whereDate('entry_date', '<=', $dateRange['end']->toDateString())
+                  ->orderBy('entry_date')
+                  ->get(['entry_date', 'closing_value']);
+
+              $series = $points
+                  ->filter(fn ($point) => is_numeric($point->closing_value) && $point->closing_value !== null)
+                  ->map(fn ($point) => [
+                      Carbon::parse($point->entry_date)->toDateString(),
+                      round((float) $point->closing_value, 2),
+                  ])
+                  ->values()
+                  ->all();
+
+              if (!empty($series)) {
+                  $data['indices_vals'][$selectedValue] = $series;
+              }
+          }
+      }
 
       return view('web.indices-reports.indices-history', $data);
     }
@@ -542,21 +578,37 @@ class RatioController extends Controller
             return $data;
         }
 
-        $selectedIndices = collect($data['indices'])
-            ->filter(fn ($index) => in_array($index->corelation, $selectedCorrelations, true))
-            ->values();
+        $selectedIndices = IndicesMaster::query()
+            ->whereIn('corelation', $selectedCorrelations)
+            ->orWhereIn('name', $selectedCorrelations)
+            ->orderBy('name')
+            ->get();
 
-        if ($selectedIndices->isEmpty()) {
-            return $data;
-        }
-
-        $data['indices_records'] = $selectedIndices;
-        $data['indices_vals'] = [];
-
-        foreach ($selectedIndices as $index) {
-            $lookupNames = array_values(array_unique(array_filter([
+        $selectedIndexMap = $selectedIndices->flatMap(function ($index) {
+            $keys = array_values(array_unique(array_filter([
                 $index->corelation ?? null,
                 $index->name ?? null,
+            ])));
+
+            return collect($keys)->mapWithKeys(fn ($key) => [$key => $index]);
+        });
+
+        $data['indices_records'] = collect($selectedCorrelations)->map(function ($value) use ($selectedIndexMap) {
+            $index = $selectedIndexMap->get($value);
+
+            return (object) [
+                'name' => $index->name ?? $value,
+                'corelation' => $index->corelation ?? $value,
+            ];
+        });
+        $data['indices_vals'] = [];
+
+        foreach ($selectedCorrelations as $selectedValue) {
+            $selectedIndex = $selectedIndexMap->get($selectedValue);
+            $lookupNames = array_values(array_unique(array_filter([
+                $selectedValue,
+                $selectedIndex->corelation ?? null,
+                $selectedIndex->name ?? null,
             ])));
 
             if (empty($lookupNames)) {
@@ -581,7 +633,8 @@ class RatioController extends Controller
                 ->all();
 
             if (!empty($series)) {
-                $data['indices_vals'][$index->name] = $series;
+                $seriesName = $selectedIndex->name ?? $selectedValue;
+                $data['indices_vals'][$seriesName] = $series;
             }
         }
 
