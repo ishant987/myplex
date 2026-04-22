@@ -495,6 +495,7 @@
     </div>
 @endsection
 
+@push('scripts')
 <script>
     function selectedFundCount() {
         var selectedValues = $('#allocation_select_fund').val() || [];
@@ -544,6 +545,10 @@
     }
 
     function set_fund_select_val() {
+        updateFundSelectionState();
+    }
+
+    function fund_multiple(selectElement) {
         updateFundSelectionState();
     }
 
@@ -605,7 +610,7 @@
     }
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+    function initPerformanceRatiosPage() {
         toggleRankingFields();
         toggleCategoryFields();
         updateFundSelectionState();
@@ -788,5 +793,12 @@
                 doc.save(fileName);
             };
         });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPerformanceRatiosPage);
+    } else {
+        initPerformanceRatiosPage();
+    }
 </script>
+@endpush
