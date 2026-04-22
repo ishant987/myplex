@@ -212,7 +212,7 @@ class RatioController extends Controller
     }
 
     function filters_beta(Request $request){
-      return view('web.filters.beta', $this->reportViewData($request));
+      return view('web.filters.beta', $this->filtersBetaViewData($request));
     }
 
     function filters_volatility(Request $request){
@@ -865,6 +865,11 @@ class RatioController extends Controller
         }
 
         return $data;
+    }
+
+    protected function filtersBetaViewData(Request $request): array
+    {
+        return $this->filtersJensensViewData($request);
     }
 
     protected function indicesReportViewData(Request $request): array
