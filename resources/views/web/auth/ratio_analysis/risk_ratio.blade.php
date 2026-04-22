@@ -30,11 +30,13 @@
                                     <div class="form_group radio_btn">
                                         <label>
                                             <input type="radio" name="ranking" value="range"
+                                                onchange="toggleRankingFields()"
                                                 {{ $selectedRanking === 'range' ? 'checked' : '' }}>
                                             Range
                                         </label>
                                         <label>
                                             <input type="radio" name="ranking" value="as_on"
+                                                onchange="toggleRankingFields()"
                                                 {{ $selectedRanking === 'as_on' ? 'checked' : '' }}>
                                             As on
                                         </label>
@@ -106,13 +108,13 @@
                                             <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
                                                 {{ $selectedCategory === 'by_category' ? 'checked' : '' }}
-                                                onclick='get_fund_types(this.value)'>
+                                                onclick='get_fund_types(this.value)' onchange='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
                                                 {{ $selectedCategory === 'by_fund' ? 'checked' : '' }}
-                                                onclick='get_fund_types(this.value)'>
+                                                onclick='get_fund_types(this.value)' onchange='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
                                     </div>
@@ -261,17 +263,32 @@
 
 
 
-                    @if(isset($request)&& isset($start_date) && isset($end_date) &&  $request->Category !='' && $request->report_category !='')
+                    @if (
+                        isset($request) &&
+                        $request->Category != '' &&
+                        $request->report_category != '' &&
+                        (
+                            (($request->ranking ?? 'range') === 'as_on' && !empty($request->as_on_date)) ||
+                            (($request->ranking ?? 'range') !== 'as_on' && isset($start_date) && isset($end_date))
+                        )
+                    )
                         <div class="fund_section new_fund_section">
                             <ul>
-                                <li>
-                                    <p>Start date :</p>
-                                    <span>{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}</span>
-                                </li>
-                                <li>
-                                    <p>End date :</p>
-                                    <span>{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}</span>
-                                </li>
+                                @if (($request->ranking ?? 'range') === 'as_on')
+                                    <li>
+                                        <p>As on date :</p>
+                                        <span>{{ !empty($request->as_on_date) ? date('d/m/Y', strtotime($request->as_on_date)) : '00/00/0000' }}</span>
+                                    </li>
+                                @else
+                                    <li>
+                                        <p>Start date :</p>
+                                        <span>{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}</span>
+                                    </li>
+                                    <li>
+                                        <p>End date :</p>
+                                        <span>{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}</span>
+                                    </li>
+                                @endif
 
                                
 
@@ -590,8 +607,10 @@
                 doc.setFontSize(12);
                 doc.setTextColor(0, 0, 0);
 
+                var ranking = "{{ $request->ranking ?? 'range' }}";
                 var startDate = "{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}";
                 var endDate = "{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}";
+                var asOnDate = "{{ !empty($request->as_on_date) ? date('d/m/Y', strtotime($request->as_on_date)) : '00/00/0000' }}";
                 var ratio = @if (isset($request->report_category)) @switch($request->report_category) @case('returns') 'Returns/CAGR' @break @case('jensens_alpha') 'Jensen’s alpha' @break @case('sharpe') 'Sharpe' @break @case('treynor') 'Treynor' @break @case('information_ratio') 'Information Ratio' @break @case('one_month_rolling_return') '1 month Rolling Return' @break @case('beta') 'Beta' @break @case('volatility') 'Volatility' @break @case('tracking_error') 'Tracking Error' @break @case('skewness') 'Skewness' @break @case('kurtosis') 'Kurtosis' @break @case('r_square') 'R Square' @break @endswitch @endif;
                 var duration = @if (isset($as_on_time_frame_data)) @switch($request->as_on_time_frame) @case('1_month') '1 Month' @break @case('3_months') '3 Months' @break @case('6_months') '6 Months' @break @case('1_year') '1 Year' @break @case('2_year') '2 Years' @break @case('3_years') '3 Years' @break @case('5_years') '5 Years' @break @default null @endswitch @else null @endif;
                 var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
@@ -602,9 +621,17 @@
                 var lineHeight = 10;
                 var yPosition = 70;
 
-                doc.text('Start date: ' + startDate, startX, yPosition);
-                doc.text('End date: ' + endDate, startX + 70, yPosition);
-                doc.text('By Ratio: ' + ratio, startX + 140, yPosition);
+                if (ranking === 'as_on') {
+                    doc.text('As on date: ' + asOnDate, startX, yPosition);
+                    if (duration !== null) {
+                        doc.text('Duration: ' + duration, startX + 70, yPosition);
+                    }
+                    doc.text('By Ratio: ' + ratio, startX + 140, yPosition);
+                } else {
+                    doc.text('Start date: ' + startDate, startX, yPosition);
+                    doc.text('End date: ' + endDate, startX + 70, yPosition);
+                    doc.text('By Ratio: ' + ratio, startX + 140, yPosition);
+                }
                 yPosition += 10;
 
                 @if (isset($request) && $request->index_id != '')
