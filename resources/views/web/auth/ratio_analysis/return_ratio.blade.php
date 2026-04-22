@@ -1,5 +1,11 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
+    @php
+        $selectedRanking = old('ranking', $request->ranking ?? 'range');
+        $selectedCategory = old('Category', $request->Category ?? 'by_category');
+        $isAsOnMode = $selectedRanking === 'as_on';
+        $isByFundMode = $selectedCategory === 'by_fund';
+    @endphp
 
     <div class="inner_main">
         <div class="page_detail">
@@ -23,11 +29,13 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" name="ranking" value="range" checked>
+                                            <input type="radio" name="ranking" value="range"
+                                                {{ $selectedRanking === 'range' ? 'checked' : '' }}>
                                             Range
                                         </label>
                                         <label>
-                                            <input type="radio" name="ranking" value="as_on">
+                                            <input type="radio" name="ranking" value="as_on"
+                                                {{ $selectedRanking === 'as_on' ? 'checked' : '' }}>
                                             As on
                                         </label>
                                         @error('ranking')
@@ -36,9 +44,10 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="Start date" name="start_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
                                             value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -46,24 +55,26 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show">
+                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <input type="date" class="form-control" placeholder="End date" name="end_date"
+                                            {{ $isAsOnMode ? 'disabled' : '' }}
                                             value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <input type="date" name="as_on_date" class="form-control" placeholder="date"
+                                            {{ $isAsOnMode ? '' : 'disabled' }}
                                             value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide">
+                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame">
+                                        <select name="as_on_time_frame" {{ $isAsOnMode ? '' : 'disabled' }}>
                                             <option value="1_month"
                                                 @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
                                             </option>
@@ -92,24 +103,25 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category" checked
+                                            <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
-                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                {{ $selectedCategory === 'by_category' ? 'checked' : '' }}
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                {{ $selectedCategory === 'by_fund' ? 'checked' : '' }}
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show_1">
+                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
-                                        <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification">
+                                        <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification"
+                                            {{ $isByFundMode ? 'disabled' : '' }}>
                                             <option value=""></option>
                                             @foreach ($all_fund_types as $fund_type)
                                                 <option value="{{ $fund_type->ft_id }}"
@@ -149,10 +161,11 @@
                                             
                                         </div> -->
 
-                                <div class="col-md-4 div_hide_1">
+                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
-                                            id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
+                                            id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'
+                                            {{ $isByFundMode ? '' : 'disabled' }}>
                                             @foreach ($all_funds as $fund)
                                                 <option value="{{ $fund->fund_id }}"
                                                     @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
@@ -463,7 +476,54 @@
 
 @endsection
 
+@push('scripts')
 <script>
+    function selectedFundCount() {
+        return ($('#allocation_select_fund').val() || []).length;
+    }
+
+    function updateFundSelectionState() {
+        var category = $('input[name="Category"]:checked').val() || 'by_category';
+        var count = selectedFundCount();
+
+        if (category !== 'by_fund') {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        if (count >= 2 && count <= 20) {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+            return;
+        }
+
+        $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+        $('#submit_btn').prop('disabled', true);
+    }
+
+    function toggleRankingFields() {
+        var ranking = $('input[name="ranking"]:checked').val() || 'range';
+        var isAsOn = ranking === 'as_on';
+
+        $('.div_show').toggle(!isAsOn);
+        $('.div_hide').toggle(isAsOn);
+
+        $('input[name="start_date"], input[name="end_date"]').prop('disabled', isAsOn);
+        $('input[name="as_on_date"], select[name="as_on_time_frame"]').prop('disabled', !isAsOn);
+    }
+
+    function toggleCategoryFields() {
+        var category = $('input[name="Category"]:checked').val() || 'by_category';
+        var isByFund = category === 'by_fund';
+
+        $('.div_show_1').toggle(!isByFund);
+        $('.div_hide_1').toggle(isByFund);
+
+        $('select[name="fund_type_id"]').prop('disabled', isByFund);
+        $('select[name="fund_id[]"]').prop('disabled', !isByFund);
+    }
+
     function get_date(thiss) {
 
         if (thiss == 'Range') {
@@ -521,51 +581,13 @@
 
 
     function set_fund_select_val() {
-
-        var thiss = $('#fund_Category').val();
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        console.log(thiss + '  ' + count);
-
-        if (thiss == 'by_fund') {
-
-            if (count >= 2 && count <= 20) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-
-        } else {
-            $('#submit_btn').prop('disabled', false);
-        }
+        updateFundSelectionState();
     }
 
 
     function get_fund_types(thiss) {
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
-        } else if (thiss == 'by_fund') {
-
-            if (count >= 2 && count <= 20) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-        }
+        toggleCategoryFields();
+        updateFundSelectionState();
     }
 
 
@@ -585,105 +607,111 @@
 
     }
 
+    function initReturnRatioPage() {
+        toggleRankingFields();
+        toggleCategoryFields();
+        updateFundSelectionState();
+        index_enable($('select[name="report_category"]').val());
 
+        $('input[name="ranking"]').on('change', toggleRankingFields);
+        $('input[name="Category"]').on('change', function() {
+            get_fund_types(this.value);
+        });
+        $('#allocation_select_fund').on('change', updateFundSelectionState);
 
+        var exportButton = document.getElementById('exportPDF');
 
-    document.addEventListener('DOMContentLoaded', function() {
-    var exportButton = document.getElementById('exportPDF');
+        if (!exportButton) {
+            return;
+        }
 
-    exportButton.addEventListener('click', function() {
-        var { jsPDF } = window.jspdf;
-        var doc = new jsPDF();
+        exportButton.addEventListener('click', function() {
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
 
-        var img = new Image();
-        img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
-        img.onload = function() {
-            var pageWidth = doc.internal.pageSize.getWidth();
-            var imgWidth = 50;
-            var imgHeight = 20;
-            var centerX = (pageWidth - imgWidth) / 2;
+            var img = new Image();
+            img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+            img.onload = function() {
+                var pageWidth = doc.internal.pageSize.getWidth();
+                var imgWidth = 50;
+                var imgHeight = 20;
+                var centerX = (pageWidth - imgWidth) / 2;
 
-            doc.addImage(img, 'PNG', centerX, 10, imgWidth, imgHeight);
+                doc.addImage(img, 'PNG', centerX, 10, imgWidth, imgHeight);
 
-            doc.setFontSize(16);
-            doc.setTextColor(45, 135, 23);
-            doc.text('Return Ratios', pageWidth / 2, 35, { align: 'center' });
+                doc.setFontSize(16);
+                doc.setTextColor(45, 135, 23);
+                doc.text('Return Ratios', pageWidth / 2, 35, { align: 'center' });
 
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
 
-            // Date and ratio details
-            var startDate = "{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}";
-            var endDate = "{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}";
-            var ratio = @if (isset($request->report_category)) @switch($request->report_category) @case('returns') 'Returns/CAGR' @break @case('jensens_alpha') 'Jensen’s alpha' @break @case('sharpe') 'Sharpe' @break @case('treynor') 'Treynor' @break @case('information_ratio') 'Information Ratio' @break @case('one_month_rolling_return') '1 month Rolling Return' @break @case('beta') 'Beta' @break @case('volatility') 'Volatility' @break @case('tracking_error') 'Tracking Error' @break @case('skewness') 'Skewness' @break @case('kurtosis') 'Kurtosis' @break @case('r_square') 'R Square' @break @endswitch @endif;
+                var startDate = "{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}";
+                var endDate = "{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}";
+                var ratio = @if (isset($request->report_category)) @switch($request->report_category) @case('returns') 'Returns/CAGR' @break @case('jensens_alpha') 'Jensen’s alpha' @break @case('sharpe') 'Sharpe' @break @case('treynor') 'Treynor' @break @case('information_ratio') 'Information Ratio' @break @case('one_month_rolling_return') '1 month Rolling Return' @break @case('beta') 'Beta' @break @case('volatility') 'Volatility' @break @case('tracking_error') 'Tracking Error' @break @case('skewness') 'Skewness' @break @case('kurtosis') 'Kurtosis' @break @case('r_square') 'R Square' @break @endswitch @endif;
+                var duration = @if (isset($as_on_time_frame_data)) @switch($request->as_on_time_frame) @case('1_month') '1 Month' @break @case('3_months') '3 Months' @break @case('6_months') '6 Months' @break @case('1_year') '1 Year' @break @case('2_year') '2 Years' @break @case('3_years') '3 Years' @break @case('5_years') '5 Years' @break @default null @endswitch @else null @endif;
+                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
+                var indexName = "{{ isset($index_name->name) ? $index_name->name : '' }}";
+                var fundNames = "{{ isset($fund_names) ? $fund_names : '' }}";
 
-            var duration = @if (isset($as_on_time_frame_data)) @switch($request->as_on_time_frame) @case('1_month') '1 Month' @break @case('3_months') '3 Months' @break @case('6_months') '6 Months' @break @case('1_year') '1 Year' @break @case('2_year') '2 Years' @break @case('3_years') '3 Years' @break @case('5_years') '5 Years' @break @default null @endswitch @else null @endif;
+                var startX = 15;
+                var lineHeight = 10;
+                var yPosition = 70;
 
-            var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
-            var indexName = "{{ isset($index_name->name) ? $index_name->name : '' }}";
-            var fundNames = "{{ isset($fund_names) ? $fund_names : '' }}";
-            
-            var startX = 15;
-            var lineHeight = 10;
-            var yPosition = 70;
-
-            // Adding start date and end date
-            doc.text('Start date: ' + startDate, startX, yPosition);
-            doc.text('End date: ' + endDate, startX + 100, yPosition);
-            yPosition += 10;
-
-            // Adding ratio and duration
-            doc.text('By Ratio: ' + ratio, startX, yPosition);
-            if (duration !== null) {
-                doc.text('Duration: ' + duration, startX + 100, yPosition);
-            }
-            yPosition += 10;
-
-            // Add fund classification (if by_category)
-            @if (isset($request) && $request->Category == 'by_category')
-                doc.text('Fund Classification: ' + fundClassification, startX, yPosition);
+                doc.text('Start date: ' + startDate, startX, yPosition);
+                doc.text('End date: ' + endDate, startX + 100, yPosition);
                 yPosition += 10;
-            @endif
 
-            // Add Index Name (if applicable)
-            @if (isset($request) && $request->index_id != '')
-                doc.text('Index Name: ' + indexName, startX, yPosition);
+                doc.text('By Ratio: ' + ratio, startX, yPosition);
+                if (duration !== null) {
+                    doc.text('Duration: ' + duration, startX + 100, yPosition);
+                }
                 yPosition += 10;
-            @endif
 
+                @if (isset($request) && $request->Category == 'by_category')
+                    doc.text('Fund Classification: ' + fundClassification, startX, yPosition);
+                    yPosition += 10;
+                @endif
 
-            @if (isset($request) && $request->Category == 'by_fund')
-                // Split the fund names if too long to fit within 180 units (adjust width as necessary)
-                var splitFundNames = doc.splitTextToSize(fundNames, 160);
-                doc.text('Fund Name: ', startX, yPosition);
-                yPosition += 10;
-                doc.text(splitFundNames, startX, yPosition);  // This will handle multiple lines
-                yPosition += splitFundNames.length * lineHeight; // Adjust yPosition based on the number of lines
-            @endif
+                @if (isset($request) && $request->index_id != '')
+                    doc.text('Index Name: ' + indexName, startX, yPosition);
+                    yPosition += 10;
+                @endif
 
-            // Adding table data (your existing DataTable logic)
-            var table = new DataTable('#pdfData');
-            var tableData = [];
-            table.rows({ search: 'applied' }).data().each(function(row) {
-                tableData.push(row);
-            });
+                @if (isset($request) && $request->Category == 'by_fund')
+                    var splitFundNames = doc.splitTextToSize(fundNames, 160);
+                    doc.text('Fund Name: ', startX, yPosition);
+                    yPosition += 10;
+                    doc.text(splitFundNames, startX, yPosition);
+                    yPosition += splitFundNames.length * lineHeight;
+                @endif
 
-            doc.autoTable({
-                head: [['Fund Name', 'Ratio', 'Rank']],
-                body: tableData,
-                startX: startX,
-                startY: yPosition + 10,
-                headStyles: { fillColor: [45, 135, 23] }
-            });
+                var table = new DataTable('#pdfData');
+                var tableData = [];
+                table.rows({ search: 'applied' }).data().each(function(row) {
+                    tableData.push(row);
+                });
 
-            var currentDate = new Date();
-            var fileName = 'Return-Ratios-' + currentDate + '.pdf';
+                doc.autoTable({
+                    head: [['Fund Name', 'Ratio', 'Rank']],
+                    body: tableData,
+                    startX: startX,
+                    startY: yPosition + 10,
+                    headStyles: { fillColor: [45, 135, 23] }
+                });
 
-            doc.save(fileName);
-        };
-    });
-});
+                var currentDate = new Date();
+                var fileName = 'Return-Ratios-' + currentDate + '.pdf';
 
+                doc.save(fileName);
+            };
+        });
+    }
 
-
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initReturnRatioPage);
+    } else {
+        initReturnRatioPage();
+    }
 </script>
+@endpush
