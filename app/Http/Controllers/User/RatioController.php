@@ -208,7 +208,7 @@ class RatioController extends Controller
     }
 
     function filters_jensens(Request $request){
-      return view('web.filters.jensens', $this->reportViewData($request));
+      return view('web.filters.jensens', $this->filtersJensensViewData($request));
     }
 
     function filters_beta(Request $request){
@@ -337,10 +337,37 @@ class RatioController extends Controller
             ->orderByDesc('entry_date')
             ->first();
 
+        $index = !empty($fund->indices_name)
+            ? IndicesMaster::query()
+                ->where('name', $fund->indices_name)
+                ->orWhere('corelation', $fund->indices_name)
+                ->first(['name', 'corelation'])
+            : null;
+
+        $lookupNames = array_values(array_unique(array_filter([
+            $fund->indices_name,
+            $index?->name,
+            $index?->corelation,
+        ])));
+
+        $indexDetail = empty($lookupNames)
+            ? null
+            : IndicesDetail::query()
+                ->where(function ($query) use ($lookupNames) {
+                    $query->whereIn('name', $lookupNames);
+
+                    if ($this->columnExists('indices_detail', 'correlation_new')) {
+                        $query->orWhereIn('correlation_new', $lookupNames);
+                    }
+                })
+                ->where('publish', 'y')
+                ->orderByDesc('entry_date')
+                ->first(['entry_date', 'name', 'closing_value']);
+
         return response()->json([
             'entry_date' => $detail?->entry_date ? Carbon::parse($detail->entry_date)->format('d-m-Y') : 'N/A',
-            'name' => $fund->indices_name ?? 'N/A',
-            'closing_value' => $detail?->nav ?? '0.0',
+            'name' => $indexDetail?->name ?? $fund->indices_name ?? 'N/A',
+            'closing_value' => $indexDetail?->closing_value ?? '0.0',
         ]);
     }
 
@@ -721,6 +748,120 @@ class RatioController extends Controller
 
         if (empty($data['checkedFundIds']) && !empty($data['fund_absolute_return'])) {
             $data['checkedFundIds'] = implode(',', array_keys($data['fund_absolute_return']));
+        }
+
+        return $data;
+    }
+
+    protected function filtersJensensViewData(Request $request): array
+    {
+        $funds = $this->safeFundList();
+        $selectedFundId = (int) $request->input('fund_id', $funds->first()->fund_id ?? 0);
+        $duration = (string) $request->input('duration', '6');
+
+        $data = array_merge($this->reportViewData($request), [
+            'fundMasterData' => $funds,
+            'selected_fund_id' => $selectedFundId,
+            'duration' => $duration,
+            'fund_details' => null,
+            'indices_details' => null,
+            'current_date' => null,
+            'current_value' => null,
+            'fund_series' => [],
+            'index_series' => [],
+        ]);
+
+        if ($selectedFundId <= 0) {
+            return $data;
+        }
+
+        $fund = FundMaster::query()->find($selectedFundId);
+        if (!$fund || empty($fund->fund_code)) {
+            return $data;
+        }
+
+        $latestFundDetail = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->orderByDesc('entry_date')
+            ->first(['entry_date', 'closing_nav']);
+
+        $data['fund_details'] = $fund;
+
+        if (!$latestFundDetail) {
+            $data['message'] = 'No fund history is available for the selected scheme.';
+
+            return $data;
+        }
+
+        $endDate = Carbon::parse($latestFundDetail->entry_date)->startOfDay();
+        $startDate = $duration === '1'
+            ? $endDate->copy()->subYear()
+            : $endDate->copy()->subMonths(6);
+
+        $index = !empty($fund->indices_name)
+            ? IndicesMaster::query()
+                ->where('name', $fund->indices_name)
+                ->orWhere('corelation', $fund->indices_name)
+                ->first(['name', 'corelation'])
+            : null;
+
+        $lookupNames = array_values(array_unique(array_filter([
+            $fund->indices_name,
+            $index?->name,
+            $index?->corelation,
+        ])));
+
+        $latestIndexDetail = null;
+        if (!empty($lookupNames)) {
+            $latestIndexDetail = IndicesDetail::query()
+                ->where(function ($query) use ($lookupNames) {
+                    $query->whereIn('name', $lookupNames);
+
+                    if ($this->columnExists('indices_detail', 'correlation_new')) {
+                        $query->orWhereIn('correlation_new', $lookupNames);
+                    }
+                })
+                ->where('publish', 'y')
+                ->whereDate('entry_date', '<=', $endDate->toDateString())
+                ->orderByDesc('entry_date')
+                ->first(['entry_date', 'name', 'closing_value']);
+        }
+
+        $fundPoints = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '>=', $startDate->toDateString())
+            ->whereDate('entry_date', '<=', $endDate->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_nav']);
+
+        $indexPoints = empty($lookupNames)
+            ? collect()
+            : IndicesDetail::query()
+                ->where(function ($query) use ($lookupNames) {
+                    $query->whereIn('name', $lookupNames);
+
+                    if ($this->columnExists('indices_detail', 'correlation_new')) {
+                        $query->orWhereIn('correlation_new', $lookupNames);
+                    }
+                })
+                ->where('publish', 'y')
+                ->whereDate('entry_date', '>=', $startDate->toDateString())
+                ->whereDate('entry_date', '<=', $endDate->toDateString())
+                ->orderBy('entry_date')
+                ->get(['entry_date', 'closing_value']);
+
+        $data['indices_details'] = $index ?? (object) ['name' => $fund->indices_name, 'corelation' => $fund->indices_name];
+        $data['current_date'] = $endDate->format('d-m-Y');
+        $data['current_value'] = $latestIndexDetail && is_numeric($latestIndexDetail->closing_value ?? null)
+            ? round((float) $latestIndexDetail->closing_value, 2)
+            : null;
+        $data['fund_series'] = $this->buildChartSeriesFromPoints($fundPoints, 'entry_date', 'closing_nav');
+        $data['index_series'] = $this->buildChartSeriesFromPoints($indexPoints, 'entry_date', 'closing_value');
+
+        if ($request->has('duration') && empty($data['fund_series']) && empty($data['index_series'])) {
+            $data['message'] = 'No graph data is available for the selected period.';
         }
 
         return $data;
