@@ -576,7 +576,11 @@ class RatioController extends Controller
 
     protected function predictiveViewData(Request $request): array
     {
-        return array_merge($this->reportViewData($request), [
+        $funds = $this->safeFundList();
+        $selectedFundId = (int) $request->input('fund_id', $funds->first()->fund_id ?? 0);
+        $duration = (string) $request->input('duration', '6');
+
+        $data = array_merge($this->reportViewData($request), [
             'fundMasterData' => $this->safeFundList(),
             'getData' => $request->all(),
             'expected_index' => $request->input('expected_index'),
@@ -585,7 +589,92 @@ class RatioController extends Controller
             'graph_date' => [],
             'nav_value' => [],
             'closing_value' => [],
+            'duration' => $duration,
         ]);
+
+        if ($selectedFundId <= 0) {
+            return $data;
+        }
+
+        $fund = FundMaster::query()->find($selectedFundId);
+        if (!$fund || empty($fund->fund_code)) {
+            return $data;
+        }
+
+        $latestFundDetail = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->orderByDesc('entry_date')
+            ->first(['entry_date', 'closing_nav']);
+
+        $data['fund_details'] = $fund;
+
+        if (!$latestFundDetail) {
+            return $data;
+        }
+
+        $endDate = Carbon::parse($latestFundDetail->entry_date)->startOfDay();
+        $startDate = $duration === '1'
+            ? $endDate->copy()->subYear()
+            : $endDate->copy()->subMonths(6);
+
+        $index = !empty($fund->indices_name)
+            ? IndicesMaster::query()
+                ->where('name', $fund->indices_name)
+                ->orWhere('corelation', $fund->indices_name)
+                ->first(['name', 'corelation'])
+            : null;
+
+        $lookupNames = array_values(array_unique(array_filter([
+            $fund->indices_name,
+            $index?->name,
+            $index?->corelation,
+        ])));
+
+        $fundPoints = FundDetail::query()
+            ->where('fund_code', $fund->fund_code)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '>=', $startDate->toDateString())
+            ->whereDate('entry_date', '<=', $endDate->toDateString())
+            ->orderBy('entry_date')
+            ->get(['entry_date', 'closing_nav']);
+
+        $indexPoints = empty($lookupNames)
+            ? collect()
+            : IndicesDetail::query()
+                ->where(function ($query) use ($lookupNames) {
+                    $query->whereIn('name', $lookupNames);
+
+                    if ($this->columnExists('indices_detail', 'correlation_new')) {
+                        $query->orWhereIn('correlation_new', $lookupNames);
+                    }
+                })
+                ->where('publish', 'y')
+                ->whereDate('entry_date', '>=', $startDate->toDateString())
+                ->whereDate('entry_date', '<=', $endDate->toDateString())
+                ->orderBy('entry_date')
+                ->get(['entry_date', 'closing_value']);
+
+        $fundSeries = $this->buildChartSeriesFromPoints($fundPoints, 'entry_date', 'closing_nav');
+        $indexSeries = $this->buildChartSeriesFromPoints($indexPoints, 'entry_date', 'closing_value');
+
+        $graphDates = collect($fundSeries)
+            ->pluck(0)
+            ->intersect(collect($indexSeries)->pluck(0))
+            ->values();
+
+        $data['indices_details'] = $index ?? (object) ['name' => $fund->indices_name, 'corelation' => $fund->indices_name];
+        $data['graph_date'] = $graphDates->all();
+        $data['nav_value'] = $graphDates
+            ->map(fn ($date) => collect($fundSeries)->firstWhere(0, $date)[1] ?? null)
+            ->values()
+            ->all();
+        $data['closing_value'] = $graphDates
+            ->map(fn ($date) => collect($indexSeries)->firstWhere(0, $date)[1] ?? null)
+            ->values()
+            ->all();
+
+        return $data;
     }
 
     protected function compositionReportViewData(Request $request): array

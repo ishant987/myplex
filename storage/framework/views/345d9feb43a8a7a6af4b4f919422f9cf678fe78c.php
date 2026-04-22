@@ -115,7 +115,7 @@ unset($__errorArgs, $__bag); ?>
         function set_fund_select_val(fundId) {
 
             $.ajax({
-                url: 'fund-details' + '?id=' + fundId,
+                url: '<?php echo e(url('fund-details')); ?>?id=' + fundId,
                 type: 'GET',
                 success: function(data) {
                     $('#date').html(data.entry_date);
@@ -136,13 +136,12 @@ unset($__errorArgs, $__bag); ?>
     </script>
 
     <script>
-        var indicesName = document.getElementById('indices_details_name').value;
-        var fundName = document.getElementById('fund_details_name').value;
+        var indicesName = document.getElementById('indices_details_name').value || 'Index';
+        var fundName = document.getElementById('fund_details_name').value || 'Fund NAV';
 
-        // Fetching arrays
-        var graphDates = JSON.parse(document.getElementById('graph_date').value);
-        var navValues = JSON.parse(document.getElementById('nav_value').value);
-        var closingValues = JSON.parse(document.getElementById('closing_value').value);
+        var graphDates = <?php echo json_encode($graph_date ?? [], 15, 512) ?>;
+        var navValues = <?php echo json_encode($nav_value ?? [], 15, 512) ?>;
+        var closingValues = <?php echo json_encode($closing_value ?? [], 15, 512) ?>;
 
         // console.log("Indices Name:", indicesName);
         // console.log("Fund Name:", fundName);
@@ -243,67 +242,25 @@ unset($__errorArgs, $__bag); ?>
                         enabled: true,
                         symbol: 'circle'
                     },
-                    data: (function() {
-                        // First part of the red line (solid)
-                        return graph_data1_date.slice(0, 4).map(function(date, i) {
-                            return [Date.parse(date), graph_data1_value[i]];
-                        });
-                    })(),
+                    data: graph_data1_date.map(function(date, i) {
+                        return [Date.parse(date), graph_data1_value[i]];
+                    }),
                     color: 'red',
                     lineWidth: 1
                 },
                 {
-                    yAxis: 0,
-                    name: value1_text,
-                    marker: {
-                        enabled: true,
-                        symbol: 'circle'
-                    },
-                    data: (function() {
-                        // Last part of the red line (dashed)
-                        return graph_data1_date.slice(3, 5).map(function(date, i) {
-                            return [Date.parse(date), graph_data1_value[i + 3]];
-                        });
-                    })(),
-                    color: 'red',
-                    lineWidth: 1,
-                    dashStyle: 'Dash', // This makes the last line dashed
-                    showInLegend: false // Hide this series name in the legend
-                },
-                {
                     name: value2_text,
                     yAxis: 1,
                     marker: {
                         enabled: true,
                         symbol: 'circle'
                     },
-                    data: (function() {
-                        // First part of the blue line (solid)
-                        return graph_data2_date.slice(0, 4).map(function(date, i) {
-                            return [Date.parse(date), graph_data2_value[i]];
-                        });
-                    })(),
+                    data: graph_data2_date.map(function(date, i) {
+                        return [Date.parse(date), graph_data2_value[i]];
+                    }),
                     color: 'blue',
                     lineWidth: 1,
                     type: 'spline' // Ensures this part is curved
-                },
-                {
-                    name: value2_text,
-                    yAxis: 1,
-                    marker: {
-                        enabled: true,
-                        symbol: 'circle'
-                    },
-                    data: (function() {
-                        // Last part of the blue line (dashed)
-                        return graph_data2_date.slice(3, 5).map(function(date, i) {
-                            return [Date.parse(date), graph_data2_value[i + 3]];
-                        });
-                    })(),
-                    color: 'blue',
-                    lineWidth: 1,
-                    dashStyle: 'Dash', // This makes the last line dashed
-                    showInLegend: false // Hide this series name in the legend
                 }
             ]
         });
