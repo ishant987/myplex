@@ -40,9 +40,9 @@
                                             <option>Select Any Funds</option>
                                             @if (isset($fund_master))
                                                 @foreach ($fund_master as $val)
-                                                    <option value="{{ $val->fund_code }}"
-                                                        {{ request()->get('fund_master') == $val->fund_code ? 'selected' : '' }}>
-                                                        {{ $val->fund_name }}
+                                                    <option value="{{ data_get($val, 'fund_code', '') }}"
+                                                        {{ request()->get('fund_master') == data_get($val, 'fund_code') ? 'selected' : '' }}>
+                                                        {{ data_get($val, 'fund_name', '') }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -91,7 +91,7 @@
 
                                 <li>
                                     <p>name of Fund :</p>
-                                    <span>{{ is_object($fund_details ?? null) ? $fund_details->fund_name : '' }}</span>
+                                    <span>{{ data_get($fund_details, 'fund_name', '') }}</span>
                                 </li>
                                 <li>
                                     <p>Scheme Portfolio :</p>
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Fetch dynamic data for AUM, fund name, and scheme portfolio
             var aumFund = "{{ isset($total_corpus_entry) ? number_format($total_corpus_entry, 2) : '' }}";
-            var fundName = "{{ is_object($fund_details ?? null) ? $fund_details->fund_name : '' }}";
+            var fundName = "{{ data_get($fund_details, 'fund_name', '') }}";
             var schemePortfolioMonth = "{{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : '' }}";
             var schemePortfolioYear = "{{ isset($year) ? $year : '' }}";
 

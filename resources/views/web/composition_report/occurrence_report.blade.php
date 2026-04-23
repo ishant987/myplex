@@ -3,6 +3,7 @@
     @php
         $fund_names = '';
         $isByFundMode = isset($request) && $request->Category === 'by_fund';
+        $selectedCategory = $isByFundMode ? 'by_fund' : 'by_category';
         $selectedCompositionType = isset($getData['scrip_industry']) ? $getData['scrip_industry'] : 'scrip';
         $selectedIndustry = trim((string) ($getData['industry'] ?? ''));
         $selectedScrip = trim((string) ($getData['fund_scrips'] ?? ''));
@@ -280,9 +281,9 @@ industry
                                     <tr>
                                         <th class="text_left">name of the Fund</th>
                                         <th class="text_left">
-                                            @if ($getData['scrip_industry'] == 'industry') Industry
+                                            @if ($selectedCompositionType === 'industry') Industry
                                                 Name
-                                            @elseif($getData['scrip_industry'] == 'scrip')
+                                            @elseif($selectedCompositionType === 'scrip')
                                                 Scrip Name @endif
                                         </th>
                                         <th class="text_center">content (%)</th>
@@ -297,11 +298,11 @@ industry
                                                     {{ getNameTable('fund_master', 'fund_name', 'fund_code', $val->fund_code) }}
                                                 </td>
 
-                                                @if ($getData['scrip_industry'] == 'industry')
+                                                @if ($selectedCompositionType === 'industry')
                                                     <td class="text_left">
                                                         {{ isset($val->industry) ? $val->industry : 'N/A' }}
                                                     </td>
-                                                @elseif($getData['scrip_industry'] == 'scrip')
+                                                @elseif($selectedCompositionType === 'scrip')
                                                     <td class="text_left">
                                                         {{ isset($val->scrip_name) ? $val->scrip_name : 'N/A' }}
                                                     </td>
@@ -318,8 +319,8 @@ industry
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="4" class="text_center">No information available for this
-                                                search
+                                            <td colspan="4" class="text_center">
+                                                {{ $message ?: 'No information available for this search.' }}
                                             </td>
                                         </tr>
                                     @endif
@@ -530,7 +531,7 @@ industry
                 // @endif
 
                 // Fund Classification
-                @if (($getData['Category'] ?? '') == 'by_category')
+                @if ($selectedCategory === 'by_category')
                     var fundClassificationText =
                         `Fund Classification: {{ isset($fund_type_get_data->name) ? $fund_type_get_data->name : 'N/A' }}`;
                     doc.text(fundClassificationText, 15, yPosition);
@@ -538,7 +539,7 @@ industry
                 @endif
                 
                 // Fund Name
-                @if (($getData['Category'] ?? '') == 'by_fund')
+                @if ($selectedCategory === 'by_fund')
                     // Split the fund names if too long to fit within 180 units (adjust width as necessary)
                     var splitFundNames = doc.splitTextToSize(fundNames, 160);
                     doc.text('Fund Names: ', startX, yPosition);
@@ -557,7 +558,7 @@ industry
                     tableData.push(row);
                 });
 
-                var middle_name = `{{isset($getData) && $getData['scrip_industry'] == 'industry' ? 'Industry Name' : 'Scrip Name' }}`;
+                var middle_name = `{{ $selectedCompositionType === 'industry' ? 'Industry Name' : 'Scrip Name' }}`;
                 doc.autoTable({
                     head: [
                         ['Name of The Fund', middle_name, 'Content(%)']

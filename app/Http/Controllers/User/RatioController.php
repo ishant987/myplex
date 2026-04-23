@@ -857,6 +857,13 @@ class RatioController extends Controller
             return $result;
         }
 
+        $availability = $this->compositionDataAvailability();
+        if (!$availability['ready']) {
+            $result['message'] = $availability['message'];
+
+            return $result;
+        }
+
         if ($selection['funds']->isEmpty()) {
             $result['message'] = $request->input('Category') === 'by_fund'
                 ? 'Choose at least 2 funds to run this report.'
@@ -930,6 +937,15 @@ class RatioController extends Controller
 
     protected function buildAllocationSnapshotData(Request $request, Collection $funds): array
     {
+        $availability = $this->compositionDataAvailability();
+        if (!$availability['ready']) {
+            return [
+                'rows' => [],
+                'snapshot_date' => null,
+                'disclaimer' => '',
+            ];
+        }
+
         $month = (int) $request->input('month');
         $year = (int) $request->input('year');
 
@@ -1093,6 +1109,41 @@ class RatioController extends Controller
         }
 
         return $rankMap;
+    }
+
+    protected function compositionDataAvailability(): array
+    {
+        $schema = DB::getSchemaBuilder();
+        $requiredTables = ['fund_composition'];
+        $missingTables = collect($requiredTables)
+            ->reject(fn ($table) => $schema->hasTable($table))
+            ->values()
+            ->all();
+
+        if (!empty($missingTables)) {
+            return [
+                'ready' => false,
+                'message' => 'Required composition report tables are missing in the current database: ' . implode(', ', $missingTables) . '.',
+            ];
+        }
+
+        $fundCompositionCount = DB::table('fund_composition')->count();
+        if ((int) $fundCompositionCount === 0) {
+            $driver = DB::connection()->getDriverName();
+            $prefix = $driver === 'sqlite'
+                ? 'Your local SQLite database has no imported composition report data'
+                : 'The current database has no composition report rows';
+
+            return [
+                'ready' => false,
+                'message' => $prefix . ' in: fund_composition.',
+            ];
+        }
+
+        return [
+            'ready' => true,
+            'message' => null,
+        ];
     }
 
     protected function filtersRatiosViewData(Request $request): array
