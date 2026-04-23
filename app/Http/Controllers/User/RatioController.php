@@ -1323,18 +1323,38 @@ class RatioController extends Controller
             'message' => null,
         ];
 
+        Log::info('occurrence_report:start', [
+            'category' => $request->input('Category'),
+            'month' => $request->input('month'),
+            'year' => $request->input('year'),
+            'scrip_industry' => $request->input('scrip_industry', 'scrip'),
+            'industry' => $request->input('industry'),
+            'fund_scrips' => $request->input('fund_scrips'),
+            'fund_ids' => $request->input('fund_id', []),
+            'has_searched' => $hasSearched,
+            'selected_fund_count' => $selection['funds']->count(),
+            'selected_fund_codes' => $selection['funds']->pluck('fund_code')->filter()->values()->all(),
+            'selected_fund_names' => $selection['funds']->pluck('fund_name')->filter()->values()->all(),
+        ]);
+
         if (!$hasSearched) {
             return $result;
         }
 
         $availability = $this->compositionDataAvailability();
         if (!$availability['ready']) {
+            Log::info('occurrence_report:availability_failed', $availability);
             $result['message'] = $availability['message'];
 
             return $result;
         }
 
         if ($selection['funds']->isEmpty()) {
+            Log::info('occurrence_report:no_funds_selected', [
+                'category' => $request->input('Category'),
+                'fund_ids' => $request->input('fund_id', []),
+                'fund_type_id' => $request->input('fund_type_id'),
+            ]);
             $result['message'] = $request->input('Category') === 'by_fund'
                 ? 'Choose at least 2 funds to run this report.'
                 : 'Choose a fund classification to run this report.';
@@ -1347,6 +1367,10 @@ class RatioController extends Controller
         $matchValue = trim((string) $request->input($scripIndustry === 'industry' ? 'industry' : 'fund_scrips', ''));
 
         if ($matchValue === '') {
+            Log::info('occurrence_report:missing_match_value', [
+                'scrip_industry' => $scripIndustry,
+                'match_column' => $matchColumn,
+            ]);
             $result['message'] = $scripIndustry === 'industry'
                 ? 'Choose an industry to run this report.'
                 : 'Choose a scrip to run this report.';
@@ -1355,51 +1379,107 @@ class RatioController extends Controller
         }
 
         $fundCodes = $selection['funds']->pluck('fund_code')->filter()->values();
-        $month = (int) $request->input('month');
-        $year = (int) $request->input('year');
+        $period = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
 
-        if ($month <= 0 || $year <= 0 || $fundCodes->isEmpty()) {
+        if (!$period || $fundCodes->isEmpty()) {
+            Log::info('occurrence_report:invalid_period_or_funds', [
+                'month' => $request->input('month'),
+                'year' => $request->input('year'),
+                'fund_codes' => $fundCodes->all(),
+            ]);
             return $result;
         }
 
-        $snapshotDate = FundComposition::query()
+        $rows = FundComposition::query()
             ->whereIn('fund_code', $fundCodes->all())
             ->where('publish', 'y')
-            ->whereMonth('entry_date', $month)
-            ->whereYear('entry_date', $year)
-            ->max('entry_date');
+            ->whereDate('entry_date', '>=', $period['start']->toDateString())
+            ->whereDate('entry_date', '<=', $period['end']->toDateString())
+            ->orderByDesc('entry_date')
+            ->orderBy('fund_code')
+            ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
 
-        if (!$snapshotDate) {
+        if ($rows->isEmpty()) {
+            Log::info('occurrence_report:no_rows', [
+                'fund_codes' => $fundCodes->all(),
+                'period_start' => $period['start']->toDateString(),
+                'period_end' => $period['end']->toDateString(),
+            ]);
             $result['message'] = 'No information available for this search.';
 
             return $result;
         }
 
-        $fundComposition = FundComposition::query()
-            ->whereIn('fund_code', $fundCodes->all())
-            ->where('publish', 'y')
-            ->whereMonth('entry_date', $month)
-            ->whereYear('entry_date', $year)
-            ->orderByDesc('entry_date')
-            ->orderBy('fund_code')
-            ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount'])
-            ->filter(function ($row) use ($matchColumn, $matchValue) {
-                return $this->normalizeComparableText(data_get($row, $matchColumn))
-                    === $this->normalizeComparableText($matchValue);
-            })
+        Log::info('occurrence_report:rows', [
+            'match_column' => $matchColumn,
+            'match_value' => $matchValue,
+            'normalized_match_value' => $this->normalizeComparableText($matchValue),
+            'fund_codes' => $fundCodes->all(),
+            'period_start' => $period['start']->toDateString(),
+            'period_end' => $period['end']->toDateString(),
+            'row_count' => $rows->count(),
+            'sample_rows' => $rows->take(10)->map(function ($row) {
+                return [
+                    'fund_code' => data_get($row, 'fund_code'),
+                    'entry_date' => data_get($row, 'entry_date'),
+                    'scrip_name' => data_get($row, 'scrip_name'),
+                    'industry' => data_get($row, 'industry'),
+                    'content_per' => data_get($row, 'content_per'),
+                ];
+            })->values()->all(),
+        ]);
+
+        $normalizedMatchValue = $this->normalizeComparableText($matchValue);
+        $looselyNormalizedMatchValue = $this->normalizeLooseComparableText($matchValue);
+
+        $matchingRows = $rows->filter(function ($row) use ($matchColumn, $normalizedMatchValue) {
+            return $this->normalizeComparableText(data_get($row, $matchColumn)) === $normalizedMatchValue;
+        });
+
+        if ($matchingRows->isEmpty()) {
+            $matchingRows = $rows->filter(function ($row) use ($matchColumn, $looselyNormalizedMatchValue) {
+                return $this->normalizeLooseComparableText(data_get($row, $matchColumn)) === $looselyNormalizedMatchValue;
+            });
+        }
+
+        $fundComposition = $matchingRows
             ->groupBy('fund_code')
             ->map(fn ($rows) => $rows->first())
+            ->sortBy('fund_code')
             ->values();
 
         if ($fundComposition->isEmpty()) {
+            Log::info('occurrence_report:no_match', [
+                'match_column' => $matchColumn,
+                'match_value' => $matchValue,
+                'normalized_match_value' => $normalizedMatchValue,
+                'loosely_normalized_match_value' => $looselyNormalizedMatchValue,
+            ]);
             $result['message'] = 'No information available for this search.';
         }
+
+        Log::info('occurrence_report:result', [
+            'match_column' => $matchColumn,
+            'match_value' => $matchValue,
+            'normalized_match_value' => $normalizedMatchValue,
+            'loosely_normalized_match_value' => $looselyNormalizedMatchValue,
+            'matched_funds_count' => $fundComposition->count(),
+            'matched_rows' => $fundComposition->map(function ($row) {
+                return [
+                    'fund_code' => data_get($row, 'fund_code'),
+                    'entry_date' => data_get($row, 'entry_date'),
+                    'scrip_name' => data_get($row, 'scrip_name'),
+                    'industry' => data_get($row, 'industry'),
+                    'content_per' => data_get($row, 'content_per'),
+                ];
+            })->values()->all(),
+        ]);
 
         $result['fund_composition'] = $fundComposition;
         $result['fund_type_get_data'] = $request->input('Category') === 'by_category'
             ? $fundTypes->firstWhere('ft_id', (int) $request->input('fund_type_id'))
             : null;
-        $result['snapshot_date'] = $snapshotDate;
+        $result['snapshot_date'] = $fundComposition->max('entry_date') ?? $rows->max('entry_date');
         $result['disclaimer'] = 'Data shown is based on the latest published portfolio for the selected month.';
 
         return $result;
@@ -2612,6 +2692,16 @@ class RatioController extends Controller
         $value = preg_replace('/\s+/', ' ', trim((string) $value));
 
         return mb_strtolower($value ?? '');
+    }
+
+    protected function normalizeLooseComparableText($value): string
+    {
+        $value = html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $value = mb_strtolower($value);
+        $value = preg_replace('/[^[:alnum:]]+/u', ' ', $value);
+        $value = preg_replace('/\s+/', ' ', trim((string) $value));
+
+        return $value ?? '';
     }
 
     protected function resolveFundAumValue(

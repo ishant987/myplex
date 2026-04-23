@@ -26,7 +26,7 @@
                             <li>
                                 <!-- <a class="<?php echo e(isset($getData) && $getData['scrip_industry'] == 'scrip' ? 'active' : ''); ?>"
                                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a> -->
-                                <a class="<?php echo e($selectedCompositionType === 'scrip' ? 'active' : ''); ?>"
+                                <a href="javascript:void(0)" class="<?php echo e($selectedCompositionType === 'scrip' ? 'active' : ''); ?>"
                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a>
                             </li>
                             <li>
@@ -39,7 +39,7 @@ active
                                 "
                                                     id="quartile_tab" data-value="industry"
                                                     onclick="industry_scrip_select(this)">Industry</a> -->
-                                <a class="<?php echo e($selectedCompositionType === 'industry' ? 'active' : ''); ?>"
+                                <a href="javascript:void(0)" class="<?php echo e($selectedCompositionType === 'industry' ? 'active' : ''); ?>"
                                     id="quartile_tab" data-value="industry"
                                     onclick="industry_scrip_select(this)">Industry</a>
                             </li>
@@ -440,33 +440,41 @@ unset($__errorArgs, $__bag); ?>
         $('#scrip_industry').val(dataValue);
         $('.wm_tab .tabs a').removeClass('active');
         $(element).addClass('active');
+
         if (dataValue === 'scrip') {
             $('.industry').hide();
             $('.scrip').show();
-            $('#industry_select').prop('disabled', true);
+            $('#industry_select').prop('disabled', false);
             $('#fund_scrips_select').prop('disabled', false);
         } else if (dataValue === 'industry') {
             $('.industry').show();
             $('.scrip').hide();
             $('#industry_select').prop('disabled', false);
-            $('#fund_scrips_select').prop('disabled', true);
+            $('#fund_scrips_select').prop('disabled', false);
         }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        function keepOccurrenceMonthEnabled() {
+            $('#month').prop('disabled', false);
+        }
+
         var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
         updateOccurrenceModeUI(selectedCategory);
+        keepOccurrenceMonthEnabled();
         $('#allocation_select_fund').on('change', set_fund_select_val);
+        $('#year').on('change', keepOccurrenceMonthEnabled);
         industry_scrip_select(document.querySelector('.wm_tab .tabs a.active') || document.getElementById('decile_tab'));
 
         $('#occurrence-report-form').on('submit', function() {
             var compositionType = $('#scrip_industry').val() || 'scrip';
+            keepOccurrenceMonthEnabled();
 
             if (compositionType === 'industry') {
                 $('#industry_select').prop('disabled', false);
-                $('#fund_scrips_select').prop('disabled', true);
+                $('#fund_scrips_select').prop('disabled', false).val('');
             } else {
-                $('#industry_select').prop('disabled', true);
+                $('#industry_select').prop('disabled', false).val('');
                 $('#fund_scrips_select').prop('disabled', false);
             }
         });
