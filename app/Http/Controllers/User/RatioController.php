@@ -2649,10 +2649,14 @@ class RatioController extends Controller
         }
 
         try {
+            $searchIndicesName = filled($fund->indices_name)
+                ? (string) $fund->indices_name
+                : 'benchmark';
+
             $request = new Request([
                 'search' => 'Search',
                 'search_fund_name' => $fund->fund_code,
-                'search_indices_name' => $fund->indices_name,
+                'search_indices_name' => $searchIndicesName,
                 'search_mar' => $minimumAcceptableRate,
                 'search_from_date' => $startDate->toDateString(),
                 'search_to_date' => $endDate->toDateString(),
@@ -2668,6 +2672,16 @@ class RatioController extends Controller
                 'sortino' => $this->normalizeMetricValue($payload['sortino'] ?? null),
             ];
         } catch (Throwable $e) {
+            Log::warning('Sortino calculation failed for fund', [
+                'fund_id' => $fund->fund_id ?? null,
+                'fund_code' => $fund->fund_code ?? null,
+                'indices_name' => $fund->indices_name ?? null,
+                'start_date' => $startDate->toDateString(),
+                'end_date' => $endDate->toDateString(),
+                'mar' => $minimumAcceptableRate,
+                'error' => $e->getMessage(),
+            ]);
+
             return $default;
         }
     }
