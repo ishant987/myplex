@@ -900,21 +900,14 @@ class RatioController extends Controller
             return $result;
         }
 
-        $periodOneRows = collect();
-        $periodTwoRows = collect();
+        $fundCodes = $selection['funds']
+            ->pluck('fund_code')
+            ->filter()
+            ->values()
+            ->all();
 
-        foreach ($selection['funds'] as $fund) {
-            if (empty($fund->fund_code)) {
-                continue;
-            }
-
-            $periodOneRows = $periodOneRows->concat(
-                $this->fetchLatestFundCompositionRows($fund->fund_code, $periodOne['start'], $periodOne['end'])
-            );
-            $periodTwoRows = $periodTwoRows->concat(
-                $this->fetchLatestFundCompositionRows($fund->fund_code, $periodTwo['start'], $periodTwo['end'])
-            );
-        }
+        $periodOneRows = $this->fetchLatestFundCompositionRowsForFunds($fundCodes, $periodOne['start'], $periodOne['end']);
+        $periodTwoRows = $this->fetchLatestFundCompositionRowsForFunds($fundCodes, $periodTwo['start'], $periodTwo['end']);
 
         $result['results_scrips'] = $this->buildCompositionMoverRows($periodOneRows, $periodTwoRows, 'scrip_name', $result['data_type']);
         $result['results_industry'] = $this->buildCompositionMoverRows($periodOneRows, $periodTwoRows, 'industry', $result['data_type']);
@@ -969,16 +962,13 @@ class RatioController extends Controller
                 $groupKey => $label,
                 'start_date_growth' => round($startValue, 4),
                 'end_date_growth' => round($endValue, 4),
+                'percentage_change' => $startValue > 0
+                    ? round((($endValue - $startValue) / $startValue) * 100, 4)
+                    : ($endValue > 0 ? 100.0 : 0.0),
             ];
 
-            if ($dataType === 'fund') {
-                $row['percentage_change'] = $startValue > 0
-                    ? round((($endValue - $startValue) / $startValue) * 100, 4)
-                    : 0.0;
-
-                if ($groupKey === 'industry') {
-                    $row['industry_name'] = $label;
-                }
+            if ($groupKey === 'industry') {
+                $row['industry_name'] = $label;
             }
 
             return $row;
@@ -987,9 +977,8 @@ class RatioController extends Controller
                 return false;
             }
 
-            return $dataType === 'fund'
-                ? ((float) ($row['start_date_growth'] ?? 0) > 0 || (float) ($row['end_date_growth'] ?? 0) > 0)
-                : (float) ($row['start_date_growth'] ?? 0) > 0;
+            return (float) ($row['start_date_growth'] ?? 0) > 0
+                || (float) ($row['end_date_growth'] ?? 0) > 0;
         })->values();
     }
 
@@ -2034,7 +2023,7 @@ class RatioController extends Controller
 
             $rows = $query
                 ->orderByDesc('entry_date')
-                ->get(['entry_date', 'scrip_name', 'industry', 'content_per', 'amount']);
+                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
 
             if ($rows->isEmpty()) {
                 return collect();
@@ -2043,6 +2032,51 @@ class RatioController extends Controller
             $latestDate = $rows->first()->entry_date;
 
             return $rows->where('entry_date', $latestDate)->values();
+        } catch (Throwable $e) {
+            return collect();
+        }
+    }
+
+    protected function fetchLatestFundCompositionRowsForFunds(
+        array $fundCodes,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        string $mode = 'range'
+    ): Collection {
+        $fundCodes = array_values(array_filter($fundCodes));
+
+        if (empty($fundCodes)) {
+            return collect();
+        }
+
+        try {
+            $query = FundComposition::query()
+                ->whereIn('fund_code', $fundCodes)
+                ->where('publish', 'y');
+
+            if ($mode === 'as_on') {
+                $query->whereDate('entry_date', '<=', $endDate->toDateString());
+            } else {
+                $query->whereDate('entry_date', '>=', $startDate->toDateString())
+                    ->whereDate('entry_date', '<=', $endDate->toDateString());
+            }
+
+            $rows = $query
+                ->orderByDesc('entry_date')
+                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
+
+            if ($rows->isEmpty()) {
+                return collect();
+            }
+
+            return $rows
+                ->groupBy('fund_code')
+                ->flatMap(function ($fundRows) {
+                    $latestDate = data_get($fundRows->first(), 'entry_date');
+
+                    return $fundRows->where('entry_date', $latestDate)->values();
+                })
+                ->values();
         } catch (Throwable $e) {
             return collect();
         }

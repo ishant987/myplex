@@ -1,126 +1,142 @@
- sed -n '35,110p' resources/views/web/composition_report/scheme_portfolio.blade.php
-                                </div> --}}
-
-                                <div class="col-md-6">
-                                    <div class="form_group">
-                                        <select name="fund_master" id="fund_master" class="select2">
-                                            <option>Select Any Funds</option>
-                                            @if (isset($fund_master))
-                                                @foreach ($fund_master as $val)
-                                                    <option value="{{ data_get($val, 'fund_code', '') }}"
-                                                        {{ request()->get('fund_master') == data_get($val, 'fund_code') ? 'selected' : '' }}>
-                                                        {{ data_get($val, 'fund_name', '') }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form_group">
-                                        <select name="month" id="month" required>
-                                            <option value="">select month</option>
-                                            @foreach ($months as $m)
-                                                <option value="{{ $m }}"
-                                                    {{ isset($month) && $month == $m ? 'selected' : '' }}>
-                                                    {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form_group">
-                                        <select name="year" id="year" required>
-                                            <option value="">select year</option>
-                                            @foreach ($years as $y)
-                                                <option
-                                                    value="{{ $y }}"{{ isset($year) && $year == $y ? 'selected' : '' }}>
-                                                    {{ $y }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="bttn_grp">
-                                        <button type="submit" name="search" value="submit">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    @if (isset($scrips) && count($scrips) > 0)
-                        <div class="fund_section new_fund_section">
-                            <ul>
-                                <li>
-                                    <p>AUM of fund(Rs.In Crores):</p>
-                                    <span>{{ isset($total_corpus_entry) ? number_format($total_corpus_entry,2): '' }}</span>
-                                </li>
-
-                                <li>
-                                    <p>name of Fund :</p>
-                                    <span>{{ data_get($fund_details, 'fund_name', '') }}</span>
-                                </li>
-                                <li>
-                                    <p>Scheme Portfolio :</p>
-                                    <span>For the month of
-                                        {{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : '' }},{{ isset($year) ? $year : '' }}</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="graph_table">
-
-                            <div class="share_pdf">
-                                
-                                <div class="sharethis-inline-share-buttons" ></div>
-                                <a href="javascript:void(0)" id="exportPDF" class="pdf"><img src="{{asset('themes/frontend/assets/infosolz/images/pdf.png')}}" ></a>[myplexus.com_o0fa2fikmf@host httpdocs]$ sed -n '190,215p' storage/framework/views/5fdb18b99806d7da60ad079d2e10cf4d61694d28.php
-sed: can't read storage/framework/views/5fdb18b99806d7da60ad079d2e10cf4d61694d28.php: No such file or directory
-
-                       
-                                <div class="sharethis-inline-share-buttons" ></div>
-                                <a href="javascript:void(0)" id="exportPDF" class="pdf"><img src="{{asset('themes/frontend/assets/infosolz/images/pdf.png')}}" ></a>
-                                
-[myplexus.com_o0fa2fikmf@host httpdocs]$ sed -n '190,215p' storage/framework/views/5fdb18b99806d7da60ad079d2e10cf4d61694d28.php
-sed: can't read storage/framework/views/5fdb18b99806d7da60ad079d2e10cf4d61694d28.php: No such file or directory
-[myplexus.com_o0fa2fikmf@host httpdocs]$ tail -n 40 storage/logs/laravel.log
-#24 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#25 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle()
-#26 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#27 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle()
-#28 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#29 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
-#30 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#31 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
-#32 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle()
-#33 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#34 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
-#35 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#36 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
-#37 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#38 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then()
-#39 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack()
-#40 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute()
-#41 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute()
-#42 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch()
-#43 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
-#44 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#45 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
-#46 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
-#47 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#48 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
-#49 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
-#50 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#51 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle()
-#52 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#53 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
-#54 /var/www/vhosts/myplexus.com/httpdocs/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#55 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle()
-#56 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#57 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle()
-#58 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#59 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then()
-#60 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
-#61 /var/www/vhosts/myplexus.com/httpdocs/public/index.php(49): Illuminate\\Foundation\\Http\\Kernel->handle()
-#62 {main}
-"} 
+Last login: Thu Apr 23 14:13:20 2026 from 127.0.0.1
+[myplexus.com_o0fa2fikmf@host ~]$ cd h
+-bash: cd: h: No such file or directory
+[myplexus.com_o0fa2fikmf@host ~]$ cd httpdocs
+[myplexus.com_o0fa2fikmf@host httpdocs]$ grep -n "start_date_growth\|end_date_growth\|percentage_change" resources/views/web/composition_report/boomers.blade.php
+250:                               $scrip_percentage = (((floatval($scrp['end_date_growth'])) - (floatval($scrp['start_date_growth'])))/(floatval($scrp['start_date_growth'])))*100;
+271:                        @if(($scrp['percentage_change'] > 0) && ($scrp['percentage_change'] >= $limit))
+274:                            <td class="text_right">{{isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'}}</td>
+348:                             $percentage = (((floatval($inds['end_date_growth'])) - (floatval($inds['start_date_growth'])))/(floatval($inds['start_date_growth'])))*100;
+370:                            @if(($scrp['percentage_change'] > 0) && ($scrp['percentage_change'] >= $limit))
+373:                                <td class="text_right">{{isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'}}</td>
 [myplexus.com_o0fa2fikmf@host httpdocs]$ 
+[myplexus.com_o0fa2fikmf@host httpdocs]$ tail -n 0 -f storage/logs/laravel.log
+
+[2026-04-23 14:26:38] prod.ERROR: Division by zero (View: /var/www/vhosts/myplexus.com/httpdocs/resources/views/web/composition_report/boomers.blade.php) {"userId":188,"exception":"[object] (Illuminate\\View\\ViewException(code: 0): Division by zero (View: /var/www/vhosts/myplexus.com/httpdocs/resources/views/web/composition_report/boomers.blade.php) at /var/www/vhosts/myplexus.com/httpdocs/storage/framework/views/80b81646d05691036dee426a122934f5a3ca8c3a.php:299)
+[stacktrace]
+#0 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(60): Illuminate\\View\\Engines\\CompilerEngine->handleViewException()
+#1 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath()
+#2 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(139): Illuminate\\View\\Engines\\CompilerEngine->get()
+#3 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(122): Illuminate\\View\\View->getContents()
+#4 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(91): Illuminate\\View\\View->renderContents()
+#5 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Response.php(69): Illuminate\\View\\View->render()
+#6 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Response.php(35): Illuminate\\Http\\Response->setContent()
+#7 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(820): Illuminate\\Http\\Response->__construct()
+#8 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(789): Illuminate\\Routing\\Router::toResponse()
+#9 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(720): Illuminate\\Routing\\Router->prepareResponse()
+#10 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#11 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/SubscriptionMiddleware.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#12 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\SubscriptionMiddleware->handle()
+#13 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/NoCache.php(12): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#14 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\NoCache->handle()
+#15 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#16 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#17 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#18 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#19 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/EnforceSingleSession.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#20 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\EnforceSingleSession->handle()
+#21 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#22 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle()
+#23 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#24 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle()
+#25 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#26 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#27 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#29 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle()
+#30 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#31 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#32 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#33 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#34 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#35 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then()
+#36 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack()
+#37 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute()
+#38 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute()
+#39 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch()
+#40 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#41 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#42 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#43 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#44 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#45 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#46 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#47 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#48 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle()
+#49 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#50 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#51 /var/www/vhosts/myplexus.com/httpdocs/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#52 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle()
+#53 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#54 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#55 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#56 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then()
+#57 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#58 /var/www/vhosts/myplexus.com/httpdocs/public/index.php(49): Illuminate\\Foundation\\Http\\Kernel->handle()
+#59 {main}
+
+[previous exception] [object] (DivisionByZeroError(code: 0): Division by zero at /var/www/vhosts/myplexus.com/httpdocs/storage/framework/views/80b81646d05691036dee426a122934f5a3ca8c3a.php:299)
+[stacktrace]
+#0 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(107): require()
+#1 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(108): Illuminate\\Filesystem\\Filesystem::Illuminate\\Filesystem\\{closure}()
+#2 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(58): Illuminate\\Filesystem\\Filesystem->getRequire()
+#3 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(61): Illuminate\\View\\Engines\\PhpEngine->evaluatePath()
+#4 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(139): Illuminate\\View\\Engines\\CompilerEngine->get()
+#5 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(122): Illuminate\\View\\View->getContents()
+#6 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/View.php(91): Illuminate\\View\\View->renderContents()
+#7 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Response.php(69): Illuminate\\View\\View->render()
+#8 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Response.php(35): Illuminate\\Http\\Response->setContent()
+#9 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(820): Illuminate\\Http\\Response->__construct()
+#10 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(789): Illuminate\\Routing\\Router::toResponse()
+#11 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(720): Illuminate\\Routing\\Router->prepareResponse()
+#12 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#13 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/SubscriptionMiddleware.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#14 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\SubscriptionMiddleware->handle()
+#15 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/NoCache.php(12): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#16 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\NoCache->handle()
+#17 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#18 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#19 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(78): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#20 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#21 /var/www/vhosts/myplexus.com/httpdocs/app/Http/Middleware/EnforceSingleSession.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#22 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): App\\Http\\Middleware\\EnforceSingleSession->handle()
+#23 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/AuthenticateSession.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#24 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\AuthenticateSession->handle()
+#25 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(44): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#26 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Auth\\Middleware\\Authenticate->handle()
+#27 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#29 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(121): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#30 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(64): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#31 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Session\\Middleware\\StartSession->handle()
+#32 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(37): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#33 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#34 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(67): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#35 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#36 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#37 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(719): Illuminate\\Pipeline\\Pipeline->then()
+#38 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(698): Illuminate\\Routing\\Router->runRouteWithinStack()
+#39 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(662): Illuminate\\Routing\\Router->runRoute()
+#40 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Routing/Router.php(651): Illuminate\\Routing\\Router->dispatchToRoute()
+#41 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(167): Illuminate\\Routing\\Router->dispatch()
+#42 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(128): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#43 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#44 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#45 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#46 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#47 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(40): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#48 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#49 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#50 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle()
+#51 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(86): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#52 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#53 /var/www/vhosts/myplexus.com/httpdocs/vendor/fruitcake/laravel-cors/src/HandleCors.php(52): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#54 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Fruitcake\\Cors\\HandleCors->handle()
+#55 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(39): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#56 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(167): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#57 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(103): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#58 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(142): Illuminate\\Pipeline\\Pipeline->then()
+#59 /var/www/vhosts/myplexus.com/httpdocs/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(111): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#60 /var/www/vhosts/myplexus.com/httpdocs/public/index.php(49): Illuminate\\Foundation\\Http\\Kernel->handle()
+#61 {main}
+"} 

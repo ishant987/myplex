@@ -1,6 +1,12 @@
 @extends('web.layout.infosolz_user_app')
 
 @section('content')
+@php
+    $data_type = $data_type ?? ((isset($request) && data_get($request, 'Category') === 'by_fund') ? 'fund' : 'category');
+    $results_scrips = $results_scrips ?? collect();
+    $results_industry = $results_industry ?? collect();
+    $isByFundMode = isset($request) && data_get($request, 'Category') === 'by_fund';
+@endphp
 
 <div class="inner_main">
     <div class="page_detail">
@@ -22,11 +28,11 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                     <label>
-                                        <input type="radio" id="type_Category" name="Category" checked value="by_category"  @if(isset($request) && $request->Category=="by_category"){{ 'Checked' }}@endif onclick='get_fund_types(this.value)'>
+                                        <input type="radio" id="type_Category" name="Category" value="by_category" @if(!$isByFundMode) checked @endif onclick='get_fund_types(this.value)'>
                                         By Category
                                     </label>
                                     <label>
-                                        <input type="radio" id="fund_Category" name="Category" value="by_fund" @if(isset($request) && $request->Category=="by_fund"){{ 'Checked' }}@endif onclick='get_fund_types(this.value)'>
+                                        <input type="radio" id="fund_Category" name="Category" value="by_fund" @if($isByFundMode) checked @endif onclick='get_fund_types(this.value)'>
                                         By Fund
                                     </label>
                                     </div>
@@ -42,9 +48,9 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4 div_show_1" style="{{ isset($request) && $request->Category == 'by_fund' ? 'display:none;' : '' }}">
+                            <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                 <div class="form_group">
-                                    <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification">
+                                    <select name="fund_type_id" id="fund_type_id" class="select2" data-placeholder="Select Fund Classification" @if(!$isByFundMode) required @endif>
                                         <option value=""></option>
                                         @foreach($all_fund_types as $fund_type)
                                             <option value="{{ $fund_type->ft_id }}" 
@@ -57,10 +63,11 @@
                                     <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <span class="text-danger" id="category_msgg"></span>
                                 
                                 </div>
 
-                                <div class="col-md-4 div_hide_1" style="{{ isset($request) && $request->Category == 'by_fund' ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <select name="fund_id[]"  class="select2 multiple" multiple id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
                                             @foreach($all_funds as $fund)
@@ -156,7 +163,17 @@
                     </form>
                 </div>
 
-                @if(isset($month) && isset($month_second) && isset($year) && isset($year_second) && isset($limit))
+                @if(!empty($message))
+                <div class="graph_table">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="text_center">{{ $message }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @elseif(isset($month) && isset($month_second) && isset($year) && isset($year_second) && isset($limit))
 
                 <div class="wm_tab">
                     <ul class="tabs">
@@ -544,8 +561,7 @@ return monthNames[monthNumber - 1];
 
 
 function set_fund_select_val() {
-
-var thiss = $('#fund_Category').val();
+var thiss = $('input[name="Category"]:checked').val();
 
 var count = $('#allocation_select_fund').select2('data').length;
 
@@ -555,12 +571,10 @@ var count = $('#allocation_select_fund').select2('data').length;
     if (thiss == 'by_fund') {
    
         if (count >= 2 && count <= 10) {
-            // console.log('enable');
+            $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
             
         } else {
-            // console.log('disabled');
-            // alert('Funds selection limit minimum 4 and maximum 20');
             $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
             $('#submit_btn').prop('disabled', true);
         }  
@@ -574,17 +588,33 @@ var count = $('#allocation_select_fund').select2('data').length;
 
 }
 
+function validate_category_selection() {
+    var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
+    var selectedFundType = $('#fund_type_id').val();
+
+    if (selectedCategory === 'by_category') {
+        if (selectedFundType) {
+            $('#category_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+        } else {
+            $('#category_msgg').html('<p>Select a <b>Fund Classification</b> to run this report.</p>');
+            $('#submit_btn').prop('disabled', true);
+        }
+    }
+}
 
 function get_fund_types(thiss){
     $('.div_show_1').toggle(thiss === 'by_category');
     $('.div_hide_1').toggle(thiss === 'by_fund');
+    $('#fund_type_id').prop('required', thiss === 'by_category');
 
     var count = $('#allocation_select_fund').select2('data').length;
 
     if(thiss == 'by_category'){
         $('#fund_msgg').html('');
-        $('#submit_btn').prop('disabled', false);
+        validate_category_selection();
     }else if(thiss == 'by_fund'){
+        $('#category_msgg').html('');
         if (count >= 2 && count <= 10) {
             $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
@@ -600,7 +630,12 @@ function get_fund_types(thiss){
 
 document.addEventListener('DOMContentLoaded', function() {
     get_fund_types($('input[name="Category"]:checked').val() || 'by_category');
+    $('#fund_type_id').on('change', validate_category_selection);
     var exportButton = document.getElementById('exportPDF-scrip');
+
+    if (!exportButton) {
+        return;
+    }
 
     exportButton.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -688,6 +723,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     var exportButton = document.getElementById('exportPDF-industry');
+
+    if (!exportButton) {
+        return;
+    }
 
     exportButton.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
