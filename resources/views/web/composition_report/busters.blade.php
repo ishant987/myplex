@@ -6,6 +6,14 @@
     $results_scrips = $results_scrips ?? collect();
     $results_industry = $results_industry ?? collect();
     $isByFundMode = isset($request) && data_get($request, 'Category') === 'by_fund';
+    $bustersScripRows = collect($results_scrips)->filter(function ($scrp) use ($limit) {
+        return (float) data_get($scrp, 'percentage_change', 0) < 0
+            && (float) data_get($scrp, 'percentage_change', 0) <= (-(float) $limit);
+    })->values();
+    $bustersIndustryRows = collect($results_industry)->filter(function ($inds) use ($limit) {
+        return (float) data_get($inds, 'percentage_change', 0) < 0
+            && (float) data_get($inds, 'percentage_change', 0) <= (-(float) $limit);
+    })->values();
 @endphp
 
 <div class="inner_main">
@@ -240,46 +248,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @if($data_type == 'category')
-
-                            @if(isset($results_scrips) && count($results_scrips)>0)
-                            @foreach($results_scrips as $scrp)
-                            @php
-                               $scrip_percentage = (((floatval($scrp['end_date_growth'])) - (floatval($scrp['start_date_growth'])))/(floatval($scrp['start_date_growth'])))*100;
-                            @endphp
-                                @if(($scrip_percentage < 0 ) && ($scrip_percentage <=(-$limit)))  
-                            <tr>
-                                <td class="text_left">{{isset($scrp['scrip_name'])?$scrp['scrip_name']:''}}</td>
-                                <td class="text_right">{{isset($scrip_percentage)?number_format($scrip_percentage, 2):'0'}}</td>
-                            </tr>
-                            @endif
-                            @endforeach
-                            @else
-                            <tr>
-                                <td colspan="2">No information available for this search</td>
-                            </tr>
-                            @endif
-
-                            @elseif($data_type == 'fund')
-
-                            @if(isset($results_scrips) && count($results_scrips)>0)
-                            @foreach($results_scrips as $scrp)
-                            
-                           
-                            @if(($scrp['percentage_change'] < 0) && ($scrp['percentage_change'] <=(-$limit)))
+                        @if($bustersScripRows->isNotEmpty())
+                            @foreach($bustersScripRows as $scrp)
                             <tr>
                                 <td class="text_left">{{isset($scrp['scrip_name'])?$scrp['scrip_name']:''}}</td>
                                 <td class="text_right">{{isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'}}</td>
                             </tr>
-                            @endif
-                        
                             @endforeach
                             @else
                             <tr>
                                 <td colspan="2">No information available for this search</td>
                             </tr>
-                            @endif
-    
                             @endif
                             
                             
@@ -340,47 +319,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @if($data_type =='category')
-                            @if(isset($results_industry) && count($results_industry)>0)
-                            @foreach($results_industry as $inds)
-                            @php
-                             $percentage = (((floatval($inds['end_date_growth'])) - (floatval($inds['start_date_growth'])))/(floatval($inds['start_date_growth'])))*100;
-                            @endphp
-
-                                @if(($percentage < 0 ) && ($percentage <=(-$limit)))    
-
-                            <tr>
-                                <td class="text_left">{{isset($inds['industry'])?$inds['industry']:''}}</td>
-                                <td class="text_left">{{isset($percentage)? number_format($percentage, 2):'N/A'}}</td>
-                            </tr>
-                            @endif
-                            @endforeach
-                            @else
-                            <tr>
-                                <td colspan="2">No information available for this search</td>
-                            </tr>
-                            @endif
-
-                            @elseif($data_type == 'fund')
-
-                            @if(isset($results_industry) && count($results_industry)>0)
-                            @foreach($results_industry as $scrp)
-                            
-                           
-                            @if(($scrp['percentage_change'] < 0) && ($scrp['percentage_change'] <=(-$limit)))
+                        @if($bustersIndustryRows->isNotEmpty())
+                            @foreach($bustersIndustryRows as $scrp)
                             <tr>
                                 <td class="text_left">{{isset($scrp['industry_name'])?$scrp['industry_name']:''}}</td>
                                 <td class="text_right">{{isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'}}</td>
                             </tr>
-                            @endif
-                        
                             @endforeach
                             @else
                             <tr>
                                 <td colspan="2">No information available for this search</td>
                             </tr>
-                            @endif
-    
                             @endif
                         </tbody>
                     </table>
