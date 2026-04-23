@@ -1,19 +1,18 @@
-@extends('web.layout.infosolz_user_app')
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="head_brdcm">
                     <ul class="brdcmb">
-                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
-                        <li><a href="{{ route('user.ratio_analysis') }}"> Ratio Analysis</a></li>
+                        <li><a href="<?php echo e(route('user.auth-dashboard')); ?>">dashboard</a></li>
+                        <li><a href="<?php echo e(route('user.ratio_analysis')); ?>"> Ratio Analysis</a></li>
                         <li>Sortino Ratio</li>
                     </ul>
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    @php
+                    <?php
                         $selectedSortinoFundIds = collect((array) ($fund_id ?? request()->input('fund_id', [])))
                             ->map(fn ($id) => (int) $id)
                             ->all();
@@ -24,30 +23,15 @@
                         $showSortinoResults = isset($request, $start_date, $end_date)
                             && $selectedSortinoCategory !== ''
                             && $selectedSortinoReportCategory !== '';
-                    @endphp
+                    ?>
 
                     <div class="light_green_bg">
                         <form method="GET" action="">
                             <input type="hidden" name="quartile_set" id="quartile_set"
-                                value="{{ isset($quartile_set) ? $quartile_set : 'quartile' }}">
+                                value="<?php echo e(isset($quartile_set) ? $quartile_set : 'quartile'); ?>">
 
                             <div class="row">
-                                {{-- <div class="col-md-4">
-                                    <div class="form_group radio_btn">
-                                        <label>
-                                            <input type="radio" name="ranking" value="range" checked>
-                                            Range
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="ranking" value="as_on">
-                                            As on
-                                        </label>
-                                        @error('ranking')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                </div> --}}
+                                
                                 <input type="hidden" name="ranking" value="range">
 
                                 <div class="col-md-6">
@@ -57,14 +41,21 @@
                                             <div class="form_group">
                                                 <select class="select2" name="month" id="month" required data-placeholder="Select month">
                                                     <option value="">select month</option>
-                                                    @foreach ($months as $m)
-                                                        <option value="{{ $m }}"
-                                                            {{ isset($month) && $month == $m ? 'selected' : '' }}>
-                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
-                                                    @endforeach
-                                                    @error('month')
-                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                    @enderror
+                                                    <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($m); ?>"
+                                                            <?php echo e(isset($month) && $month == $m ? 'selected' : ''); ?>>
+                                                            <?php echo e(date('F', mktime(0, 0, 0, $m, 10))); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php $__errorArgs = ['month'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -72,14 +63,21 @@
                                             <div class="form_group">
                                                 <select class="select2" name="year" id="year" required onchange="get_second_month_year()" data-placeholder="Select Year">
                                                     <option value="">select year</option>
-                                                    @foreach ($years as $y)
+                                                    <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $y): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option
-                                                            value="{{ $y }}"{{ isset($year) && $year == $y ? 'selected' : '' }}>
-                                                            {{ $y }}</option>
-                                                    @endforeach
-                                                    @error('year')
-                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                    @enderror
+                                                            value="<?php echo e($y); ?>"<?php echo e(isset($year) && $year == $y ? 'selected' : ''); ?>>
+                                                            <?php echo e($y); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php $__errorArgs = ['year'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -93,14 +91,21 @@
                                                 <select class="select2" name="month_second" id="month_second" required
                                                     onchange="get_second_period(this.value)" data-placeholder="Select Month">
                                                     <option value="">select month</option>
-                                                    @foreach ($months as $m)
-                                                        <option value="{{ $m }}"
-                                                            {{ isset($month_second) && $month_second == $m ? 'selected' : '' }}>
-                                                            {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
-                                                    @endforeach
-                                                    @error('month_second')
-                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                    @enderror
+                                                    <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($m); ?>"
+                                                            <?php echo e(isset($month_second) && $month_second == $m ? 'selected' : ''); ?>>
+                                                            <?php echo e(date('F', mktime(0, 0, 0, $m, 10))); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php $__errorArgs = ['month_second'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -108,90 +113,32 @@
                                             <div class="form_group">
                                                 <select class="select2" name="year_second" id="year_second" required data-placeholder="Select Year">
                                                     <option value="">select year</option>
-                                                    @foreach ($years as $y)
+                                                    <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $y): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option
-                                                            value="{{ $y }}"{{ isset($year_second) && $year_second == $y ? 'selected' : '' }}>
-                                                            {{ $y }}</option>
-                                                    @endforeach
-                                                    @error('year_second')
-                                                    <div class="alert alert-danger">{{ $message }}</div>
-                                                    @enderror
+                                                            value="<?php echo e($y); ?>"<?php echo e(isset($year_second) && $year_second == $y ? 'selected' : ''); ?>>
+                                                            <?php echo e($y); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php $__errorArgs = ['year_second'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                {{-- <div class="col-md-4 div_hide">
-                                    <div class="form_group">
-                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
-                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-4 div_hide">
-                                    <div class="form_group">
-                                        <select name="as_on_time_frame">
-                                            <option value="1_month"
-                                                @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
-                                            </option>
-                                            <option value="3_months"
-                                                @if (isset($request) && $request->as_on_time_frame == '3_months') {{ 'selected' }} @endif>3 Months
-                                            </option>
-                                            <option value="6_months"
-                                                @if (isset($request) && $request->as_on_time_frame == '6_months') {{ 'selected' }} @endif>6 Months
-                                            </option>
-                                            <option value="1_year"
-                                                @if (isset($request) && $request->as_on_time_frame == '1_year') {{ 'selected' }} @endif>1 Year
-                                            </option>
-                                            <option value="2_year"
-                                                @if (isset($request) && $request->as_on_time_frame == '2_year') {{ 'selected' }} @endif>2 Year
-                                            </option>
-                                            <option value="3_years"
-                                                @if (isset($request) && $request->as_on_time_frame == '3_years') {{ 'selected' }} @endif>3 Years
-                                            </option>
-                                            <option value="5_years"
-                                                @if (isset($request) && $request->as_on_time_frame == '5_years') {{ 'selected' }} @endif>5 Years
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div> --}}
+                                
+                                
 
-                                {{--  <div class="col-md-4">
-                                    <div class="form_group radio_btn">
-                                        <label>
-                                            <input type="radio" id="type_Category" name="Category" checked
-                                                value="by_category"
-                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
-                                                onclick='get_fund_types(this.value)'>
-                                            By Category
-                                        </label>
-                                        <label>
-                                            <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
-                                                onclick='get_fund_types(this.value)'>
-                                            By Fund
-                                        </label>
-                                    </div>  
-
-
-                                </div> --}}
-                                {{--  <div class="col-md-4 div_show_1">
-                                    <div class="form_group">
-                                        <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification">
-                                            <option value=""></option>
-                                            @foreach ($all_fund_types as $fund_type)
-                                                <option value="{{ $fund_type->ft_id }}"
-                                                    @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)) selected @endif>
-                                                    {{ $fund_type->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('fund_type_id')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                </div>  --}}             
+                                
+                                             
                                 
                                 <input type="hidden" name="Category" id="fund_Category" value="by_fund">
 
@@ -201,53 +148,46 @@
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='set_fund_select_val(this.value)' data-placeholder="Select Fund">
                                             <option value=""></option>
-                                            @foreach ($all_funds as $fund)
-                                                <option value="{{ $fund->fund_id }}"
-                                                    {{ in_array((int) $fund->fund_id, $selectedSortinoFundIds, true) ? 'selected' : '' }}>
-                                                    {{ $fund->fund_name }}
+                                            <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($fund->fund_id); ?>"
+                                                    <?php echo e(in_array((int) $fund->fund_id, $selectedSortinoFundIds, true) ? 'selected' : ''); ?>>
+                                                    <?php echo e($fund->fund_name); ?>
+
                                                 </option>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
-                                        @error('fund_id')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['fund_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                     <span class="text-danger" id="fund_msgg"></span>
                                 </div>
 
-                                {{-- <div class="col-md-4">
-                                    <div class="form_group">
-                                        <select name="report_category">
-                                            <!-- <option value="">Ratio</option> -->
-
-                                            <option value="sortino" selected>
-                                                Sortino
-                                            </option>
-                                            <!-- <option value="upside_potential"
-                                                @if (old('report_category', $request->report_category) == 'upside_potential') selected @endif>
-                                                Upside Potential
-                                            </option>
-                                            <option value="downside_risk"
-                                                @if (old('report_category', $request->report_category) == 'downside_risk') selected @endif>
-                                                Downside Risk
-                                            </option>                                        -->
-
-                                        </select>
-                                        @error('report_category')
-                                            <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div> --}}
+                                
 
                                 <input type="hidden" name="report_category" value="sortino">
 
                                 <div class="col-md-4">
                                     <div class="form_group">
-                                        <input type="number" name="limit" placeholder="Annual minimum Acceptable Rate (in %) " value="{{isset($request->limit)?$request->limit:''}}">
+                                        <input type="number" name="limit" placeholder="Annual minimum Acceptable Rate (in %) " value="<?php echo e(isset($request->limit)?$request->limit:''); ?>">
 
-                                        @error('limit')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                        @enderror
+                                        <?php $__errorArgs = ['limit'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                        <div class="alert alert-danger"><?php echo e($message); ?></div>
+                                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                     </div>
                                 </div>
 
@@ -263,16 +203,16 @@
 
 
 
-                    @if($showSortinoResults)
+                    <?php if($showSortinoResults): ?>
                         <div class="fund_section new_fund_section">
                             <ul>
                                 <li>
                                     <p>Start Month & Year :</p>
-                                    <span>{{ isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000' }}</span>
+                                    <span><?php echo e(isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000'); ?></span>
                                 </li>
                                 <li>
                                     <p>End Month & Year :</p>
-                                    <span>{{ isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000' }}</span>
+                                    <span><?php echo e(isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000'); ?></span>
                                 </li>
 
 
@@ -281,59 +221,69 @@
                                     <p>By Ratio :</p>
 
                                     <span>
-                                        @if ($selectedSortinoReportCategory === 'sortino')
-                                            {{ 'Sortino' }}
-                                        @elseif($selectedSortinoReportCategory === 'upside_potential')
-                                            {{ 'Upside Potential' }}
-                                        @elseif($selectedSortinoReportCategory === 'downside_risk')
-                                            {{ 'Downside Risk' }}
-                                        @endif
+                                        <?php if($selectedSortinoReportCategory === 'sortino'): ?>
+                                            <?php echo e('Sortino'); ?>
+
+                                        <?php elseif($selectedSortinoReportCategory === 'upside_potential'): ?>
+                                            <?php echo e('Upside Potential'); ?>
+
+                                        <?php elseif($selectedSortinoReportCategory === 'downside_risk'): ?>
+                                            <?php echo e('Downside Risk'); ?>
+
+                                        <?php endif; ?>
                                     </span>
                                 </li>
 
-                                @if (!empty($as_on_time_frame_data))
+                                <?php if(!empty($as_on_time_frame_data)): ?>
                                     <li>
                                         <p>Duration :</p>
                                         <span>
-                                            @if ($selectedSortinoTimeFrame === '1_month')
-                                                {{ '1 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '3_months')
-                                                {{ '3 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '6_months')
-                                                {{ '6 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '1_year')
-                                                {{ '1 Year' }}
-                                            @elseif($selectedSortinoTimeFrame === '2_year')
-                                                {{ '2 Year' }}
-                                            @elseif($selectedSortinoTimeFrame === '3_years')
-                                                {{ '3 Years' }}
-                                            @elseif($selectedSortinoTimeFrame === '5_years')
-                                                {{ '5 Years' }}
-                                            @endif
+                                            <?php if($selectedSortinoTimeFrame === '1_month'): ?>
+                                                <?php echo e('1 Month'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '3_months'): ?>
+                                                <?php echo e('3 Month'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '6_months'): ?>
+                                                <?php echo e('6 Month'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '1_year'): ?>
+                                                <?php echo e('1 Year'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '2_year'): ?>
+                                                <?php echo e('2 Year'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '3_years'): ?>
+                                                <?php echo e('3 Years'); ?>
+
+                                            <?php elseif($selectedSortinoTimeFrame === '5_years'): ?>
+                                                <?php echo e('5 Years'); ?>
+
+                                            <?php endif; ?>
                                         </span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
-                                @if($selectedSortinoMar !== '')
+                                <?php if($selectedSortinoMar !== ''): ?>
                                     <li>
                                         <p>Minimum Acceptable Rate (in %)  :</p>
-                                        <span>{{ $selectedSortinoMar }}</span>
+                                        <span><?php echo e($selectedSortinoMar); ?></span>
                                     </li>
-                                @endif
+                                <?php endif; ?>
 
-                                @if ($selectedSortinoCategory === 'by_category')
+                                <?php if($selectedSortinoCategory === 'by_category'): ?>
                                 <li>
                                     <p>fund classification :</p>
-                                    <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
+                                    <span><?php echo e(isset($fund_type_name) ? $fund_type_name : ''); ?></span>
                                 </li>
-                            @endif
+                            <?php endif; ?>
 
-                                @if ($selectedSortinoCategory === 'by_fund')
+                                <?php if($selectedSortinoCategory === 'by_fund'): ?>
                                 <li>
                                     <p>fund name :</p>
-                                    <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
+                                    <span><?php echo e(isset($fund_names) ? $fund_names : ''); ?></span>
                                 </li>
-                            @endif
+                            <?php endif; ?>
 
                             </ul>
                         </div>
@@ -342,7 +292,7 @@
                             <div class="share_pdf">
                                 
                                 <div class="sharethis-inline-share-buttons" ></div>
-                                <a href="javascript:void(0)" id="exportPDF" class="pdf"><img src="{{asset('themes/frontend/assets/infosolz/images/pdf.png')}}" ></a>
+                                <a href="javascript:void(0)" id="exportPDF" class="pdf"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/pdf.png')); ?>" ></a>
                                 
                             </div>
                             <table class="table datatable"  id="pdfData">
@@ -356,12 +306,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
+                                    <?php
                                         $sortedFundReturns = [];
                                         $ranks = [];
-                                    @endphp
-                                    @if (isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0)
-                                    @php
+                                    ?>
+                                    <?php if(isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0): ?>
+                                    <?php
                                         $fundReturns = $stat_result['fund_absolute_return'];
 
                                         // $sortedFundReturns = collect($fundReturns)->sortDesc()->toArray();
@@ -389,55 +339,54 @@
 
                                         // dd($fundReturns);
 
-                                    @endphp
-                                    @endif
+                                    ?>
+                                    <?php endif; ?>
 
-                                    @if (!empty($fund_all_return) && !empty($sortedFundReturns))
-                                        @foreach ($sortedFundReturns as $fundId => $value)
+                                    <?php if(!empty($fund_all_return) && !empty($sortedFundReturns)): ?>
+                                        <?php $__currentLoopData = $sortedFundReturns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fundId => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td class="text_left">
-                                                    {{ getNameTable('fund_master', 'fund_name', 'fund_id', $fundId) }}</td>
+                                                    <?php echo e(getNameTable('fund_master', 'fund_name', 'fund_id', $fundId)); ?></td>
                                                 <td class="text_right">
-                                                    {{ printValue($fund_all_return[$fundId]['upside_potential']) }}</td>
+                                                    <?php echo e(printValue($fund_all_return[$fundId]['upside_potential'])); ?></td>
                                                 <td class="text_right">
-                                                    {{ printValue($fund_all_return[$fundId]['downside_risk']) }}</td>
-                                                <td class="text_right">{{ printValue($value) }}</td>
-                                                <td class="text_right">{{ printRank($ranks[$fundId] ?? 'N/A') }}</td>
+                                                    <?php echo e(printValue($fund_all_return[$fundId]['downside_risk'])); ?></td>
+                                                <td class="text_right"><?php echo e(printValue($value)); ?></td>
+                                                <td class="text_right"><?php echo e(printRank($ranks[$fundId] ?? 'N/A')); ?></td>
                                             </tr>
-                                        @endforeach
-                                    @else
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php else: ?>
                                         <tr>
                                             <td colspan="5">No records found</td>
                                         </tr>
-                                    @endif
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
-                    @else
-                        {{-- <div class="graph_section">
-                            <p style="text-align: center;">Please search above to show the results</p>
-                        </div> --}}
-                        {!! printNoData() !!}
-                    @endif
+                    <?php else: ?>
+                        
+                        <?php echo printNoData(); ?>
+
+                    <?php endif; ?>
 
                 </div>
-                @if (isset($stat_result['fund_absolute_return']))
+                <?php if(isset($stat_result['fund_absolute_return'])): ?>
                 <div class="disclaimer">
                     <p><strong>Note : </strong>For the calculations, the first working day is considered in case of Starting
                         and Ending day.</p>
                 </div>
                 <div class="disclaimer">
-                    <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
+                    <p><strong>Disclaimer : </strong><?php echo e($disclaimer); ?></p>
                 </div>
            
                     
-            @endif
+            <?php endif; ?>
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@php
+<?php
     $sortinoPdfRatio = match ($selectedSortinoReportCategory ?? null) {
         'sortino' => 'Sortino',
         'upside_potential' => 'Upside Potential',
@@ -458,7 +407,7 @@
             default => '',
         };
     }
-@endphp
+?>
 
 <script>
     function get_date(thiss) {
@@ -653,7 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var doc = new jsPDF();
 
         var img = new Image();
-        img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+        img.src = "<?php echo e(asset('themes/frontend/assets/infosolz/images/small_logo.png')); ?>";
         img.onload = function() {
             var pageWidth = doc.internal.pageSize.getWidth();
             var imgWidth = 50;
@@ -673,16 +622,16 @@ document.addEventListener('DOMContentLoaded', function() {
             var yPosition = 70;
 
             // Extracted values from the provided HTML structure
-            var startDate = "{{ isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000' }}";
-            var endDate = "{{ isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000' }}";
+            var startDate = "<?php echo e(isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000'); ?>";
+            var endDate = "<?php echo e(isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000'); ?>";
             
-            var ratio = @json($sortinoPdfRatio);
+            var ratio = <?php echo json_encode($sortinoPdfRatio, 15, 512) ?>;
 
-            var duration = @json($sortinoPdfDuration);
+            var duration = <?php echo json_encode($sortinoPdfDuration, 15, 512) ?>;
 
-            var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name : '' }}";
-            var fundNames = "{{ isset($fund_names) ? $fund_names : '' }}";
-            var minimumAcceptableRate = @json($selectedSortinoMar);
+            var fundClassification = "<?php echo e(isset($fund_type_name) ? $fund_type_name : ''); ?>";
+            var fundNames = "<?php echo e(isset($fund_names) ? $fund_names : ''); ?>";
+            var minimumAcceptableRate = <?php echo json_encode($selectedSortinoMar, 15, 512) ?>;
 
             // Add data to the PDF
             doc.text('Start Month & Year: ' + startDate, startX, yPosition);
@@ -730,3 +679,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </script>
+
+<?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/auth/ratio_analysis/sortino_ratio.blade.php ENDPATH**/ ?>

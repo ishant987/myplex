@@ -12,6 +12,7 @@ use App\Http\Controllers\Web\RollingreturnController;
 use App\Http\Controllers\Web\rsquereController;
 use App\Http\Controllers\Web\SharpeController;
 use App\Http\Controllers\Web\SkewnessController;
+use App\Http\Controllers\Web\SortinoController;
 use App\Http\Controllers\Web\TrackingerrorController;
 use App\Http\Controllers\Web\TreynorController;
 use App\Http\Controllers\Web\VolatilityController;
@@ -272,6 +273,35 @@ class RatioController extends Controller
           $data['end_date'] = null;
       }
 
+      $selectedFundIds = array_filter(array_map('intval', (array) $request->input('fund_id', [])));
+      $minimumAcceptableRate = $request->input('limit');
+
+      if (
+          !empty($selectedFundIds) &&
+          count($selectedFundIds) >= 2 &&
+          $data['start_date'] &&
+          $data['end_date'] &&
+          $minimumAcceptableRate !== null &&
+          $minimumAcceptableRate !== ''
+      ) {
+          $funds = FundMaster::query()
+              ->whereIn('fund_id', $selectedFundIds)
+              ->orderBy('fund_name')
+              ->get();
+
+          [$sortinoMap, $fundAllReturn] = $this->buildSortinoMap(
+              $funds,
+              Carbon::parse($data['start_date'])->startOfDay(),
+              Carbon::parse($data['end_date'])->endOfDay(),
+              (float) $minimumAcceptableRate
+          );
+
+          $data['stat_result'] = [
+              'fund_absolute_return' => $sortinoMap,
+          ];
+          $data['fund_all_return'] = $fundAllReturn;
+      }
+
       return view('web.auth.ratio_analysis.sortino_ratio', $data);
     }
 
@@ -477,6 +507,11 @@ class RatioController extends Controller
         ];
     }
 
+    public static function loggedInUserData($user = null): array
+    {
+        return app(self::class)->subscriptionViewData($user ?? Auth::user());
+    }
+
     protected function resolveSubscriptionExpiry($userdetails): ?Carbon
     {
         if (!$userdetails || !method_exists($userdetails, 'accessExpiresAt')) {
@@ -524,6 +559,7 @@ class RatioController extends Controller
             'stat_result' => [],
             'sortedFundReturns' => [],
             'fundReturns' => [],
+            'fund_all_return' => [],
             'ranks' => [],
             'rank' => [],
             'fund_names' => '',
@@ -2571,6 +2607,78 @@ class RatioController extends Controller
         } catch (Throwable $e) {
             return 'N/A';
         }
+    }
+
+    protected function buildSortinoMap(
+        Collection $funds,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        float $minimumAcceptableRate
+    ): array {
+        $sortinoMap = [];
+        $fundAllReturn = [];
+
+        foreach ($funds as $fund) {
+            if (empty($fund->fund_id) || empty($fund->fund_code)) {
+                continue;
+            }
+
+            $metrics = $this->calculateSortinoMetricsForFund($fund, $startDate, $endDate, $minimumAcceptableRate);
+
+            $sortinoMap[$fund->fund_id] = $metrics['sortino'];
+            $fundAllReturn[$fund->fund_id] = $metrics;
+        }
+
+        return [$sortinoMap, $fundAllReturn];
+    }
+
+    protected function calculateSortinoMetricsForFund(
+        FundMaster $fund,
+        CarbonInterface $startDate,
+        CarbonInterface $endDate,
+        float $minimumAcceptableRate
+    ): array {
+        $default = [
+            'upside_potential' => 'N/A',
+            'downside_risk' => 'N/A',
+            'sortino' => 'N/A',
+        ];
+
+        if (empty($fund->fund_code)) {
+            return $default;
+        }
+
+        try {
+            $request = new Request([
+                'search' => 'Search',
+                'search_fund_name' => $fund->fund_code,
+                'search_indices_name' => $fund->indices_name,
+                'search_mar' => $minimumAcceptableRate,
+                'search_from_date' => $startDate->toDateString(),
+                'search_to_date' => $endDate->toDateString(),
+            ]);
+
+            /** @var ViewContract $view */
+            $view = app(SortinoController::class)->sortino_calculator($request);
+            $payload = method_exists($view, 'getData') ? $view->getData() : [];
+
+            return [
+                'upside_potential' => $this->normalizeMetricValue($payload['fund_return_daily_risk_free_average'] ?? null),
+                'downside_risk' => $this->normalizeMetricValue($payload['downside_risk'] ?? null),
+                'sortino' => $this->normalizeMetricValue($payload['sortino'] ?? null),
+            ];
+        } catch (Throwable $e) {
+            return $default;
+        }
+    }
+
+    protected function normalizeMetricValue($value)
+    {
+        if (is_numeric($value)) {
+            return round((float) $value, 4);
+        }
+
+        return $value === null || $value === '' ? 'N/A' : $value;
     }
 
     protected function extractRatioMetrics(FundMaster $fund, string $reportCategory, CarbonInterface $startDate, CarbonInterface $endDate, array $keys): array
