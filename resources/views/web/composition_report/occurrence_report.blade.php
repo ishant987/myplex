@@ -2,6 +2,7 @@
 @section('content')
     @php
         $fund_names = '';
+        $isByFundMode = isset($request) && $request->Category === 'by_fund';
     @endphp
     <div class="inner_main">
         <div class="page_detail">
@@ -77,22 +78,22 @@ scrip @endif">
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category" checked
+                                            <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
-                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                @if (!$isByFundMode) checked @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                @if ($isByFundMode) checked @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_hide_1">
+                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange="set_fund_select_val(this.value)">
@@ -114,7 +115,7 @@ scrip @endif">
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_show_1">
+                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2" data-placeholder="Select Fund Type">
                                             <option value="">Select Fund Type</option>
@@ -216,7 +217,7 @@ scrip @endif">
                             </div>
                         </form>
                     </div>
-                    @if (isset($fund_composition))
+                    @if (!empty($has_searched))
                         <div class="fund_section new_fund_section">
                             <ul>
                                 @if (isset($getData['month']) && isset($getData['year']))
@@ -332,7 +333,7 @@ scrip @endif">
                         {!! printNoData() !!}
                     @endif
                 </div>
-                @if (isset($fund_composition))
+                @if (isset($fund_composition) && count($fund_composition) > 0)
                     <div class="disclaimer">
                         <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
                     </div>
@@ -402,57 +403,39 @@ scrip @endif">
     }
 
 
-    function set_fund_select_val() {
+    function updateOccurrenceModeUI(mode) {
+        var isByFund = mode === 'by_fund';
+        $('.div_show_1').toggle(!isByFund);
+        $('.div_hide_1').toggle(isByFund);
 
-        var thiss = $('#fund_Category').val();
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-
-        console.log(thiss + '  ' + count);
-
-        if (thiss == 'by_fund') {
-
-            if (count >= 2 && count <= 20) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-
-        } else {
-
+        if (!isByFund) {
+            $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
-
+        } else {
+            set_fund_select_val();
         }
-
     }
 
+    function set_fund_select_val() {
+        var thiss = $('input[name="Category"]:checked').val();
+        var count = ($('#allocation_select_fund').val() || []).length;
 
-    function get_fund_types(thiss) {
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
-        } else if (thiss == 'by_fund') {
+        if (thiss == 'by_fund') {
             if (count >= 2 && count <= 20) {
-                // console.log('enable');
+                $('#fund_msgg').html('');
                 $('#submit_btn').prop('disabled', false);
             } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
-
+        } else {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
         }
+    }
+
+    function get_fund_types(thiss) {
+        updateOccurrenceModeUI(thiss);
     }
 
     function industry_scrip_select(element) {
@@ -468,7 +451,15 @@ scrip @endif">
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
+        updateOccurrenceModeUI(selectedCategory);
+        $('#allocation_select_fund').on('change', set_fund_select_val);
+
         var exportButton = document.getElementById('exportPDF');
+
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
             var {

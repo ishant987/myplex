@@ -780,8 +780,20 @@ class RatioController extends Controller
         $fundSnapshot = [];
         $snapshotDate = null;
         $disclaimer = '';
+        $fundComposition = null;
+        $fundTypeGetData = null;
 
-        if ($hasSearched) {
+        if ($request->routeIs('user.occurrence_report')) {
+            $occurrenceData = $this->buildOccurrenceReportData($request, $selection, $data['all_fund_types'], $hasSearched);
+            $fundComposition = $occurrenceData['fund_composition'];
+            $snapshotDate = $occurrenceData['snapshot_date'];
+            $disclaimer = $occurrenceData['disclaimer'];
+            $fundTypeGetData = $occurrenceData['fund_type_get_data'];
+
+            if (!empty($occurrenceData['message'])) {
+                $data['message'] = $occurrenceData['message'];
+            }
+        } elseif ($hasSearched) {
             $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
             $fundSnapshot = $snapshotData['rows'];
             $snapshotDate = $snapshotData['snapshot_date'];
@@ -808,8 +820,8 @@ class RatioController extends Controller
             'limit' => $request->input('limit'),
             'getData' => $getData,
             'has_searched' => $hasSearched,
-            'industries' => collect(),
-            'mpx_fund_scrips' => collect(),
+            'industries' => $this->safeFundCompositionIndustryList(),
+            'mpx_fund_scrips' => $this->safeFundCompositionScripList(),
             'scrips' => collect(),
             'total_corpus_entry' => null,
             'top_scrips' => null,
@@ -817,15 +829,92 @@ class RatioController extends Controller
             'monthName' => $request->filled('month') ? date('F', mktime(0, 0, 0, (int) $request->input('month'), 10)) : null,
             'lastDate' => $snapshotDate,
             'active_tab' => $request->input('active_tab'),
-            'fund_type_get_data' => null,
+            'fund_type_get_data' => $fundTypeGetData,
             'fund_details' => $selection['funds']->map(fn ($fund) => ['fund_id' => $fund->fund_id])->all(),
             'fund_ids' => (array) $request->input('fund_id', []),
-            'fund_composition' => null,
+            'fund_composition' => $fundComposition,
             'fund_snapshot' => $fundSnapshot,
             'fund_names' => $selection['fund_names'],
             'fund_type_name' => $selection['fund_type_name'],
             'disclaimer' => $disclaimer,
         ]);
+    }
+
+    protected function buildOccurrenceReportData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
+    {
+        $result = [
+            'fund_composition' => null,
+            'fund_type_get_data' => null,
+            'snapshot_date' => null,
+            'disclaimer' => '',
+            'message' => null,
+        ];
+
+        if (!$hasSearched) {
+            return $result;
+        }
+
+        if ($selection['funds']->isEmpty()) {
+            $result['message'] = $request->input('Category') === 'by_fund'
+                ? 'Choose at least 2 funds to run this report.'
+                : 'Choose a fund classification to run this report.';
+
+            return $result;
+        }
+
+        $scripIndustry = (string) $request->input('scrip_industry', 'scrip');
+        $matchColumn = $scripIndustry === 'industry' ? 'industry' : 'scrip_name';
+        $matchValue = trim((string) $request->input($scripIndustry === 'industry' ? 'industry' : 'fund_scrips', ''));
+
+        if ($matchValue === '') {
+            $result['message'] = $scripIndustry === 'industry'
+                ? 'Choose an industry to run this report.'
+                : 'Choose a scrip to run this report.';
+
+            return $result;
+        }
+
+        $fundCodes = $selection['funds']->pluck('fund_code')->filter()->values();
+        $month = (int) $request->input('month');
+        $year = (int) $request->input('year');
+
+        if ($month <= 0 || $year <= 0 || $fundCodes->isEmpty()) {
+            return $result;
+        }
+
+        $snapshotDate = FundComposition::query()
+            ->whereIn('fund_code', $fundCodes->all())
+            ->where('publish', 'y')
+            ->whereMonth('entry_date', $month)
+            ->whereYear('entry_date', $year)
+            ->max('entry_date');
+
+        if (!$snapshotDate) {
+            $result['message'] = 'No information available for this search.';
+
+            return $result;
+        }
+
+        $fundComposition = FundComposition::query()
+            ->whereIn('fund_code', $fundCodes->all())
+            ->where('publish', 'y')
+            ->whereDate('entry_date', $snapshotDate)
+            ->where($matchColumn, $matchValue)
+            ->orderBy('fund_code')
+            ->get(['fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
+
+        if ($fundComposition->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+        }
+
+        $result['fund_composition'] = $fundComposition;
+        $result['fund_type_get_data'] = $request->input('Category') === 'by_category'
+            ? $fundTypes->firstWhere('ft_id', (int) $request->input('fund_type_id'))
+            : null;
+        $result['snapshot_date'] = $snapshotDate;
+        $result['disclaimer'] = 'Data shown is based on the latest published portfolio for the selected month.';
+
+        return $result;
     }
 
     protected function buildAllocationSnapshotData(Request $request, Collection $funds): array
