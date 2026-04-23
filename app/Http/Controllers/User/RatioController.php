@@ -787,6 +787,8 @@ class RatioController extends Controller
         $fundTypeGetData = null;
         $resultsScrips = collect();
         $resultsIndustry = collect();
+        $newScrips = collect();
+        $newIndustry = collect();
         $dataType = $request->input('Category') === 'by_fund' ? 'fund' : 'category';
 
         if ($request->routeIs('user.occurrence_report')) {
@@ -809,6 +811,17 @@ class RatioController extends Controller
 
             if (!empty($moversData['message'])) {
                 $data['message'] = $moversData['message'];
+            }
+        } elseif ($request->routeIs('user.new_script_new_industry')) {
+            $newCompositionData = $this->buildNewCompositionEntriesData($request, $selection, $data['all_fund_types'], $hasSearched);
+            $newScrips = $newCompositionData['scrips'];
+            $newIndustry = $newCompositionData['industry'];
+            $fundTypeGetData = $newCompositionData['fund_type_get_data'];
+            $disclaimer = $newCompositionData['disclaimer'];
+            $snapshotDate = $newCompositionData['snapshot_date'];
+
+            if (!empty($newCompositionData['message'])) {
+                $data['message'] = $newCompositionData['message'];
             }
         } elseif ($hasSearched) {
             $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
@@ -839,7 +852,8 @@ class RatioController extends Controller
             'has_searched' => $hasSearched,
             'industries' => $this->safeFundCompositionIndustryList(),
             'mpx_fund_scrips' => $this->safeFundCompositionScripList(),
-            'scrips' => collect(),
+            'scrips' => $newScrips,
+            'industry' => $newIndustry,
             'total_corpus_entry' => null,
             'top_scrips' => null,
             'top_industries' => null,
@@ -921,6 +935,109 @@ class RatioController extends Controller
         }
 
         return $result;
+    }
+
+    protected function buildNewCompositionEntriesData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
+    {
+        $result = [
+            'scrips' => collect(),
+            'industry' => collect(),
+            'fund_type_get_data' => null,
+            'snapshot_date' => null,
+            'disclaimer' => '',
+            'message' => null,
+        ];
+
+        if (!$hasSearched || !$request->filled('month_second') || !$request->filled('year_second')) {
+            return $result;
+        }
+
+        $availability = $this->compositionDataAvailability();
+        if (!$availability['ready']) {
+            $result['message'] = $availability['message'];
+
+            return $result;
+        }
+
+        if ($selection['funds']->isEmpty()) {
+            $result['message'] = $request->input('Category') === 'by_fund'
+                ? 'Choose at least 2 funds to run this report.'
+                : 'Choose a fund classification to run this report.';
+
+            return $result;
+        }
+
+        $periodOne = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+        $periodTwo = $this->resolveMonthYearPeriod($request->input('month_second'), $request->input('year_second'));
+
+        if (!$periodOne || !$periodTwo) {
+            $result['message'] = 'Choose both periods to run this report.';
+
+            return $result;
+        }
+
+        $fundCodes = $selection['funds']
+            ->pluck('fund_code')
+            ->filter()
+            ->values()
+            ->all();
+
+        $periodOneRows = $this->fetchLatestFundCompositionRowsForFunds($fundCodes, $periodOne['start'], $periodOne['end']);
+        $periodTwoRows = $this->fetchLatestFundCompositionRowsForFunds($fundCodes, $periodTwo['start'], $periodTwo['end']);
+
+        $result['scrips'] = $this->buildNewCompositionRows($periodOneRows, $periodTwoRows, 'scrip_name');
+        $result['industry'] = $this->buildNewCompositionRows($periodOneRows, $periodTwoRows, 'industry');
+        $result['fund_type_get_data'] = $request->input('Category') === 'by_category'
+            ? $fundTypes->firstWhere('ft_id', (int) $request->input('fund_type_id'))
+            : null;
+        $result['snapshot_date'] = $periodTwoRows->max('entry_date');
+        $result['disclaimer'] = 'Data shown is based on holdings newly appearing in the latest published portfolio for the second selected period.';
+
+        if ($result['scrips']->isEmpty() && $result['industry']->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+        }
+
+        return $result;
+    }
+
+    protected function buildNewCompositionRows(Collection $oldRows, Collection $newRows, string $groupKey): Collection
+    {
+        $oldFundKeys = $oldRows
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, $groupKey)))
+            ->map(fn ($rows) => $rows
+                ->pluck('fund_code')
+                ->filter()
+                ->map(fn ($fundCode) => $this->normalizeComparableText($fundCode))
+                ->unique()
+                ->values());
+
+        return $newRows
+            ->filter(fn ($row) => filled(data_get($row, $groupKey)) && filled(data_get($row, 'fund_code')))
+            ->filter(function ($row) use ($oldFundKeys, $groupKey) {
+                $normalizedGroup = $this->normalizeComparableText(data_get($row, $groupKey));
+                $normalizedFundCode = $this->normalizeComparableText(data_get($row, 'fund_code'));
+                $existingFunds = $oldFundKeys->get($normalizedGroup, collect());
+
+                return !$existingFunds->contains($normalizedFundCode);
+            })
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, $groupKey)))
+            ->map(function ($rows) use ($groupKey) {
+                $first = $rows->first();
+                $payload = [
+                    $groupKey => data_get($first, $groupKey),
+                    'content_per' => round((float) $rows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)), 2),
+                    'amount' => round((float) $rows->sum(fn ($row) => (float) data_get($row, 'amount', 0)), 2),
+                ];
+
+                if ($groupKey === 'scrip_name') {
+                    $payload['industry'] = data_get($first, 'industry');
+                }
+
+                return (object) $payload;
+            })
+            ->filter(fn ($row) => (float) data_get($row, 'content_per', 0) > 0 || (float) data_get($row, 'amount', 0) > 0)
+            ->sortByDesc(fn ($row) => (float) data_get($row, 'content_per', 0))
+            ->values();
     }
 
     protected function buildCompositionMoverRows(Collection $oldRows, Collection $newRows, string $groupKey, string $dataType): Collection
