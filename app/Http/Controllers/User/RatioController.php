@@ -32,6 +32,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Collection;
 use Throwable;
@@ -594,6 +595,19 @@ class RatioController extends Controller
             'index_series' => [],
             'duration' => $duration,
             'message' => null,
+            'predictive_debug' => [
+                'route' => optional($request->route())->getName(),
+                'fund_id' => $selectedFundId,
+                'fund_code' => null,
+                'index_name' => null,
+                'duration' => $duration,
+                'start_date' => null,
+                'end_date' => null,
+                'fund_points_count' => 0,
+                'index_points_count' => 0,
+                'fund_series_count' => 0,
+                'index_series_count' => 0,
+            ],
         ]);
 
         if ($selectedFundId <= 0) {
@@ -661,6 +675,34 @@ class RatioController extends Controller
 
         $fundSeries = $this->buildChartSeriesFromPoints($fundPoints, 'entry_date', 'closing_nav');
         $indexSeries = $this->buildChartSeriesFromPoints($indexPoints, 'entry_date', 'closing_value');
+
+        Log::info('Predictive chart data prepared', [
+            'route' => optional($request->route())->getName(),
+            'fund_id' => $selectedFundId,
+            'fund_code' => $fund->fund_code,
+            'index_name' => $fund->indices_name,
+            'duration' => $duration,
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'fund_points_count' => $fundPoints->count(),
+            'index_points_count' => $indexPoints->count(),
+            'fund_series_count' => count($fundSeries),
+            'index_series_count' => count($indexSeries),
+        ]);
+
+        $data['predictive_debug'] = [
+            'route' => optional($request->route())->getName(),
+            'fund_id' => $selectedFundId,
+            'fund_code' => $fund->fund_code,
+            'index_name' => $fund->indices_name,
+            'duration' => $duration,
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'fund_points_count' => $fundPoints->count(),
+            'index_points_count' => $indexPoints->count(),
+            'fund_series_count' => count($fundSeries),
+            'index_series_count' => count($indexSeries),
+        ];
 
         $data['indices_details'] = $index ?? (object) ['name' => $fund->indices_name, 'corelation' => $fund->indices_name];
         $data['fund_series'] = $fundSeries;

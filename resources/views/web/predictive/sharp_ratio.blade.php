@@ -13,6 +13,7 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    @php($selectedPredictiveFundId = (int) ($selected_fund_id ?? request()->input('fund_id', 0)))
 
                     <div class="light_green_bg">
                         <form action="{{ route('user.predictive.sharp-ratio') }}" method="GET">
@@ -24,7 +25,7 @@
                                             onchange="set_fund_select_val(this.value)">
                                             @foreach ($fundMasterData as $fund)
                                                 <option value="{{ $fund->fund_id }}"
-                                                    {{ (int) ($selected_fund_id ?? 0) === (int) $fund->fund_id ? 'selected' : '' }}>
+                                                    {{ $selectedPredictiveFundId === (int) $fund->fund_id ? 'selected' : '' }}>
                                                     {{ $fund->fund_name }}
                                                 </option>
                                             @endforeach
@@ -120,6 +121,22 @@
                     @else
                         <div class="graph_table">
                             <p>Select a scheme and period to view the graph.</p>
+                        </div>
+                    @endif
+
+                    @if (!empty($predictive_debug))
+                        <div class="graph_table" style="margin-top: 12px;">
+                            <p>
+                                Debug:
+                                route={{ $predictive_debug['route'] ?? 'n/a' }},
+                                fund_id={{ $predictive_debug['fund_id'] ?? 'n/a' }},
+                                fund_code={{ $predictive_debug['fund_code'] ?? 'n/a' }},
+                                duration={{ $predictive_debug['duration'] ?? 'n/a' }},
+                                fund_points={{ $predictive_debug['fund_points_count'] ?? 0 }},
+                                index_points={{ $predictive_debug['index_points_count'] ?? 0 }},
+                                fund_series={{ $predictive_debug['fund_series_count'] ?? 0 }},
+                                index_series={{ $predictive_debug['index_series_count'] ?? 0 }}
+                            </p>
                         </div>
                     @endif
 
