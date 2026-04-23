@@ -785,6 +785,9 @@ class RatioController extends Controller
         $disclaimer = '';
         $fundComposition = null;
         $fundTypeGetData = null;
+        $resultsScrips = collect();
+        $resultsIndustry = collect();
+        $dataType = $request->input('Category') === 'by_fund' ? 'fund' : 'category';
 
         if ($request->routeIs('user.occurrence_report')) {
             $occurrenceData = $this->buildOccurrenceReportData($request, $selection, $data['all_fund_types'], $hasSearched);
@@ -795,6 +798,17 @@ class RatioController extends Controller
 
             if (!empty($occurrenceData['message'])) {
                 $data['message'] = $occurrenceData['message'];
+            }
+        } elseif ($request->routeIs('user.boomers') || $request->routeIs('user.busters')) {
+            $moversData = $this->buildCompositionMoversData($request, $selection, $data['all_fund_types'], $hasSearched);
+            $resultsScrips = $moversData['results_scrips'];
+            $resultsIndustry = $moversData['results_industry'];
+            $fundTypeGetData = $moversData['fund_type_get_data'];
+            $disclaimer = $moversData['disclaimer'];
+            $dataType = $moversData['data_type'];
+
+            if (!empty($moversData['message'])) {
+                $data['message'] = $moversData['message'];
             }
         } elseif ($hasSearched) {
             $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
@@ -839,8 +853,144 @@ class RatioController extends Controller
             'fund_snapshot' => $fundSnapshot,
             'fund_names' => $selection['fund_names'],
             'fund_type_name' => $selection['fund_type_name'],
+            'data_type' => $dataType,
+            'results_scrips' => $resultsScrips,
+            'results_industry' => $resultsIndustry,
+            'results_industries' => $resultsIndustry,
             'disclaimer' => $disclaimer,
         ]);
+    }
+
+    protected function buildCompositionMoversData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
+    {
+        $result = [
+            'results_scrips' => collect(),
+            'results_industry' => collect(),
+            'fund_type_get_data' => null,
+            'data_type' => $request->input('Category') === 'by_fund' ? 'fund' : 'category',
+            'disclaimer' => '',
+            'message' => null,
+        ];
+
+        if (!$hasSearched || !$request->filled('month_second') || !$request->filled('year_second')) {
+            return $result;
+        }
+
+        $availability = $this->compositionDataAvailability();
+        if (!$availability['ready']) {
+            $result['message'] = $availability['message'];
+
+            return $result;
+        }
+
+        if ($selection['funds']->isEmpty()) {
+            $result['message'] = $request->input('Category') === 'by_fund'
+                ? 'Choose at least 2 funds to run this report.'
+                : 'Choose a fund classification to run this report.';
+
+            return $result;
+        }
+
+        $periodOne = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+        $periodTwo = $this->resolveMonthYearPeriod($request->input('month_second'), $request->input('year_second'));
+
+        if (!$periodOne || !$periodTwo) {
+            $result['message'] = 'Choose both periods to run this report.';
+
+            return $result;
+        }
+
+        $periodOneRows = collect();
+        $periodTwoRows = collect();
+
+        foreach ($selection['funds'] as $fund) {
+            if (empty($fund->fund_code)) {
+                continue;
+            }
+
+            $periodOneRows = $periodOneRows->concat(
+                $this->fetchLatestFundCompositionRows($fund->fund_code, $periodOne['start'], $periodOne['end'])
+            );
+            $periodTwoRows = $periodTwoRows->concat(
+                $this->fetchLatestFundCompositionRows($fund->fund_code, $periodTwo['start'], $periodTwo['end'])
+            );
+        }
+
+        $result['results_scrips'] = $this->buildCompositionMoverRows($periodOneRows, $periodTwoRows, 'scrip_name', $result['data_type']);
+        $result['results_industry'] = $this->buildCompositionMoverRows($periodOneRows, $periodTwoRows, 'industry', $result['data_type']);
+        $result['fund_type_get_data'] = $request->input('Category') === 'by_category'
+            ? $fundTypes->firstWhere('ft_id', (int) $request->input('fund_type_id'))
+            : null;
+        $result['disclaimer'] = 'Data shown is based on the latest published portfolio for each selected period.';
+
+        if ($result['results_scrips']->isEmpty() && $result['results_industry']->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+        }
+
+        return $result;
+    }
+
+    protected function buildCompositionMoverRows(Collection $oldRows, Collection $newRows, string $groupKey, string $dataType): Collection
+    {
+        $oldMap = $oldRows
+            ->filter(fn ($row) => filled(data_get($row, $groupKey)))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, $groupKey)))
+            ->map(function ($rows) use ($groupKey) {
+                return [
+                    'label' => data_get($rows->first(), $groupKey),
+                    'value' => (float) $rows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)),
+                ];
+            });
+
+        $newMap = $newRows
+            ->filter(fn ($row) => filled(data_get($row, $groupKey)))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, $groupKey)))
+            ->map(function ($rows) use ($groupKey) {
+                return [
+                    'label' => data_get($rows->first(), $groupKey),
+                    'value' => (float) $rows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)),
+                ];
+            });
+
+        $keys = $oldMap->keys()->merge($newMap->keys())->unique()->values();
+
+        return $keys->map(function ($key) use ($oldMap, $newMap, $groupKey, $dataType) {
+            $oldItem = $oldMap->get($key);
+            $newItem = $newMap->get($key);
+            $startValue = (float) data_get($oldItem, 'value', 0);
+            $endValue = (float) data_get($newItem, 'value', 0);
+            $label = data_get($newItem, 'label') ?? data_get($oldItem, 'label');
+
+            if (!filled($label)) {
+                return null;
+            }
+
+            $row = [
+                $groupKey => $label,
+                'start_date_growth' => round($startValue, 4),
+                'end_date_growth' => round($endValue, 4),
+            ];
+
+            if ($dataType === 'fund') {
+                $row['percentage_change'] = $startValue > 0
+                    ? round((($endValue - $startValue) / $startValue) * 100, 4)
+                    : 0.0;
+
+                if ($groupKey === 'industry') {
+                    $row['industry_name'] = $label;
+                }
+            }
+
+            return $row;
+        })->filter(function ($row) use ($dataType) {
+            if ($row === null) {
+                return false;
+            }
+
+            return $dataType === 'fund'
+                ? ((float) ($row['start_date_growth'] ?? 0) > 0 || (float) ($row['end_date_growth'] ?? 0) > 0)
+                : (float) ($row['start_date_growth'] ?? 0) > 0;
+        })->values();
     }
 
     protected function buildOccurrenceReportData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array

@@ -42,7 +42,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4 div_show_1">
+                            <div class="col-md-4 div_show_1" style="{{ isset($request) && $request->Category == 'by_fund' ? 'display:none;' : '' }}">
                                 <div class="form_group">
                                     <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification">
                                         <option value=""></option>
@@ -60,7 +60,7 @@
                                 
                                 </div>
 
-                                <div class="col-md-4 div_hide_1">
+                                <div class="col-md-4 div_hide_1" style="{{ isset($request) && $request->Category == 'by_fund' ? '' : 'display:none;' }}">
                                     <div class="form_group">
                                         <select name="fund_id[]"  class="select2 multiple" multiple id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
                                             @foreach($all_funds as $fund)
@@ -576,19 +576,19 @@ var count = $('#allocation_select_fund').select2('data').length;
 
 
 function get_fund_types(thiss){
+    $('.div_show_1').toggle(thiss === 'by_category');
+    $('.div_hide_1').toggle(thiss === 'by_fund');
 
-var count = $('#allocation_select_fund').select2('data').length;
+    var count = $('#allocation_select_fund').select2('data').length;
 
     if(thiss == 'by_category'){
-
+        $('#fund_msgg').html('');
         $('#submit_btn').prop('disabled', false);
     }else if(thiss == 'by_fund'){
         if (count >= 2 && count <= 10) {
-            // console.log('enable');
+            $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
         } else {
-            // console.log('disabled');
-            // alert('Funds selection limit minimum 4 and maximum 20');
             $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
             $('#submit_btn').prop('disabled', true);
         }  
@@ -600,6 +600,7 @@ var count = $('#allocation_select_fund').select2('data').length;
 
 
 document.addEventListener('DOMContentLoaded', function() {
+    get_fund_types($('input[name="Category"]:checked').val() || 'by_category');
     var exportButton = document.getElementById('exportPDF-scrip');
 
     exportButton.addEventListener('click', function() {
