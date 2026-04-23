@@ -1,5 +1,8 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
+    @php
+        $isByFundMode = isset($request) && $request->Category === 'by_fund';
+    @endphp
 
     <div class="inner_main">
         <div class="page_detail">
@@ -89,15 +92,15 @@
                                     </div> --}}
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category" checked
+                                            <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
-                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                @if (!$isByFundMode) checked @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
+                                                @if ($isByFundMode) checked @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
@@ -159,7 +162,7 @@
                                             value="{{ isset($limit) ? $limit : '' }}">
                                     </div>
                                 </div> --}}
-                                <div class="col-md-6 div_show_1">
+                                <div class="col-md-6 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
                                     <div class="form_group">
                                         <select name="fund_type" id="fund_type" class="select2"
                                             data-placeholder="Select Fund Category">
@@ -175,7 +178,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 div_hide_1">
+                                <div class="col-md-6 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
                                     <div class="form_group multiple_select">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" data-max="2"
@@ -217,7 +220,7 @@
                         </form>
                     </div>
 
-                    @if(isset($monthName) && isset($year) && isset( $request->Category))
+                    @if(!empty($has_searched))
                     <div class="fund_section new_fund_section">
                         <ul>
                             <li>
@@ -227,14 +230,14 @@
                                 @endif
                             </li>
                            
-                            @if (isset($request) && $request->Category == 'by_category')
+                            @if (isset($request) && $request->Category == 'by_category' && !empty($fund_type_name))
                             <li>
                                 <p>fund classification :</p>
                                 <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
                             </li>
                         @endif
 
-                        @if (isset($request) && $request->Category == 'by_fund')
+                        @if (isset($request) && $request->Category == 'by_fund' && !empty($fund_names))
                         <li>
                             <p>fund name :</p>
                             <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
@@ -264,27 +267,22 @@
 
                                 <thead>
                                     <tr>
-                                        <th colspan="4"></th>
-                                        <th colspan="4" class="text_center">Equity</th>
-                                        <th colspan="2"></th>
-                                    </tr>
-                                    <tr>
-                                        <td class="text_left">Name of the Fund</td>
-                                        <td class="text_center">Cash %</td>
-                                        <td class="text_center">SOV %</td>
-                                        <td class="text_center">Corp debt %</td>
-                                        <td class="text_center">Small cap %</td>
-                                        <td class="text_center">Mid cap %</td>
-                                        <td class="text_center">Large cap %</td>
-                                        <td class="text_center">Very large cap %</td>
-                                        <td class="text_center">Others</td>
-                                        <td class="text_center">Wt. PE</td>
+                                        <th class="text_left">Name of the Fund</th>
+                                        <th class="text_center">Cash %</th>
+                                        <th class="text_center">SOV %</th>
+                                        <th class="text_center">Corp debt %</th>
+                                        <th class="text_center">Small cap %</th>
+                                        <th class="text_center">Mid cap %</th>
+                                        <th class="text_center">Large cap %</th>
+                                        <th class="text_center">Very large cap %</th>
+                                        <th class="text_center">Others</th>
+                                        <th class="text_center">Wt. PE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     
                                     
-                                    @if (isset($fund_snapshot))
+                                    @if (isset($fund_snapshot) && count($fund_snapshot) > 0)
                                     @foreach ($fund_snapshot as $item)
                                         <tr>
                                             <td class="text_left">{{ $item['fund_name'] }}</td>
@@ -301,7 +299,7 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                        <td colspan="9">No information available for this search</td>
+                                        <td colspan="10">No information available for this search</td>
                                     </tr>
                                     @endif
 
@@ -312,7 +310,7 @@
                         {!! printNoData() !!}
                     @endif
                 </div>
-                @if (isset($fund_snapshot))
+                @if (isset($fund_snapshot) && count($fund_snapshot) > 0)
 
                 
 
@@ -339,60 +337,51 @@
     </div>
 @endsection
 <script>
+    function updateAllocationModeUI(mode) {
+        var isByFund = mode === 'by_fund';
+        $('.div_show_1').toggle(!isByFund);
+        $('.div_hide_1').toggle(isByFund);
+
+        if (!isByFund) {
+            $('#fund_msgg').html('');
+            $('#submit_btn').prop('disabled', false);
+        } else {
+            set_fund_select_val();
+        }
+    }
+
     function set_fund_select_val() {
-
-        var thiss = $('#fund_Category').val();
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-
-        console.log(thiss + '  ' + count);
+        var thiss = $('input[name="Category"]:checked').val();
+        var count = ($('#allocation_select_fund').val() || []).length;
 
         if (thiss == 'by_fund') {
-
             if (count >= 2 && count <= 20) {
-                // console.log('enable');
+                $('#fund_msgg').html('');
                 $('#submit_btn').prop('disabled', false);
             } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
-
-
         } else {
-
+            $('#fund_msgg').html('');
             $('#submit_btn').prop('disabled', false);
         }
     }
 
     function get_fund_types(thiss) {
-
-        var count = $('#allocation_select_fund').select2('data').length;
-
-        if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
-        } else if (thiss == 'by_fund') {
-            if (count >= 2 && count <= 20) {
-                // console.log('enable');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
-                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-
-        }
+        updateAllocationModeUI(thiss);
     }
 
-
-
-
     document.addEventListener('DOMContentLoaded', function() {
+    var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
+    updateAllocationModeUI(selectedCategory);
+    $('#allocation_select_fund').on('change', set_fund_select_val);
+
     var exportButton = document.getElementById('exportPDF');
+
+    if (!exportButton) {
+        return;
+    }
 
     exportButton.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -452,13 +441,8 @@
                 tableData.push(row);
             });
 
-            doc.autoTable({
+                doc.autoTable({
                 head: [
-                    [
-                        { content: '', colSpan: 4 },
-                        { content: 'Equity', colSpan: 4, styles: { halign: 'center' } },
-                        { content: '', colSpan: 2 }
-                    ],
                     [
                         { content: 'Name of the Fund', styles: { halign: 'left' } },
                         { content: 'Cash %', styles: { halign: 'center' } },

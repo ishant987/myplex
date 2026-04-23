@@ -21,6 +21,7 @@ use App\Models\CurrencyDetail;
 use App\Models\FundDetail;
 use App\Models\FundComposition;
 use Illuminate\Http\Request;
+use App\Models\McapEps;
 use App\Models\CurrencyMaster;
 use App\Models\FundMaster;
 use App\Models\FundType;
@@ -756,19 +757,44 @@ class RatioController extends Controller
 
     protected function compositionReportViewData(Request $request): array
     {
+        $request->merge([
+            'fund_type_id' => $request->input('fund_type_id', $request->input('fund_type')),
+        ]);
+
         $data = $this->reportViewData($request);
         $months = range(1, 12);
         $years = range((int) now()->format('Y'), 1950);
         $getData = array_merge([
             'scrip_industry' => 'scrip',
-            'Category' => $request->input('Category', 'by_category'),
+            'Category' => $request->input('Category'),
             'fund_id' => [],
-            'fund_type_id' => null,
+            'fund_type_id' => $request->input('fund_type_id'),
             'industry' => null,
             'fund_scrips' => null,
             'year' => $request->input('year'),
             'month' => $request->input('month'),
         ], $request->all());
+
+        $selection = $this->resolveFundSelection($request, $data);
+        $hasSearched = $request->filled('month') && $request->filled('year') && filled($request->input('Category'));
+        $fundSnapshot = [];
+        $snapshotDate = null;
+        $disclaimer = '';
+
+        if ($hasSearched) {
+            $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
+            $fundSnapshot = $snapshotData['rows'];
+            $snapshotDate = $snapshotData['snapshot_date'];
+            $disclaimer = $snapshotData['disclaimer'];
+
+            if ($selection['funds']->isEmpty()) {
+                $data['message'] = $request->input('Category') === 'by_fund'
+                    ? 'Choose at least 2 funds to run this report.'
+                    : 'Choose a fund classification to run this report.';
+            } elseif (empty($fundSnapshot)) {
+                $data['message'] = 'No information available for this search.';
+            }
+        }
 
         return array_merge($data, [
             'fund_type' => $data['all_fund_types'],
@@ -781,6 +807,7 @@ class RatioController extends Controller
             'year_second' => $request->input('year_second'),
             'limit' => $request->input('limit'),
             'getData' => $getData,
+            'has_searched' => $hasSearched,
             'industries' => collect(),
             'mpx_fund_scrips' => collect(),
             'scrips' => collect(),
@@ -788,13 +815,184 @@ class RatioController extends Controller
             'top_scrips' => null,
             'top_industries' => null,
             'monthName' => $request->filled('month') ? date('F', mktime(0, 0, 0, (int) $request->input('month'), 10)) : null,
-            'lastDate' => null,
+            'lastDate' => $snapshotDate,
             'active_tab' => $request->input('active_tab'),
             'fund_type_get_data' => null,
-            'fund_details' => [],
+            'fund_details' => $selection['funds']->map(fn ($fund) => ['fund_id' => $fund->fund_id])->all(),
             'fund_ids' => (array) $request->input('fund_id', []),
             'fund_composition' => null,
+            'fund_snapshot' => $fundSnapshot,
+            'fund_names' => $selection['fund_names'],
+            'fund_type_name' => $selection['fund_type_name'],
+            'disclaimer' => $disclaimer,
         ]);
+    }
+
+    protected function buildAllocationSnapshotData(Request $request, Collection $funds): array
+    {
+        $month = (int) $request->input('month');
+        $year = (int) $request->input('year');
+
+        if ($month <= 0 || $year <= 0 || $funds->isEmpty()) {
+            return [
+                'rows' => [],
+                'snapshot_date' => null,
+                'disclaimer' => '',
+            ];
+        }
+
+        $fundCodes = $funds->pluck('fund_code')->filter()->values();
+
+        if ($fundCodes->isEmpty()) {
+            return [
+                'rows' => [],
+                'snapshot_date' => null,
+                'disclaimer' => '',
+            ];
+        }
+
+        $snapshotDate = FundComposition::query()
+            ->whereIn('fund_code', $fundCodes->all())
+            ->where('publish', 'y')
+            ->whereMonth('entry_date', $month)
+            ->whereYear('entry_date', $year)
+            ->max('entry_date');
+
+        if (!$snapshotDate) {
+            return [
+                'rows' => [],
+                'snapshot_date' => null,
+                'disclaimer' => '',
+            ];
+        }
+
+        $rankMap = $this->buildCompositionRankMap($snapshotDate);
+        $compositions = FundComposition::query()
+            ->whereIn('fund_code', $fundCodes->all())
+            ->where('publish', 'y')
+            ->whereDate('entry_date', $snapshotDate)
+            ->get(['fund_code', 'scrip_name', 'category', 'content_per']);
+        $peMap = McapEps::query()
+            ->where('publish', 'y')
+            ->whereDate('entry_date', $snapshotDate)
+            ->pluck('pe', 'scrip_name');
+        $fundNames = $funds->pluck('fund_name', 'fund_code');
+        $rows = [];
+
+        foreach ($fundCodes as $fundCode) {
+            $fundRows = $compositions->where('fund_code', $fundCode);
+
+            if ($fundRows->isEmpty()) {
+                continue;
+            }
+
+            $cash = 0.0;
+            $sov = 0.0;
+            $debt = 0.0;
+            $eqSmall = 0.0;
+            $eqMid = 0.0;
+            $eqLarge = 0.0;
+            $eqVeryLarge = 0.0;
+            $wtPe = 0.0;
+
+            foreach ($fundRows as $row) {
+                $content = (float) ($row->content_per ?? 0);
+                $category = strtoupper(trim((string) $row->category));
+
+                if ($category === 'CASH') {
+                    $cash += $content;
+                    continue;
+                }
+
+                if ($category === 'SOV') {
+                    $sov += $content;
+                    continue;
+                }
+
+                if (in_array($category, ['CORPORATE DEBT', 'CORPORATEDEBT'], true)) {
+                    $debt += $content;
+                    continue;
+                }
+
+                if ($category !== 'EQUITY') {
+                    continue;
+                }
+
+                $status = $rankMap[$row->scrip_name] ?? 'SC';
+
+                if ($status === 'VLC') {
+                    $eqVeryLarge += $content;
+                } elseif ($status === 'LC') {
+                    $eqLarge += $content;
+                } elseif ($status === 'MC') {
+                    $eqMid += $content;
+                } else {
+                    $eqSmall += $content;
+                }
+
+                $pe = $peMap[$row->scrip_name] ?? null;
+                if (is_numeric($pe) && (float) $pe > 0) {
+                    $wtPe += ((float) $pe * $content) / 100;
+                }
+            }
+
+            $othersVal = max(0, 100 - ($cash + $sov + $debt + $eqSmall + $eqMid + $eqLarge + $eqVeryLarge));
+
+            $rows[] = [
+                'fund_name' => $fundNames[$fundCode] ?? $fundCode,
+                'cash' => number_format($cash, 2, '.', ''),
+                'sov' => number_format($sov, 2, '.', ''),
+                'debt' => number_format($debt, 2, '.', ''),
+                'eq_small' => number_format($eqSmall, 2, '.', ''),
+                'eq_mid' => number_format($eqMid, 2, '.', ''),
+                'eq_large' => number_format($eqLarge, 2, '.', ''),
+                'eq_very_large' => number_format($eqVeryLarge, 2, '.', ''),
+                'others_val' => number_format($othersVal, 2, '.', ''),
+                'wt_pe' => number_format($wtPe, 2, '.', ''),
+            ];
+        }
+
+        return [
+            'rows' => $rows,
+            'snapshot_date' => $snapshotDate,
+            'disclaimer' => 'For loss making scrips, earnings are considered as zero.',
+        ];
+    }
+
+    protected function buildCompositionRankMap(string $snapshotDate): array
+    {
+        $equityRows = IndicesComposition::query()
+            ->where('publish', 'y')
+            ->whereDate('entry_date', $snapshotDate)
+            ->where('indices_name', 'BSE 500')
+            ->where('type', 'Equity')
+            ->orderByDesc('percentage')
+            ->get(['scrip_name']);
+
+        $rankMap = [];
+
+        foreach ($equityRows->values() as $index => $row) {
+            $rank = $index + 1;
+            $rankMap[$row->scrip_name] = match (true) {
+                $rank <= 15 => 'VLC',
+                $rank <= 100 => 'LC',
+                $rank <= 250 => 'MC',
+                default => 'SC',
+            };
+        }
+
+        $additionalScrips = McapEps::query()
+            ->where('publish', 'y')
+            ->whereDate('entry_date', $snapshotDate)
+            ->pluck('scrip_name');
+
+        foreach ($additionalScrips as $scripName) {
+            if (!isset($rankMap[$scripName])) {
+                $rankMap[$scripName] = 'SC';
+            }
+        }
+
+        return $rankMap;
     }
 
     protected function filtersRatiosViewData(Request $request): array
