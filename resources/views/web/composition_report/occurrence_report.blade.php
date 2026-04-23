@@ -3,6 +3,9 @@
     @php
         $fund_names = '';
         $isByFundMode = isset($request) && $request->Category === 'by_fund';
+        $selectedCompositionType = isset($getData['scrip_industry']) ? $getData['scrip_industry'] : 'scrip';
+        $selectedIndustry = trim((string) ($getData['industry'] ?? ''));
+        $selectedScrip = trim((string) ($getData['fund_scrips'] ?? ''));
     @endphp
     <div class="inner_main">
         <div class="page_detail">
@@ -27,11 +30,7 @@
                             <li>
                                 <!-- <a class="{{ isset($getData) && $getData['scrip_industry'] == 'scrip' ? 'active' : '' }}"
                                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a> -->
-                                <a class="@if (isset($getData['scrip_industry'])) @if ($getData['scrip_industry'] == 'scrip')
-                                            active @endif
-@else
-active
-                                         @endif"
+                                <a class="{{ $selectedCompositionType === 'scrip' ? 'active' : '' }}"
                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a>
                             </li>
                             <li>
@@ -44,7 +43,7 @@ active
                                 "
                                                     id="quartile_tab" data-value="industry"
                                                     onclick="industry_scrip_select(this)">Industry</a> -->
-                                <a class="{{ isset($getData) && $getData['scrip_industry'] == 'industry' ? 'active' : '' }}"
+                                <a class="{{ $selectedCompositionType === 'industry' ? 'active' : '' }}"
                                     id="quartile_tab" data-value="industry"
                                     onclick="industry_scrip_select(this)">Industry</a>
                             </li>
@@ -54,7 +53,7 @@ active
                     </div>
 
                     <div class="light_green_bg">
-                        <form action="">
+                        <form action="{{ route('user.occurrence_report') }}" method="GET" id="occurrence-report-form">
                             <div class="row">
 
                                 {{-- <input type="hidden" name="scrip_industry" id="scrip_industry" value="{{ isset($getData['scrip_industry']) ? $getData['scrip_industry'] : ''}}"> --}}
@@ -69,9 +68,7 @@ industry
                                         @endif"> -->
 
                                 <input type="hidden" name="scrip_industry" id="scrip_industry"
-                                    value="@if (isset($getdata)) @if ($getData['scrip_industry'] == 'industry') industry @elseif($getData['scrip_industry'] == 'scrip') scrip @endif
-@else
-scrip @endif">
+                                    value="{{ $selectedCompositionType }}">
 
 
 
@@ -134,13 +131,13 @@ scrip @endif">
                                 <!-- <div class="col-md-4 industry"
                                                     style="{{ isset($getData) ? ($getData['scrip_industry'] == 'industry' ? 'display:block' : 'display:none') : 'display:block' }}"> -->
                                 <div class="col-md-4 industry"
-                                    style="{{ isset($getData) && $getData['scrip_industry'] == 'industry' ? 'display:block' : 'display:none' }}">
+                                    style="{{ $selectedCompositionType === 'industry' ? 'display:block' : 'display:none' }}">
                                     <div class="form_group">
-                                        <select class="select2" name="industry" data-placeholder="Select Industry">
+                                        <select class="select2" id="industry_select" name="industry" data-placeholder="Select Industry">
                                             <option value="">Select Industry</option>
                                             @foreach ($industries as $industry)
                                                 <option
-                                                    value="{{ $industry->industry }}"{{ isset($getData['industry']) && $getData['industry'] == $industry->industry ? 'selected' : '' }}>
+                                                    value="{{ $industry->industry }}"{{ strcasecmp(trim((string) $industry->industry), $selectedIndustry) === 0 ? 'selected' : '' }}>
                                                     {{ $industry->industry }} </option>
                                             @endforeach
                                         </select>
@@ -153,13 +150,13 @@ scrip @endif">
                                 <!-- <div class="col-md-4 scrip"
                                                     style="{{ isset($getData) && $getData['scrip_industry'] == 'scrip' ? 'display:block' : 'display:none' }}"> -->
                                 <div class="col-md-4 scrip"
-                                    style="{{ isset($getData) ? ($getData['scrip_industry'] == 'scrip' ? 'display:block' : 'display:none') : 'display:block' }}">
+                                    style="{{ $selectedCompositionType === 'scrip' ? 'display:block' : 'display:none' }}">
                                     <div class="form_group">
-                                        <select class="select2" name="fund_scrips" data-placeholder="Select Scrip">
+                                        <select class="select2" id="fund_scrips_select" name="fund_scrips" data-placeholder="Select Scrip">
                                             <option value="">Select Scrip</option>
                                             @foreach ($mpx_fund_scrips as $scr)
                                                 <option
-                                                    value="{{ $scr->actual_scrip }}"{{ isset($getData['fund_scrips']) && $getData['fund_scrips'] == $scr->actual_scrip ? 'selected' : '' }}>
+                                                    value="{{ $scr->actual_scrip }}"{{ strcasecmp(trim((string) $scr->actual_scrip), $selectedScrip) === 0 ? 'selected' : '' }}>
                                                     {{ $scr->actual_scrip }}</option>
                                             @endforeach
                                         </select>
@@ -233,7 +230,7 @@ scrip @endif">
                                     <li>
                                         <p>Scrip Name: </p>
 
-                                        <span>{{ getNameTable('scrips', 'actual_scrip', 'actual_scrip', $getData['fund_scrips']) }},
+                                        <span>{{ $selectedScrip !== '' ? $selectedScrip : 'N/A' }},
                                         </span>
 
                                     </li>
@@ -241,7 +238,7 @@ scrip @endif">
                                     <li>
                                         <p>Industry Name: </p>
 
-                                        <span>{{ getNameTable('fund_composition', 'industry', 'industry', $getData['industry']) }},
+                                        <span>{{ $selectedIndustry !== '' ? $selectedIndustry : 'N/A' }},
                                         </span>
 
                                     </li>
@@ -441,12 +438,18 @@ scrip @endif">
     function industry_scrip_select(element) {
         var dataValue = element.getAttribute('data-value');
         $('#scrip_industry').val(dataValue);
+        $('.wm_tab .tabs a').removeClass('active');
+        $(element).addClass('active');
         if (dataValue === 'scrip') {
             $('.industry').hide();
             $('.scrip').show();
+            $('#industry_select').prop('disabled', true);
+            $('#fund_scrips_select').prop('disabled', false);
         } else if (dataValue === 'industry') {
             $('.industry').show();
             $('.scrip').hide();
+            $('#industry_select').prop('disabled', false);
+            $('#fund_scrips_select').prop('disabled', true);
         }
     }
 
@@ -454,6 +457,19 @@ scrip @endif">
         var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
         updateOccurrenceModeUI(selectedCategory);
         $('#allocation_select_fund').on('change', set_fund_select_val);
+        industry_scrip_select(document.querySelector('.wm_tab .tabs a.active') || document.getElementById('decile_tab'));
+
+        $('#occurrence-report-form').on('submit', function() {
+            var compositionType = $('#scrip_industry').val() || 'scrip';
+
+            if (compositionType === 'industry') {
+                $('#industry_select').prop('disabled', false);
+                $('#fund_scrips_select').prop('disabled', true);
+            } else {
+                $('#industry_select').prop('disabled', true);
+                $('#fund_scrips_select').prop('disabled', false);
+            }
+        });
 
         var exportButton = document.getElementById('exportPDF');
 

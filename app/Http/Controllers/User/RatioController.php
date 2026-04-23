@@ -759,6 +759,9 @@ class RatioController extends Controller
     {
         $request->merge([
             'fund_type_id' => $request->input('fund_type_id', $request->input('fund_type')),
+            'scrip_industry' => trim((string) $request->input('scrip_industry', 'scrip')),
+            'industry' => trim((string) $request->input('industry', '')),
+            'fund_scrips' => trim((string) $request->input('fund_scrips', '')),
         ]);
 
         $data = $this->reportViewData($request);
@@ -898,10 +901,18 @@ class RatioController extends Controller
         $fundComposition = FundComposition::query()
             ->whereIn('fund_code', $fundCodes->all())
             ->where('publish', 'y')
-            ->whereDate('entry_date', $snapshotDate)
-            ->where($matchColumn, $matchValue)
+            ->whereMonth('entry_date', $month)
+            ->whereYear('entry_date', $year)
+            ->orderByDesc('entry_date')
             ->orderBy('fund_code')
-            ->get(['fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
+            ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount'])
+            ->filter(function ($row) use ($matchColumn, $matchValue) {
+                return $this->normalizeComparableText(data_get($row, $matchColumn))
+                    === $this->normalizeComparableText($matchValue);
+            })
+            ->groupBy('fund_code')
+            ->map(fn ($rows) => $rows->first())
+            ->values();
 
         if ($fundComposition->isEmpty()) {
             $result['message'] = 'No information available for this search.';
@@ -2024,10 +2035,17 @@ class RatioController extends Controller
         }
 
         $value = $rows
-            ->filter(fn ($row) => strcasecmp(trim((string) data_get($row, $column)), trim($matchValue)) === 0)
+            ->filter(fn ($row) => $this->normalizeComparableText(data_get($row, $column)) === $this->normalizeComparableText($matchValue))
             ->sum(fn ($row) => (float) ($row->content_per ?? 0));
 
         return $value > 0 ? $value : null;
+    }
+
+    protected function normalizeComparableText($value): string
+    {
+        $value = preg_replace('/\s+/', ' ', trim((string) $value));
+
+        return mb_strtolower($value ?? '');
     }
 
     protected function resolveFundAumValue(
