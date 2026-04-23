@@ -789,6 +789,10 @@ class RatioController extends Controller
         $resultsIndustry = collect();
         $newScrips = collect();
         $newIndustry = collect();
+        $topScrips = collect();
+        $topIndustries = collect();
+        $topScripBreakdown = [];
+        $topIndustryBreakdown = [];
         $dataType = $request->input('Category') === 'by_fund' ? 'fund' : 'category';
 
         if ($request->routeIs('user.occurrence_report')) {
@@ -823,6 +827,19 @@ class RatioController extends Controller
             if (!empty($newCompositionData['message'])) {
                 $data['message'] = $newCompositionData['message'];
             }
+        } elseif ($request->routeIs('user.top_script_rop_industry')) {
+            $topCompositionData = $this->buildTopCompositionData($request, $selection, $data['all_fund_types'], $hasSearched);
+            $topScrips = $topCompositionData['top_scrips'];
+            $topIndustries = $topCompositionData['top_industries'];
+            $topScripBreakdown = $topCompositionData['top_scrip_breakdown'];
+            $topIndustryBreakdown = $topCompositionData['top_industry_breakdown'];
+            $fundTypeGetData = $topCompositionData['fund_type_get_data'];
+            $disclaimer = $topCompositionData['disclaimer'];
+            $snapshotDate = $topCompositionData['snapshot_date'];
+
+            if (!empty($topCompositionData['message'])) {
+                $data['message'] = $topCompositionData['message'];
+            }
         } elseif ($hasSearched) {
             $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
             $fundSnapshot = $snapshotData['rows'];
@@ -855,8 +872,10 @@ class RatioController extends Controller
             'scrips' => $newScrips,
             'industry' => $newIndustry,
             'total_corpus_entry' => null,
-            'top_scrips' => null,
-            'top_industries' => null,
+            'top_scrips' => $topScrips,
+            'top_industries' => $topIndustries,
+            'top_scrip_breakdown' => $topScripBreakdown,
+            'top_industry_breakdown' => $topIndustryBreakdown,
             'monthName' => $request->filled('month') ? date('F', mktime(0, 0, 0, (int) $request->input('month'), 10)) : null,
             'lastDate' => $snapshotDate,
             'active_tab' => $request->input('active_tab'),
@@ -873,6 +892,201 @@ class RatioController extends Controller
             'results_industries' => $resultsIndustry,
             'disclaimer' => $disclaimer,
         ]);
+    }
+
+    protected function buildTopCompositionData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
+    {
+        $result = [
+            'top_scrips' => collect(),
+            'top_industries' => collect(),
+            'top_scrip_breakdown' => [],
+            'top_industry_breakdown' => [],
+            'fund_type_get_data' => null,
+            'snapshot_date' => null,
+            'disclaimer' => '',
+            'message' => null,
+        ];
+
+        Log::info('top_script_rop_industry:start', [
+            'category' => $request->input('Category'),
+            'month' => $request->input('month'),
+            'year' => $request->input('year'),
+            'limit' => $request->input('limit', 10),
+            'fund_ids' => $request->input('fund_id', []),
+            'has_searched' => $hasSearched,
+            'selected_fund_count' => $selection['funds']->count(),
+            'selected_fund_codes' => $selection['funds']->pluck('fund_code')->filter()->values()->all(),
+            'selected_fund_names' => $selection['funds']->pluck('fund_name')->filter()->values()->all(),
+        ]);
+
+        if (!$hasSearched) {
+            return $result;
+        }
+
+        $availability = $this->compositionDataAvailability();
+        if (!$availability['ready']) {
+            Log::info('top_script_rop_industry:availability_failed', $availability);
+            $result['message'] = $availability['message'];
+
+            return $result;
+        }
+
+        if ($selection['funds']->isEmpty()) {
+            Log::info('top_script_rop_industry:no_funds_selected', [
+                'category' => $request->input('Category'),
+                'fund_ids' => $request->input('fund_id', []),
+                'fund_type_id' => $request->input('fund_type_id'),
+            ]);
+            $result['message'] = $request->input('Category') === 'by_fund'
+                ? 'Choose at least 2 funds to run this report.'
+                : 'Choose a fund classification to run this report.';
+
+            return $result;
+        }
+
+        $period = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+        if (!$period) {
+            Log::info('top_script_rop_industry:invalid_period', [
+                'month' => $request->input('month'),
+                'year' => $request->input('year'),
+            ]);
+            $result['message'] = 'Choose a valid month and year to run this report.';
+
+            return $result;
+        }
+
+        $limit = max(1, min((int) $request->input('limit', 10), 20));
+        $fundCodes = $selection['funds']
+            ->pluck('fund_code')
+            ->filter()
+            ->values()
+            ->all();
+
+        $rows = $this->fetchLatestFundCompositionRowsForFunds($fundCodes, $period['start'], $period['end']);
+
+        Log::info('top_script_rop_industry:rows', [
+            'fund_codes' => $fundCodes,
+            'period_start' => $period['start']->toDateString(),
+            'period_end' => $period['end']->toDateString(),
+            'row_count' => $rows->count(),
+            'sample_rows' => $rows->take(5)->map(function ($row) {
+                return [
+                    'fund_code' => data_get($row, 'fund_code'),
+                    'entry_date' => data_get($row, 'entry_date'),
+                    'scrip_name' => data_get($row, 'scrip_name'),
+                    'industry' => data_get($row, 'industry'),
+                    'category' => data_get($row, 'category'),
+                    'content_per' => data_get($row, 'content_per'),
+                    'amount' => data_get($row, 'amount'),
+                ];
+            })->values()->all(),
+        ]);
+
+        if ($rows->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+
+            return $result;
+        }
+
+        $result['top_scrips'] = $rows
+            ->filter(fn ($row) => filled(data_get($row, 'scrip_name')))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'scrip_name')))
+            ->map(function ($groupRows) {
+                $first = $groupRows->first();
+
+                return (object) [
+                    'scrip_name' => data_get($first, 'scrip_name'),
+                    'industry' => data_get($first, 'industry'),
+                    'content_per' => round((float) $groupRows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)), 2),
+                    'amount' => round((float) $groupRows->sum(fn ($row) => (float) data_get($row, 'amount', 0)), 2),
+                ];
+            })
+            ->sortByDesc(fn ($row) => (float) data_get($row, 'content_per', 0))
+            ->take($limit)
+            ->values();
+
+        $fundNameMap = $selection['funds']
+            ->pluck('fund_name', 'fund_code')
+            ->mapWithKeys(fn ($name, $code) => [$this->normalizeComparableText($code) => $name]);
+
+        $result['top_scrip_breakdown'] = $rows
+            ->filter(fn ($row) => filled(data_get($row, 'scrip_name')) && filled(data_get($row, 'fund_code')))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'scrip_name')))
+            ->map(function ($groupRows) use ($fundNameMap) {
+                return $groupRows
+                    ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'fund_code')))
+                    ->map(function ($fundRows, $fundCodeKey) use ($fundNameMap) {
+                        $first = $fundRows->first();
+
+                        return [
+                            'fund_name' => $fundNameMap->get($fundCodeKey, data_get($first, 'fund_code')),
+                            'content_per' => round((float) $fundRows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)), 2),
+                            'amount' => round((float) $fundRows->sum(fn ($row) => (float) data_get($row, 'amount', 0)), 2),
+                        ];
+                    })
+                    ->sortByDesc('content_per')
+                    ->values()
+                    ->all();
+            })
+            ->only($result['top_scrips']->map(fn ($row) => $this->normalizeComparableText(data_get($row, 'scrip_name')))->all())
+            ->toArray();
+
+        $result['top_industries'] = $rows
+            ->filter(fn ($row) => filled(data_get($row, 'industry')))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'industry')))
+            ->map(function ($groupRows) {
+                $first = $groupRows->first();
+
+                return (object) [
+                    'industry' => data_get($first, 'industry'),
+                    'category' => data_get($first, 'category'),
+                    'content_per' => round((float) $groupRows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)), 2),
+                    'amount' => round((float) $groupRows->sum(fn ($row) => (float) data_get($row, 'amount', 0)), 2),
+                ];
+            })
+            ->sortByDesc(fn ($row) => (float) data_get($row, 'content_per', 0))
+            ->take($limit)
+            ->values();
+
+        $result['top_industry_breakdown'] = $rows
+            ->filter(fn ($row) => filled(data_get($row, 'industry')) && filled(data_get($row, 'fund_code')))
+            ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'industry')))
+            ->map(function ($groupRows) use ($fundNameMap) {
+                return $groupRows
+                    ->groupBy(fn ($row) => $this->normalizeComparableText(data_get($row, 'fund_code')))
+                    ->map(function ($fundRows, $fundCodeKey) use ($fundNameMap) {
+                        $first = $fundRows->first();
+
+                        return [
+                            'fund_name' => $fundNameMap->get($fundCodeKey, data_get($first, 'fund_code')),
+                            'content_per' => round((float) $fundRows->sum(fn ($row) => (float) data_get($row, 'content_per', 0)), 2),
+                            'amount' => round((float) $fundRows->sum(fn ($row) => (float) data_get($row, 'amount', 0)), 2),
+                        ];
+                    })
+                    ->sortByDesc('content_per')
+                    ->values()
+                    ->all();
+            })
+            ->only($result['top_industries']->map(fn ($row) => $this->normalizeComparableText(data_get($row, 'industry')))->all())
+            ->toArray();
+
+        $result['fund_type_get_data'] = $request->input('Category') === 'by_category'
+            ? $fundTypes->firstWhere('ft_id', (int) $request->input('fund_type_id'))
+            : null;
+        $result['snapshot_date'] = $rows->max('entry_date');
+        $result['disclaimer'] = 'Data shown is based on the latest published portfolio for the selected month.';
+
+        Log::info('top_script_rop_industry:result', [
+            'top_scrips_count' => $result['top_scrips']->count(),
+            'top_industries_count' => $result['top_industries']->count(),
+            'snapshot_date' => $result['snapshot_date'],
+        ]);
+
+        if ($result['top_scrips']->isEmpty() && $result['top_industries']->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+        }
+
+        return $result;
     }
 
     protected function buildCompositionMoversData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
@@ -2140,7 +2354,7 @@ class RatioController extends Controller
 
             $rows = $query
                 ->orderByDesc('entry_date')
-                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
+                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'category', 'content_per', 'amount']);
 
             if ($rows->isEmpty()) {
                 return collect();
@@ -2180,7 +2394,7 @@ class RatioController extends Controller
 
             $rows = $query
                 ->orderByDesc('entry_date')
-                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'content_per', 'amount']);
+                ->get(['entry_date', 'fund_code', 'scrip_name', 'industry', 'category', 'content_per', 'amount']);
 
             if ($rows->isEmpty()) {
                 return collect();
