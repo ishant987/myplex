@@ -57,64 +57,15 @@
                                         <h4>R-Square <span>Comparison</span></h4>
                                     </a>
                                 </li>
-                                
+                                <li>
+                                    <a href="<?php echo e(route('user.notifications')); ?>">
+                                        <figure><img src="<?php echo e(asset('new-images/dh4.png')); ?>" alt=""></figure>
+                                        <h4>Notifications</h4>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
-
-                        <!-- <div class="dash_boxes">
-                            <ul>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 1</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 2</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 3</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 4</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 5</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 6</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                            </ul>
-                        </div> -->
                     </div>
-                   
                 </div>
         </div>
 

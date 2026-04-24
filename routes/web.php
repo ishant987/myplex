@@ -738,9 +738,10 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     Route::middleware(['auth', 'nocache'])->group(function () {
         Route::get('logout', 'LoginController@logout')->name('logout');
         Route::middleware(['subscription'])->group(function () {
-            Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+            Route::get('dashboard', 'RatioController@index_dashboard')->name('index_dashboard');
+            Route::get('ratio-reports', 'RatioController@dashboard')->name('ratio_dashboard');
             Route::get('auth-dashboard', function () {
-                return redirect()->route('user.ratio_dashboard');
+                return redirect()->route('user.index_dashboard');
             })->name('auth-dashboard');
             Route::get('notifications', 'RatioController@notifications')->name('notifications');
             Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');

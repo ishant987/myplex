@@ -98,7 +98,7 @@
         <header class="head">
                 <div class="top_bar">
                     <div class="tgl_menu">
-                        <a href="{{route('user.ratio_dashboard')}}" class="inner_logo">
+                        <a href="{{route('user.index_dashboard')}}" class="inner_logo">
                             <img class="logo1" src="{{asset('themes/frontend/assets/v1/img/logo_dash.png')}}" alt="">
                             <img class="logo2" src="{{asset('themes/frontend/assets/infosolz/images/small_logo.png')}}" alt="">
                         </a>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <ul class="welcome">
-                        <li><a href="{{ route('user.ratio_dashboard') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/wel.png')}}" alt="">Welcome to Dashboard</a></li>
+                        <li><a href="{{ route('user.index_dashboard') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/wel.png')}}" alt="">Welcome to Dashboard</a></li>
                         <li><a href="{{ route('user.notifications') }}">
                             <i>
                                 <img src="{{asset('themes/frontend/assets/infosolz/images/noti.png')}}" alt="">

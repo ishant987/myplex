@@ -76,7 +76,7 @@ class LoginController extends BaseController
             }
             else
             {
-                return redirect()->route('user.ratio_dashboard')->with('success','You have successfully logged in');
+                return redirect()->route('user.index_dashboard')->with('success','You have successfully logged in');
             }
                  
               // return redirect()->back();
@@ -218,14 +218,14 @@ class LoginController extends BaseController
 
                 auth()->login($finduser);
                 $this->establishUserSession($request, $finduser);
-                return redirect()->route('user.ratio_dashboard');
+                return redirect()->route('user.index_dashboard');
             }
             else
             {
                 if(isset($finduser->email))
                 {
                     auth()->login($finduser);
-                    return redirect()->route('user.ratio_dashboard');
+                    return redirect()->route('user.index_dashboard');
                 }
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
@@ -258,7 +258,7 @@ class LoginController extends BaseController
                     'trial_ends_at' => $expiryDate,
                     'subscription_status' => 'trial',
                 ]);
-                return redirect()->route('user.ratio_dashboard');
+                return redirect()->route('user.index_dashboard');
               //  return redirect()->back();
             }
 
@@ -326,7 +326,7 @@ class LoginController extends BaseController
 
                 auth()->login($finduser);
                 $this->establishUserSession($request, $finduser);
-                return redirect()->route('user.ratio_dashboard');
+                return redirect()->route('user.index_dashboard');
             }
             else
             {
@@ -334,7 +334,7 @@ class LoginController extends BaseController
                 {
                     auth()->login($finduser);
                     $this->establishUserSession($request, $finduser);
-                    return redirect()->route('user.ratio_dashboard');
+                    return redirect()->route('user.index_dashboard');
                 }
                 $registrationDate=date('Y-m-d');
                 $registrationDates = Carbon::now(); 
@@ -363,7 +363,7 @@ class LoginController extends BaseController
                 $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
                 $this->establishUserSession($request, $user);
-                return redirect()->route('user.ratio_dashboard');
+                return redirect()->route('user.index_dashboard');
               //  return redirect()->back();
             }
 

@@ -244,7 +244,7 @@ class SubscriptionController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'redirect' => route('user.ratio_dashboard'),
+            'redirect' => route('user.index_dashboard'),
         ]);
     }
 

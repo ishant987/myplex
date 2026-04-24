@@ -98,7 +98,7 @@
         <header class="head">
                 <div class="top_bar">
                     <div class="tgl_menu">
-                        <a href="<?php echo e(route('user.ratio_dashboard')); ?>" class="inner_logo">
+                        <a href="<?php echo e(route('user.index_dashboard')); ?>" class="inner_logo">
                             <img class="logo1" src="<?php echo e(asset('themes/frontend/assets/v1/img/logo_dash.png')); ?>" alt="">
                             <img class="logo2" src="<?php echo e(asset('themes/frontend/assets/infosolz/images/small_logo.png')); ?>" alt="">
                         </a>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <ul class="welcome">
-                        <li><a href="<?php echo e(route('user.ratio_dashboard')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Welcome to Dashboard</a></li>
+                        <li><a href="<?php echo e(route('user.index_dashboard')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Welcome to Dashboard</a></li>
                         <li><a href="<?php echo e(route('user.notifications')); ?>">
                             <i>
                                 <img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/noti.png')); ?>" alt="">

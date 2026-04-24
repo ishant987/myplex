@@ -41,12 +41,17 @@ use Throwable;
 
 class RatioController extends Controller
 {
+    public function index_dashboard(Request $request)
+    {
+        return view('web.auth.index_dashboard', $this->subscriptionViewData(Auth::user()));
+    }
+
     public function dashboard(Request $request)
     {
         $user = Auth::user();
         $data = $this->subscriptionViewData($user);
 
-        return view('web.auth.dashboard', $data);
+        return view('web.auth.ratio_index', $data);
     }
 
     function notifications(){
