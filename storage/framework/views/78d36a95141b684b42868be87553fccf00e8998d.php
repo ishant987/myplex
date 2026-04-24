@@ -456,7 +456,15 @@ unset($__errorArgs, $__bag); ?>
 
     document.addEventListener('DOMContentLoaded', function() {
         function keepOccurrenceMonthEnabled() {
-            $('#month').prop('disabled', false);
+            var monthSelect = document.getElementById('month');
+
+            if (!monthSelect) {
+                return;
+            }
+
+            monthSelect.disabled = false;
+            monthSelect.removeAttribute('disabled');
+            $(monthSelect).prop('disabled', false).trigger('change.select2');
         }
 
         var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
@@ -464,6 +472,11 @@ unset($__errorArgs, $__bag); ?>
         keepOccurrenceMonthEnabled();
         $('#allocation_select_fund').on('change', set_fund_select_val);
         $('#year').on('change', keepOccurrenceMonthEnabled);
+        $('#month').on('focus click change', keepOccurrenceMonthEnabled);
+        setTimeout(keepOccurrenceMonthEnabled, 0);
+        setTimeout(keepOccurrenceMonthEnabled, 300);
+        setTimeout(keepOccurrenceMonthEnabled, 1000);
+        setInterval(keepOccurrenceMonthEnabled, 2000);
         industry_scrip_select(document.querySelector('.wm_tab .tabs a.active') || document.getElementById('decile_tab'));
 
         $('#occurrence-report-form').on('submit', function() {
