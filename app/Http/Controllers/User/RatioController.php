@@ -51,7 +51,7 @@ class RatioController extends Controller
         $user = Auth::user();
         $data = $this->subscriptionViewData($user);
 
-        return view('web.auth.ratio_index', $data);
+        return view('web.auth.dashboard', $data);
     }
 
     function notifications(){
