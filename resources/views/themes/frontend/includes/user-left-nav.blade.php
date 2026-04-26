@@ -1,5 +1,9 @@
-<div class="content-form bg-lightblue">
-    <div class="list-group">
+<div class="content-form bg-lightblue account-nav-card">
+    <div class="account-nav-head">
+        <p>Account</p>
+        <h4>Settings</h4>
+    </div>
+    <div class="list-group account-nav-list">
         <a href="{{ route('web.myaccount') }}" class="list-group-item list-group-item-action{{ request()->routeIs('web.myaccount') ? ' active' : '' }}">
             My Account
         </a>

@@ -130,20 +130,20 @@ unset($__errorArgs, $__bag); ?>
                                                 value="by_category"
                                                 <?php echo e($selectedCategory === 'by_category' ? 'checked' : ''); ?>
 
-                                                onclick='get_fund_types(this.value)'>
+                                                onchange="toggleCategoryFields(); updateFundSelectionState();">
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
                                                 <?php echo e($selectedCategory === 'by_fund' ? 'checked' : ''); ?>
 
-                                                onclick='get_fund_types(this.value)'>
+                                                onchange="toggleCategoryFields(); updateFundSelectionState();">
                                             By Fund
                                         </label>
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show_1" style="<?php echo e($isByFundMode ? 'display:none;' : ''); ?>">
+                                <div class="col-md-4 div_show_1" id="fund_type_wrap" style="<?php echo e($isByFundMode ? 'display:none;' : ''); ?>">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2" data-placeholder="Select Fund Classification"
                                             <?php echo e($isByFundMode ? 'disabled' : ''); ?>>
@@ -201,7 +201,7 @@ unset($__errorArgs, $__bag); ?>
                                             
                                         </div> -->
 
-                                <div class="col-md-4 div_hide_1" style="<?php echo e($isByFundMode ? '' : 'display:none;'); ?>">
+                                <div class="col-md-4 div_hide_1" id="fund_select_wrap" style="<?php echo e($isByFundMode ? '' : 'display:none;'); ?>">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'
@@ -338,6 +338,7 @@ unset($__errorArgs, $__bag); ?>
                                         <button type="submit" id="submit_btn">Search</button>
                                         <!-- <button type="submit" name="submit" value="search_by_fund">show by fund</button> -->
                                     </div>
+                                    <span class="text-danger d-block mt-2" id="filter_msgg"></span>
                                 </div>
                             </div>
                         </form>
@@ -537,8 +538,12 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                     <?php else: ?>
                         
-                        <?php echo printNoData(); ?>
+                        <?php if(!empty($message)): ?>
+                            <div class="alert alert-warning mt-3"><?php echo e($message); ?></div>
+                        <?php else: ?>
+                            <?php echo printNoData(); ?>
 
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 <?php if(isset($stat_result['fund_absolute_return'])): ?>
@@ -561,6 +566,79 @@ unset($__errorArgs, $__bag); ?>
 
 <?php $__env->stopSection(); ?>
 
+<?php
+    $pdfRatioLabel = null;
+
+    if (isset($request->report_category)) {
+        switch ($request->report_category) {
+            case 'returns':
+                $pdfRatioLabel = 'Returns/CAGR';
+                break;
+            case 'jensens_alpha':
+                $pdfRatioLabel = 'Jensen’s alpha';
+                break;
+            case 'sharpe':
+                $pdfRatioLabel = 'Sharpe';
+                break;
+            case 'treynor':
+                $pdfRatioLabel = 'Treynor';
+                break;
+            case 'information_ratio':
+                $pdfRatioLabel = 'Information Ratio';
+                break;
+            case 'one_month_rolling_return':
+                $pdfRatioLabel = '1 month Rolling Return';
+                break;
+            case 'beta':
+                $pdfRatioLabel = 'Beta';
+                break;
+            case 'volatility':
+                $pdfRatioLabel = 'Volatility';
+                break;
+            case 'tracking_error':
+                $pdfRatioLabel = 'Tracking Error';
+                break;
+            case 'skewness':
+                $pdfRatioLabel = 'Skewness';
+                break;
+            case 'kurtosis':
+                $pdfRatioLabel = 'Kurtosis';
+                break;
+            case 'r_square':
+                $pdfRatioLabel = 'R Square';
+                break;
+        }
+    }
+
+    $pdfDurationLabel = null;
+
+    if (isset($as_on_time_frame_data)) {
+        switch ($request->as_on_time_frame) {
+            case '1_month':
+                $pdfDurationLabel = '1 Month';
+                break;
+            case '3_months':
+                $pdfDurationLabel = '3 Months';
+                break;
+            case '6_months':
+                $pdfDurationLabel = '6 Months';
+                break;
+            case '1_year':
+                $pdfDurationLabel = '1 Year';
+                break;
+            case '2_year':
+                $pdfDurationLabel = '2 Years';
+                break;
+            case '3_years':
+                $pdfDurationLabel = '3 Years';
+                break;
+            case '5_years':
+                $pdfDurationLabel = '5 Years';
+                break;
+        }
+    }
+?>
+
 <?php $__env->startPush('scripts'); ?>
 <script>
     function selectedFundCount() {
@@ -570,21 +648,21 @@ unset($__errorArgs, $__bag); ?>
     function updateFundSelectionState() {
         var category = $('input[name="Category"]:checked').val() || 'by_category';
         var count = selectedFundCount();
+        var ratio = $('select[name="report_category"]').val();
+        var fundTypeId = $('select[name="fund_type_id"]').val();
+        var message = '';
 
-        if (category !== 'by_fund') {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
+        if (!ratio) {
+            message = 'Select a ratio to run this report.';
+        } else if (category === 'by_category' && !fundTypeId) {
+            message = 'Select a fund classification to run this report.';
+        } else if (category === 'by_fund' && (count < 2 || count > 20)) {
+            message = 'Selection limit minimum 2 and maximum 20 for Funds.';
         }
 
-        if (count >= 2 && count <= 20) {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
-        }
-
-        $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
-        $('#submit_btn').prop('disabled', true);
+        $('#fund_msgg').html(category === 'by_fund' && message ? '<p>' + message + '</p>' : '');
+        $('#filter_msgg').text(message && category !== 'by_fund' ? message : '');
+        $('#submit_btn').prop('disabled', message !== '');
     }
 
     function toggleRankingFields() {
@@ -601,12 +679,30 @@ unset($__errorArgs, $__bag); ?>
     function toggleCategoryFields() {
         var category = $('input[name="Category"]:checked').val() || 'by_category';
         var isByFund = category === 'by_fund';
+        var fundTypeWrap = $('#fund_type_wrap');
+        var fundSelectWrap = $('#fund_select_wrap');
+        var fundTypeSelect = $('select[name="fund_type_id"]');
+        var fundSelect = $('select[name="fund_id[]"]');
 
-        $('.div_show_1').toggle(!isByFund);
-        $('.div_hide_1').toggle(isByFund);
+        fundTypeWrap.toggle(!isByFund);
+        fundSelectWrap.toggle(isByFund);
 
-        $('select[name="fund_type_id"]').prop('disabled', isByFund);
-        $('select[name="fund_id[]"]').prop('disabled', !isByFund);
+        fundTypeSelect.prop('disabled', isByFund);
+        fundSelect.prop('disabled', !isByFund);
+
+        if (isByFund) {
+            $('#filter_msgg').text('');
+        } else {
+            $('#fund_msgg').empty();
+        }
+
+        if (fundTypeSelect.hasClass('select2-hidden-accessible')) {
+            fundTypeSelect.trigger('change.select2');
+        }
+
+        if (fundSelect.hasClass('select2-hidden-accessible')) {
+            fundSelect.trigger('change.select2');
+        }
     }
 
     function get_date(thiss) {
@@ -699,10 +795,10 @@ unset($__errorArgs, $__bag); ?>
         index_enable($('select[name="report_category"]').val());
 
         $('input[name="ranking"]').on('change', toggleRankingFields);
-        $('input[name="Category"]').on('change', function() {
-            get_fund_types(this.value);
-        });
+        $('input[name="Category"]').on('change', toggleCategoryFields);
+        $('input[name="Category"]').on('change', updateFundSelectionState);
         $('#allocation_select_fund').on('change', updateFundSelectionState);
+        $('select[name="fund_type_id"], select[name="report_category"]').on('change', updateFundSelectionState);
 
         var exportButton = document.getElementById('exportPDF');
 
@@ -733,8 +829,8 @@ unset($__errorArgs, $__bag); ?>
 
                 var startDate = "<?php echo e(isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000'); ?>";
                 var endDate = "<?php echo e(isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000'); ?>";
-                var ratio = <?php if(isset($request->report_category)): ?> <?php switch($request->report_category): case ('returns'): ?> 'Returns/CAGR' <?php break; ?> <?php case ('jensens_alpha'): ?> 'Jensen’s alpha' <?php break; ?> <?php case ('sharpe'): ?> 'Sharpe' <?php break; ?> <?php case ('treynor'): ?> 'Treynor' <?php break; ?> <?php case ('information_ratio'): ?> 'Information Ratio' <?php break; ?> <?php case ('one_month_rolling_return'): ?> '1 month Rolling Return' <?php break; ?> <?php case ('beta'): ?> 'Beta' <?php break; ?> <?php case ('volatility'): ?> 'Volatility' <?php break; ?> <?php case ('tracking_error'): ?> 'Tracking Error' <?php break; ?> <?php case ('skewness'): ?> 'Skewness' <?php break; ?> <?php case ('kurtosis'): ?> 'Kurtosis' <?php break; ?> <?php case ('r_square'): ?> 'R Square' <?php break; ?> <?php endswitch; ?> <?php endif; ?>;
-                var duration = <?php if(isset($as_on_time_frame_data)): ?> <?php switch($request->as_on_time_frame): case ('1_month'): ?> '1 Month' <?php break; ?> <?php case ('3_months'): ?> '3 Months' <?php break; ?> <?php case ('6_months'): ?> '6 Months' <?php break; ?> <?php case ('1_year'): ?> '1 Year' <?php break; ?> <?php case ('2_year'): ?> '2 Years' <?php break; ?> <?php case ('3_years'): ?> '3 Years' <?php break; ?> <?php case ('5_years'): ?> '5 Years' <?php break; ?> <?php default: ?> null <?php endswitch; ?> <?php else: ?> null <?php endif; ?>;
+                var ratio = <?php echo json_encode($pdfRatioLabel, 15, 512) ?>;
+                var duration = <?php echo json_encode($pdfDurationLabel, 15, 512) ?>;
                 var fundClassification = "<?php echo e(isset($fund_type_name) ? $fund_type_name[0] : ''); ?>";
                 var indexName = "<?php echo e(isset($index_name->name) ? $index_name->name : ''); ?>";
                 var fundNames = "<?php echo e(isset($fund_names) ? $fund_names : ''); ?>";

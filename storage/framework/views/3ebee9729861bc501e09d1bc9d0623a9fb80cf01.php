@@ -1,4 +1,9 @@
 <?php $__env->startSection('content'); ?>
+    <?php
+        $scrips = $scrips ?? collect();
+        $industry = $industry ?? collect();
+        $isByFundMode = isset($request) && data_get($request, 'Category') === 'by_fund';
+    ?>
 
     <div class="inner_main">
         <div class="page_detail">
@@ -19,15 +24,15 @@
                                 <div class="col-md-6">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category" checked
+                                            <input type="radio" id="type_Category" name="Category"
                                                 value="by_category"
-                                                <?php if(isset($request) && $request->Category == 'by_category'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                <?php if(!$isByFundMode): ?> checked <?php endif; ?>
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                <?php if(isset($request) && $request->Category == 'by_fund'): ?> <?php echo e('Checked'); ?> <?php endif; ?>
+                                                <?php if($isByFundMode): ?> checked <?php endif; ?>
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
@@ -38,16 +43,15 @@
 
                                 
 
-                                <div class="col-md-6 div_show_1">
+                                <div class="col-md-6 div_show_1" style="<?php echo e($isByFundMode ? 'display:none;' : ''); ?>">
                                     <div class="form_group">
-                                        <select name="fund_type" id="fund_type" class="select2"
-                                            data-placeholder="Select Fund Classification">
-
+                                        <select name="fund_type_id" id="fund_type_id" class="select2"
+                                            data-placeholder="Select Fund Classification" <?php if(!$isByFundMode): ?> required <?php endif; ?>>
+                                            <option value=""></option>
                                             <?php if(isset($all_fund_types)): ?>
                                                 <?php $__currentLoopData = $all_fund_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value=""></option>
                                                     <option value="<?php echo e($fund_type->ft_id); ?>"
-                                                        <?php if($fund_type->ft_id == old('fund_type_id', isset($fund_type_id) ? $fund_type_id : '')): ?> selected <?php endif; ?>>
+                                                        <?php if($fund_type->ft_id == old('fund_type_id', $request->fund_type_id ?? $fund_type_id ?? '')): ?> selected <?php endif; ?>>
                                                         <?php echo e($fund_type->name); ?>
 
                                                     </option>
@@ -55,7 +59,7 @@
                                             <?php endif; ?>
                                         </select>
                                     </div>
-                                    <?php $__errorArgs = ['fund_type'];
+                                    <?php $__errorArgs = ['fund_type_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -65,13 +69,13 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                                    <span class="text-danger" id="category_msgg"></span>
                                 </div>
 
-                                <div class="col-md-6 div_hide_1">
+                                <div class="col-md-6 div_hide_1" style="<?php echo e($isByFundMode ? '' : 'display:none;'); ?>">
                                     <div class="form_group multiple_select">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
-                                            <option value="">Select Fund</option>
                                             <?php if(isset($all_funds)): ?>
                                                 <?php $__currentLoopData = $all_funds; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <option value="<?php echo e($fund->fund_id); ?>"
@@ -202,7 +206,7 @@ unset($__errorArgs, $__bag); ?>
 
                                 <div class="col-md-12">
                                     <div class="bttn_grp">
-                                        <button type="submit" name="search" id="fund_type_btn"
+                                        <button type="submit" name="search" id="submit_btn"
                                             value="search">Search</button>
                                     </div>
                                 </div>
@@ -214,7 +218,17 @@ unset($__errorArgs, $__bag); ?>
                         value="<?php echo e(isset($fundCodes) ? json_encode($fundCodes) : ''); ?>">
                     <input type="hidden" name="lastDate" id="lastDate" value="<?php echo e(isset($lastDate) ? $lastDate : ''); ?>">
 
-                    <?php if(isset($month) && isset($year) && isset($month_second) && isset($year_second) && $request->Category != ''): ?>
+                    <?php if(!empty($message)): ?>
+                        <div class="graph_table">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text_center"><?php echo e($message); ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php elseif(isset($month) && isset($year) && isset($month_second) && isset($year_second) && $request->Category != ''): ?>
 
                         <div class="wm_tab">
                             <ul class="tabs">
@@ -277,7 +291,7 @@ unset($__errorArgs, $__bag); ?>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if(isset($scrips) && count($scrips) > 0): ?>
+                                            <?php if($scrips->count() > 0): ?>
                                                 <?php $__currentLoopData = $scrips; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <?php if(number_format($sc->content_per, 2) > 0): ?>
                                                         <tr>
@@ -352,7 +366,7 @@ unset($__errorArgs, $__bag); ?>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if(isset($industry) && count($industry) > 0): ?>
+                                            <?php if($industry->count() > 0): ?>
                                                 <?php $__currentLoopData = $industry; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $inds): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <?php if(number_format($inds->content_per, 2) > 0): ?>
                                                         <tr>
@@ -397,25 +411,7 @@ unset($__errorArgs, $__bag); ?>
                 <?php endif; ?>
             </div>
             <div class="popup-overlay"></div>
-            <div class="table_popup">
-                <div class="graph_table">
-                    <h4>Fund Changes</h4>
-                    <div class="table_overflow table_height">
-                        <table class="table datatable">
-                            <thead>
-                                <tr>
-                                    <th>Fund Name </th>
-                                    <th>% Change </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <button class="close_popup"><i class="fa-solid fa-xmark"></i></button>
-            </div>
+            
         </div>
 
     </div>
@@ -426,8 +422,7 @@ unset($__errorArgs, $__bag); ?>
 
 <script>
     function set_fund_select_val() {
-
-        var thiss = $('#fund_Category').val();
+        var thiss = $('input[name="Category"]:checked').val();
         var count = $('#allocation_select_fund').select2('data').length;
 
         console.log(thiss + '  ' + count);
@@ -435,11 +430,9 @@ unset($__errorArgs, $__bag); ?>
         if (thiss == 'by_fund') {
 
             if (count >= 2 && count <= 20) {
-                // console.log('enable');
+                $('#fund_msgg').html('');
                 $('#submit_btn').prop('disabled', false);
             } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
@@ -450,22 +443,39 @@ unset($__errorArgs, $__bag); ?>
         }
     }
 
+    function validate_category_selection() {
+        var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
+        var selectedFundType = $('#fund_type_id').val();
+
+        if (selectedCategory === 'by_category') {
+            if (selectedFundType) {
+                $('#category_msgg').html('');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                $('#category_msgg').html('<p>Select a <b>Fund Classification</b> to run this report.</p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+        }
+    }
+
 
     function get_fund_types(thiss) {
+        $('.div_show_1').toggle(thiss === 'by_category');
+        $('.div_hide_1').toggle(thiss === 'by_fund');
+        $('#fund_type_id').prop('required', thiss === 'by_category');
 
         var count = $('#allocation_select_fund').select2('data').length;
 
         if (thiss == 'by_category') {
-
-            $('#submit_btn').prop('disabled', false);
+            $('#fund_msgg').html('');
+            validate_category_selection();
         } else if (thiss == 'by_fund') {
+            $('#category_msgg').html('');
 
             if (count >= 2 && count <= 20) {
-                // console.log('enable');
+                $('#fund_msgg').html('');
                 $('#submit_btn').prop('disabled', false);
             } else {
-                // console.log('disabled');
-                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
@@ -593,6 +603,11 @@ unset($__errorArgs, $__bag); ?>
         $('#active-tab-input').val(tab_name);
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        get_fund_types($('input[name="Category"]:checked').val() || 'by_category');
+        $('#fund_type_id').on('change', validate_category_selection);
+    });
+
 
 
 
@@ -601,6 +616,10 @@ unset($__errorArgs, $__bag); ?>
 
     document.addEventListener('DOMContentLoaded', function() {
     var exportButtonIndustries = document.getElementById('exportPDF-industries');
+
+    if (!exportButtonIndustries) {
+        return;
+    }
 
     exportButtonIndustries.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -650,11 +669,11 @@ unset($__errorArgs, $__bag); ?>
             var table = new DataTable('#pdfData-industries');
             var tableData = [];
             table.rows({ search: 'applied' }).data().each(function(row) {
-                tableData.push([row[0], row[1], row[2], row[3]]);
+                tableData.push([row[0], row[1], row[2]]);
             });
 
             doc.autoTable({
-                head: [['Industry Name', 'Category', 'Content %', 'Amount (in Cr.)']],
+                head: [['Industry Name', 'Content %', 'Amount (in Cr.)']],
                 body: tableData,
                 startX: 15,
                 startY: yPosition + 10,
@@ -672,6 +691,10 @@ unset($__errorArgs, $__bag); ?>
 
 document.addEventListener('DOMContentLoaded', function() {
     var exportButtonScrips = document.getElementById('exportPDF-scrips');
+
+    if (!exportButtonScrips) {
+        return;
+    }
 
     exportButtonScrips.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -721,11 +744,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var table = new DataTable('#pdfData-scrips');
             var tableData = [];
             table.rows({ search: 'applied' }).data().each(function(row) {
-                tableData.push([row[0], row[1], row[2], row[3]]);
+                tableData.push([row[0], row[1], row[2]]);
             });
 
             doc.autoTable({
-                head: [['Scrip Name', 'Industry', 'Content %', 'Amount (in Cr.)']],
+                head: [['Scrip Name', 'Content %', 'Amount (in Cr.)']],
                 body: tableData,
                 startX: 15,
                 startY: yPosition + 10,

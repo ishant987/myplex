@@ -1,128 +1,145 @@
 <?php $__env->startSection('content'); ?>
+    <style>
+        .ratio-reports-shell {
+            display: grid;
+            gap: 18px;
+        }
 
-<div class="inner_main">
-            <div class="page_detail">
-                    <div class="inner_padding">
-                        
+        .ratio-reports-hero {
+            background: linear-gradient(135deg, #f4fbf6 0%, #ffffff 100%);
+            border: 1px solid #dcece1;
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 12px 28px rgba(18, 119, 62, 0.06);
+        }
 
-                        <div class="all_dash">
-                            <h1 class="page_heading">Ratio Reports</h1>
-                            <ul>
-                                <li>
-                                    <a href="<?php echo e(route('user.quick_ratio')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh1.png')); ?>" alt=""></figure>
-                                        <h4>Quick <span>Ratios</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.weekly_snapshot_new')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh2.png')); ?>" alt=""></figure>
-                                        <h4>Weekly <span>Snapshot</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.monthly_snapshot_new')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh2.png')); ?>" alt=""></figure>
-                                        <h4>Monthly <span>Snapshot</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.fund_factsheet')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh3.png')); ?>" alt=""></figure>
-                                        <h4>Fund <span>Factsheet</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.performance_ratios')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh4.png')); ?>" alt=""></figure>
-                                        <h4>Performance <span>Ratios</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.quartile_decile')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh5.png')); ?>" alt=""></figure>
-                                        <h4>Quartile &amp;<br> Decile</h4>
-                                    </a>
-                                </li>
-                               
-                                <li>
-                                    <a href="<?php echo e(route('user.comparative')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh6.png')); ?>" alt=""></figure>
-                                        <h4>Comparative</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.r_square_comparison')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh6.png')); ?>" alt=""></figure>
-                                        <h4>R-Square <span>Comparison</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="<?php echo e(route('user.notifications')); ?>">
-                                        <figure><img src="<?php echo e(asset('new-images/dh4.png')); ?>" alt=""></figure>
-                                        <h4>Notifications</h4>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+        .ratio-reports-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #e8f5ed;
+            color: #12773E;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
 
-                        <!-- <div class="dash_boxes">
-                            <ul>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 1</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 2</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 3</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 4</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 5</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                                <li>
-                                    <div class="box_icon">
-                                        <figure><img src="images/box_icon.png" alt=""></figure>
-                                        <h4>Ratio 6</h4>
-                                    </div>
-                                    <p>It is a long established fact that a reader will be...</p>
-                                    <a href="#">More <img src="images/right_arw.png" alt=""></a>
-                                </li>
-                            </ul>
-                        </div> -->
+        .ratio-reports-copy {
+            max-width: 760px;
+            margin: 0;
+            color: #667085;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .ratio-reports-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .ratio-reports-highlight {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid #e4ece7;
+        }
+
+        .ratio-reports-highlight strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #1f2937;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ratio-reports-highlight span {
+            display: block;
+            color: #667085;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .ratio-reports-shell .all_dash {
+            padding-left: 0;
+        }
+
+        .ratio-reports-shell .all_dash ul {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        @media  only screen and (max-width: 991px) {
+            .ratio-reports-hero {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            .ratio-reports-copy {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .ratio-reports-highlights,
+            .ratio-reports-shell .all_dash ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="inner_main">
+        <div class="page_detail">
+            <div class="inner_padding">
+                
+
+                <div class="ratio-reports-shell">
+                    <section class="ratio-reports-hero">
+                        <span class="ratio-reports-eyebrow">
+                            <i class="fa-solid fa-chart-column"></i>
+                            Report Hub
+                        </span>
+                        <h1 class="page_heading">Ratio Reports</h1>
+                        <p class="ratio-reports-copy">
+                            Access your ratio reporting toolkit from one clear dashboard. Jump into snapshots, factsheets,
+                            performance comparisons, and peer ranking views without digging through cluttered navigation.
+                        </p>
+                    </section>
+
+                    <section class="ratio-reports-highlights" aria-label="Ratio report highlights">
+                        <article class="ratio-reports-highlight">
+                            <strong>Snapshots</strong>
+                            <span>Review quick weekly and monthly changes from one place.</span>
+                        </article>
+                        <article class="ratio-reports-highlight">
+                            <strong>Comparisons</strong>
+                            <span>Move into quartile, comparative, and R-square views faster.</span>
+                        </article>
+                        <article class="ratio-reports-highlight">
+                            <strong>Details</strong>
+                            <span>Open factsheets and performance ratios with fewer taps.</span>
+                        </article>
+                    </section>
+
+                    <div class="all_dash">
+                        <ul>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.quick_ratio', 'icon' => 'new-images/dh1.png', 'title' => 'Quick Ratios', 'subtitle' => 'Fast ratio overview'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.weekly_snapshot_new', 'icon' => 'new-images/dh2.png', 'title' => 'Weekly Snapshot', 'subtitle' => 'Latest weekly report'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.monthly_snapshot_new', 'icon' => 'new-images/dh2.png', 'title' => 'Monthly Snapshot', 'subtitle' => 'Monthly trend summary'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.fund_factsheet', 'icon' => 'new-images/dh3.png', 'title' => 'Fund Factsheet', 'subtitle' => 'View fund essentials'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.performance_ratios', 'icon' => 'new-images/dh4.png', 'title' => 'Performance Ratios', 'subtitle' => 'Track ratio performance'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.quartile_decile', 'icon' => 'new-images/dh5.png', 'title' => 'Quartile & Decile', 'subtitle' => 'Rank peer group standing'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.comparative', 'icon' => 'new-images/dh6.png', 'title' => 'Comparative', 'subtitle' => 'Compare multiple funds'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.r_square_comparison', 'icon' => 'new-images/dh6.png', 'title' => 'R-Square Comparison', 'subtitle' => 'Check correlation strength'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                            <?php echo $__env->make('web.auth.partials.dashboard-card', ['route' => 'user.notifications', 'icon' => 'new-images/dh4.png', 'title' => 'Notifications', 'subtitle' => 'Review account alerts'], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                        </ul>
                     </div>
-                   
                 </div>
+            </div>
         </div>
-
+    </div>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/auth/dashboard.blade.php ENDPATH**/ ?>

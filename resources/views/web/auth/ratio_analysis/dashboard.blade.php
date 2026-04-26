@@ -14,49 +14,13 @@
                         <div class="all_dash">
                             <h1 class="page_heading">Ratio Reports</h1>
                             <ul>
-                                <li>
-                                    <a href="{{route('user.quick_ratio')}}">
-                                        <figure><img src="{{asset('new-images/dh1.png')}}" alt=""></figure>
-                                        <h4>Quick Ratios</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.weekly_snapshot_new')}}">
-                                        <figure><img src="{{asset('new-images/dh2.png')}}" alt=""></figure>
-                                        <h4>Snapshot</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.fund_factsheet')}}">
-                                        <figure><img src="{{asset('new-images/dh3.png')}}" alt=""></figure>
-                                        <h4>Fund Factsheet</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.stats')}}">
-                                        <figure><img src="{{asset('new-images/dh4.png')}}" alt=""></figure>
-                                        <h4>Performance Ratios</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.quartile_decile')}}">
-                                        <figure><img src="{{asset('new-images/dh5.png')}}" alt=""></figure>
-                                        <h4>Quartile &amp;<br> Decile</h4>
-                                    </a>
-                                </li>
-                               
-                                <li>
-                                    <a href="{{route('user.comparative')}}">
-                                        <figure><img src="{{asset('new-images/dh6.png')}}" alt=""></figure>
-                                        <h4>Comparative</h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.r_square_comparison')}}">
-                                        <figure><img src="{{asset('new-images/dh6.png')}}" alt=""></figure>
-                                        <h4>r-Square Compare</h4>
-                                    </a>
-                                </li>
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.quick_ratio', 'icon' => 'new-images/dh1.png', 'title' => 'Quick Ratios', 'subtitle' => 'Fast ratio overview'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.weekly_snapshot_new', 'icon' => 'new-images/dh2.png', 'title' => 'Snapshot', 'subtitle' => 'Open weekly snapshot'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.fund_factsheet', 'icon' => 'new-images/dh3.png', 'title' => 'Fund Factsheet', 'subtitle' => 'View fund essentials'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.stats', 'icon' => 'new-images/dh4.png', 'title' => 'Performance Ratios', 'subtitle' => 'Track ratio performance'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.quartile_decile', 'icon' => 'new-images/dh5.png', 'title' => 'Quartile & Decile', 'subtitle' => 'Rank peer group standing'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.comparative', 'icon' => 'new-images/dh6.png', 'title' => 'Comparative', 'subtitle' => 'Compare multiple funds'])
+                                @include('web.auth.partials.dashboard-card', ['route' => 'user.r_square_comparison', 'icon' => 'new-images/dh6.png', 'title' => 'R-Square Compare', 'subtitle' => 'Check correlation strength'])
                             </ul>
                         </div>
 

@@ -16,6 +16,7 @@ use App\Lib\App\Common;
 
 use App\Models\PageModel;
 use App\Models\User;
+use App\Models\UserSensitiveDetail;
 // use App\Models\AskExpertQuestionModel;
 // use App\Models\AnswerModel;
 // use App\Models\LikeModel;
@@ -65,54 +66,35 @@ class UserController extends BaseController
     public function myAccountData(Request $request)
     {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 54);
-        if (!empty($dataArr)) {
-            $dataArr['full_url'] = $request->fullUrl();
+        $dataArr = $this->resolveAccountPageData($request, $dataArr, 'My Account');
 
-            $meta_title = $dataArr['meta_title'];
-            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
-            $meta_descp = $dataArr['meta_descp'];
-            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+        $commonconstants = Config('commonconstants');
+        $defDataArr = array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']));
 
-            $commonconstants = Config('commonconstants');
-
-            $userId = self::getLoggedInUserId();
-
-            $defDataArr = array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']));
-
-            return view($this->page_path.'.performance-synopsis', compact('dataArr', 'defDataArr'));
-        }
-        return abort(404);
+        return view($this->page_path.'.performance-synopsis', compact('dataArr', 'defDataArr'));
     }
 
     public function editProfileData(Request $request)
     {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 20);
-        if (!empty($dataArr)) {
-            $dataArr['full_url'] = $request->fullUrl();
+        $dataArr = $this->resolveAccountPageData($request, $dataArr, 'Edit Profile');
 
-            $meta_title = $dataArr['meta_title'];
-            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
-            $meta_descp = $dataArr['meta_descp'];
-            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+        $user = User::with('sensitiveDetails')->find(self::getLoggedInUserId());
 
-            $user = User::find(self::getLoggedInUserId());
-
-            $birthdayArr = ['0' => '', '1' => '', '2' => ''];
-            if ($user->birthday != '') {
-                $birthdayArr = explode("-", $user->birthday);
-            }
-
-            $commonconstants = Config('commonconstants');
-            $webLang = __('web');
-
-            $defDataArr = array("web_lang" => $webLang, "user_media_folder" => $commonconstants['user_dir_name']);
-            $daysArr = User::days();
-            $monthsArr = User::months();
-            $yearArr = range(date('Y'), 1950);
-
-            return view('themes.frontend.pages.edit-profile', compact('dataArr', 'defDataArr', 'user', 'birthdayArr', 'daysArr', 'monthsArr', 'yearArr'));
+        $birthdayArr = ['0' => '', '1' => '', '2' => ''];
+        if ($user->birthday != '') {
+            $birthdayArr = explode("-", $user->birthday);
         }
-        return abort(404);
+
+        $commonconstants = Config('commonconstants');
+        $webLang = __('web');
+
+        $defDataArr = array("web_lang" => $webLang, "user_media_folder" => $commonconstants['user_dir_name']);
+        $daysArr = User::days();
+        $monthsArr = User::months();
+        $yearArr = range(date('Y'), 1950);
+
+        return view('themes.frontend.pages.edit-profile', compact('dataArr', 'defDataArr', 'user', 'birthdayArr', 'daysArr', 'monthsArr', 'yearArr'));
     }
 
     public function updateProfile(Request $request)
@@ -130,7 +112,6 @@ class UserController extends BaseController
             'l_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id . ',u_id',
             'mobile' => 'nullable|numeric',
-            'company' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:500',
@@ -138,6 +119,10 @@ class UserController extends BaseController
             'birthday_day' => 'nullable|integer|min:1|max:31',
             'birthday_month' => 'nullable|integer|min:1|max:12',
             'birthday_year' => 'nullable|integer|min:1900|max:2100',
+            'bank_name' => 'nullable|string|max:255',
+            'account_holder_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'ifsc_code' => 'nullable|string|max:50',
             'p_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:' . Config('frontconstants.img_upld_max_size') . ''
         ];
 
@@ -165,7 +150,6 @@ class UserController extends BaseController
                 'l_name',
                 'email',
                 'mobile',
-                'company',
                 'city',
                 'state',
                 'address',
@@ -208,6 +192,18 @@ class UserController extends BaseController
             $store->updated_id = $id;
 
             if ($store->save()) {
+                UserSensitiveDetail::updateOrCreate(
+                    ['user_id' => $store->u_id],
+                    [
+                        'city' => $request->filled('city') ? trim((string) $request->city) : null,
+                        'state' => $request->filled('state') ? trim((string) $request->state) : null,
+                        'bank_name' => $request->filled('bank_name') ? trim((string) $request->bank_name) : null,
+                        'account_holder_name' => $request->filled('account_holder_name') ? trim((string) $request->account_holder_name) : null,
+                        'account_number' => $request->filled('account_number') ? trim((string) $request->account_number) : null,
+                        'ifsc_code' => $request->filled('ifsc_code') ? trim((string) $request->ifsc_code) : null,
+                    ]
+                );
+
                 if ($request->hasFile('p_picture') && $exstPicture) {
                     $oldFilePath = $upldDirName . '/' . $exstPicture;
                     $exists = Storage::exists($oldFilePath);
@@ -231,21 +227,38 @@ class UserController extends BaseController
     public function resetPasswordData(Request $request)
     {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 33);
-        if (!empty($dataArr)) {
-            $dataArr['full_url'] = $request->fullUrl();
+        $dataArr = $this->resolveAccountPageData($request, $dataArr, 'Reset Password');
 
-            $meta_title = $dataArr['meta_title'];
-            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
-            $meta_descp = $dataArr['meta_descp'];
-            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+        $webLang = __('web');
 
-            $webLang = __('web');
+        $defDataArr = array("web_lang" => $webLang);
 
-            $defDataArr = array("web_lang" => $webLang);
+        return view('themes.frontend.pages.reset-password', compact('dataArr', 'defDataArr'));
+    }
 
-            return view('themes.frontend.pages.reset-password', compact('dataArr', 'defDataArr'));
+    protected function resolveAccountPageData(Request $request, $dataArr, string $defaultTitle): array
+    {
+        if (empty($dataArr)) {
+            return [
+                'title' => $defaultTitle,
+                'meta_title' => $defaultTitle,
+                'meta_descp' => $defaultTitle,
+                'meta_key' => '',
+                'image_path' => '',
+                'descp' => $defaultTitle,
+                'full_url' => $request->fullUrl(),
+            ];
         }
-        return abort(404);
+
+        $dataArr['full_url'] = $request->fullUrl();
+
+        $meta_title = $dataArr['meta_title'] ?? '';
+        $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title'] ?? $defaultTitle);
+
+        $meta_descp = $dataArr['meta_descp'] ?? '';
+        $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp'] ?? $defaultTitle);
+
+        return $dataArr;
     }
 
     public function resetPassword(Request $request)

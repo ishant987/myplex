@@ -25,7 +25,7 @@
                 <x-link url="{{ route('web.myaccount') }}">{{ __('auth.dshbrd_txt') }}</x-link>
               </li>
               <li class="user-register">
-                <x-link url="{{ route('web.logout') }}">{{ __('auth.logout_txt') }}</x-link>
+                <x-link url="{{ Route::has('web.logout') ? route('web.logout') : (Route::has('user.logout') ? route('user.logout') : route('logout')) }}">{{ __('auth.logout_txt') }}</x-link>
               </li>
               @endif
             </ul>

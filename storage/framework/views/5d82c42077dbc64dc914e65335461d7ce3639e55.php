@@ -57,11 +57,11 @@
               </li>
               <li class="user-register">
                 <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
-<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.link','data' => ['url' => ''.e(route('web.logout')).'']]); ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.link','data' => ['url' => ''.e(Route::has('web.logout') ? route('web.logout') : (Route::has('user.logout') ? route('user.logout') : route('logout'))).'']]); ?>
 <?php $component->withName('link'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php $component->withAttributes(['url' => ''.e(route('web.logout')).'']); ?><?php echo e(__('auth.logout_txt')); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['url' => ''.e(Route::has('web.logout') ? route('web.logout') : (Route::has('user.logout') ? route('user.logout') : route('logout'))).'']); ?><?php echo e(__('auth.logout_txt')); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
 <?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
@@ -112,4 +112,5 @@
 
     </div>
   </div>
-</nav><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/frontend/includes/header.blade.php ENDPATH**/ ?>
+</nav>
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/frontend/includes/header.blade.php ENDPATH**/ ?>

@@ -4,6 +4,14 @@
     $results_scrips = $results_scrips ?? collect();
     $results_industry = $results_industry ?? collect();
     $isByFundMode = isset($request) && data_get($request, 'Category') === 'by_fund';
+    $bustersScripRows = collect($results_scrips)->filter(function ($scrp) use ($limit) {
+        return (float) data_get($scrp, 'percentage_change', 0) < 0
+            && (float) data_get($scrp, 'percentage_change', 0) <= (-(float) $limit);
+    })->values();
+    $bustersIndustryRows = collect($results_industry)->filter(function ($inds) use ($limit) {
+        return (float) data_get($inds, 'percentage_change', 0) < 0
+            && (float) data_get($inds, 'percentage_change', 0) <= (-(float) $limit);
+    })->values();
 ?>
 
 <div class="inner_main">
@@ -289,46 +297,17 @@ unset($__errorArgs, $__bag); ?>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php if($data_type == 'category'): ?>
-
-                            <?php if(isset($results_scrips) && count($results_scrips)>0): ?>
-                            <?php $__currentLoopData = $results_scrips; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scrp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php
-                               $scrip_percentage = (((floatval($scrp['end_date_growth'])) - (floatval($scrp['start_date_growth'])))/(floatval($scrp['start_date_growth'])))*100;
-                            ?>
-                                <?php if(($scrip_percentage < 0 ) && ($scrip_percentage <=(-$limit))): ?>  
-                            <tr>
-                                <td class="text_left"><?php echo e(isset($scrp['scrip_name'])?$scrp['scrip_name']:''); ?></td>
-                                <td class="text_right"><?php echo e(isset($scrip_percentage)?number_format($scrip_percentage, 2):'0'); ?></td>
-                            </tr>
-                            <?php endif; ?>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            <?php else: ?>
-                            <tr>
-                                <td colspan="2">No information available for this search</td>
-                            </tr>
-                            <?php endif; ?>
-
-                            <?php elseif($data_type == 'fund'): ?>
-
-                            <?php if(isset($results_scrips) && count($results_scrips)>0): ?>
-                            <?php $__currentLoopData = $results_scrips; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scrp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            
-                           
-                            <?php if(($scrp['percentage_change'] < 0) && ($scrp['percentage_change'] <=(-$limit))): ?>
+                        <?php if($bustersScripRows->isNotEmpty()): ?>
+                            <?php $__currentLoopData = $bustersScripRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scrp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td class="text_left"><?php echo e(isset($scrp['scrip_name'])?$scrp['scrip_name']:''); ?></td>
                                 <td class="text_right"><?php echo e(isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'); ?></td>
                             </tr>
-                            <?php endif; ?>
-                        
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <?php else: ?>
                             <tr>
                                 <td colspan="2">No information available for this search</td>
                             </tr>
-                            <?php endif; ?>
-    
                             <?php endif; ?>
                             
                             
@@ -389,47 +368,17 @@ unset($__errorArgs, $__bag); ?>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php if($data_type =='category'): ?>
-                            <?php if(isset($results_industry) && count($results_industry)>0): ?>
-                            <?php $__currentLoopData = $results_industry; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $inds): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php
-                             $percentage = (((floatval($inds['end_date_growth'])) - (floatval($inds['start_date_growth'])))/(floatval($inds['start_date_growth'])))*100;
-                            ?>
-
-                                <?php if(($percentage < 0 ) && ($percentage <=(-$limit))): ?>    
-
-                            <tr>
-                                <td class="text_left"><?php echo e(isset($inds['industry'])?$inds['industry']:''); ?></td>
-                                <td class="text_left"><?php echo e(isset($percentage)? number_format($percentage, 2):'N/A'); ?></td>
-                            </tr>
-                            <?php endif; ?>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            <?php else: ?>
-                            <tr>
-                                <td colspan="2">No information available for this search</td>
-                            </tr>
-                            <?php endif; ?>
-
-                            <?php elseif($data_type == 'fund'): ?>
-
-                            <?php if(isset($results_industry) && count($results_industry)>0): ?>
-                            <?php $__currentLoopData = $results_industry; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scrp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            
-                           
-                            <?php if(($scrp['percentage_change'] < 0) && ($scrp['percentage_change'] <=(-$limit))): ?>
+                        <?php if($bustersIndustryRows->isNotEmpty()): ?>
+                            <?php $__currentLoopData = $bustersIndustryRows; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $scrp): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td class="text_left"><?php echo e(isset($scrp['industry_name'])?$scrp['industry_name']:''); ?></td>
                                 <td class="text_right"><?php echo e(isset($scrp['percentage_change'])?number_format($scrp['percentage_change'], 2):'0'); ?></td>
                             </tr>
-                            <?php endif; ?>
-                        
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <?php else: ?>
                             <tr>
                                 <td colspan="2">No information available for this search</td>
                             </tr>
-                            <?php endif; ?>
-    
                             <?php endif; ?>
                         </tbody>
                     </table>

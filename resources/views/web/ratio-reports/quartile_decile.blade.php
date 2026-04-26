@@ -31,6 +31,7 @@
             
 
                 <div class="new_page">
+                    <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
 
                     <div class="wm_tab">
                         <ul class="tabs">

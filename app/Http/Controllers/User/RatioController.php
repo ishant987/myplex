@@ -54,6 +54,31 @@ class RatioController extends Controller
         return view('web.auth.dashboard', $data);
     }
 
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(403);
+        }
+
+        $user->loadMissing([
+            'sensitiveDetails',
+            'razorpaySubscriptions.plan',
+            'paymentTransactions',
+        ]);
+
+        return view('web.auth.profile', array_merge(
+            $this->subscriptionViewData($user),
+            [
+                'profileUser' => $user,
+                'profileSections' => $this->profileSections($user),
+                'subscriptionHistory' => $user->razorpaySubscriptions->sortByDesc('id')->values(),
+                'paymentHistory' => $user->paymentTransactions->sortByDesc('id')->values(),
+            ]
+        ));
+    }
+
     function notifications(){
       $user = Auth::user();
       $data = $this->subscriptionViewData($user);
@@ -196,10 +221,7 @@ class RatioController extends Controller
     function model_portfolio(){
       $user = Auth::user();
       $data = $this->subscriptionViewData($user);
-      $data['page_title'] = 'Model Portfolio';
-      $data['page_message'] = 'Model Portfolio is now available from the sidebar. This section is ready for detailed dashboard content.';
-
-      return view('web.ratio-reports.generic_page', $data);
+      return view('web.auth.model_portfolio.index', $data);
     }
 
     function filters(Request $request){
@@ -538,6 +560,113 @@ class RatioController extends Controller
         }
 
         return '#';
+    }
+
+    protected function profileSections(User $user): array
+    {
+        $sensitive = $user->sensitiveDetails;
+
+        return [
+            'Personal Details' => [
+                'First Name' => $user->f_name,
+                'Last Name' => $user->l_name,
+                'Full Name' => trim($user->getFullName()),
+                'Email' => $user->email,
+                'Mobile' => $user->mobile,
+                'Birthday' => $this->formatDateValue($user->birthday),
+                'About' => $user->about,
+                'Profile Type' => $user->profile,
+                'Profile Picture' => $user->p_picture ? basename((string) $user->p_picture) : null,
+            ],
+            'Contact Details' => [
+                'Address' => $user->address,
+                'Pincode' => $user->pincode,
+                'City' => $sensitive->city ?? $user->city,
+                'State' => $sensitive->state ?? $user->state,
+            ],
+            'Business Details' => [
+                'Company' => $sensitive->company_name ?? $user->company,
+                'Contact Person' => $sensitive->contact_person ?? $user->contact_person,
+                'GST' => $sensitive->gst ?? $user->gst,
+                'ARN' => $sensitive->arn ?? $user->arn,
+                'PAN' => $sensitive->pan ?? $user->pan,
+            ],
+            'Access & Status' => [
+                'Account Source' => $this->accountTypeLabel($user->acc_type),
+                'Social Login Provider' => $this->socialMediumLabel($user->s_acc_medium),
+                'Social Account ID' => $user->s_account,
+                'Status' => (string) $user->status === '1' ? 'Active' : 'Inactive',
+                'Approved' => $this->yesNoLabel($user->is_approved),
+                'Subscription Status' => $user->subscription_status,
+                'Subscription Expiry Date' => $this->formatDateTimeValue($user->subscription_expiry_date, 'd M Y'),
+                'Trial Ends At' => $this->formatDateTimeValue($user->trial_ends_at, 'd M Y h:i A'),
+                'Session Active' => $user->is_session_active ? 'Yes' : 'No',
+                'Joined On' => $this->formatDateTimeValue($user->created_at, 'd M Y h:i A'),
+                'Last Updated' => $this->formatDateTimeValue($user->updated_at, 'd M Y h:i A'),
+                'Note' => $user->note,
+            ],
+            'Banking Details' => [
+                'Bank Name' => $sensitive->bank_name ?? null,
+                'Account Holder Name' => $sensitive->account_holder_name ?? null,
+                'Account Number' => $sensitive->account_number ?? null,
+                'IFSC Code' => $sensitive->ifsc_code ?? null,
+            ],
+        ];
+    }
+
+    protected function accountTypeLabel(?string $value): string
+    {
+        return match ($value) {
+            'a' => 'Application',
+            's' => 'Social',
+            default => '-',
+        };
+    }
+
+    protected function socialMediumLabel(?string $value): string
+    {
+        return match ($value) {
+            'g' => 'Google',
+            'f' => 'Facebook',
+            'm' => 'Microsoft',
+            'a' => 'Apple',
+            default => '-',
+        };
+    }
+
+    protected function yesNoLabel(?string $value): string
+    {
+        return match ($value) {
+            'y' => 'Yes',
+            'n' => 'No',
+            default => '-',
+        };
+    }
+
+    protected function formatDateValue($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value)->format('d M Y');
+        } catch (Throwable $exception) {
+            return (string) $value;
+        }
+    }
+
+    protected function formatDateTimeValue($value, string $format = 'd M Y h:i A'): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value)->format($format);
+        } catch (Throwable $exception) {
+            return (string) $value;
+        }
     }
 
     protected function reportViewData(Request $request): array

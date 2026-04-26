@@ -743,6 +743,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('auth-dashboard', function () {
                 return redirect()->route('user.index_dashboard');
             })->name('auth-dashboard');
+            Route::get('profile', 'RatioController@profile')->name('profile');
             Route::get('notifications', 'RatioController@notifications')->name('notifications');
             Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
             Route::get('user-risk-ratio', 'RatioController@risk_ratio')->name('risk_ratio');
