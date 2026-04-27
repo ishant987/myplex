@@ -649,6 +649,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     if (config('features.subscription_enabled')) {
         Route::get('/subscription', 'SubscriptionController@index')->name('subscription.index');
         Route::middleware(['auth'])->group(function () {
+            Route::post('/subscription/calculate-upgrade', 'SubscriptionController@calculateUpgradeAmount')->name('subscription.calculate-upgrade');
             Route::post('/subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
             Route::post('/subscription/verify-payment', 'SubscriptionController@verifyPayment')->name('subscription.verify');
             Route::post('/subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
@@ -790,6 +791,8 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
             Route::get('user-comparative', 'RatioController@comparative')->name('comparative');
             Route::get('user-r-square-comparison', 'RatioController@comparative')->name('r_square_comparison');
+            Route::get('whitelabel-settings', 'RatioController@whitelabel_settings')->name('whitelabel_settings');
+            Route::post('whitelabel-settings', 'RatioController@whitelabel_settings')->name('whitelabel_settings.save');
         });
         Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
         //======================================== End Dashboard ======================================//

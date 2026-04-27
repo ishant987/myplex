@@ -1,14 +1,18 @@
 <?php $__env->startSection('vue-js'); ?> <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 
+<?php ($lock_access_screen = true); ?>
+
 <div class="inner_main">
     <div class="page_detail">
         <div class="inner_padding">
             <div class="subs_end">
+                <h1 class="page_heading mb-3">Access Blocked</h1>
                 <p>
-                    <?php echo e(!empty($expiry_date_display) ? 'Subscription will expire on ' . $expiry_date_display : 'Your subscription or trial period has ended.'); ?>
+                    <?php echo e(!empty($expiry_date_display) ? 'Your access expired on ' . $expiry_date_display . '.' : 'Your subscription or trial period has ended.'); ?>
 
                 </p>
+                <p>Choose a plan to continue. Until then, the reports stay locked.</p>
                 <a href="<?php echo e($subscription_cta_url ?? '#'); ?>">Subscribe</a>
             </div>
         </div>

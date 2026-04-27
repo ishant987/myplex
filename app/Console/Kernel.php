@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         // Commands\MembersBirthday::class,
         Commands\InsertCagrQuartileDecile::class,
         Commands\SendTrialReminders::class,
+        Commands\SendSubscriptionExpiryEmails::class,
     ];
 
     /**
@@ -33,6 +34,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('set:daily-cagr')->dailyAt('16:28');
         $schedule->command('app:send-trial-reminders')->dailyAt('09:00');
+        $schedule->command('subscription:send-expiry-emails')
+            ->dailyAt('09:00')
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/subscription-expiry.log'));
     }
 
     /**

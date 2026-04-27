@@ -9,6 +9,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Support\WelcomeEmailSender;
 use Auth;
 use Mail;
 use Illuminate\Mail\Message;
@@ -16,6 +17,7 @@ use GuzzleHttp\Client;
 use ReCaptcha\ReCaptcha;
 class RegistrationController extends BaseController
 {
+    protected int $trialDays = 0;
 
     public function index(Request $request)
     {
@@ -90,9 +92,7 @@ class RegistrationController extends BaseController
         $plainPassword = $request->password;
         // dd('ok1');
         $registrationDate=date('Y-m-d');
-        $registrationDates = Carbon::now(); 
-       
-        $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
+        $expiryDate = Carbon::now()->addDays($this->trialDays)->format('Y-m-d');
        // dd( $expiryDate);
       
        // $registrationDate = Carbon::parse($registrationDate);
@@ -121,15 +121,18 @@ class RegistrationController extends BaseController
         $userId = $user->u_id;
         $userCode = $user->u_code;
 
+        $subscription_table['user_id']=$userId;
         $subscription_table['u_id']=$userId;
         $subscription_table['u_code']=$userCode;
-        $subscription_table['subscription_type']='free_subscription';
+        $subscription_table['subscription_type']='trial';
         $subscription_table['created_date']=date('Y-m-d');
         $subscription_table['subscription_expiry_date']=$expiryDate;
+        $subscription_table['trial_ends_at']=$expiryDate;
+        $subscription_table['ends_at']=$expiryDate;
         $subscription_table['status']='a';
         $subscription_table['created_by']='u';
         $subscription_table['created_id']=$userId;
-        $subscription = Subscription::create($subscription_table);
+        Subscription::create($subscription_table);
 
         if (class_exists(\App\Models\UserSensitiveDetail::class)) {
             \App\Models\UserSensitiveDetail::updateOrCreate(
@@ -161,46 +164,13 @@ class RegistrationController extends BaseController
        
 
 
-        try 
-        {
-            // Mail::send('web.auth.email.registration_email',  ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function ($message) use ($request) {
-            //    $message->to($request->email);
-            //     $message->subject('Welcome to our myplexus');
-            // });
+        WelcomeEmailSender::send(
+            $user,
+            $plainPassword,
+            route('verify-email', ['id' => base64_encode($userId)]),
+            route('user.user_login')
+        );
 
-            // Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message) use($request){
-            //     $message->to($request->email);
-            //     $message->subject('Application Status');
-            // });
-
-
-            // Mail::raw('This is a test email', function ($message) {
-            //     $message->to('paromita@infosolz.in')->subject('Test Email');
-            // });
-            // registration_email
-            //  Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message){
-            //     $message->to('paromita@infosolz.in');
-            //     $message->subject('Application Status');
-            // });
-
-           
-                Mail::send('web.auth.email.registration_email', ['id' => base64_encode($userId), 'email' => $request->email, 'password' => $plainPassword, 'date' => $registrationDate], function ($message) use($request) {
-                    $message->to($request->email);
-                    $message->subject('Application Status');
-                });
-                //return 'Email sent successfully';
-       
-             
-         
-           // die;
-
-  
-        } 
-        catch(\Exception $e)
-        {
-            return 'Failed to send email: ' . $e->getMessage();
-            die;
-        }
         return redirect()->route('user.registration')->with('success','You have successfully register and email send your email id -'.$request->email);
 
 

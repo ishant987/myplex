@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 class RatioController extends Controller
@@ -473,6 +475,73 @@ class RatioController extends Controller
       
     }
 
+    public function whitelabel_settings(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->hasWhiteLabel()) {
+            return redirect()->route('user.ratio_dashboard');
+        }
+
+        $data = $this->subscriptionViewData($user);
+        $data['user'] = $user;
+        $data['brandingSettings'] = $user->whiteLabelSettings();
+
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'company_name' => 'required|string|max:255',
+                'logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            ]);
+
+            $settings = $user->whiteLabelSettings();
+            $settings['company_name'] = $request->company_name;
+
+            if ($request->hasFile('logo')) {
+                $uploadDirectory = public_path('uploads/whitelabel');
+
+                if (!File::isDirectory($uploadDirectory)) {
+                    File::makeDirectory($uploadDirectory, 0755, true);
+                }
+
+                $file = $request->file('logo');
+                $fileName = 'wl-' . $user->u_id . '-' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDirectory, $fileName);
+                $settings['logo'] = 'uploads/whitelabel/' . $fileName;
+            }
+
+            $settingsDirectory = dirname($user->whiteLabelSettingsPath());
+            if (!File::isDirectory($settingsDirectory)) {
+                File::makeDirectory($settingsDirectory, 0755, true);
+            }
+
+            File::put($user->whiteLabelSettingsPath(), json_encode([
+                'company_name' => $settings['company_name'],
+                'logo' => $settings['logo'],
+                'updated_at' => now()->toDateTimeString(),
+            ], JSON_PRETTY_PRINT));
+
+            if (Schema::hasColumn($user->getTable(), 'wl_company_name') || Schema::hasColumn($user->getTable(), 'wl_logo')) {
+                $update = [];
+
+                if (Schema::hasColumn($user->getTable(), 'wl_company_name')) {
+                    $update['wl_company_name'] = $settings['company_name'];
+                }
+
+                if (Schema::hasColumn($user->getTable(), 'wl_logo')) {
+                    $update['wl_logo'] = $settings['logo'];
+                }
+
+                if (!empty($update)) {
+                    $user->update($update);
+                }
+            }
+
+            return back()->with('success', 'White Label settings saved.');
+        }
+
+        return view('web.auth.whitelabel_settings', $data);
+    }
+
     protected function subscriptionViewData($user): array
     {
         $userdetails = null;
@@ -507,6 +576,7 @@ class RatioController extends Controller
             'current_date' => $currentDate->toDateString(),
             'fiveDaysBeforeExpiry' => $expiryDatetime ? $expiryDatetime->copy()->subDays(5)->toDateString() : null,
             'has_active_subscription' => $hasActiveSubscription,
+            'has_valid_access' => $hasActiveSubscription,
             'show_renew_warning' => $showRenewWarning,
             'show_expired_warning' => $showExpiredWarning,
             'subscription_cta_url' => $this->resolveSubscriptionCtaUrl(),

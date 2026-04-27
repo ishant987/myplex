@@ -20,6 +20,8 @@ use App\Models\Subscription;
 use App\Models\PaymentTransaction;
 use App\Models\UserSensitiveDetail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -72,6 +74,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'session_token',
         'is_session_active',
         'subscription_status',
+        'wl_company_name',
+        'wl_logo',
     ];
 
     protected $guarded = [
@@ -162,6 +166,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function activeSubscription()
     {
         return $this->razorpaySubscriptions()
+            ->whereNotNull('plan_id')
             ->whereIn('status', ['a', 'active'])
             ->latest('id');
     }
@@ -193,6 +198,43 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasActiveSubscription() || $this->isOnTrial();
     }
 
+    public function hasWhiteLabel(): bool
+    {
+        $subscription = $this->activeSubscription()->with('plan')->first();
+
+        if (!$subscription || !$subscription->isActive()) {
+            return false;
+        }
+
+        return strtolower((string) optional($subscription->plan)->slug) === 'white-label';
+    }
+
+    public function hasUsedTrial(): bool
+    {
+        if (!empty($this->trial_ends_at)) {
+            return true;
+        }
+
+        return Subscription::query()
+            ->where(function ($query) {
+                $query->where('user_id', $this->u_id)
+                    ->orWhere('u_id', $this->u_id);
+            })
+            ->whereIn('subscription_type', ['trial', 'free_subscription'])
+            ->exists();
+    }
+
+    public function subscriptionDaysRemaining(): int
+    {
+        $expiry = $this->accessExpiresAt();
+
+        if (!$expiry) {
+            return 0;
+        }
+
+        return max(0, (int) now()->diffInDays($expiry, false));
+    }
+
     public function accessExpiresAt(): ?Carbon
     {
         if (!empty($this->subscription_expiry_date)) {
@@ -209,6 +251,40 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return null;
+    }
+
+    public function whiteLabelSettingsPath(): string
+    {
+        return storage_path('app/whitelabel/user-' . $this->u_id . '.json');
+    }
+
+    public function whiteLabelSettings(): array
+    {
+        $settings = [
+            'company_name' => null,
+            'logo' => null,
+        ];
+
+        if (Schema::hasColumn($this->getTable(), 'wl_company_name') && !empty($this->wl_company_name)) {
+            $settings['company_name'] = $this->wl_company_name;
+        }
+
+        if (Schema::hasColumn($this->getTable(), 'wl_logo') && !empty($this->wl_logo)) {
+            $settings['logo'] = $this->wl_logo;
+        }
+
+        $path = $this->whiteLabelSettingsPath();
+
+        if (File::exists($path)) {
+            $decoded = json_decode((string) File::get($path), true);
+
+            if (is_array($decoded)) {
+                $settings['company_name'] = $decoded['company_name'] ?? $settings['company_name'];
+                $settings['logo'] = $decoded['logo'] ?? $settings['logo'];
+            }
+        }
+
+        return $settings;
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)

@@ -49,7 +49,7 @@
                     </div>
                 <?php endif; ?>
             
-                <form method="POST" action="<?php echo e(route('user.loginpost')); ?>" class="contact-wrapper">
+                <form method="POST" action="<?php echo e(route('user.loginpost', [], false)); ?>" class="contact-wrapper">
                     <?php echo csrf_field(); ?>
                     <div class="form_group" data-floating-group>
                         <label>User Name</label>

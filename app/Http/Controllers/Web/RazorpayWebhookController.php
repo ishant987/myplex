@@ -57,9 +57,11 @@ class RazorpayWebhookController extends Controller
 
             if ($transaction->subscription) {
                 $subscription = $transaction->subscription;
-                $durationMonths = $subscription->billing_cycle === 'yearly' ? 12 : 1;
                 $startsAt = now();
-                $endsAt = now()->addMonthsNoOverflow($durationMonths);
+                $plan = $subscription->plan;
+                $endsAt = $plan && strtolower((string) $plan->slug) === 'basic'
+                    ? now()->addDays(4)
+                    : now()->addMonthsNoOverflow(max(1, (int) optional($plan)->duration_months ?: 1));
 
                 Subscription::query()
                     ->where('user_id', $subscription->user_id)

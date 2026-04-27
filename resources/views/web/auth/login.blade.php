@@ -48,7 +48,7 @@
                     </div>
                 @endif
             
-                <form method="POST" action="{{ route('user.loginpost') }}" class="contact-wrapper">
+                <form method="POST" action="{{ route('user.loginpost', [], false) }}" class="contact-wrapper">
                     @csrf
                     <div class="form_group" data-floating-group>
                         <label>User Name</label>

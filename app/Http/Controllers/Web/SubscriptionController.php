@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use App\Services\RazorpayService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -21,25 +23,31 @@ class SubscriptionController extends Controller
         [
             'name' => 'Basic',
             'slug' => 'basic',
-            'price_monthly' => 499.00,
-            'price_yearly' => 4999.00,
-            'features' => ['Feature 1', 'Feature 2', 'Feature 3'],
-            'is_active' => true,
-        ],
-        [
-            'name' => 'Standard',
-            'slug' => 'standard',
-            'price_monthly' => 999.00,
-            'price_yearly' => 9999.00,
-            'features' => ['Priority research', 'Monthly insights', 'Advisor support'],
+            'price_monthly' => 10000.00,
+            'price_yearly' => 10000.00,
+            'duration_months' => 1,
+            'allow_trial' => true,
+            'features' => ['Core research tools', 'Ratio and composition reports', '0-day trial for new users'],
             'is_active' => true,
         ],
         [
             'name' => 'Premium',
             'slug' => 'premium',
-            'price_monthly' => 1999.00,
-            'price_yearly' => 19999.00,
-            'features' => ['All Standard features', 'Premium analytics', 'Dedicated onboarding'],
+            'price_monthly' => 15000.00,
+            'price_yearly' => 15000.00,
+            'duration_months' => 12,
+            'allow_trial' => true,
+            'features' => ['Everything in Basic', 'Extended access and best value', '0-day trial only if unused'],
+            'is_active' => true,
+        ],
+        [
+            'name' => 'White Label',
+            'slug' => 'white-label',
+            'price_monthly' => 5000.00,
+            'price_yearly' => 5000.00,
+            'duration_months' => 1,
+            'allow_trial' => false,
+            'features' => ['All Premium features', 'Custom PDF branding', 'Your logo and company name'],
             'is_active' => true,
         ],
     ];
@@ -56,20 +64,32 @@ class SubscriptionController extends Controller
 
         $plans = SubscriptionPlan::query()
             ->where('is_active', true)
-            ->orderByRaw("CASE slug WHEN 'basic' THEN 1 WHEN 'standard' THEN 2 WHEN 'premium' THEN 3 ELSE 4 END")
+            ->whereIn('slug', ['basic', 'premium', 'white-label'])
+            ->orderByRaw("CASE slug WHEN 'basic' THEN 1 WHEN 'premium' THEN 2 WHEN 'white-label' THEN 3 ELSE 4 END")
             ->get();
 
         $user = Auth::user();
         $activeSubscription = null;
+        $upgradePreview = [];
+        $hasUsedTrial = false;
 
         if ($user && Schema::hasTable('subscriptions')) {
+            $hasUsedTrial = $user->hasUsedTrial();
             $activeSubscription = $user->razorpaySubscriptions()
                 ->with('plan')
+                ->whereIn('status', [
+                    Subscription::databaseStatusFor('active'),
+                    'active',
+                ])
                 ->latest('id')
                 ->first();
+
+            foreach ($plans as $plan) {
+                $upgradePreview[$plan->id] = $this->buildUpgradeBreakdown($user, $plan);
+            }
         }
 
-        return view('subscription.index', compact('plans', 'user', 'activeSubscription'));
+        return view('subscription.index', compact('plans', 'user', 'activeSubscription', 'upgradePreview', 'hasUsedTrial'));
     }
 
     protected function ensureDefaultPlans(): void
@@ -78,16 +98,129 @@ class SubscriptionController extends Controller
             return;
         }
 
-        if (SubscriptionPlan::query()->where('is_active', true)->exists()) {
-            return;
-        }
-
         foreach ($this->defaultPlans as $plan) {
+            $payload = $plan;
+
+            if (!Schema::hasColumn('subscription_plans', 'duration_months')) {
+                unset($payload['duration_months']);
+            }
+
+            if (!Schema::hasColumn('subscription_plans', 'allow_trial')) {
+                unset($payload['allow_trial']);
+            }
+
             SubscriptionPlan::updateOrCreate(
                 ['slug' => $plan['slug']],
-                $plan
+                $payload
             );
         }
+    }
+
+    protected function activePaidSubscription($user): ?Subscription
+    {
+        if (!$user) {
+            return null;
+        }
+
+        return $user->razorpaySubscriptions()
+            ->with('plan')
+            ->whereIn('status', [
+                Subscription::databaseStatusFor('active'),
+                'active',
+            ])
+            ->latest('id')
+            ->first();
+    }
+
+    protected function planChargeAmount(SubscriptionPlan $plan): float
+    {
+        return (float) $plan->price_monthly;
+    }
+
+    protected function planDurationMonths(SubscriptionPlan $plan): int
+    {
+        return max(1, (int) ($plan->duration_months ?: 1));
+    }
+
+    protected function calculatePlanEndDate(SubscriptionPlan $plan): Carbon
+    {
+        return match (strtolower((string) $plan->slug)) {
+            'basic' => now()->copy()->addDays(4),
+            default => now()->copy()->addMonthsNoOverflow($this->planDurationMonths($plan)),
+        };
+    }
+
+    protected function buildUpgradeBreakdown($user, SubscriptionPlan $newPlan): array
+    {
+        $originalAmount = $this->planChargeAmount($newPlan);
+        $currentSubscription = $this->activePaidSubscription($user);
+
+        if (
+            !$currentSubscription
+            || !$currentSubscription->isActive()
+            || !$currentSubscription->plan
+            || (int) $currentSubscription->plan_id === (int) $newPlan->id
+            || $this->planChargeAmount($newPlan) <= $this->planChargeAmount($currentSubscription->plan)
+        ) {
+            return [
+                'is_upgrade' => false,
+                'original_amount' => round($originalAmount, 2),
+                'credit' => 0.0,
+                'upgrade_amount' => round($originalAmount, 2),
+                'days_remaining' => 0,
+            ];
+        }
+
+        $currentPlanSlug = strtolower((string) optional($currentSubscription->plan)->slug);
+        $newPlanSlug = strtolower((string) $newPlan->slug);
+
+        // White Label is treated as a standalone monthly branding plan.
+        // Moving from White Label to Basic/Premium should always charge full price.
+        if ($currentPlanSlug === 'white-label' && in_array($newPlanSlug, ['basic', 'premium'], true)) {
+            return [
+                'is_upgrade' => false,
+                'original_amount' => round($originalAmount, 2),
+                'credit' => 0.0,
+                'upgrade_amount' => round($originalAmount, 2),
+                'days_remaining' => 0,
+                'current_plan_id' => $currentSubscription->plan_id,
+                'current_plan_name' => optional($currentSubscription->plan)->name,
+                'trial_allowed' => false,
+            ];
+        }
+
+        $endDate = $currentSubscription->ends_at
+            ? Carbon::parse($currentSubscription->ends_at)
+            : Carbon::parse($currentSubscription->subscription_expiry_date);
+        $daysRemaining = max(0, now()->diffInDays($endDate, false));
+        $totalDays = max(1, $this->planDurationMonths($currentSubscription->plan) * 30);
+        $amountPaid = (float) ($currentSubscription->amount ?: $this->planChargeAmount($currentSubscription->plan));
+        $credit = ($daysRemaining / $totalDays) * $amountPaid;
+        $upgradeAmount = max(0, $originalAmount - $credit);
+
+        return [
+            'is_upgrade' => true,
+            'original_amount' => round($originalAmount, 2),
+            'credit' => round($credit, 2),
+            'upgrade_amount' => round($upgradeAmount, 2),
+            'days_remaining' => $daysRemaining,
+            'current_plan_id' => $currentSubscription->plan_id,
+            'current_plan_name' => optional($currentSubscription->plan)->name,
+            'trial_allowed' => false,
+        ];
+    }
+
+    public function calculateUpgradeAmount(Request $request): JsonResponse
+    {
+        abort_unless(config('features.subscription_enabled'), 404);
+
+        $validated = $request->validate([
+            'plan_id' => ['required', 'integer', Rule::exists('subscription_plans', 'id')],
+        ]);
+
+        $plan = SubscriptionPlan::findOrFail($validated['plan_id']);
+
+        return response()->json($this->buildUpgradeBreakdown($request->user(), $plan));
     }
 
     public function checkout(Request $request)
@@ -96,12 +229,12 @@ class SubscriptionController extends Controller
 
         $validated = $request->validate([
             'plan_id' => ['required', 'integer', Rule::exists('subscription_plans', 'id')],
-            'billing_cycle' => ['required', Rule::in(['monthly', 'yearly'])],
         ]);
 
         $plan = SubscriptionPlan::findOrFail($validated['plan_id']);
         $user = $request->user();
-        $amount = $plan->getPriceForCycle($validated['billing_cycle']);
+        $upgrade = $this->buildUpgradeBreakdown($user, $plan);
+        $amount = (float) $upgrade['upgrade_amount'];
 
         if (!$this->razorpayService->isConfigured()) {
             return response()->json([
@@ -116,7 +249,7 @@ class SubscriptionController extends Controller
             'notes' => [
                 'user_id' => $user->u_id,
                 'plan_id' => $plan->id,
-                'billing_cycle' => $validated['billing_cycle'],
+                'upgrade_amount' => $amount,
             ],
         ]);
 
@@ -127,7 +260,7 @@ class SubscriptionController extends Controller
             'plan_id' => $plan->id,
             'subscription_type' => $plan->slug,
             'razorpay_order_id' => $order['id'],
-            'billing_cycle' => $validated['billing_cycle'],
+            'billing_cycle' => 'fixed',
             'status' => Subscription::databaseStatusFor('pending'),
             'trial_ends_at' => $user->trial_ends_at,
             'amount' => $amount,
@@ -148,7 +281,10 @@ class SubscriptionController extends Controller
             'status' => 'pending',
             'metadata' => [
                 'plan_id' => $plan->id,
-                'billing_cycle' => $validated['billing_cycle'],
+                'is_upgrade' => $upgrade['is_upgrade'],
+                'credit' => $upgrade['credit'],
+                'original_amount' => $upgrade['original_amount'],
+                'days_remaining' => $upgrade['days_remaining'],
             ],
         ]);
 
@@ -159,6 +295,9 @@ class SubscriptionController extends Controller
             'currency' => $order['currency'],
             'company_name' => $this->razorpayService->getCompanyName(),
             'plan_name' => $plan->name,
+            'display_amount' => number_format($amount, 2, '.', ''),
+            'credit' => $upgrade['credit'],
+            'is_upgrade' => $upgrade['is_upgrade'],
             'user_name' => trim($user->f_name . ' ' . $user->l_name),
             'user_email' => $user->email,
             'user_phone' => $user->mobile,
@@ -195,9 +334,9 @@ class SubscriptionController extends Controller
             ->firstOrFail();
 
         $subscription = Subscription::findOrFail($transaction->subscription_id);
-        $durationMonths = $subscription->billing_cycle === 'yearly' ? 12 : 1;
+        $plan = $subscription->plan()->first();
         $startsAt = now();
-        $endsAt = now()->copy()->addMonthsNoOverflow($durationMonths);
+        $endsAt = $plan ? $this->calculatePlanEndDate($plan) : now()->copy()->addMonthsNoOverflow(1);
 
         DB::transaction(function () use ($validated, $transaction, $subscription, $user, $startsAt, $endsAt, $paymentDetails) {
             Subscription::query()

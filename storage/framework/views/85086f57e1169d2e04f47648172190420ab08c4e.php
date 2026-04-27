@@ -92,9 +92,39 @@
                 .dataTables_wrapper .dataTables_length {
                     margin-bottom: 12px;
                 }
+
+                .left_menu {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .left_menu .menu-main,
+                .left_menu .menu-bottom {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .left_menu .menu-bottom {
+                    margin-top: auto;
+                    padding-top: 16px;
+                }
+
+                .left_menu .menu-bottom li + li {
+                    margin-top: 4px;
+                }
+
+                .left_menu .menu-bottom a {
+                    color: #fff;
+                }
+
+                .left_menu .menu-bottom img {
+                    filter: brightness(0) invert(1);
+                }
             </style>
         </head>
         <body>
+        <?php ($isLockedScreen = !empty($lock_access_screen) || request()->routeIs('user.subscription_lock')); ?>
         <header class="head">
                 <div class="top_bar">
                     <div class="tgl_menu">
@@ -109,6 +139,10 @@
                         </div>
                     </div>
                     <ul class="welcome">
+                        <?php if($isLockedScreen): ?>
+                        <li><a href="<?php echo e($subscription_cta_url ?? route('web.subscription.index')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Subscription Plans</a></li>
+                        <li><a href="<?php echo e(route('user.logout')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/log.png')); ?>" alt="">Logout</a></li>
+                        <?php else: ?>
                         <li><a href="<?php echo e(route('user.index_dashboard')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Welcome to Dashboard</a></li>
                         <li><a href="<?php echo e(route('user.notifications')); ?>">
                             <i>
@@ -117,6 +151,7 @@
                             </i>
                             Notification</a></li>
                         <li><a href="<?php echo e(route('user.logout')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/log.png')); ?>" alt="">Logout</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="subscription_heading">
@@ -135,7 +170,12 @@
                     </div>
                 </div>
                 <nav class="left_menu same_height">
-                    <ul>
+                    <?php if($isLockedScreen): ?>
+                    <ul class="menu-bottom">
+                        <li class="active"><a href="<?php echo e($subscription_cta_url ?? route('web.subscription.index')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Subscription Plans</a></li>
+                    </ul>
+                    <?php else: ?>
+                    <ul class="menu-main">
                         <li class="<?php echo e(request()->routeIs('user.ratio_dashboard') ? 'active' : ''); ?>"><a href="<?php echo e(route('user.ratio_dashboard')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/ratop_report.png')); ?>" alt="">Ratio Reports</a></li>
                         <li class="<?php echo e(request()->routeIs('user.ratio_analysis') ? 'active' : ''); ?>"><a href="<?php echo e(route('user.ratio_analysis')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/ratio_ana.png')); ?>" alt=""> Ratio Analysis</a></li>
                         <li class="<?php echo e(request()->routeIs('user.composition_report') ? 'active' : ''); ?>"><a href="<?php echo e(route('user.composition_report')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/compos.png')); ?>" alt="">Composition Report</a></li>
@@ -144,6 +184,15 @@
                         <li class="<?php echo e(request()->routeIs('user.filters') ? 'active' : ''); ?>"><a href="<?php echo e(route('user.filters')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/filter.png')); ?>" alt="">Filters</a></li>
                         <li class="<?php echo e(request()->routeIs('user.predictive') ? 'active' : ''); ?>"><a href="<?php echo e(route('user.predictive')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/predic.png')); ?>" alt="">Predictive</a></li>
                     </ul>
+                    <ul class="menu-bottom">
+                        <li class="<?php echo e(request()->routeIs('web.subscription.index') ? 'active' : ''); ?>"><a href="<?php echo e(route('web.subscription.index')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">Subscription Plans</a></li>
+                        <?php if(auth()->check() && auth()->user()->hasWhiteLabel()): ?>
+                        <li class="<?php echo e(request()->routeIs('user.whitelabel_settings') || request()->routeIs('user.whitelabel_settings.save') ? 'active' : ''); ?>">
+                            <a href="<?php echo e(route('user.whitelabel_settings')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/wel.png')); ?>" alt="">White Label Settings</a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
+                    <?php endif; ?>
                 </nav>
         </header>
 

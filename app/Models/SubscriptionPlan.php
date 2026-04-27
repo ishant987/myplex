@@ -14,6 +14,8 @@ class SubscriptionPlan extends Model
         'slug',
         'price_monthly',
         'price_yearly',
+        'duration_months',
+        'allow_trial',
         'features',
         'is_active',
         'razorpay_plan_id_monthly',
@@ -23,6 +25,8 @@ class SubscriptionPlan extends Model
     protected $casts = [
         'features' => 'array',
         'is_active' => 'boolean',
+        'allow_trial' => 'boolean',
+        'duration_months' => 'integer',
         'price_monthly' => 'decimal:2',
         'price_yearly' => 'decimal:2',
     ];

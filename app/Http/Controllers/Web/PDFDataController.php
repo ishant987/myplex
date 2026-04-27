@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Models\FundType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use DB;
 use PDF;
@@ -13,6 +14,36 @@ use PDF;
 
 class PDFDataController extends BaseController
 {
+    protected function brandingData(): array
+    {
+        $defaultLogo = public_path('images/myplexus-footer-logo.png');
+        $defaultCompanyName = 'myplexus.com';
+
+        $branding = [
+            'company_name' => $defaultCompanyName,
+            'headline' => $defaultCompanyName,
+            'tagline' => 'Search, Research Mutual Funds',
+            'footer_logo' => $defaultLogo,
+        ];
+
+        $user = Auth::user();
+
+        if (!$user || !$user->hasWhiteLabel()) {
+            return $branding;
+        }
+
+        $settings = $user->whiteLabelSettings();
+        $customLogo = !empty($settings['logo']) ? public_path($settings['logo']) : null;
+        $companyName = $settings['company_name'] ?: $defaultCompanyName;
+
+        return [
+            'company_name' => $companyName,
+            'headline' => $companyName,
+            'tagline' => 'White Label Report',
+            'footer_logo' => $customLogo && file_exists($customLogo) ? $customLogo : $defaultLogo,
+        ];
+    }
+
     public function compositionSnapshotPDF($type_id)
     {
         $dataArr = $responseArr = [];
@@ -23,9 +54,8 @@ class PDFDataController extends BaseController
         if (!empty($dataArr['type_data']) && count($dataArr['composition_data'])) {
             $dataArr['type_data'] = json_decode(json_encode($dataArr['type_data']), true);
             $dataArr['composition_data'] = json_decode(json_encode($dataArr['composition_data']), true);
-            //dd($dataArr);
-            //return view('pdf.composition-snapshot', compact('dataArr'));
-            $pdf = PDF::loadView('pdf.composition-snapshot', compact('dataArr'));
+            $branding = $this->brandingData();
+            $pdf = PDF::loadView('pdf.composition-snapshot', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');
@@ -44,7 +74,8 @@ class PDFDataController extends BaseController
             $dataArr['monthly_ranking_data'] = $dataArrRatios['data']['monthly_ranking'];
             $dataArr['month'] = date('F', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
             $dataArr['year'] = date('Y', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
-            $pdf = PDF::loadView('pdf.monthly-ranking', compact('dataArr'));
+            $branding = $this->brandingData();
+            $pdf = PDF::loadView('pdf.monthly-ranking', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');
@@ -70,10 +101,8 @@ class PDFDataController extends BaseController
             $dataArr['type_data']['text'] = 'As on '.date('d/m/Y', strtotime($date));
 
             $dataArr['performance_snapshot_data'] = $dataArrSn['data']['snapshot_data'];
-            // $dataArr['month'] = date('F', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
-            // $dataArr['year'] = date('Y', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
-            //dd($dataArr);
-            $pdf = PDF::loadView('pdf.performance-snapshot', compact('dataArr'));
+            $branding = $this->brandingData();
+            $pdf = PDF::loadView('pdf.performance-snapshot', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');

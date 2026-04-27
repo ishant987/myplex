@@ -93,8 +93,8 @@ tbody tr:last-child {
                 <tbody style="">
                     <tr style="">
                         <td style="">
-                            <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">myplexus.com</span></p>
-                            <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">Search, Research Mutual Funds</span></p>
+                            <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">{{ $branding['headline'] ?? 'myplexus.com' }}</span></p>
+                            <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">{{ $branding['tagline'] ?? 'Search, Research Mutual Funds' }}</span></p>
                         </td>
                     </tr>
                     <tr style=" margin-top: 90px;">
@@ -183,7 +183,7 @@ tbody tr:last-child {
     <table style=" background-image: url('{{ url('images/footer-bg.jpg') }}'); background-size: 100%; background-repeat: no-repeat; padding: 28px 0 10px 0;">
         <tbody style="" class="container">
             <tr style="justify-content:space-between">
-                <td class="half" style="padding-left:20px;margin-top: -10px"><img src="{{ url('images/myplexus-footer-logo.png') }}" /></td>
+                <td class="half" style="padding-left:20px;margin-top: -10px"><img src="{{ $branding['footer_logo'] ?? public_path('images/myplexus-footer-logo.png') }}" /></td>
                 <td class="half" style="text-align: right;padding-right:20px">
                     <a href="https://www.facebook.com/MyplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/facebook-icon.png') }}"></a>
                     <a href="https://twitter.com/myplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/twiiter-icon.png') }}"></a>

@@ -12,13 +12,13 @@ use Illuminate\Validation\Rule;
 use Auth;
 use DB;
 
-use App\Lib\Core\MailPS;
 // use App\Lib\App\Common;
 use App\Lib\Core\Useful;
 
 use App\Models\PageModel;
 use App\Models\User;
 use App\Models\UserGroupRelModel;
+use App\Support\WelcomeEmailSender;
 use Session;
 
 // use Socialite;
@@ -337,44 +337,27 @@ class AuthController extends BaseController
                             session()->put('useremail', $email);
                             session()->put('username', $fullname);
 
-                            $mailPSObj = new MailPS();
-                            $mailCssAtr = $mailPSObj->getEmailHtmlCssAtr();
-
-                            $mailArr = ["fullname" => $fullname, "email" => $email, "password" => $password];
-
                             $authLang = __('auth');
+                            WelcomeEmailSender::send($store, $password, null, route('web.login'));
 
-                            $subject    = $authLang['su_reg_mail_sbjct'];
-                            $content    = view('emails.web.to-user-signup', compact('mailArr', 'mailCssAtr'));
-                            $fromName   = $authLang['su_reg_mail_f_name'];
+                            /*attempt to do the login*/
+                            if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                                Auth::user()->update([
+                                    'session_token' => session()->getId(),
+                                    'is_session_active' => true,
+                                ]);
+                                $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                                    <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
+                                    ' . $authLang['success']['su_signup'] . '
+                                </div>';
 
-                            $mailResp = $mailPSObj->sendMail($email, $subject, $content, '', $fromName);
-                            if ($mailResp) {
-                                /*attempt to do the login*/
-                                if (Auth::attempt(['email' => $email, 'password' => $password])) {
-                                    Auth::user()->update([
-                                        'session_token' => session()->getId(),
-                                        'is_session_active' => true,
-                                    ]);
-                                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['1'] . '">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                                        <strong>' . $webLang['success_ttl'] . '&nbsp;</strong> 
-                                        ' . $authLang['success']['su_signup'] . '
-                                    </div>';
-
-                                    $resArr['url'] = route('web.myaccount');
-                                } else {
-                                    $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
-                                        <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
-                                        ' . $authLang['failed'] . '
-                                    </div>';
-                                }
+                                $resArr['url'] = route('web.myaccount');
                             } else {
                                 $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['2'] . '">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                                     <strong>' . $webLang['error_ttl'] . '&nbsp;</strong> 
-                                    ' . $message['error']['email_send'] . '
+                                    ' . $authLang['failed'] . '
                                 </div>';
                             }
                         } else {
@@ -1173,27 +1156,13 @@ class AuthController extends BaseController
                         } else {
                             DB::commit();
 
-                            $mailPSObj = new MailPS();
-                            $mailCssAtr = $mailPSObj->getEmailHtmlCssAtr();
+                            WelcomeEmailSender::send($store, $password, null, route('web.login'));
 
-                            $fullname = $store->f_name . " " . $store->l_name;
-                            $mailArr = ["fullname" => rtrim($fullname), "email" => $email, "password" => $password];
-
-                            $subject    = $authLang['su_reg_mail_sbjct'];
-                            $content    = view('emails.web.to-user-signup', compact('mailArr', 'mailCssAtr'));
-                            $fromName   = $authLang['su_reg_mail_f_name'];
-
-                            $mailResp = $mailPSObj->sendMail($email, $subject, $content, '', $fromName);
-
-                            if ($mailResp) {
-                                if (Auth::login($store)) {
-                                    $this->establishFrontendSession($request, $store);
-                                    return redirect($request->session()->get('url.web_intended'));
-                                } else {
-                                    return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('auth.failed'))->with('title', $webLang['error_ttl']);
-                                }
+                            if (Auth::login($store)) {
+                                $this->establishFrontendSession($request, $store);
+                                return redirect($request->session()->get('url.web_intended'));
                             } else {
-                                return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', $message['error']['email_send'])->with('title', $webLang['error_ttl']);
+                                return redirect()->route('web.login')->with('alert', $frontconstants['alert_css']['2'])->with('message', __('auth.failed'))->with('title', $webLang['error_ttl']);
                             }
                         }
                     } else {

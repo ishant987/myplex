@@ -8,6 +8,7 @@ use App\Http\Controllers\Web\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subscription;
+use App\Support\WelcomeEmailSender;
 
 // use Illuminate\Support\Facades\Auth;
  use Auth;
@@ -16,6 +17,37 @@ use App\Models\Subscription;
 
 class LoginController extends BaseController
 {
+    protected int $trialDays = 0;
+
+    protected function createTrialSubscription(User $user, string $expiryDate): void
+    {
+        $existingTrial = Subscription::query()
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->u_id)
+                    ->orWhere('u_id', $user->u_id);
+            })
+            ->whereIn('subscription_type', ['trial', 'free_subscription'])
+            ->exists();
+
+        if ($existingTrial) {
+            return;
+        }
+
+        Subscription::create([
+            'user_id' => $user->u_id,
+            'u_id' => $user->u_id,
+            'u_code' => $user->u_code,
+            'subscription_type' => 'trial',
+            'created_date' => date('Y-m-d'),
+            'subscription_expiry_date' => $expiryDate,
+            'trial_ends_at' => $expiryDate,
+            'ends_at' => $expiryDate,
+            'status' => 'a',
+            'created_by' => 'u',
+            'created_id' => $user->u_id,
+        ]);
+    }
+
     protected function establishUserSession(Request $request, User $user): void
     {
         $request->session()->regenerate();
@@ -24,6 +56,15 @@ class LoginController extends BaseController
             'session_token' => $request->session()->getId(),
             'is_session_active' => true,
         ]);
+    }
+
+    protected function loginRedirectFor(User $user)
+    {
+        if (config('features.subscription_enabled') && $user->isOnTrial()) {
+            return redirect()->route('web.subscription.index')->with('success', 'Your free trial is active. You can continue the trial or choose a paid plan.');
+        }
+
+        return redirect()->route('user.index_dashboard')->with('success','You have successfully logged in');
     }
 
     public function logout(Request $request)
@@ -76,7 +117,7 @@ class LoginController extends BaseController
             }
             else
             {
-                return redirect()->route('user.index_dashboard')->with('success','You have successfully logged in');
+                return $this->loginRedirectFor($user);
             }
                  
               // return redirect()->back();
@@ -218,7 +259,7 @@ class LoginController extends BaseController
 
                 auth()->login($finduser);
                 $this->establishUserSession($request, $finduser);
-                return redirect()->route('user.index_dashboard');
+                return $this->loginRedirectFor($finduser);
             }
             else
             {
@@ -227,46 +268,27 @@ class LoginController extends BaseController
                     auth()->login($finduser);
                     return redirect()->route('user.index_dashboard');
                 }
-                $registrationDate=date('Y-m-d');
-                $registrationDates = Carbon::now(); 
-               
-                $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
-                $registrationDate=date('Y-m-d');
-                $registrationDates = Carbon::now(); 
+                $expiryDate = Carbon::now()->addDays($this->trialDays)->format('Y-m-d');
                 $insert['email']=$user_google->email;
                 $insert['subscription_expiry_date']=$expiryDate;
+                $insert['trial_ends_at']=$expiryDate;
+                $insert['subscription_status']='trial';
                 $insert['acc_type']='s';
                 $insert['created_by']='u';
                 $insert['s_acc_medium']='g';
                 $insert['s_account']=$user_google->id;
                 $user = User::create($insert);
-                $userId = $user->u_id;
-                $userCode = $user->u_code;
-        
-                $subscription_table['u_id']=$userId;
-                $subscription_table['u_code']=$userCode;
-                $subscription_table['subscription_type']='free_subscription';
-                $subscription_table['created_date']=date('Y-m-d');
-                $subscription_table['subscription_expiry_date']=$expiryDate;
-                $subscription_table['status']='a';
-                $subscription_table['created_by']='u';
-                $subscription_table['created_id']=$userId;
-                $subscription = Subscription::create($subscription_table);
+                $this->createTrialSubscription($user, $expiryDate);
+                WelcomeEmailSender::send($user, null, null, route('user.user_login'));
                 auth()->login($user);
                 $this->establishUserSession($request, $user);
-                $user->update([
-                    'trial_ends_at' => $expiryDate,
-                    'subscription_status' => 'trial',
-                ]);
-                return redirect()->route('user.index_dashboard');
+                return $this->loginRedirectFor($user);
               //  return redirect()->back();
             }
 
            
 
 
-       
-            $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
         }
         catch (Exception $e) {
             return redirect()->route('user.user_login')->with('error','Wrong Credentials');
@@ -326,7 +348,7 @@ class LoginController extends BaseController
 
                 auth()->login($finduser);
                 $this->establishUserSession($request, $finduser);
-                return redirect()->route('user.index_dashboard');
+                return $this->loginRedirectFor($finduser);
             }
             else
             {
@@ -336,42 +358,27 @@ class LoginController extends BaseController
                     $this->establishUserSession($request, $finduser);
                     return redirect()->route('user.index_dashboard');
                 }
-                $registrationDate=date('Y-m-d');
-                $registrationDates = Carbon::now(); 
-               
-                $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
-                $registrationDate=date('Y-m-d');
-                $registrationDates = Carbon::now(); 
+                $expiryDate = Carbon::now()->addDays($this->trialDays)->format('Y-m-d');
                 $insert['email']=$user_facebook->email;
                 $insert['subscription_expiry_date']=$expiryDate;
+                $insert['trial_ends_at']=$expiryDate;
+                $insert['subscription_status']='trial';
                 $insert['acc_type']='s';
                 $insert['created_by']='u';
                 $insert['s_acc_medium']='f';
                 $insert['s_account']=$user_facebook->id;
                 $user = User::create($insert);
-                $userId = $user->u_id;
-                $userCode = $user->u_code;
-        
-                $subscription_table['u_id']=$userId;
-                $subscription_table['u_code']=$userCode;
-                $subscription_table['subscription_type']='free_subscription';
-                $subscription_table['created_date']=date('Y-m-d');
-                $subscription_table['subscription_expiry_date']=$expiryDate;
-                $subscription_table['status']='a';
-                $subscription_table['created_by']='u';
-                $subscription_table['created_id']=$userId;
-                $subscription = Subscription::create($subscription_table);
+                $this->createTrialSubscription($user, $expiryDate);
+                WelcomeEmailSender::send($user, null, null, route('user.user_login'));
                 auth()->login($user);
                 $this->establishUserSession($request, $user);
-                return redirect()->route('user.index_dashboard');
+                return $this->loginRedirectFor($user);
               //  return redirect()->back();
             }
 
            
 
 
-       
-            $expiryDate = $registrationDates->addDays(0)->format('Y-m-d');
         }
         catch (Exception $e) 
         {
