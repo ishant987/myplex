@@ -29,7 +29,7 @@
                     <li>
                         <a href="{{ route('user.indies_report') }}">
                             <figure><img src="{{ asset('new-images/Indices-History.png') }}" alt=""></figure>
-                            <h4>Indies <span>Report</span></h4>
+                            <h4>Indices <span>Report</span></h4>
                         </a>
                     </li>
                     <li>

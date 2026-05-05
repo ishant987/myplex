@@ -131,7 +131,41 @@ class RatioController extends Controller
     }
 
     function indices_composition(Request $request){
-      return view('web.indices-reports.indices-composition', $this->indicesReportViewData($request));
+      $data = $this->indicesReportViewData($request);
+      $selectedValue = trim((string) $request->input('indices', ''));
+      $period = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+
+      if ($selectedValue !== '' && $period) {
+          $selectedIndex = IndicesMaster::query()
+              ->where('corelation', $selectedValue)
+              ->orWhere('name', $selectedValue)
+              ->first(['name', 'corelation']);
+
+          $lookupNames = array_values(array_unique(array_filter([
+              $selectedValue,
+              $selectedIndex?->corelation,
+              $selectedIndex?->name,
+          ])));
+
+          $rows = $this->fetchLatestIndicesCompositionRows($lookupNames, $period['end'], $period['start']);
+
+          if ($rows->isNotEmpty()) {
+              $data['indices_composition'] = $rows
+                  ->map(fn ($row) => [
+                      'scrip_name' => $row->scrip_name,
+                      'type' => $row->type,
+                      'industry' => $row->industry,
+                      'percentage' => (float) $row->percentage,
+                  ])
+                  ->values();
+              $data['lastDate'] = $rows->max('entry_date');
+              $data['disclaimer'] = 'Data shown is based on the latest published index composition for the selected month.';
+          } else {
+              $data['message'] = 'No information available for this search.';
+          }
+      }
+
+      return view('web.indices-reports.indices-composition', $data);
     }
 
     function schemes_associated_with_index(Request $request){
@@ -422,7 +456,27 @@ class RatioController extends Controller
 
     function composition_get_fund_by_scrips(Request $request)
     {
-        return response()->json([]);
+        $scripName = trim((string) $request->input('scrips_name', ''));
+
+        if ($scripName === '') {
+            return response()->json([]);
+        }
+
+        $fundCodes = FundComposition::query()
+            ->where('publish', 'y')
+            ->where('scrip_name', $scripName)
+            ->pluck('fund_code')
+            ->unique()
+            ->values();
+
+        $funds = $fundCodes->isEmpty()
+            ? collect()
+            : FundMaster::query()
+                ->whereIn('fund_code', $fundCodes->all())
+                ->orderBy('fund_name')
+                ->get(['fund_id', 'fund_name', 'fund_code']);
+
+        return response()->json($funds);
     }
     function monthly_snapshot(Request $request){
       $data = $this->monthlySnapshotViewData($request);
@@ -854,7 +908,9 @@ class RatioController extends Controller
         ], $request->all());
 
         $selection = $this->resolveFundSelection($request, $data);
-        $hasSearched = $request->filled('month') && $request->filled('year') && filled($request->input('Category'));
+        $hasSearched = $request->routeIs('user.scheme_portfolio')
+            ? $request->filled('month') && $request->filled('year') && $request->filled('fund_master')
+            : $request->filled('month') && $request->filled('year') && filled($request->input('Category'));
         $fundSnapshot = [];
         $snapshotDate = null;
         $disclaimer = '';
@@ -915,6 +971,17 @@ class RatioController extends Controller
             if (!empty($topCompositionData['message'])) {
                 $data['message'] = $topCompositionData['message'];
             }
+        } elseif ($request->routeIs('user.scheme_portfolio')) {
+            $schemePortfolioData = $this->buildSchemePortfolioData($request, $hasSearched);
+            $newScrips = $schemePortfolioData['scrips'];
+            $snapshotDate = $schemePortfolioData['snapshot_date'];
+            $disclaimer = $schemePortfolioData['disclaimer'];
+            $data['total_corpus_entry'] = $schemePortfolioData['total_corpus_entry'];
+            $data['fund_details'] = $schemePortfolioData['fund_details'];
+
+            if (!empty($schemePortfolioData['message'])) {
+                $data['message'] = $schemePortfolioData['message'];
+            }
         } elseif ($hasSearched) {
             $snapshotData = $this->buildAllocationSnapshotData($request, $selection['funds']);
             $fundSnapshot = $snapshotData['rows'];
@@ -946,7 +1013,7 @@ class RatioController extends Controller
             'mpx_fund_scrips' => $this->safeFundCompositionScripList(),
             'scrips' => $newScrips,
             'industry' => $newIndustry,
-            'total_corpus_entry' => null,
+            'total_corpus_entry' => $data['total_corpus_entry'] ?? null,
             'top_scrips' => $topScrips,
             'top_industries' => $topIndustries,
             'top_scrip_breakdown' => $topScripBreakdown,
@@ -955,7 +1022,7 @@ class RatioController extends Controller
             'lastDate' => $snapshotDate,
             'active_tab' => $request->input('active_tab'),
             'fund_type_get_data' => $fundTypeGetData,
-            'fund_details' => $selection['funds']->map(fn ($fund) => ['fund_id' => $fund->fund_id])->all(),
+            'fund_details' => $data['fund_details'] ?? $selection['funds']->map(fn ($fund) => ['fund_id' => $fund->fund_id])->all(),
             'fund_ids' => (array) $request->input('fund_id', []),
             'fund_composition' => $fundComposition,
             'fund_snapshot' => $fundSnapshot,
@@ -967,6 +1034,64 @@ class RatioController extends Controller
             'results_industries' => $resultsIndustry,
             'disclaimer' => $disclaimer,
         ]);
+    }
+
+    protected function buildSchemePortfolioData(Request $request, bool $hasSearched): array
+    {
+        $result = [
+            'scrips' => collect(),
+            'fund_details' => null,
+            'total_corpus_entry' => null,
+            'snapshot_date' => null,
+            'disclaimer' => '',
+            'message' => null,
+        ];
+
+        if (!$hasSearched) {
+            return $result;
+        }
+
+        $fundCode = trim((string) $request->input('fund_master', ''));
+        $period = $this->resolveMonthYearPeriod($request->input('month'), $request->input('year'));
+
+        if ($fundCode === '' || !$period) {
+            $result['message'] = 'Choose a valid scheme, month, and year to run this report.';
+
+            return $result;
+        }
+
+        $fund = FundMaster::query()
+            ->where('fund_code', $fundCode)
+            ->first(['fund_id', 'fund_name', 'fund_code']);
+
+        if (!$fund) {
+            $result['message'] = 'Choose a valid scheme to run this report.';
+
+            return $result;
+        }
+
+        $rows = $this->fetchLatestFundCompositionRows($fundCode, $period['start'], $period['end']);
+        $result['fund_details'] = $fund;
+        $result['scrips'] = $rows;
+        $result['snapshot_date'] = $rows->max('entry_date');
+        $result['disclaimer'] = $rows->isNotEmpty()
+            ? 'Data shown is based on the latest published portfolio for the selected month.'
+            : '';
+
+        $aumRow = CorpusEntry::query()
+            ->where('fund_code', $fundCode)
+            ->where('publish', 'y')
+            ->whereDate('entry_date', '<=', $period['end']->toDateString())
+            ->orderByDesc('entry_date')
+            ->first(['corpus_entry']);
+
+        $result['total_corpus_entry'] = $aumRow?->corpus_entry;
+
+        if ($rows->isEmpty()) {
+            $result['message'] = 'No information available for this search.';
+        }
+
+        return $result;
     }
 
     protected function buildTopCompositionData(Request $request, array $selection, Collection $fundTypes, bool $hasSearched): array
@@ -2094,8 +2219,8 @@ class RatioController extends Controller
             }
 
             $displayName = $selectedIndex->name ?? $selectedValue;
-            $periodOneRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodOne['end']);
-            $periodTwoRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodTwo['end']);
+            $periodOneRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodOne['end'], $periodOne['start']);
+            $periodTwoRows = $this->fetchLatestIndicesCompositionRows($lookupNames, $periodTwo['end'], $periodTwo['start']);
 
             $resultsScrips = $resultsScrips->concat(
                 $this->buildIndicesMoverRows($periodOneRows, $periodTwoRows, 'scrip_name', $displayName)
@@ -2106,8 +2231,25 @@ class RatioController extends Controller
             );
         }
 
-        $data['results_scrips'] = $resultsScrips->values();
-        $data['results_industry'] = $resultsIndustry->values();
+        $limit = max(0, (float) $request->input('limit', 0));
+        $isBusters = $request->routeIs('user.indices_busters');
+
+        $filterMoverRows = function (Collection $rows) use ($limit, $isBusters) {
+            return $rows
+                ->filter(function ($row) use ($limit, $isBusters) {
+                    $change = (float) data_get($row, 'percentage_change', 0);
+
+                    if ($isBusters) {
+                        return $change < 0 && abs($change) >= $limit;
+                    }
+
+                    return $change > 0 && $change >= $limit;
+                })
+                ->values();
+        };
+
+        $data['results_scrips'] = $filterMoverRows($resultsScrips);
+        $data['results_industry'] = $filterMoverRows($resultsIndustry);
         $data['results_industries'] = $data['results_industry'];
 
         return $data;
@@ -2266,11 +2408,17 @@ class RatioController extends Controller
 
     protected function quickRatioViewData(Request $request): array
     {
+        $request->merge([
+            'date' => $request->input('date') ?: now()->toDateString(),
+            'report_category' => $request->input('report_category') ?: 'return',
+            'type' => $request->input('type') ?: 'weekly',
+        ]);
+
         $data = $this->reportViewData($request);
         $normalizedDate = $this->normalizeInputDate($request->input('date'));
         $fundTypeId = (int) $request->input('fund_type_id');
         $reportCategory = $request->input('report_category');
-        $type = $request->input('type', 'weekly');
+        $type = $request->input('type');
 
         $data['request_fund_type'] = $fundTypeId > 0
             ? $data['all_fund_types']->firstWhere('ft_id', $fundTypeId)
@@ -2388,12 +2536,109 @@ class RatioController extends Controller
             $data['changes_currency'] = collect($this->safeSnapshotIndexData('GET_CURRENCY', $range['end']->toDateString(), $range['days']));
             $data['changes_commodity'] = collect($this->safeSnapshotIndexData('GET_COMMODITY', $range['end']->toDateString(), $range['days']));
             $data['monthly_benchmark'] = collect(DB::select('CALL sp_snapshot_monthly_benchmark(?)', [$range['end']->toDateString()]));
+            $data['monthly_benchmark'] = $this->fillMonthlyBenchmarkGaps($data['monthly_benchmark'], $range['start'], $range['end']);
             $data['best_schemes'] = collect(DB::select('CALL sp_snapshot_monthly_best_fund(?)', [$range['end']->toDateString()]));
         } catch (Throwable $e) {
-            $data['message'] = 'Unable to load monthly snapshot data right now.';
+            $data['monthly_benchmark'] = $this->buildMonthlyBenchmarkFallback($range['start'], $range['end']);
+            $data['message'] = $data['monthly_benchmark']->isEmpty()
+                ? 'Unable to load monthly snapshot data right now.'
+                : null;
         }
 
         return $data;
+    }
+
+    protected function fillMonthlyBenchmarkGaps(Collection $benchmarkRows, CarbonInterface $startDate, CarbonInterface $endDate): Collection
+    {
+        if ($benchmarkRows->isEmpty()) {
+            return $this->buildMonthlyBenchmarkFallback($startDate, $endDate);
+        }
+
+        $needsFallback = $benchmarkRows->contains(function ($row) {
+            return !is_numeric(data_get($row, 'CHANGEVALUE_NEW')) || !is_numeric(data_get($row, 'MEDIANVAL_NEW'));
+        });
+
+        if (!$needsFallback) {
+            return $benchmarkRows;
+        }
+
+        $fallbackRows = $this->buildMonthlyBenchmarkFallback($startDate, $endDate)
+            ->keyBy(fn ($row) => (int) data_get($row, 'FundTypeID'));
+
+        return $benchmarkRows->map(function ($row) use ($fallbackRows) {
+            $fundTypeId = (int) data_get($row, 'FundTypeID');
+            $fallback = $fallbackRows->get($fundTypeId);
+
+            if (!$fallback) {
+                return $row;
+            }
+
+            if (!is_numeric(data_get($row, 'CHANGEVALUE_NEW'))) {
+                $row->CHANGEVALUE_NEW = $fallback->CHANGEVALUE_NEW;
+            }
+
+            if (!is_numeric(data_get($row, 'MEDIANVAL_NEW'))) {
+                $row->MEDIANVAL_NEW = $fallback->MEDIANVAL_NEW;
+            }
+
+            return $row;
+        });
+    }
+
+    protected function buildMonthlyBenchmarkFallback(CarbonInterface $startDate, CarbonInterface $endDate): Collection
+    {
+        $fundTypes = $this->safeFundTypeList();
+
+        if ($fundTypes->isEmpty()) {
+            return collect();
+        }
+
+        return $fundTypes->map(function ($fundType) use ($startDate, $endDate) {
+            $funds = FundMaster::query()
+                ->where('fund_type_id', $fundType->ft_id)
+                ->whereNotNull('fund_code')
+                ->get(['fund_code']);
+
+            $returns = $funds->map(function ($fund) use ($startDate, $endDate) {
+                $startNav = FundDetail::query()
+                    ->where('fund_code', $fund->fund_code)
+                    ->where('publish', 'y')
+                    ->whereDate('entry_date', '<=', $startDate->toDateString())
+                    ->orderByDesc('entry_date')
+                    ->value('closing_nav');
+
+                $endNav = FundDetail::query()
+                    ->where('fund_code', $fund->fund_code)
+                    ->where('publish', 'y')
+                    ->whereDate('entry_date', '<=', $endDate->toDateString())
+                    ->orderByDesc('entry_date')
+                    ->value('closing_nav');
+
+                if (!is_numeric($startNav) || !is_numeric($endNav) || (float) $startNav <= 0) {
+                    return null;
+                }
+
+                return round((((float) $endNav - (float) $startNav) / (float) $startNav) * 100, 4);
+            })->filter(fn ($value) => is_numeric($value))->values();
+
+            if ($returns->isEmpty()) {
+                return null;
+            }
+
+            $sorted = $returns->sort()->values();
+            $count = $sorted->count();
+            $middle = intdiv($count, 2);
+            $median = $count % 2
+                ? $sorted[$middle]
+                : (($sorted[$middle - 1] + $sorted[$middle]) / 2);
+
+            return (object) [
+                'FundTypeID' => $fundType->ft_id,
+                'FUNDTYPE' => $fundType->name,
+                'CHANGEVALUE_NEW' => round((float) $returns->avg(), 2),
+                'MEDIANVAL_NEW' => round((float) $median, 2),
+            ];
+        })->filter()->values();
     }
 
     protected function normalizeInputDate(?string $date): ?Carbon
@@ -2471,14 +2716,24 @@ class RatioController extends Controller
         }
     }
 
-    protected function fetchLatestIndicesCompositionRows(array $lookupNames, CarbonInterface $periodEnd): Collection
+    protected function fetchLatestIndicesCompositionRows(
+        array $lookupNames,
+        CarbonInterface $periodEnd,
+        ?CarbonInterface $periodStart = null
+    ): Collection
     {
-        $rows = IndicesComposition::query()
+        $query = IndicesComposition::query()
             ->whereIn('indices_name', $lookupNames)
             ->where('publish', 'y')
-            ->whereDate('entry_date', '<=', $periodEnd->toDateString())
+            ->whereDate('entry_date', '<=', $periodEnd->toDateString());
+
+        if ($periodStart) {
+            $query->whereDate('entry_date', '>=', $periodStart->toDateString());
+        }
+
+        $rows = $query
             ->orderByDesc('entry_date')
-            ->get(['entry_date', 'indices_name', 'scrip_name', 'industry', 'percentage']);
+            ->get(['entry_date', 'indices_name', 'scrip_name', 'type', 'industry', 'percentage']);
 
         if ($rows->isEmpty()) {
             return collect();
@@ -2832,12 +3087,19 @@ class RatioController extends Controller
             $oldRow = $oldMap->get($key);
             $newRow = $newMap->get($key);
             $label = data_get($newRow, $groupKey) ?? data_get($oldRow, $groupKey);
+            $oldPercentage = (float) (data_get($oldRow, 'percentage') ?? 0);
+            $newPercentage = (float) (data_get($newRow, 'percentage') ?? 0);
+
+            $percentageChange = $oldPercentage > 0
+                ? (($newPercentage - $oldPercentage) / $oldPercentage) * 100
+                : ($newPercentage > 0 ? 100.0 : 0.0);
 
             return (object) [
                 $groupKey => $label,
                 'correlation_new' => $displayName,
-                'percentage_old' => (float) (data_get($oldRow, 'percentage') ?? 0),
-                'percentage_new' => (float) (data_get($newRow, 'percentage') ?? 0),
+                'percentage_old' => $oldPercentage,
+                'percentage_new' => $newPercentage,
+                'percentage_change' => round($percentageChange, 4),
             ];
         })->filter(fn ($row) => filled(data_get($row, $groupKey)));
     }
@@ -3405,6 +3667,11 @@ class RatioController extends Controller
             $timeFrame = $request->input('as_on_time_frame', '1_year');
             $startDate = $this->startDateForTimeFrame($asOnDate, $timeFrame);
 
+            $request->merge([
+                'as_on_date' => $asOnDate->toDateString(),
+                'as_on_time_frame' => $timeFrame,
+            ]);
+
             return [
                 'mode' => 'as_on',
                 'start' => $startDate,
@@ -3414,6 +3681,11 @@ class RatioController extends Controller
 
         $explicitRange = $this->resolveExplicitDateRange($request->input('start_date'), $request->input('end_date'));
         if ($explicitRange) {
+            $request->merge([
+                'start_date' => $explicitRange['start']->toDateString(),
+                'end_date' => $explicitRange['end']->toDateString(),
+            ]);
+
             return [
                 'mode' => 'range',
                 'start' => $explicitRange['start'],
@@ -3422,10 +3694,16 @@ class RatioController extends Controller
         }
 
         $fallbackEnd = now()->startOfDay();
+        $fallbackStart = $fallbackEnd->copy()->subYear();
+
+        $request->merge([
+            'start_date' => $fallbackStart->toDateString(),
+            'end_date' => $fallbackEnd->toDateString(),
+        ]);
 
         return [
             'mode' => 'range',
-            'start' => $fallbackEnd->copy()->subYear(),
+            'start' => $fallbackStart,
             'end' => $fallbackEnd,
         ];
     }
@@ -3456,7 +3734,7 @@ class RatioController extends Controller
             '3_months' => $asOnDate->copy()->subMonths(3),
             '6_months' => $asOnDate->copy()->subMonths(6),
             '1_year' => $asOnDate->copy()->subYear(),
-            '2_year' => $asOnDate->copy()->subYears(2),
+            '2_year', '2_years' => $asOnDate->copy()->subYears(2),
             '3_years' => $asOnDate->copy()->subYears(3),
             '5_years' => $asOnDate->copy()->subYears(5),
             default => $asOnDate->copy()->subYear(),

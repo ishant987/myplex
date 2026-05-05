@@ -121,22 +121,6 @@
                         </div>
                     @endif
 
-                    @if (!empty($predictive_debug))
-                        <div class="graph_table" style="margin-top: 12px;">
-                            <p>
-                                Debug:
-                                route={{ $predictive_debug['route'] ?? 'n/a' }},
-                                fund_id={{ $predictive_debug['fund_id'] ?? 'n/a' }},
-                                fund_code={{ $predictive_debug['fund_code'] ?? 'n/a' }},
-                                duration={{ $predictive_debug['duration'] ?? 'n/a' }},
-                                fund_points={{ $predictive_debug['fund_points_count'] ?? 0 }},
-                                index_points={{ $predictive_debug['index_points_count'] ?? 0 }},
-                                fund_series={{ $predictive_debug['fund_series_count'] ?? 0 }},
-                                index_series={{ $predictive_debug['index_series_count'] ?? 0 }}
-                            </p>
-                        </div>
-                    @endif
-
                 </div>
 
                 @if (isset($indices_details))
@@ -201,6 +185,7 @@
             }).filter(function(point) {
                 return !isNaN(point[0]) && point[1] !== null;
             });
+            var expectedIndex = Number(@json($expected_index ?? null));
 
             Highcharts.chart('container1', {
                 chart: {
@@ -216,7 +201,14 @@
                 yAxis: [{
                     title: {
                         text: '{{ addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index')) }}'
-                    }
+                    },
+                    plotLines: isFinite(expectedIndex) && expectedIndex > 0 ? [{
+                        color: '#379962',
+                        dashStyle: 'Dash',
+                        width: 2,
+                        value: expectedIndex,
+                        label: { text: 'Expected Future Index', align: 'right' }
+                    }] : []
                 }, {
                     title: {
                         text: '{{ addslashes($fund_details->fund_name ?? 'Fund NAV') }}'

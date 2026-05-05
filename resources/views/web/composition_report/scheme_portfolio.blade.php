@@ -37,7 +37,7 @@
                                 <div class="col-md-6">
                                     <div class="form_group">
                                         <select name="fund_master" id="fund_master" class="select2">
-                                            <option>Select Any Funds</option>
+                                            <option value="">Select Fund</option>
                                             @if (isset($fund_master))
                                                 @foreach ($fund_master as $val)
                                                     <option value="{{ data_get($val, 'fund_code', '') }}"
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <select name="month" id="month" required>
+                                        <select name="month" id="month" class="select2" required>
                                             <option value="">select month</option>
                                             @foreach ($months as $m)
                                                 <option value="{{ $m }}"
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <select name="year" id="year" required>
+                                        <select name="year" id="year" class="select2" required>
                                             <option value="">select year</option>
                                             @foreach ($years as $y)
                                                 <option
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             doc.autoTable({
-                head: [['Fund Name', 'Ratio', 'Rank']],
+                head: [['Name of the Scrip', 'Industry', 'Category', 'Content (%)', 'Amount (Rs.In Crores)']],
                 body: tableData,
                 startX: startX,
                 startY: yPosition + 10,

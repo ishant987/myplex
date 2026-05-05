@@ -20,7 +20,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form_group">
-                                        <select class="select2" name="indices[]" data-placeholder="Select Indices">
+                                        <select class="select2 multiple" name="indices[]" multiple data-placeholder="Select Indices">
                                             <option value="">Select Indices</option>
                                             @foreach ($indices as $index)
                                                 <option value="{{ $index->corelation }}"
@@ -191,25 +191,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(isset($results_scrips))
+                                    @if(isset($results_scrips) && count($results_scrips) > 0)
                                         @foreach ($results_scrips as $item)
-
-                                        @if($item->percentage_new !=0 && $item->percentage_old !=0)
-                                        @php                                        
-
-                                          $scrip_percentage = (((floatval($item->percentage_new)) - (floatval($item->percentage_old)))/(floatval($item->percentage_old)))*100;
-                                        @endphp
-
-                                           @if(($scrip_percentage >0) && ($scrip_percentage >= $limit)) 
                                             <tr>
-                                                {{-- <td class="text_left open_scrip" correlation_new = {{ $item->correlation_new}}>{{$item->scrip_name}}</td>
-                                                <td class="text_left open_scrip_percentage">{{number_format($scrip_percentage,2)}}</td> --}}
-
                                                 <td class="text_left" correlation_new = {{ $item->correlation_new}}>{{$item->scrip_name}}</td>
-                                                <td class="text_right">{{number_format($scrip_percentage,2)}}</td>
+                                                <td class="text_right">{{ number_format($item->percentage_change, 2) }}</td>
                                             </tr>                                            
-                                            @endif
-                                           @endif
                                         @endforeach
                                     @else
                                     <tr>
@@ -329,27 +316,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(isset($results_industry))
+                                    @if(isset($results_industry) && count($results_industry) > 0)
                                         @foreach ($results_industry as $item)
-                                        @if($item->percentage_new !=0 && $item->percentage_old !=0)
-                                        @php
-                                        $industry_percentage = (((floatval($item->percentage_new)) - (floatval($item->percentage_old)))/(floatval($item->percentage_old)))*100;
-                                      @endphp
-
-                                        @if(($industry_percentage > 0) && ($industry_percentage >= $limit))
-
-                                            {{-- <tr>
-                                                <td class="text_left open_industry" correlation_new = {{ $item->correlation_new}}>{{$item->industry}}</td>
-                                                <td class="text_left open_industry_percentage">{{number_format($industry_percentage,2)}}</td>
-                                            </tr> --}}
-
                                             <tr>
                                                 <td class="text_left" correlation_new = {{ $item->correlation_new}}>{{$item->industry}}</td>
-                                                <td class="text_right">{{number_format($industry_percentage,2)}}</td>
+                                                <td class="text_right">{{ number_format($item->percentage_change, 2) }}</td>
                                             </tr>
-                                       
-                                        @endif
-                                        @endif
                                         @endforeach
                                     @else
                                         <tr>
@@ -602,6 +574,10 @@ return monthNames[monthNumber - 1];
     {
         var exportButton = document.getElementById('exportPDF-indices-scrip');
 
+        if (!exportButton) {
+            return;
+        }
+
         exportButton.addEventListener('click', function() 
         {
             var { jsPDF } = window.jspdf;
@@ -696,6 +672,10 @@ return monthNames[monthNumber - 1];
     document.addEventListener('DOMContentLoaded', function() 
     {
         var exportButton = document.getElementById('exportPDF-indices-industry');
+
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
         

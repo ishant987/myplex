@@ -19,13 +19,7 @@
                                 <li>
                                     <a href="{{route('user.weekly_snapshot_new')}}">
                                         <figure><img src="{{asset('new-images/dh2.png')}}" alt=""></figure>
-                                        <h4>Weekly <span>Snapshot</span></h4>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{route('user.monthly_snapshot_new')}}">
-                                        <figure><img src="{{asset('new-images/dh2.png')}}" alt=""></figure>
-                                        <h4>Monthly <span>Snapshot</span></h4>
+                                        <h4>Weekly / Monthly <span>Snapshot</span></h4>
                                     </a>
                                 </li>
                                 <li>

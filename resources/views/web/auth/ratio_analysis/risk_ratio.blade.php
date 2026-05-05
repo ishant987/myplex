@@ -189,7 +189,7 @@
                                 <div class="col-md-4">
                                     <div class="form_group">
                                         <select name="report_category">
-                                            <option value="">Ratio</option>
+                                           
 
                                             <option value="beta" @if (old('report_category', $request->report_category) == 'beta') selected @endif>
                                                 Beta

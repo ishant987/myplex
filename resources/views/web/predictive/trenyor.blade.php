@@ -189,6 +189,7 @@
             }).filter(function(point) {
                 return !isNaN(point[0]) && point[1] !== null;
             });
+            var expectedIndex = Number(@json($expected_index ?? null));
 
             Highcharts.chart('container1', {
                 chart: {
@@ -204,7 +205,14 @@
                 yAxis: [{
                     title: {
                         text: '{{ addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index')) }}'
-                    }
+                    },
+                    plotLines: isFinite(expectedIndex) && expectedIndex > 0 ? [{
+                        color: '#379962',
+                        dashStyle: 'Dash',
+                        width: 2,
+                        value: expectedIndex,
+                        label: { text: 'Expected Future Index', align: 'right' }
+                    }] : []
                 }, {
                     title: {
                         text: '{{ addslashes($fund_details->fund_name ?? 'Fund NAV') }}'

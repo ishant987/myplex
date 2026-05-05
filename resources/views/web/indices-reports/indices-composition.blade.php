@@ -18,11 +18,11 @@
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
 
                     <div class="light_green_bg">
-                        <form action="">
+                        <form action="" id="indices-composition-form" novalidate>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form_group">
-                                        <select class="select2" name="indices" data-placeholder="Select Indices">
+                                        <select class="select2" name="indices" id="indices" data-placeholder="Select Indices">
                                             <option value="">Select Indices</option>
                                             @foreach ($indices as $index)
                                                 <option value="{{ $index->corelation }}"
@@ -59,6 +59,11 @@
                             </div>
                         </form>
                     </div>
+                    @if (!empty($message))
+                        <div class="alert alert-warning mt-3">
+                            {{ $message }}
+                        </div>
+                    @endif
                     @if (isset($indices_composition))
                         <div class="fund_section new_fund_section">
                             <ul>
@@ -127,7 +132,53 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() 
     {
+        var form = document.getElementById('indices-composition-form');
+        var indexSelect = document.getElementById('indices');
+        var monthSelect = document.getElementById('month');
+        var yearSelect = document.getElementById('year');
+
+        function openSelect2(selectElement) {
+            if (window.jQuery && $.fn.select2 && selectElement) {
+                $(selectElement).select2('open');
+            } else if (selectElement) {
+                selectElement.focus();
+            }
+        }
+
+        if (yearSelect && monthSelect) {
+            $(yearSelect).on('change select2:select', function() {
+                if (this.value && !monthSelect.value) {
+                    openSelect2(monthSelect);
+                }
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (indexSelect && !indexSelect.value) {
+                    event.preventDefault();
+                    openSelect2(indexSelect);
+                    return;
+                }
+
+                if (yearSelect && !yearSelect.value) {
+                    event.preventDefault();
+                    openSelect2(yearSelect);
+                    return;
+                }
+
+                if (monthSelect && !monthSelect.value) {
+                    event.preventDefault();
+                    openSelect2(monthSelect);
+                }
+            });
+        }
+
         var exportButton = document.getElementById('exportPDF-indices-composition');
+
+        if (!exportButton) {
+            return;
+        }
 
         exportButton.addEventListener('click', function() {
             var { jsPDF } = window.jspdf;
