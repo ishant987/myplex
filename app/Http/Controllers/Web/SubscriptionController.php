@@ -19,6 +19,8 @@ use Illuminate\Support\Carbon;
 
 class SubscriptionController extends Controller
 {
+    protected int $trialDays;
+
     protected array $defaultPlans = [
         [
             'name' => 'Basic',
@@ -27,7 +29,7 @@ class SubscriptionController extends Controller
             'price_yearly' => 10000.00,
             'duration_months' => 1,
             'allow_trial' => true,
-            'features' => ['Core research tools', 'Ratio and composition reports', '0-day trial for new users'],
+            'features' => ['Core research tools', 'Ratio and composition reports'],
             'is_active' => true,
         ],
         [
@@ -37,7 +39,7 @@ class SubscriptionController extends Controller
             'price_yearly' => 15000.00,
             'duration_months' => 12,
             'allow_trial' => true,
-            'features' => ['Everything in Basic', 'Extended access and best value', '0-day trial only if unused'],
+            'features' => ['Everything in Basic', 'Extended access and best value'],
             'is_active' => true,
         ],
         [
@@ -54,6 +56,10 @@ class SubscriptionController extends Controller
 
     public function __construct(protected RazorpayService $razorpayService)
     {
+        $this->trialDays = (int) config('features.subscription_trial_days', 15);
+
+        $this->defaultPlans[0]['features'][] = "{$this->trialDays}-day trial for new users";
+        $this->defaultPlans[1]['features'][] = "{$this->trialDays}-day trial only if unused";
     }
 
     public function index()

@@ -53,7 +53,7 @@
                    
 
                     <div class="free_trial">
-                        <span>Free Trial (14 Days)</span>
+                        <span>Free Trial ({{ (int) config('features.subscription_trial_days', 15) }} Days)</span>
                          <p class="dont_acc up">Already Have An Account?   <a href="{{route('user.user_login')}}"> Sign In Now!</a></p>
                     </div>
 

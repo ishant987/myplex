@@ -48,6 +48,7 @@
     $isTrialUser = auth()->check() && $user->isOnTrial();
     $isActiveUser = auth()->check() && $user->hasActiveSubscription();
     $hasUsedTrial = $hasUsedTrial ?? false;
+    $trialDays = (int) config('features.subscription_trial_days', 15);
 @endphp
 
 <div class="subscription-page">
@@ -66,7 +67,7 @@
                 @endif
                 @guest
                 <h2 class="h4 mb-2">Start with full access</h2>
-                <p class="mb-0">Create an account to get a 15-day trial on Basic or Premium, then subscribe whenever you are ready.</p>
+                <p class="mb-0">Create an account to get a {{ $trialDays }}-day trial on Basic or Premium, then subscribe whenever you are ready.</p>
                 @else
                     @if ($user->hasActiveSubscription() && $activeSubscription)
                     <h2 class="h4 mb-2">Current plan: {{ optional($activeSubscription->plan)->name ?: 'Active Subscription' }}</h2>
@@ -146,7 +147,7 @@
                         <p class="muted-note mb-3">Credit applied: INR {{ number_format((float) $preview['credit'], 2) }} for {{ $preview['days_remaining'] }} remaining days.</p>
                         <p class="muted-note mb-3">Current plan: {{ $preview['current_plan_name'] }}</p>
                         @elseif ($planAllowsTrial && !$hasUsedTrial)
-                        <p class="muted-note mb-3">Includes a 0-day trial for new users.</p>
+                        <p class="muted-note mb-3">Includes a {{ $trialDays }}-day trial for new users.</p>
                         @elseif ($planAllowsTrial && $hasUsedTrial)
                         <p class="muted-note mb-3">Free trial already used. This plan starts as a paid subscription.</p>
                         @else
