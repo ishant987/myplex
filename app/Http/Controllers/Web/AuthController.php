@@ -700,7 +700,17 @@ class AuthController extends BaseController
                         </div>';
                         return json_encode($resArr);
                     }
-                    if ($user->is_approved == $commonconstants['y_n_val'][2]) {
+
+                    if (isset($user->arn_verification_status)) {
+                        if (($user->arn_verification_status ?: 'pending') !== 'verified') {
+                            $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
+                                <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 
+                                We are verifying your ARN and account details. Password reset will be available after verification.
+                            </div>';
+                            return json_encode($resArr);
+                        }
+                    } elseif ($user->is_approved == $commonconstants['y_n_val'][2]) {
                         $resArr['msg'] = '<div class="alert alert-' . $frontconstants['alert_css']['3'] . '">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="icofont icofont-close-line-circled"></i></button>
                             <strong>' . $webLang['warning_ttl'] . '&nbsp;</strong> 

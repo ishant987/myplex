@@ -56,6 +56,9 @@ class MailPS extends Core
 	public static function getFromEmail()
 	{
 		$email = UsefulSql::getSingleValue('options', 'option_value', 'option_key', 'from_email');
+		if (!$email) {
+			$email = Config('mail.from.address');
+		}
 		return $email;
 	}
 
@@ -315,13 +318,15 @@ class MailPS extends Core
 			$fromEmail = self::getFromEmail();
 		}
 		if (!$fromName) {
-			$fromName = Config('app.name');
+			$fromName = Config('mail.from.name', Config('app.name'));
 		}
 
 		try {
 
 			Mail::send([], [], function ($message) use ($toEmail, $subject, $fromName, $fromEmail, $cc, $bcc, $content, $filePath) {
-				$message->from($fromEmail, $fromName);
+				if ($fromEmail) {
+					$message->from($fromEmail, $fromName);
+				}
 				$message->to($toEmail, null);
 
 				if ($cc)	$message->cc($cc, null);
