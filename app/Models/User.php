@@ -16,13 +16,6 @@ use App\Lib\Core\MailPS;
 use App\Models\UserGroupModel;
 use App\Models\UserGroupRelModel;
 use App\Models\AdminModel;
-use App\Models\Subscription;
-use App\Models\PaymentTransaction;
-use App\Models\UserSensitiveDetail;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -71,22 +64,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'arn',
         'pan',
         'subscription_expiry_date',
-        'trial_ends_at',
-        'session_token',
-        'is_session_active',
-        'subscription_status',
-        'wl_company_name',
-        'wl_logo',
     ];
 
     protected $guarded = [
         'u_id',
-    ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'trial_ends_at' => 'datetime',
-        'is_session_active' => 'boolean',
     ];
 
 
@@ -94,33 +75,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         parent::boot();
         self::creating(function ($model) {
-            if (empty($model->u_code)) {
-                $model->u_code = self::generateUserCode($model->table);
+            if (!isset($model->u_id) && $model->u_id == 0) {
+                $model->u_code = IdGenerator::generate(['table' => env('DB_PREFIX') . $model->table, 'field' => 'u_code', 'length' => 8, 'prefix' => 'U']);
             }
         });
-    }
-
-    protected static function generateUserCode(string $table): string
-    {
-        if (DB::connection()->getDriverName() !== 'sqlite') {
-            return IdGenerator::generate([
-                'table' => env('DB_PREFIX') . $table,
-                'field' => 'u_code',
-                'length' => 8,
-                'prefix' => 'U',
-            ]);
-        }
-
-        $maxNumericCode = static::query()
-            ->where('u_code', 'like', 'U%')
-            ->pluck('u_code')
-            ->map(function ($code) {
-                return preg_match('/^U(\d+)$/', (string) $code, $matches) ? (int) $matches[1] : null;
-            })
-            ->filter()
-            ->max();
-
-        return 'U' . str_pad((string) (($maxNumericCode ?? 0) + 1), 7, '0', STR_PAD_LEFT);
     }
 
     public static function days()
@@ -163,214 +121,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function groups()
     {
         return $this->belongsToMany(UserGroupModel::class, 'user_group_rel', 'u_id', 'u_g_id');
-    }
-
-    public function razorpaySubscriptions()
-    {
-        return $this->hasMany(Subscription::class, 'user_id', 'u_id');
-    }
-
-    public function latestPaidSubscription()
-    {
-        return $this->hasOne(Subscription::class, 'user_id', 'u_id')
-            ->whereNotNull('plan_id')
-            ->latest('id');
-    }
-
-    public function paymentTransactions()
-    {
-        return $this->hasMany(PaymentTransaction::class, 'user_id', 'u_id');
-    }
-
-    public function sensitiveDetails()
-    {
-        return $this->hasOne(UserSensitiveDetail::class, 'user_id', 'u_id');
-    }
-
-    public function activeSubscription()
-    {
-        return $this->razorpaySubscriptions()
-            ->whereNotNull('plan_id')
-            ->whereIn('status', ['a', 'active'])
-            ->latest('id');
-    }
-
-    public function hasActiveSubscription(): bool
-    {
-        $activeSubscription = $this->activeSubscription()->first();
-
-        if ($activeSubscription && $activeSubscription->isActive()) {
-            return true;
-        }
-
-        if ($this->subscription_status !== 'active' || empty($this->subscription_expiry_date)) {
-            return false;
-        }
-
-        return Carbon::parse($this->subscription_expiry_date)->isFuture();
-    }
-
-    public function isOnTrial(): bool
-    {
-        return $this->subscription_status === 'trial'
-            && !empty($this->trial_ends_at)
-            && Carbon::parse($this->trial_ends_at)->isFuture();
-    }
-
-    public function hasValidAccess(): bool
-    {
-        return $this->hasActiveSubscription() || $this->isOnTrial();
-    }
-
-    public function hasWhiteLabel(): bool
-    {
-        return $this->razorpaySubscriptions()
-            ->with('plan')
-            ->whereNotNull('plan_id')
-            ->whereIn('status', ['a', 'active'])
-            ->get()
-            ->contains(function ($subscription) {
-                return $subscription->isActive()
-                    && strtolower((string) optional($subscription->plan)->slug) === 'white-label';
-            });
-    }
-
-    public function hasUsedTrial(): bool
-    {
-        if (!empty($this->trial_ends_at)) {
-            return true;
-        }
-
-        return Subscription::query()
-            ->where(function ($query) {
-                $query->where('user_id', $this->u_id)
-                    ->orWhere('u_id', $this->u_id);
-            })
-            ->whereIn('subscription_type', ['trial', 'free_subscription'])
-            ->exists();
-    }
-
-    public function subscriptionDaysRemaining(): int
-    {
-        $expiry = $this->accessExpiresAt();
-
-        if (!$expiry) {
-            return 0;
-        }
-
-        return max(0, (int) now()->diffInDays($expiry, false));
-    }
-
-    public function accessExpiresAt(): ?Carbon
-    {
-        if (!empty($this->subscription_expiry_date)) {
-            return Carbon::parse($this->subscription_expiry_date);
-        }
-
-        $activeSubscription = $this->activeSubscription()->first();
-        if ($activeSubscription?->ends_at) {
-            return Carbon::parse($activeSubscription->ends_at);
-        }
-
-        if (!empty($this->trial_ends_at)) {
-            return Carbon::parse($this->trial_ends_at);
-        }
-
-        return null;
-    }
-
-    public function whiteLabelSettingsPath(): string
-    {
-        return storage_path('app/whitelabel/user-' . $this->u_id . '.json');
-    }
-
-    public function whiteLabelSettings(): array
-    {
-        $settings = [
-            'company_name' => null,
-            'logo' => null,
-        ];
-
-        if (Schema::hasColumn($this->getTable(), 'wl_company_name') && !empty($this->wl_company_name)) {
-            $settings['company_name'] = $this->wl_company_name;
-        }
-
-        if (Schema::hasColumn($this->getTable(), 'wl_logo') && !empty($this->wl_logo)) {
-            $settings['logo'] = $this->wl_logo;
-        }
-
-        $path = $this->whiteLabelSettingsPath();
-
-        if (File::exists($path)) {
-            $decoded = json_decode((string) File::get($path), true);
-
-            if (is_array($decoded)) {
-                $settings['company_name'] = $decoded['company_name'] ?? $settings['company_name'];
-                $settings['logo'] = $decoded['logo'] ?? $settings['logo'];
-            }
-        }
-
-        return $settings;
-    }
-
-    public function whiteLabelCompanyName(): ?string
-    {
-        $companyName = trim((string) ($this->whiteLabelSettings()['company_name'] ?? ''));
-
-        return $companyName !== '' ? $companyName : null;
-    }
-
-    public function whiteLabelLogoPath(): ?string
-    {
-        $logoPath = trim((string) ($this->whiteLabelSettings()['logo'] ?? ''));
-
-        return $logoPath !== '' ? ltrim($logoPath, '/') : null;
-    }
-
-    public function whiteLabelLogoUrl(): ?string
-    {
-        $logoPath = $this->whiteLabelLogoPath();
-
-        if (!$logoPath) {
-            return null;
-        }
-
-        if (filter_var($logoPath, FILTER_VALIDATE_URL)) {
-            return $logoPath;
-        }
-
-        return asset($logoPath);
-    }
-
-    public function whiteLabelPdfLogoPath(): ?string
-    {
-        $logoPath = $this->whiteLabelLogoPath();
-
-        if (!$logoPath || filter_var($logoPath, FILTER_VALIDATE_URL)) {
-            return null;
-        }
-
-        $absolutePath = public_path($logoPath);
-
-        return File::exists($absolutePath) ? $absolutePath : null;
-    }
-
-    public function whiteLabelBranding(): array
-    {
-        $hasWhiteLabel = $this->hasWhiteLabel();
-        $defaultLogoUrl = asset('themes/frontend/assets/infosolz/images/small_logo.png');
-        $customLogoUrl = $hasWhiteLabel ? $this->whiteLabelLogoUrl() : null;
-        $customPdfLogoPath = $hasWhiteLabel ? $this->whiteLabelPdfLogoPath() : null;
-
-        return [
-            'is_white_label' => $hasWhiteLabel,
-            'company_name' => $hasWhiteLabel ? $this->whiteLabelCompanyName() : null,
-            'logo_path' => $hasWhiteLabel ? $this->whiteLabelLogoPath() : null,
-            'logo_url' => $customLogoUrl ?: $defaultLogoUrl,
-            'header_logo_url' => $customLogoUrl ?: asset('themes/frontend/assets/v1/img/logo_dash.png'),
-            'pdf_logo_path' => $customPdfLogoPath,
-            'has_custom_logo' => !empty($customLogoUrl),
-        ];
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)
@@ -604,5 +354,79 @@ class User extends Authenticatable implements MustVerifyEmail
         $response['mailResp'] = $mailResp;
 
         return $response;
+    }
+
+    public function whiteLabelBranding(): array
+    {
+        $logoPath = $this->whiteLabelLogoPath();
+
+        return [
+            "is_white_label"   => $this->hasWhiteLabel(),
+            "company_name"     => $this->wl_company_name ?: null,
+            "logo_url"         => $logoPath ? asset($logoPath) : asset("themes/frontend/assets/infosolz/images/small_logo.png"),
+            "header_logo_url"  => $logoPath ? asset($logoPath) : asset("themes/frontend/assets/infosolz/images/small_logo.png"),
+            "pdf_logo_path"    => $logoPath ? public_path($logoPath) : public_path("themes/frontend/assets/infosolz/images/small_logo.png"),
+        ];
+    }
+
+    public function hasWhiteLabel(): bool
+    {
+        if (!empty($this->wl_company_name) || !empty($this->wl_logo)) {
+            return true;
+        }
+
+        return $this->razorpaySubscriptions()
+            ->with("plan")
+            ->whereNotNull("plan_id")
+            ->whereIn("status", ["a", "active"])
+            ->get()
+            ->contains(function ($subscription) {
+                return $subscription->isActive()
+                    && strtolower((string) optional($subscription->plan)->slug) === "white-label";
+            });
+    }
+
+    public function whiteLabelLogoPath(): ?string
+    {
+        return $this->wl_logo ?: null;
+    }
+
+    public function whiteLabelSettingsPath(): string
+    {
+        return storage_path("app/whitelabel/user-{$this->u_id}.json");
+    }
+
+
+    public function hasUsedTrial(): bool
+    {
+        return (bool) $this->razorpaySubscriptions()
+            ->whereNotNull("trial_ends_at")
+            ->exists();
+    }
+
+    public function razorpaySubscriptions()
+    {
+        return $this->hasMany(\App\Models\Subscription::class, "user_id", "u_id");
+    }
+
+    public function isOnTrial(): bool
+    {
+        if (empty($this->trial_ends_at)) { return false; }
+        if ($this->subscription_status !== "trial") { return false; }
+        return \Carbon\Carbon::parse($this->trial_ends_at)->isFuture();
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        if (empty($this->subscription_expiry_date)) { return false; }
+        if (!in_array($this->subscription_status, ["active", "trial"])) { return false; }
+        return \Carbon\Carbon::parse($this->subscription_expiry_date)->isFuture();
+    }
+
+    public function accessExpiresAt(): ?\Carbon\Carbon
+    {
+        if (!empty($this->subscription_expiry_date)) { return \Carbon\Carbon::parse($this->subscription_expiry_date); }
+        if (!empty($this->trial_ends_at)) { return \Carbon\Carbon::parse($this->trial_ends_at); }
+        return null;
     }
 }

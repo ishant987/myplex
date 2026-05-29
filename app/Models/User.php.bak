@@ -355,4 +355,64 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $response;
     }
+
+    public function whiteLabelBranding(): array
+    {
+        $logoPath = $this->whiteLabelLogoPath();
+        return [
+            "is_white_label"   => $this->hasWhiteLabel(),
+            "company_name"     => $this->wl_company_name ?: null,
+            "logo_url"         => $logoPath ? asset($logoPath) : asset("images/logo.png"),
+            "header_logo_url"  => $logoPath ? asset($logoPath) : asset("images/logo.png"),
+            "pdf_logo_path"    => $logoPath ? public_path($logoPath) : null,
+        ];
+    }
+    public function hasWhiteLabel(): bool
+    {
+        return (bool) (!empty($this->wl_company_name) || !empty($this->wl_logo));
+    }
+
+    public function whiteLabelLogoPath(): ?string
+    {
+        return $this->wl_logo ?: null;
+    }
+
+    public function whiteLabelSettingsPath(): string
+    {
+        return storage_path("app/whitelabel/user-{$this->u_id}.json");
+    }
+
+
+    public function hasUsedTrial(): bool
+    {
+        return (bool) $this->razorpaySubscriptions()
+            ->whereNotNull("trial_ends_at")
+            ->exists();
+    }
+
+    public function razorpaySubscriptions()
+    {
+        return $this->hasMany(\App\Models\Subscription::class, "user_id", "u_id");
+    }
+
+    public function isOnTrial(): bool
+    {
+        if (empty($this->trial_ends_at)) { return false; }
+        if ($this->subscription_status !== "trial") { return false; }
+        return \Carbon\Carbon::parse($this->trial_ends_at)->isFuture();
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        if (empty($this->subscription_expiry_date)) { return false; }
+        if (!in_array($this->subscription_status, ["active", "trial"])) { return false; }
+        return \Carbon\Carbon::parse($this->subscription_expiry_date)->isFuture();
+    }
+
+    public function accessExpiresAt(): ?\Carbon\Carbon
+    {
+        if (!empty($this->subscription_expiry_date)) { return \Carbon\Carbon::parse($this->subscription_expiry_date); }
+        if (!empty($this->trial_ends_at)) { return \Carbon\Carbon::parse($this->trial_ends_at); }
+        return null;
+    }
 }
