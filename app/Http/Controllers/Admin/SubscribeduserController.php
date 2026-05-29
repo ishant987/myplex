@@ -60,6 +60,7 @@ class SubscribeduserController extends BaseController
         $fltrDataArr['email'] = $request->has('fem') ? $request->query('fem') : '';
         $fltrDataArr['mobile'] = $request->has('fmb') ? $request->query('fmb') : '';
         $fltrDataArr['status'] = $request->has('fsts') ? $request->query('fsts') : '';
+        $fltrDataArr['arn_verification_status'] = $request->has('fav') ? $request->query('fav') : '';
         $fltrDataArr['acc_type'] = $request->has('fat') ? $request->query('fat') : '';
         $fltrDataArr['s_acc_medium'] = $request->has('fsm') ? $request->query('fsm') : '';
         $fltrDataArr['created_at'] = $request->has('fad') ? $request->query('fad') : '';
@@ -86,10 +87,14 @@ class SubscribeduserController extends BaseController
         $showEntryArr = ['value' => __('admin.sw_entry.options.value'), 'text' => __('admin.sw_entry.options.text')];
 
         $cFilterArr = ['all_txt' => __('admin.def_drop_optn_styl3_txt')];
+        $arnVerificationStatusArr = [
+            'pending' => 'Pending',
+            'verified' => 'Verified',
+        ];
 
         $roleRights = ['add' => App::hasAccessToMethod($this->className, 'admin.subscribeduser.create'), 'edit' => App::hasAccessToMethod($this->className, 'admin.subscribeduser.edit'), 'delete' => App::hasAccessToMethod($this->className, 'admin.deletesubscribeduser')];
 
-        return view('themes.backend.pages.subscribeduser.index', compact('dataListModel', 'data', 'listDataAtrArr', 'moduleAtrArr', 'sortbyArr', 'orderbyArr', 'fltrDataArr', 'perPage', 'sortBy', 'orderBy', 'showEntryArr', 'cFilterArr', 'roleRights'));
+        return view('themes.backend.pages.subscribeduser.index', compact('dataListModel', 'data', 'listDataAtrArr', 'moduleAtrArr', 'sortbyArr', 'orderbyArr', 'fltrDataArr', 'perPage', 'sortBy', 'orderBy', 'showEntryArr', 'cFilterArr', 'roleRights', 'arnVerificationStatusArr'));
     }
 
     /**
@@ -342,8 +347,9 @@ class SubscribeduserController extends BaseController
             'p_picture' => 'nullable|file|image|mimes:jpeg,jpg,png|max:' . $commonconstants['img_upld_max_size'] . '',
             'pincode' => 'nullable|numeric',
             // 'plan' => 'required|integer',
-            'user_group' => 'required|array|min:1',
-            'status' => 'required|integer'
+            'user_group' => 'nullable|array',
+            'status' => 'required|integer',
+            'arn_verification_status' => 'required|in:pending,verified',
         ], [
             'p_picture.max' => $message['error']['img_upload_max_sz']
         ]);
@@ -472,6 +478,10 @@ class SubscribeduserController extends BaseController
                         return back()->with('alert', $adminconstants['alert_css'][1])->with('message', $message['success']['update'])->with('title', $admin['success_ttl']);
                     }
                 }
+
+                DB::commit();
+
+                return back()->with('alert', $adminconstants['alert_css'][1])->with('message', $message['success']['update'])->with('title', $admin['success_ttl']);
             }
         } catch (QueryException $exception) {
             if (isset($path) && $path) {

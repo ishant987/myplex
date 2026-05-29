@@ -12,44 +12,49 @@ class SendSubscriptionExpiryEmails extends Command
 {
     protected $signature = 'subscription:send-expiry-emails';
 
-    protected $description = 'Send reminder emails to users whose subscription expires in 3 days';
+    protected $description = 'Send reminder emails to users whose subscription expires in 7 or 3 days';
 
 
     public function handle()
     {
-        $targetDate = now()->addDays(3)->toDateString();
         $renewalUrl = url('/subscriptions');
 
-        $this->info("Looking for subscriptions expiring on: {$targetDate}");
+        foreach ([7, 3] as $daysLeft) {
+            $targetDate = now()->addDays($daysLeft)->toDateString();
 
-        User::query()
-            ->where('subscription_status', 'active')
-            ->whereNotNull('subscription_expiry_date')
-            ->whereDate('subscription_expiry_date', $targetDate)
-            ->whereNotNull('email')
-            ->chunkById(100, function ($users) use ($renewalUrl) {
-                foreach ($users as $user) {
-                    try {
-                        Mail::to($user->email)->send(
-                            new SubscriptionExpiry($user, (string) $user->subscription_expiry_date, $renewalUrl)
-                        );
+            $this->info("Looking for subscriptions expiring on: {$targetDate}");
 
-                        $this->info("Subscription expiry email sent to {$user->email}");
-                        Log::info('Subscription expiry email sent', [
-                            'user_id' => $user->u_id,
-                            'email' => $user->email,
-                            'expiry_date' => $user->subscription_expiry_date,
-                        ]);
-                    } catch (\Throwable $exception) {
-                        $this->error("Subscription expiry email failed for {$user->email}: {$exception->getMessage()}");
-                        Log::error('Subscription expiry email failed', [
-                            'user_id' => $user->u_id,
-                            'email' => $user->email,
-                            'error' => $exception->getMessage(),
-                        ]);
+            User::query()
+                ->where('subscription_status', 'active')
+                ->whereNotNull('subscription_expiry_date')
+                ->whereDate('subscription_expiry_date', $targetDate)
+                ->whereNotNull('email')
+                ->chunkById(100, function ($users) use ($renewalUrl, $daysLeft) {
+                    foreach ($users as $user) {
+                        try {
+                            Mail::to($user->email)->send(
+                                new SubscriptionExpiry($user, (string) $user->subscription_expiry_date, $renewalUrl, $daysLeft)
+                            );
+
+                            $this->info("Subscription expiry email sent to {$user->email}");
+                            Log::info('Subscription expiry email sent', [
+                                'user_id' => $user->u_id,
+                                'email' => $user->email,
+                                'expiry_date' => $user->subscription_expiry_date,
+                                'days_left' => $daysLeft,
+                            ]);
+                        } catch (\Throwable $exception) {
+                            $this->error("Subscription expiry email failed for {$user->email}: {$exception->getMessage()}");
+                            Log::error('Subscription expiry email failed', [
+                                'user_id' => $user->u_id,
+                                'email' => $user->email,
+                                'error' => $exception->getMessage(),
+                                'days_left' => $daysLeft,
+                            ]);
+                        }
                     }
-                }
-            }, 'u_id');
+                }, 'u_id');
+        }
 
         $this->info('Subscription expiry email scan completed.');
 

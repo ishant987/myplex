@@ -8,10 +8,13 @@ use App\Http\Controllers\Web\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subscription;
+use App\Mail\WelcomeAccount;
 
 // use Illuminate\Support\Facades\Auth;
 use Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class LoginController extends BaseController
@@ -40,6 +43,30 @@ class LoginController extends BaseController
         if (Auth::attempt($credentials)) {
             //  dd("ok4");
             $user = Auth::user();
+
+            if ($user->arn_verification_status !== 'verified') {
+                Auth::guard()->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()
+                    ->route('user.registration.pending')
+                    ->with('success', 'We are verifying your ARN and account details. Please stay tuned.');
+            }
+
+            if (empty($user->welcome_email_sent_at)) {
+                try {
+                    Mail::to($user->email)->send(new WelcomeAccount($user, null, null, route('user.user_login')));
+                    $user->forceFill(['welcome_email_sent_at' => now()])->save();
+                } catch (\Throwable $exception) {
+                    Log::warning('Welcome email failed to send on first login.', [
+                        'user_id' => $user->u_id,
+                        'email' => $user->email,
+                        'message' => $exception->getMessage(),
+                    ]);
+                }
+            }
+
             //dd($user);
             // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
             if (isset($request->pageurl)) {

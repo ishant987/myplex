@@ -25,6 +25,25 @@ class MailConfigServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if (env('MAIL_HOST') && env('MAIL_USERNAME')) {
+            $this->applySmtpConfig([
+                'driver' => env('MAIL_MAILER', 'smtp'),
+                'host' => env('MAIL_HOST'),
+                'port' => env('MAIL_PORT', 587),
+                'from' => [
+                    'address' => env('MAIL_FROM_ADDRESS'),
+                    'name' => env('MAIL_FROM_NAME', config('app.name')),
+                ],
+                'encryption' => $this->normalizeEncryption(env('MAIL_PORT'), env('MAIL_ENCRYPTION')),
+                'username' => env('MAIL_USERNAME'),
+                'password' => env('MAIL_PASSWORD'),
+                'sendmail' => '/usr/sbin/sendmail -bs',
+                'pretend' => false,
+            ]);
+
+            return;
+        }
+
        /* if (\Schema::hasTable('mails')) {
             $mail = DB::table('mails')->first();
             if ($mail) //checking if table is not empty
@@ -89,8 +108,42 @@ class MailConfigServiceProvider extends ServiceProvider
                         'allow_self_signed' => true
                     );                    
                 }
-                Config::set('mail', $configArr);
+                $configArr['encryption'] = $this->normalizeEncryption($configArr['port'] ?? null, $configArr['encryption'] ?? null);
+                $this->applySmtpConfig($configArr);
             }
         }
+    }
+
+    protected function normalizeEncryption($port, $encryption): ?string
+    {
+        if ((int) $port === 465 && strtolower((string) $encryption) === 'tls') {
+            return 'ssl';
+        }
+
+        return $encryption ?: null;
+    }
+
+    protected function applySmtpConfig(array $config): void
+    {
+        $driver = $config['driver'] ?? 'smtp';
+
+        Config::set('mail.default', $driver);
+        Config::set("mail.mailers.{$driver}.transport", $driver);
+        Config::set("mail.mailers.{$driver}.host", $config['host'] ?? null);
+        Config::set("mail.mailers.{$driver}.port", $config['port'] ?? null);
+        Config::set("mail.mailers.{$driver}.encryption", $config['encryption'] ?? null);
+        Config::set("mail.mailers.{$driver}.username", $config['username'] ?? null);
+        Config::set("mail.mailers.{$driver}.password", $config['password'] ?? null);
+        Config::set('mail.from', $config['from'] ?? []);
+
+        // Keep the legacy keys because some older project code still reads them directly.
+        Config::set('mail.driver', $driver);
+        Config::set('mail.host', $config['host'] ?? null);
+        Config::set('mail.port', $config['port'] ?? null);
+        Config::set('mail.encryption', $config['encryption'] ?? null);
+        Config::set('mail.username', $config['username'] ?? null);
+        Config::set('mail.password', $config['password'] ?? null);
+        Config::set('mail.sendmail', $config['sendmail'] ?? '/usr/sbin/sendmail -bs');
+        Config::set('mail.pretend', $config['pretend'] ?? false);
     }
 }

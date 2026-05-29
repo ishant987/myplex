@@ -643,6 +643,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::get('subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
         Route::post('subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
         Route::post('subscription/verify', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+        Route::post('subscription/payment-failed', 'SubscriptionController@paymentFailed')->name('subscription.payment-failed');
         Route::post('subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
         Route::post('subscription/upgrade-preview', 'SubscriptionController@calculateUpgradeAmount')->name('subscription.upgrade-preview');
         Route::get('edit-profile', 'UserController@editProfileData')->name('edit.profile');
@@ -768,6 +769,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
 
     Route::get('registration', 'RegistrationController@index')->name('registration');
     Route::post('registration-store', 'RegistrationController@store')->name('registration-store');
+    Route::get('registration-pending', 'RegistrationController@pending')->name('registration.pending');
     Route::get('verify-email/{id}', 'RegistrationController@verify')->name('verify-email');
     Route::post('check-email-unique', 'RegistrationController@checkEmailUnique')->name('check-email-unique');
     Route::post('registration-send-otp', 'RegistrationController@sendRegistrationOtp')->name('registration-send-otp');

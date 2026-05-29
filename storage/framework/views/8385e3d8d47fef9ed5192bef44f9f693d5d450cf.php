@@ -30,20 +30,20 @@
                             </h1>
 
                             <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
-                                We received a request to verify <strong>{{ $email }}</strong> for a new myplexus account. Enter the code below to continue registration.
+                                We received a request to verify <strong><?php echo e($email); ?></strong> for a new myplexus account. Enter the code below to continue registration.
                             </p>
 
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0; background:#f7fbf8; border:1px solid #dcefe3; border-radius:18px;">
                                 <tr>
                                     <td align="center" style="padding:26px 18px;">
                                         <div style="font-size:12px; color:#6a7b86; text-transform:uppercase; letter-spacing:.16em; font-weight:700; margin-bottom:12px;">One-time password</div>
-                                        <div style="font-size:40px; line-height:1; font-weight:800; letter-spacing:.20em; color:#12773e;">{{ $otp }}</div>
+                                        <div style="font-size:40px; line-height:1; font-weight:800; letter-spacing:.20em; color:#12773e;"><?php echo e($otp); ?></div>
                                     </td>
                                 </tr>
                             </table>
 
                             <p style="margin:0 0 12px; font-size:15px; line-height:1.8; color:#415466;">
-                                This OTP is valid for <strong>{{ $expiresInMinutes }} minutes</strong>.
+                                This OTP is valid for <strong><?php echo e($expiresInMinutes); ?> minutes</strong>.
                             </p>
                             <p style="margin:0; font-size:13px; line-height:1.7; color:#7a8b96;">
                                 If you did not request this, you can safely ignore this email. Your account will not be created without the OTP.
@@ -64,3 +64,4 @@
     </table>
 </body>
 </html>
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/auth/email/registration_otp.blade.php ENDPATH**/ ?>

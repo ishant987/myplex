@@ -5,10 +5,10 @@
     <title>Welcome to myplexus</title>
 </head>
 <body style="margin:0; padding:0; background:#eef6f1; font-family:Arial, Helvetica, sans-serif; color:#173043;">
-    @php
+    <?php
         $displayName = trim((string) ($user->f_name ?? '') . ' ' . (string) ($user->l_name ?? ''));
         $displayName = $displayName !== '' ? $displayName : ($user->contact_person ?: ($user->company ?: 'there'));
-    @endphp
+    ?>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef6f1; margin:0; padding:28px 12px;">
         <tr>
@@ -31,7 +31,7 @@
                             </div>
 
                             <h1 style="margin:18px 0 12px; font-size:28px; line-height:1.25; color:#102b3f;">
-                                Hi {{ $displayName }},
+                                Hi <?php echo e($displayName); ?>,
                             </h1>
 
                             <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
@@ -42,31 +42,31 @@
                                 <tr>
                                     <td style="padding:18px 20px;">
                                         <p style="margin:0 0 8px; font-size:13px; color:#6a7b86; text-transform:uppercase; letter-spacing:.08em; font-weight:700;">Account email</p>
-                                        <p style="margin:0; font-size:17px; color:#102b3f; font-weight:700;">{{ $user->email }}</p>
-                                        @if (!empty($plainPassword))
+                                        <p style="margin:0; font-size:17px; color:#102b3f; font-weight:700;"><?php echo e($user->email); ?></p>
+                                        <?php if(!empty($plainPassword)): ?>
                                             <p style="margin:16px 0 8px; font-size:13px; color:#6a7b86; text-transform:uppercase; letter-spacing:.08em; font-weight:700;">Password</p>
-                                            <p style="margin:0; font-size:17px; color:#102b3f; font-weight:700;">{{ $plainPassword }}</p>
-                                        @endif
+                                            <p style="margin:0; font-size:17px; color:#102b3f; font-weight:700;"><?php echo e($plainPassword); ?></p>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             </table>
 
-                            @if (!empty($verifyUrl))
+                            <?php if(!empty($verifyUrl)): ?>
                                 <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
                                     Please verify your email address to activate your account.
                                 </p>
                                 <p style="margin:0 0 18px;">
-                                    <a href="{{ $verifyUrl }}" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">Verify Email</a>
+                                    <a href="<?php echo e($verifyUrl); ?>" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">Verify Email</a>
                                 </p>
-                                <p style="margin:0; font-size:12px; line-height:1.6; color:#7a8b96;">If the button does not work, open this link:<br>{{ $verifyUrl }}</p>
-                            @elseif (!empty($loginUrl))
+                                <p style="margin:0; font-size:12px; line-height:1.6; color:#7a8b96;">If the button does not work, open this link:<br><?php echo e($verifyUrl); ?></p>
+                            <?php elseif(!empty($loginUrl)): ?>
                                 <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
                                     You can sign in any time using the link below.
                                 </p>
                                 <p style="margin:0;">
-                                    <a href="{{ $loginUrl }}" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">Go To Login</a>
+                                    <a href="<?php echo e($loginUrl); ?>" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">Go To Login</a>
                                 </p>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
 
@@ -83,3 +83,4 @@
     </table>
 </body>
 </html>
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/emails/web/welcome_account.blade.php ENDPATH**/ ?>

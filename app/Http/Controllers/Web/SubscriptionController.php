@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PaymentConfirmation;
+use App\Mail\PaymentFailed;
 use App\Models\PaymentTransaction;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
@@ -404,12 +406,83 @@ class SubscriptionController extends Controller
         try {
             Mail::to($user->email)->send(new PaymentConfirmation($user, $subscription->fresh('plan'), $transaction));
         } catch (\Throwable $exception) {
+            Log::warning('Payment confirmation email failed to send.', [
+                'user_id' => $user->u_id,
+                'email' => $user->email,
+                'transaction_id' => $transaction->id,
+                'message' => $exception->getMessage(),
+            ]);
         }
 
         return response()->json([
             'status' => 'ok',
             'redirect' => route('user.auth-dashboard'),
         ]);
+    }
+
+    public function paymentFailed(Request $request): JsonResponse
+    {
+        abort_unless(config('features.subscription_enabled'), 404);
+
+        $validated = $request->validate([
+            'razorpay_order_id' => ['required', 'string'],
+            'razorpay_payment_id' => ['nullable', 'string'],
+            'error_description' => ['nullable', 'string'],
+            'error_reason' => ['nullable', 'string'],
+        ]);
+
+        $user = $request->user();
+        $transaction = PaymentTransaction::query()
+            ->where('user_id', $user->u_id)
+            ->where('razorpay_order_id', $validated['razorpay_order_id'])
+            ->latest('id')
+            ->first();
+
+        if (!$transaction) {
+            return response()->json(['status' => 'ignored']);
+        }
+
+        $failureReason = $validated['error_description']
+            ?? $validated['error_reason']
+            ?? 'Payment failed before completion.';
+
+        $transaction->update([
+            'razorpay_payment_id' => $validated['razorpay_payment_id'] ?? $transaction->razorpay_payment_id,
+            'status' => 'failed',
+            'failure_reason' => $failureReason,
+            'metadata' => array_merge($transaction->metadata ?? [], ['browser_failure' => $validated]),
+        ]);
+
+        $subscription = $transaction->subscription;
+        if ($subscription) {
+            $subscription->update(['status' => Subscription::databaseStatusFor('failed')]);
+
+            $this->sendPaymentFailedEmail($user, $subscription, $transaction);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    protected function sendPaymentFailedEmail($user, Subscription $subscription, PaymentTransaction $transaction): void
+    {
+        $metadata = $transaction->metadata ?? [];
+
+        if (!empty($metadata['payment_failed_mail_sent_at'])) {
+            return;
+        }
+
+        try {
+            Mail::to($user->email)->send(new PaymentFailed($user, $subscription->fresh('plan'), $transaction));
+            $metadata['payment_failed_mail_sent_at'] = now()->toDateTimeString();
+            $transaction->forceFill(['metadata' => $metadata])->save();
+        } catch (\Throwable $exception) {
+            Log::warning('Payment failed email failed to send.', [
+                'user_id' => $user->u_id,
+                'email' => $user->email,
+                'transaction_id' => $transaction->id,
+                'message' => $exception->getMessage(),
+            ]);
+        }
     }
 
     public function cancel(Request $request)

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PaymentFailed;
 use App\Models\PaymentTransaction;
 use App\Models\Subscription;
 use App\Services\RazorpayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class RazorpayWebhookController extends Controller
 {
@@ -113,7 +116,34 @@ class RazorpayWebhookController extends Controller
         ]);
 
         if ($transaction->subscription) {
-            $transaction->subscription->update(['status' => Subscription::databaseStatusFor('failed')]);
+            $subscription = $transaction->subscription;
+            $subscription->update(['status' => Subscription::databaseStatusFor('failed')]);
+
+            if ($transaction->user) {
+                $this->sendPaymentFailedEmail($transaction, $subscription);
+            }
+        }
+    }
+
+    protected function sendPaymentFailedEmail(PaymentTransaction $transaction, Subscription $subscription): void
+    {
+        $metadata = $transaction->metadata ?? [];
+
+        if (!empty($metadata['payment_failed_mail_sent_at'])) {
+            return;
+        }
+
+        try {
+            Mail::to($transaction->user->email)->send(new PaymentFailed($transaction->user, $subscription->fresh('plan'), $transaction));
+            $metadata['payment_failed_mail_sent_at'] = now()->toDateTimeString();
+            $transaction->forceFill(['metadata' => $metadata])->save();
+        } catch (\Throwable $exception) {
+            Log::warning('Payment failed webhook email failed to send.', [
+                'user_id' => $transaction->user_id,
+                'email' => optional($transaction->user)->email,
+                'transaction_id' => $transaction->id,
+                'message' => $exception->getMessage(),
+            ]);
         }
     }
 

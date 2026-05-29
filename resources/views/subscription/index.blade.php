@@ -322,6 +322,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var rzp = new Razorpay(options);
         rzp.on('payment.failed', function(response) {
+            fetch('{{ route('web.subscription.payment-failed') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    razorpay_order_id: orderData.order_id,
+                    razorpay_payment_id: response.error.metadata ? response.error.metadata.payment_id : '',
+                    error_description: response.error.description || '',
+                    error_reason: response.error.reason || ''
+                })
+            }).catch(function () {});
+
             alert(response.error.description || 'Payment failed.');
         });
         rzp.open();

@@ -103,6 +103,7 @@
                   <th>{{ $sortbyArr['mobile'] }}</th>
                   <th class="cc-w-70">{{ __('subscribeduser.profile_pic_txt') }}</th>
                   <th class="cc-w-60">{{ __('admin.status_txt') }}</th>
+                  <th class="cc-w-120">ARN Verification</th>
                   <th>{{ $sortbyArr['acc_type'] }}</th>
                   <th>{{ $sortbyArr['s_acc_medium'] }}</th>
                   <th class="cc-w-150">{{ $sortbyArr['created_at'] }}</th>
@@ -139,6 +140,14 @@
                       <option value="">{{ $cFilterArr['all_txt'] }}</option>
                       @foreach($moduleAtrArr['status']['label'] as $key => $statusFtxt)
                       <option value="{{ $key }}" @if( $key==old('fsts') ) {{ 'selected' }} @elseif( $key==$fltrDataArr['status'] ) {{ 'selected' }} @endif>{{ $statusFtxt }}</option>
+                      @endforeach
+                    </select>
+                  </td>
+                  <td>
+                    <select name="fav" id="fav" aria-controls="example" class="form-control">
+                      <option value="">{{ $cFilterArr['all_txt'] }}</option>
+                      @foreach($arnVerificationStatusArr as $key => $statusFtxt)
+                      <option value="{{ $key }}" @if( $key == ($fltrDataArr['arn_verification_status'] ?? '') ) selected @endif>{{ $statusFtxt }}</option>
                       @endforeach
                     </select>
                   </td>
@@ -218,6 +227,10 @@
                     <label id="change_status{{ $record->u_id }}" class="label btn-{{ $listDataAtrArr['alert_css'][$record->status] }} no-drop">{{ $moduleAtrArr['status']['label'][$record->status] }}</label>
                     @endif
                   </td>
+                  <td>
+                    @php $arnStatus = $record->arn_verification_status ?: 'pending'; @endphp
+                    <span class="label btn-{{ $arnStatus === 'verified' ? 'success' : 'warning' }}">{{ $arnVerificationStatusArr[$arnStatus] ?? ucfirst($arnStatus) }}</span>
+                  </td>
                   <td>{{ $moduleAtrArr['acc_type']['text'][$record->acc_type] }}</td>
                   <td>
                     @if($record->s_acc_medium)
@@ -270,7 +283,7 @@
                 @endforeach
                 @else
                 <tr>
-                  <td colspan="16">{{ __('message.data_not_available') }}</td>
+                  <td colspan="17">{{ __('message.data_not_available') }}</td>
                 </tr>
                 @endif
               </tbody>
@@ -335,6 +348,10 @@
     var ftrFstsVlu = document.getElementById("fsts").value;
     if (ftrFstsVlu != "") {
       searchPagiData = searchPagiData + "&fsts=" + ftrFstsVlu;
+    }
+    var ftrFavVlu = document.getElementById("fav").value;
+    if (ftrFavVlu != "") {
+      searchPagiData = searchPagiData + "&fav=" + ftrFavVlu;
     }
     /*alert(searchPagiData);*/
     window.location.href = "{{ route('admin.subscribeduser.index') }}" + "?page=0" + searchPagiData + "&ppage=" + "{{ $perPage }}";

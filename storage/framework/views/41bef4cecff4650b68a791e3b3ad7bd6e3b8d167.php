@@ -5,13 +5,13 @@
     <title>Trial Ending Soon</title>
 </head>
 <body style="margin:0; padding:0; background:#eef6f1; font-family:Arial, Helvetica, sans-serif; color:#173043;">
-    @php
+    <?php
         $displayName = trim((string) ($user->f_name ?? '') . ' ' . (string) ($user->l_name ?? ''));
         $displayName = $displayName !== '' ? $displayName : ($user->email ?? 'there');
         $daysLabel = $daysLeft . ' day' . ($daysLeft === 1 ? '' : 's');
         $trialDate = $user->trial_ends_at ? \Carbon\Carbon::parse($user->trial_ends_at)->format('d M Y') : 'soon';
         $subscriptionUrl = route('web.subscriptions.index');
-    @endphp
+    ?>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef6f1; margin:0; padding:28px 12px;">
         <tr>
@@ -34,18 +34,18 @@
                             </div>
 
                             <h1 style="margin:18px 0 12px; font-size:28px; line-height:1.25; color:#102b3f;">
-                                Hi {{ $displayName }},
+                                Hi <?php echo e($displayName); ?>,
                             </h1>
 
                             <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
-                                Your myplexus trial expires in <strong>{{ $daysLabel }}</strong>. Choose a plan to keep your fund analysis, advisor workflows, and research tools available without interruption.
+                                Your myplexus trial expires in <strong><?php echo e($daysLabel); ?></strong>. Choose a plan to keep your fund analysis, advisor workflows, and research tools available without interruption.
                             </p>
 
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0; background:#f7fbf8; border:1px solid #dcefe3; border-radius:16px;">
                                 <tr>
                                     <td style="padding:18px 20px;">
                                         <p style="margin:0 0 8px; font-size:13px; color:#6a7b86; text-transform:uppercase; letter-spacing:.08em; font-weight:700;">Trial ends on</p>
-                                        <p style="margin:0; font-size:24px; color:#12773e; font-weight:800;">{{ $trialDate }}</p>
+                                        <p style="margin:0; font-size:24px; color:#12773e; font-weight:800;"><?php echo e($trialDate); ?></p>
                                     </td>
                                 </tr>
                             </table>
@@ -55,10 +55,10 @@
                             </p>
 
                             <p style="margin:0 0 18px;">
-                                <a href="{{ $subscriptionUrl }}" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">View Subscription Plans</a>
+                                <a href="<?php echo e($subscriptionUrl); ?>" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">View Subscription Plans</a>
                             </p>
 
-                            <p style="margin:0; font-size:12px; line-height:1.6; color:#7a8b96;">If the button does not work, open this link:<br>{{ $subscriptionUrl }}</p>
+                            <p style="margin:0; font-size:12px; line-height:1.6; color:#7a8b96;">If the button does not work, open this link:<br><?php echo e($subscriptionUrl); ?></p>
                         </td>
                     </tr>
 
@@ -75,3 +75,4 @@
     </table>
 </body>
 </html>
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/emails/web/trial-expiry-reminder.blade.php ENDPATH**/ ?>

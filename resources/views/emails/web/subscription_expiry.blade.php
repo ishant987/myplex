@@ -1,54 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Subscription Expiring Soon</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .header { background: linear-gradient(180deg, #56BF84 0%, #12773E 112%); padding: 32px 24px; text-align: center; }
-        .header img { max-width: 160px; height: auto; }
-        .body { padding: 32px 24px; }
-        .body h2 { color: #1f2937; font-size: 22px; margin-bottom: 12px; }
-        .body p { color: #344054; font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
-        .highlight { background: #f3f8f5; border: 1px solid #dcece1; border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
-        .highlight p { margin: 0; font-size: 15px; color: #12773E; font-weight: 600; }
-        .btn { display: inline-block; background: linear-gradient(180deg, #56BF84 0%, #12773E 112%); color: #ffffff !important; text-decoration: none; padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; margin-top: 8px; }
-        .footer { background: #f9fafb; border-top: 1px solid #e5e7eb; padding: 20px 24px; text-align: center; }
-        .footer p { margin: 0; font-size: 13px; color: #667085; }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <img src="{{ asset('themes/frontend/assets/v1/img/logo_dash.png') }}" alt="myplexus">
-        </div>
-        <div class="body">
-            <h2>Hi {{ $user->f_name ?: 'User' }},</h2>
-            <p>Your <strong>myplexus</strong> subscription is expiring in <strong>3 days</strong>.</p>
+<body style="margin:0; padding:0; background:#eef6f1; font-family:Arial, Helvetica, sans-serif; color:#173043;">
+    @php
+        $displayName = trim((string) ($user->f_name ?? '') . ' ' . (string) ($user->l_name ?? ''));
+        $displayName = $displayName !== '' ? $displayName : 'User';
+        $daysLabel = $daysLeft . ' day' . ($daysLeft === 1 ? '' : 's');
+    @endphp
 
-            <div class="highlight">
-                <p>Expiry Date: {{ \Carbon\Carbon::parse($expiry_date)->format('d M Y') }}</p>
-            </div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef6f1; margin:0; padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:640px; background:#ffffff; border-radius:22px; overflow:hidden; border:1px solid #d7eadf; box-shadow:0 18px 48px rgba(13, 64, 43, 0.12);">
+                    <tr>
+                        <td style="background:#0d2d45; padding:30px; color:#ffffff;">
+                            <div style="font-size:32px; line-height:1; font-weight:800; letter-spacing:-1px;">myplexus</div>
+                            <div style="margin-top:8px; width:72px; height:4px; background:#36b875; border-radius:20px;"></div>
+                            <p style="margin:18px 0 0; font-size:15px; line-height:1.7; color:#d8f4e4;">
+                                Keep your mutual fund research tools uninterrupted.
+                            </p>
+                        </td>
+                    </tr>
 
-            <p>
-                To continue enjoying uninterrupted access to Ratio Reports, Composition Reports,
-                Indies Reports, Filters, Predictive tools and more, please renew your subscription
-                before it expires.
-            </p>
+                    <tr>
+                        <td style="padding:34px 30px 30px;">
+                            <div style="display:inline-block; padding:7px 12px; background:#fff6df; color:#9a5b00; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;">
+                                Renewal reminder
+                            </div>
 
-            <p>
-                <a href="{{ $renewal_url }}" class="btn">Renew Subscription</a>
-            </p>
+                            <h1 style="margin:18px 0 12px; font-size:28px; line-height:1.25; color:#102b3f;">
+                                Hi {{ $displayName }},
+                            </h1>
 
-            <p style="margin-top: 24px; font-size: 13px; color: #667085;">
-                If you have already renewed, please ignore this email.
-                For support, contact us at support@myplexus.com.
-            </p>
-        </div>
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} myplexus.com. All Rights Reserved.</p>
-        </div>
-    </div>
+                            <p style="margin:0 0 18px; font-size:15px; line-height:1.8; color:#415466;">
+                                Your myplexus subscription is expiring in <strong>{{ $daysLabel }}</strong>. Renew now to keep access to Ratio Reports, Composition Reports, Filters, predictive tools, and research workflows.
+                            </p>
+
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0; background:#f7fbf8; border:1px solid #dcefe3; border-radius:16px;">
+                                <tr>
+                                    <td style="padding:18px 20px;">
+                                        <p style="margin:0 0 8px; font-size:13px; color:#6a7b86; text-transform:uppercase; letter-spacing:.08em; font-weight:700;">Subscription expires on</p>
+                                        <p style="margin:0; font-size:24px; color:#12773e; font-weight:800;">{{ \Carbon\Carbon::parse($expiry_date)->format('d M Y') }}</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 20px; font-size:15px; line-height:1.8; color:#415466;">
+                                Renew before the expiry date to avoid access interruption across your dashboards and reports.
+                            </p>
+
+                            <p style="margin:0 0 18px;">
+                                <a href="{{ $renewal_url }}" style="display:inline-block; background:#12773e; color:#ffffff; text-decoration:none; padding:14px 24px; border-radius:12px; font-size:15px; font-weight:700;">Renew Subscription</a>
+                            </p>
+
+                            <p style="margin:0; font-size:12px; line-height:1.6; color:#7a8b96;">If the button does not work, open this link:<br>{{ $renewal_url }}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding:20px 30px; background:#f6faf7; border-top:1px solid #e4efe8;">
+                            <p style="margin:0; font-size:12px; line-height:1.6; color:#71808a;">
+                                If you have already renewed, please ignore this email. For support, contact support@myplexus.com.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

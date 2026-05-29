@@ -147,6 +147,13 @@
             </select>
           </x-form.group_lyt1_2_10>
 
+          <x-form.group_lyt1_2_10 label="ARN Verification" for="arn_verification_status" error="{{ $errors->first('arn_verification_status') }}" required="true">
+            <select id="arn_verification_status" class="form-control" name="arn_verification_status">
+              <option value="pending" @if(old('arn_verification_status', $dataArr['arn_verification_status'] ?? 'pending') == 'pending') selected @endif>Pending</option>
+              <option value="verified" @if(old('arn_verification_status', $dataArr['arn_verification_status'] ?? 'pending') == 'verified') selected @endif>Verified</option>
+            </select>
+          </x-form.group_lyt1_2_10>
+
           <div class="row">
             <div class="col-sm-12">
               <x-form.group_lyt1_2_10 class="m-t-10">

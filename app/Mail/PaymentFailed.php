@@ -9,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentConfirmation extends Mailable
+class PaymentFailed extends Mailable
 {
     use Queueable;
     use SerializesModels;
@@ -29,7 +29,7 @@ class PaymentConfirmation extends Mailable
     {
         $planName = optional($this->subscription->plan)->name ?: 'Subscription';
 
-        return $this->subject("Payment Confirmed - MyPlexus {$planName} Plan")
-            ->view('emails.web.payment-confirmation');
+        return $this->subject("Payment Failed - MyPlexus {$planName} Plan")
+            ->view('emails.web.payment-failed');
     }
 }

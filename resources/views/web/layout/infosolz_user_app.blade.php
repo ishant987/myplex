@@ -12,6 +12,77 @@
         'companyName' => $whiteLabelBranding['company_name'],
         'logoUrl' => $whiteLabelBranding['logo_url'],
     ]);
+    $subscriptionNotice = null;
+
+    if ($loggedInUser) {
+        $today = \Carbon\Carbon::today();
+        $activeSubscriptions = $loggedInUser->razorpaySubscriptions()
+            ->with('plan')
+            ->whereIn('status', ['a', 'active'])
+            ->get()
+            ->filter(function ($subscription) use ($today) {
+                $expiry = $subscription->ends_at ?: $subscription->subscription_expiry_date;
+
+                return !empty($expiry) && \Carbon\Carbon::parse($expiry)->endOfDay()->gte($today);
+            });
+
+        $whiteLabelSubscription = $activeSubscriptions
+            ->first(function ($subscription) {
+                return strtolower((string) optional($subscription->plan)->slug) === 'white-label'
+                    || strtolower((string) $subscription->subscription_type) === 'white-label';
+            });
+
+        $standardSubscription = $activeSubscriptions
+            ->first(function ($subscription) {
+                $slug = strtolower((string) optional($subscription->plan)->slug);
+                $type = strtolower((string) $subscription->subscription_type);
+
+                return in_array($slug, ['basic', 'premium'], true)
+                    || in_array($type, ['basic', 'premium'], true);
+            });
+
+        if ($loggedInUser->subscription_status === 'trial' && !empty($loggedInUser->subscription_expiry_date)) {
+            $trialExpiry = \Carbon\Carbon::parse($loggedInUser->subscription_expiry_date);
+            $subscriptionNotice = [
+                'type' => $trialExpiry->endOfDay()->lt($today) ? 'expired' : 'renew',
+                'expiry' => $trialExpiry,
+                'message' => $trialExpiry->endOfDay()->lt($today)
+                    ? 'Trial is expired, Please renew'
+                    : 'Trial subscription will expire on',
+            ];
+        } elseif ($whiteLabelSubscription) {
+            $whiteLabelExpiry = \Carbon\Carbon::parse($whiteLabelSubscription->ends_at ?: $whiteLabelSubscription->subscription_expiry_date);
+            if ($whiteLabelExpiry->copy()->endOfDay()->lt($today) || $today->gte($whiteLabelExpiry->copy()->subDays(5)->startOfDay())) {
+                $subscriptionNotice = [
+                    'type' => $whiteLabelExpiry->copy()->endOfDay()->lt($today) ? 'expired' : 'renew',
+                    'expiry' => $whiteLabelExpiry,
+                    'message' => $whiteLabelExpiry->copy()->endOfDay()->lt($today)
+                        ? 'White label subscription is expired, Please renew'
+                        : 'White label subscription will expire on',
+                ];
+            }
+        } elseif ($standardSubscription) {
+            $standardExpiry = \Carbon\Carbon::parse($standardSubscription->ends_at ?: $standardSubscription->subscription_expiry_date);
+            if ($standardExpiry->copy()->endOfDay()->lt($today) || $today->gte($standardExpiry->copy()->subDays(20)->startOfDay())) {
+                $subscriptionNotice = [
+                    'type' => $standardExpiry->copy()->endOfDay()->lt($today) ? 'expired' : 'renew',
+                    'expiry' => $standardExpiry,
+                    'message' => $standardExpiry->copy()->endOfDay()->lt($today)
+                        ? 'Subscription is expired, Please renew'
+                        : 'Subscription will expire on',
+                ];
+            }
+        } elseif (!empty($loggedInUser->subscription_expiry_date)) {
+            $fallbackExpiry = \Carbon\Carbon::parse($loggedInUser->subscription_expiry_date);
+            if ($fallbackExpiry->copy()->endOfDay()->lt($today)) {
+                $subscriptionNotice = [
+                    'type' => 'expired',
+                    'expiry' => $fallbackExpiry,
+                    'message' => 'Subscription is expired, Please renew',
+                ];
+            }
+        }
+    }
 @endphp
 <!DOCTYPE html>
     <html lang="en">
@@ -66,30 +137,22 @@
                         <li><a href="{{route('user.logout')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/log.png')}}" alt="">Logout</a></li>
                     </ul>
                 </div>
+                @if($subscriptionNotice)
                 <div class="subscription_heading">
                         <div class="sub_in_pdng">
                         <div class="subs_in">
-                        @if($expiry_date < $current_date)
-                        <!-- red warning--> 
-                         <!-- <i class="fa-solid fa-triangle-exclamation red"></i>  -->
-                         <a  href="{{ route('web.subscriptions.index') }}">Renew</a>
-                         <p>Subscription is expired, Please renew</p>  
-                        
-                        @elseif($current_date <= $fiveDaysBeforeExpiry)
-                        <!-- yellow last 4 day before warning-->
-                          <!-- <i class="fa-solid fa-triangle-exclamation yellow"></i>  -->
-                          <a  href="{{ route('web.subscriptions.index') }}">Renew</a>
-                           <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}, Please renew 
+                        <a href="{{ route('web.subscriptions.index') }}">Renew</a>
+                        @if($subscriptionNotice['type'] === 'expired')
+                            <p>{{ $subscriptionNotice['message'] }}</p>
                         @else
-                        <!-- green subscription warning--> 
-                         <!-- <i class="fa-solid fa-bell green"></i> -->
-                          <p>Subscription will expire on</p> {{ date('d/m/Y', strtotime($expiry_date)) }}
+                            <p>{{ $subscriptionNotice['message'] }}</p> {{ $subscriptionNotice['expiry']->format('d/m/Y') }}, Please renew
                         @endif
 
                         <i class="fa-solid fa-xmark close"></i>
                         </div>
                    </div>
                 </div>
+                @endif
                 <nav class="left_menu same_height">
                     <ul>
                         <li @if (isset($active_menu) && $active_menu == 'dashboard') class="active" @endif><a href="{{route('user.ratio_dashboard')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/ratop_report.png') }}" alt="">Ratio Reports</a></li>

@@ -134,6 +134,7 @@ class RegistrationController extends BaseController
         $insert['city'] = $request->city;
         $insert['state'] = $request->state;
         $insert['arn'] = $request->arn;
+        $insert['arn_verification_status'] = 'pending';
         $insert['pan'] = $request->pan;
         $insert['gst'] = $request->gst;
         $insert['password'] = $hashedPassword;
@@ -144,7 +145,7 @@ class RegistrationController extends BaseController
         $insert['updated_by'] = 'u';
         $insert['updated_id'] = 0;
         if (app()->environment('local')) {
-            $insert['is_approved'] = 'y';
+            $insert['is_approved'] = 'n';
             $insert['email_verified_at'] = now();
         }
         // dd($insert);
@@ -178,17 +179,16 @@ class RegistrationController extends BaseController
 
 
 
-        $user->forceFill([
-            'is_approved' => 'y',
-            'email_verified_at' => now(),
-        ])->save();
-
-        Auth::guard()->login($user);
         $request->session()->forget(self::REGISTRATION_OTP_SESSION_KEY);
 
         return redirect()
-            ->route('user.auth-dashboard')
-            ->with('success', 'You have successfully registered and verified your email.');
+            ->route('user.registration.pending')
+            ->with('success', 'Your registration has been submitted. We are verifying your ARN and details.');
+    }
+
+    public function pending()
+    {
+        return view('web.auth.registration_pending');
     }
 
     public function verify(Request $request, $id)

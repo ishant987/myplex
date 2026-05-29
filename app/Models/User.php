@@ -62,12 +62,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'state',
         'gst',
         'arn',
+        'arn_verification_status',
         'pan',
         'subscription_expiry_date',
+        'welcome_email_sent_at',
     ];
 
     protected $guarded = [
         'u_id',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'welcome_email_sent_at' => 'datetime',
+        'subscription_expiry_date' => 'date',
     ];
 
 
@@ -282,6 +290,10 @@ class User extends Authenticatable implements MustVerifyEmail
             $status = $fltrDataArr['status'] ?? 0;
             if ($status > 0) {
                 $query->where('status', '=', $status);
+            }
+            $arnVerificationStatus = $fltrDataArr['arn_verification_status'] ?? '';
+            if ($arnVerificationStatus) {
+                $query->where('arn_verification_status', '=', $arnVerificationStatus);
             }
             $accType = $fltrDataArr['acc_type'] ?? '';
             if ($accType) {
