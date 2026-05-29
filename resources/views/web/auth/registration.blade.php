@@ -211,7 +211,7 @@
                         <div class="col-md-6">
                             <div class="form_group">
                                 <label>Password</label>
-                                <input type="password" name="password" id="password" value="{{old('password')}}">
+                                <input type="password" name="password" id="password" value="">
                                 <div class="text-danger"></div>
                                 @if ($errors->has('password'))
                                     <div class="text-danger">{{ $errors->first('password') }}</div>
@@ -221,7 +221,7 @@
                         <div class="col-md-6">
                             <div class="form_group">
                                 <label>Confirm Password</label>
-                                <input type="password" name="confirm_password" id="confirm_password" value="{{old('confirm_password')}}">
+                                <input type="password" name="confirm_password" id="confirm_password" value="">
                                 <div class="text-danger"></div>
                                 @if ($errors->has('confirm_password'))
                                     <div class="text-danger">{{ $errors->first('confirm_password') }}</div>
@@ -298,7 +298,7 @@
 
         $(document).ready(function() 
         {
-            var otpSentForEmail = '{{ old('email') ? strtolower(old('email')) : '' }}';
+            var otpSentForEmail = '';
 
             function setFieldError(fieldId, message) {
                 $('#' + fieldId).closest('.form_group').find('.text-danger').first().html(message || '');
@@ -313,6 +313,17 @@
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             }
+
+            function showRegistrationMessage(message) {
+                alert(message);
+            }
+
+            $('#email').on('input', function() {
+                otpSentForEmail = '';
+                $('#email_otp').val('');
+                $('#otp_status').html('Please click Check Email again after changing the email address.');
+                setFieldError('email_otp', '');
+            });
 
             $('#sendEmailOtpButton').on('click', function() {
                 var email = $('#email').val().trim();
@@ -348,6 +359,7 @@
                     success: function(response) {
                         otpSentForEmail = normalizeEmail(email);
                         $('#otp_status').html(response.message);
+                        showRegistrationMessage('OTP sent successfully. Please enter the OTP from your email, then complete the form and click Sign Up.');
                         $('#email_otp').focus();
                     },
                     error: function(xhr) {
@@ -409,13 +421,16 @@
 
                 var emailOtp = $('#email_otp').val().trim();
                 if (emailOtp === '') {
-                    setFieldError('email_otp', 'Email OTP is required.');
+                    setFieldError('email_otp', 'Please enter the OTP sent to your email.');
+                    showRegistrationMessage('Please enter the OTP sent to your email before signing up.');
                     isValid = false;
                 } else if (!/^\d{6}$/.test(emailOtp)) {
                     setFieldError('email_otp', 'Email OTP must be 6 digits.');
+                    showRegistrationMessage('Email OTP must be 6 digits.');
                     isValid = false;
                 } else if (otpSentForEmail !== normalizeEmail(email)) {
                     setFieldError('email_otp', 'Please click Check Email and use the OTP sent to this email address.');
+                    showRegistrationMessage('Please click Check Email first and enter the OTP sent to this email address.');
                     isValid = false;
                 } else {
                     setFieldError('email_otp', '');
@@ -487,9 +502,9 @@
                     setFieldError('password', 'Password is required.');
                     isValid = false;
                 } 
-                else if (!/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]+$/.test(password)) 
+                else if (!/^(?=.*[a-zA-Z])(?=.*\d).+$/.test(password)) 
                 {
-                    setFieldError('password', 'Password must contain both alphabetic and numeric characters.');
+                    setFieldError('password', 'Password must contain at least one alphabetic character and one numeric character.');
                     isValid = false;
                 } 
                 else if (password.length < 8) 

@@ -45,7 +45,13 @@ class RegistrationController extends BaseController
             'pan' => 'required|regex:/^[0-9A-Za-z]{10}$/',
             'gst' => 'required|regex:/^[0-9A-Za-z]{15}$/',
             'privacy_policy' => 'required',
-            'password' => 'required',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-zA-Z])(?=.*\d).+$/',
+            ],
+            'confirm_password' => 'required|same:password',
             //'file' => 'mimes:jpg,jpeg,png',
         ];
 
@@ -62,6 +68,10 @@ class RegistrationController extends BaseController
                 'email_otp.required' => 'Please enter the OTP sent to your email.',
                 'email_otp.digits' => 'Email OTP must be 6 digits.',
                 'password.required' => 'Please enter your password.',
+                'password.min' => 'Password must be at least 8 characters long.',
+                'password.regex' => 'Password must contain at least one alphabetic character and one numeric character.',
+                'confirm_password.required' => 'Please confirm your password.',
+                'confirm_password.same' => 'Passwords do not match.',
                 'contact_person.required' => 'Please enter contact person name.',
                 'city.required' => 'Please enter your city.',
                 'state.required' => 'Please enter your state.',
@@ -216,12 +226,27 @@ class RegistrationController extends BaseController
     public function sendRegistrationOtp(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
         ], [
             'email.required' => 'Please enter your email address.',
             'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email already exists.',
         ]);
+
+        $existingUser = User::where('email', $request->email)->first();
+
+        if ($existingUser) {
+            $message = $existingUser->arn_verification_status === 'verified'
+                ? 'This email is already registered. Please sign in or use forgot password.'
+                : 'This email is already registered and your ARN details are under verification. Please wait for admin approval.';
+
+            return response()->json([
+                'status' => false,
+                'message' => $message,
+                'errors' => [
+                    'email' => [$message],
+                ],
+            ], 422);
+        }
 
         $otp = (string) random_int(100000, 999999);
         $otpData = [
