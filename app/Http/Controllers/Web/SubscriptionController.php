@@ -356,16 +356,6 @@ class SubscriptionController extends Controller
                     Subscription::databaseStatusFor('pending'),
                 ]);
 
-            if ($newPlanSlug === 'white-label') {
-                $subscriptionsToCancel->whereHas('plan', function ($query) {
-                    $query->where('slug', 'white-label');
-                });
-            } else {
-                $subscriptionsToCancel->whereHas('plan', function ($query) {
-                    $query->where('slug', '!=', 'white-label');
-                });
-            }
-
             $subscriptionsToCancel->update([
                 'status' => Subscription::databaseStatusFor('cancelled'),
                 'updated_by' => 'u',
@@ -396,11 +386,18 @@ class SubscriptionController extends Controller
                 $userExpiry = $currentExpiry->isFuture() && $currentExpiry->greaterThan($endsAt) ? $currentExpiry : $endsAt;
             }
 
-            $user->update([
+            $userUpdate = [
                 'trial_ends_at' => null,
                 'subscription_status' => 'active',
                 'subscription_expiry_date' => $userExpiry->toDateString(),
-            ]);
+            ];
+
+            if ($newPlanSlug !== 'white-label') {
+                $userUpdate['wl_company_name'] = null;
+                $userUpdate['wl_logo'] = null;
+            }
+
+            $user->update($userUpdate);
         });
 
         try {

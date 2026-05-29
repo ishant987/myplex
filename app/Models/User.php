@@ -370,23 +370,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function whiteLabelBranding(): array
     {
-        $logoPath = $this->whiteLabelLogoPath();
+        $hasWhiteLabel = $this->hasWhiteLabel();
+        $logoPath = $hasWhiteLabel ? $this->whiteLabelLogoPath() : null;
 
         return [
-            "is_white_label"   => $this->hasWhiteLabel(),
-            "company_name"     => $this->wl_company_name ?: null,
+            "is_white_label"   => $hasWhiteLabel,
+            "company_name"     => $hasWhiteLabel ? ($this->wl_company_name ?: null) : null,
             "logo_url"         => $logoPath ? asset($logoPath) : asset("themes/frontend/assets/infosolz/images/small_logo.png"),
-            "header_logo_url"  => $logoPath ? asset($logoPath) : asset("themes/frontend/assets/infosolz/images/small_logo.png"),
+            "header_logo_url"  => $logoPath ? asset($logoPath) : asset("themes/frontend/assets/v1/img/logo_dash.png"),
             "pdf_logo_path"    => $logoPath ? public_path($logoPath) : public_path("themes/frontend/assets/infosolz/images/small_logo.png"),
+            "has_custom_logo"  => $hasWhiteLabel && !empty($logoPath),
         ];
     }
 
     public function hasWhiteLabel(): bool
     {
-        if (!empty($this->wl_company_name) || !empty($this->wl_logo)) {
-            return true;
-        }
-
         return $this->razorpaySubscriptions()
             ->with("plan")
             ->whereNotNull("plan_id")
