@@ -305,6 +305,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 email: orderData.user_email,
                 contact: orderData.user_phone
             },
+            method: {
+                upi: true,
+                card: true,
+                netbanking: true,
+                wallet: true
+            },
+            config: {
+                display: {
+                    blocks: {
+                        upi: {
+                            name: 'Pay using UPI',
+                            instruments: [
+                                {
+                                    method: 'upi'
+                                }
+                            ]
+                        }
+                    },
+                    sequence: ['block.upi'],
+                    preferences: {
+                        show_default_blocks: true
+                    }
+                }
+            },
             theme: { color: '#16ab6c' },
             handler: function(response) {
                 submitVerification(

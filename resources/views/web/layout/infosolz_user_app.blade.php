@@ -41,18 +41,22 @@
                     || in_array($type, ['basic', 'premium'], true);
             });
 
+        $renewalNoticeDays = 15;
+
         if ($loggedInUser->subscription_status === 'trial' && !empty($loggedInUser->subscription_expiry_date)) {
             $trialExpiry = \Carbon\Carbon::parse($loggedInUser->subscription_expiry_date);
-            $subscriptionNotice = [
-                'type' => $trialExpiry->endOfDay()->lt($today) ? 'expired' : 'renew',
-                'expiry' => $trialExpiry,
-                'message' => $trialExpiry->endOfDay()->lt($today)
-                    ? 'Trial is expired, Please renew'
-                    : 'Trial subscription will expire on',
-            ];
+            if ($trialExpiry->copy()->endOfDay()->lt($today) || $today->gte($trialExpiry->copy()->subDays($renewalNoticeDays)->startOfDay())) {
+                $subscriptionNotice = [
+                    'type' => $trialExpiry->copy()->endOfDay()->lt($today) ? 'expired' : 'renew',
+                    'expiry' => $trialExpiry,
+                    'message' => $trialExpiry->copy()->endOfDay()->lt($today)
+                        ? 'Trial is expired, Please renew'
+                        : 'Trial subscription will expire on',
+                ];
+            }
         } elseif ($whiteLabelSubscription) {
             $whiteLabelExpiry = \Carbon\Carbon::parse($whiteLabelSubscription->ends_at ?: $whiteLabelSubscription->subscription_expiry_date);
-            if ($whiteLabelExpiry->copy()->endOfDay()->lt($today) || $today->gte($whiteLabelExpiry->copy()->subDays(5)->startOfDay())) {
+            if ($whiteLabelExpiry->copy()->endOfDay()->lt($today) || $today->gte($whiteLabelExpiry->copy()->subDays($renewalNoticeDays)->startOfDay())) {
                 $subscriptionNotice = [
                     'type' => $whiteLabelExpiry->copy()->endOfDay()->lt($today) ? 'expired' : 'renew',
                     'expiry' => $whiteLabelExpiry,
@@ -63,7 +67,7 @@
             }
         } elseif ($standardSubscription) {
             $standardExpiry = \Carbon\Carbon::parse($standardSubscription->ends_at ?: $standardSubscription->subscription_expiry_date);
-            if ($standardExpiry->copy()->endOfDay()->lt($today) || $today->gte($standardExpiry->copy()->subDays(20)->startOfDay())) {
+            if ($standardExpiry->copy()->endOfDay()->lt($today) || $today->gte($standardExpiry->copy()->subDays($renewalNoticeDays)->startOfDay())) {
                 $subscriptionNotice = [
                     'type' => $standardExpiry->copy()->endOfDay()->lt($today) ? 'expired' : 'renew',
                     'expiry' => $standardExpiry,
