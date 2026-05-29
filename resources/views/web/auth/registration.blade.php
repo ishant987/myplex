@@ -12,8 +12,61 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .inline-action-group {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .inline-action-group input {
+            flex: 1 1 auto;
+        }
+        .inline-action-btn {
+            flex: 0 0 auto;
+            min-width: 132px;
+            border: 1px solid #379962;
+            background: #379962;
+            color: #fff;
+            border-radius: 12px;
+            padding: 0 18px;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+        .inline-action-btn[disabled] {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+        .field-help-text {
+            font-size: 13px;
+            margin-top: 8px;
+            color: #688277;
+        }
+        .otp-row {
+            margin-top: 14px;
+        }
+        .otp-status {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #2f8158;
+        }
+        @media (max-width: 575px) {
+            .inline-action-group {
+                flex-direction: column;
+            }
+            .inline-action-btn {
+                width: 100%;
+                min-height: 52px;
+            }
+        }
+    </style>
    
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @php
+        $recaptchaSiteKey = env('RECAPTCHA_SITE_KEY');
+        $recaptchaEnabled = !empty($recaptchaSiteKey);
+    @endphp
+    @if ($recaptchaEnabled)
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @endif
 	
 </head>
 <body>
@@ -82,10 +135,26 @@
                         <div class="col-md-6">
                             <div class="form_group">
                                 <label>Email</label>
-                                <input type="email"  name="email" id="email" value="{{old('email')}}">
+                                <div class="inline-action-group">
+                                    <input type="email" name="email" id="email" value="{{old('email')}}">
+                                    <button type="button" id="sendEmailOtpButton" class="inline-action-btn">Check Email</button>
+                                </div>
+                                <div class="field-help-text">Click Check Email to receive a 6-digit OTP on this address before registration.</div>
+                                <div id="otp_status" class="otp-status"></div>
                                 <div class="text-danger"></div>
                                 @if ($errors->has('email'))
                                     <div class="text-danger">{{ $errors->first('email') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form_group">
+                                <label>Email OTP</label>
+                                <input type="text" name="email_otp" id="email_otp" maxlength="6" inputmode="numeric" value="{{old('email_otp')}}">
+                                <div class="field-help-text">Enter the OTP sent to your email. OTP is valid for 10 minutes.</div>
+                                <div class="text-danger"></div>
+                                @if ($errors->has('email_otp'))
+                                    <div class="text-danger">{{ $errors->first('email_otp') }}</div>
                                 @endif
                             </div>
                         </div>
@@ -179,11 +248,21 @@
                             <div class="form_group">
                                 <div class="captcha">
                                     <!-- <img src="{{asset('themes/frontend/assets/infosolz/images/capcha_box.png')}}" alt=""> -->
-                                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                                    <div id="recaptcha_error" class="text-danger"></div>
-                                    @error('g-recaptcha-response')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
+                                    @if ($recaptchaEnabled)
+                                        <div
+                                            class="g-recaptcha"
+                                            data-sitekey="{{ $recaptchaSiteKey }}"
+                                            data-callback="onRegistrationRecaptchaSuccess"
+                                            data-expired-callback="onRegistrationRecaptchaExpired"
+                                        ></div>
+                                        <div id="recaptcha_error" class="text-danger"></div>
+                                        @error('g-recaptcha-response')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    @else
+                                        <div class="text-muted" style="font-size: 14px;">reCAPTCHA is disabled in this local environment because the site key is not configured.</div>
+                                        <div id="recaptcha_error" class="text-danger"></div>
+                                    @endif
 
                                 </div>
                             </div>
@@ -205,17 +284,86 @@
 		<img class="right_bg" src="{{asset('themes/frontend/assets/infosolz/images/rignt_img.png')}}" alt="">
 	</div>
 
-	<script src="{{asset('themes/frontend/assets/infosolz/js/bootstrap.min.js')}}"></script>
 	<script src="{{asset('themes/frontend/assets/infosolz/js/jquery.min.js')}}"></script>
-	<script src="{{asset('themes/frontend/assets/infosolz/js/owl.carousel.min.js')}}"></script>
 	<script src="{{asset('themes/frontend/assets/infosolz/js/icon.js')}}"></script>
-	<script src="{{asset('themes/frontend/assets/infosolz/js/main.js')}}"></script>
 
     <script>
-       
+        function onRegistrationRecaptchaSuccess() {
+            $('#recaptcha_error').html('');
+        }
+
+        function onRegistrationRecaptchaExpired() {
+            $('#recaptcha_error').html('Please complete the reCAPTCHA verification.');
+        }
 
         $(document).ready(function() 
         {
+            var otpSentForEmail = '{{ old('email') ? strtolower(old('email')) : '' }}';
+
+            function setFieldError(fieldId, message) {
+                $('#' + fieldId).closest('.form_group').find('.text-danger').first().html(message || '');
+            }
+
+            function normalizeEmail(email) {
+                return $.trim(email).toLowerCase();
+            }
+
+            function isValidEmail(email) 
+            {
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            $('#sendEmailOtpButton').on('click', function() {
+                var email = $('#email').val().trim();
+                var $button = $(this);
+
+                if (email === '') {
+                    setFieldError('email', 'Email is required.');
+                    $('#otp_status').html('');
+                    return;
+                }
+
+                if (!isValidEmail(email)) {
+                    setFieldError('email', 'Please enter a valid email address.');
+                    $('#otp_status').html('');
+                    return;
+                }
+
+                setFieldError('email', '');
+                setFieldError('email_otp', '');
+                $('#otp_status').html('');
+
+                $.ajax({
+                    url: "{{ route('user.registration-send-otp') }}",
+                    type: "post",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        email: email
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        $button.prop('disabled', true).text('Sending...');
+                    },
+                    success: function(response) {
+                        otpSentForEmail = normalizeEmail(email);
+                        $('#otp_status').html(response.message);
+                        $('#email_otp').focus();
+                    },
+                    error: function(xhr) {
+                        otpSentForEmail = '';
+                        var response = xhr.responseJSON || {};
+                        var validationErrors = response.errors || {};
+                        var emailError = validationErrors.email ? validationErrors.email[0] : (response.message || 'Unable to send OTP right now.');
+                        setFieldError('email', emailError);
+                        $('#otp_status').html('');
+                    },
+                    complete: function() {
+                        $button.prop('disabled', false).text('Check Email');
+                    }
+                });
+            });
+
             $('#registrationForm').submit(function(event) 
             {
                 // Prevent form submission
@@ -227,18 +375,18 @@
                 // Validate company name
                 var companyName = $('#company_name').val().trim();
                 if (companyName === '') {
-                    $('#company_name').next('.text-danger').html('Company Name is required.');
+                    setFieldError('company_name', 'Company Name is required.');
                     isValid = false;
                 } else {
-                    $('#company_name').next('.text-danger').html('');
+                    setFieldError('company_name', '');
                 }
 
                 var contactPerson = $('#contact_person').val().trim();
-                if (companyName === '') {
-                    $('#contact_person').next('.text-danger').html('Contact Person is required.');
+                if (contactPerson === '') {
+                    setFieldError('contact_person', 'Contact Person is required.');
                     isValid = false;
                 } else {
-                    $('#contact_person').next('.text-danger').html('');
+                    setFieldError('contact_person', '');
                 }
 
                 // Validate email
@@ -246,117 +394,124 @@
                 if (email === '') 
                 {
                   
-                    $('#email').next('.text-danger').html('Email is required.');
+                    setFieldError('email', 'Email is required.');
                     isValid = false;
                 } else if (!isValidEmail(email)) 
                 {
                     
-                    $('#email').next('.text-danger').html('Please enter a valid email address.');
+                    setFieldError('email', 'Please enter a valid email address.');
                     isValid = false;
                 } 
                 else 
                 {
-                    // Clear previous error message
-                    
-                    $('#email').next('.text-danger').html('');
+                    setFieldError('email', '');
+                }
 
-                    // Check email uniqueness
-                    
-                    checkEmailUnique(email);
-                
+                var emailOtp = $('#email_otp').val().trim();
+                if (emailOtp === '') {
+                    setFieldError('email_otp', 'Email OTP is required.');
+                    isValid = false;
+                } else if (!/^\d{6}$/.test(emailOtp)) {
+                    setFieldError('email_otp', 'Email OTP must be 6 digits.');
+                    isValid = false;
+                } else if (otpSentForEmail !== normalizeEmail(email)) {
+                    setFieldError('email_otp', 'Please click Check Email and use the OTP sent to this email address.');
+                    isValid = false;
+                } else {
+                    setFieldError('email_otp', '');
                 }
 
                 // Validate other fields similarly...
 
                 var city = $('#city').val().trim();
                 if (city === '') {
-                    $('#city').next('.text-danger').html('City is required.');
+                    setFieldError('city', 'City is required.');
                     isValid = false;
                 } else {
-                    $('#city').next('.text-danger').html('');
+                    setFieldError('city', '');
                 }
                 var state = $('#state').val().trim();
                 if (state === '') {
-                    $('#state').next('.text-danger').html('State is required.');
+                    setFieldError('state', 'State is required.');
                     isValid = false;
                 } else {
-                    $('#state').next('.text-danger').html('');
+                    setFieldError('state', '');
                 }
 
                 var arn = $('#arn').val().trim();
                 if (arn === '') {
-                    $('#arn').next('.text-danger').html('ARN is required.');
+                    setFieldError('arn', 'ARN is required.');
                     isValid = false;
                 } 
                 else if (!/^\d+$/.test(arn)) 
                 {
-                    $('#arn').next('.text-danger').html('ARN must contain only numeric values.');
+                    setFieldError('arn', 'ARN must contain only numeric values.');
                     isValid = false;
                 }
                 else 
                 {
-                    $('#arn').next('.text-danger').html('');
+                    setFieldError('arn', '');
                 }
 
                 var pan = $('#pan').val().trim();
                 if (pan === '') {
-                    $('#pan').next('.text-danger').html('PAN is required.');
+                    setFieldError('pan', 'PAN is required.');
                     isValid = false;
                 } 
                 
                 else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) 
                 {
-                    $('#pan').next('.text-danger').html('Invalid PAN format. PAN should be in the format ABCDE1234F.');
+                    setFieldError('pan', 'Invalid PAN format. PAN should be in the format ABCDE1234F.');
                     isValid = false;
                 }
                 else
                 {
-                    $('#pan').next('.text-danger').html('');
+                    setFieldError('pan', '');
                 }
 
                 var gst = $('#gst').val().trim();
                 if (gst === '') {
-                    $('#gst').next('.text-danger').html('GST is required.');
+                    setFieldError('gst', 'GST is required.');
                     isValid = false;
                 } else if (!/^[a-zA-Z0-9]{15}$/.test(gst)) {
-                    $('#gst').next('.text-danger').html('GST must be alphanumeric and 15 characters long.');
+                    setFieldError('gst', 'GST must be alphanumeric and 15 characters long.');
                     isValid = false;
                 } else {
-                    $('#gst').next('.text-danger').html('');
+                    setFieldError('gst', '');
                 }
 
                 // Validate password
                 var password = $('#password').val().trim();
                 if (password === '') 
                 {
-                    $('#password').next('.text-danger').html('Password is required.');
+                    setFieldError('password', 'Password is required.');
                     isValid = false;
                 } 
                 else if (!/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]+$/.test(password)) 
                 {
-                    $('#password').next('.text-danger').html('Password must contain both alphabetic and numeric characters.');
+                    setFieldError('password', 'Password must contain both alphabetic and numeric characters.');
                     isValid = false;
                 } 
                 else if (password.length < 8) 
                 {
-                    $('#password').next('.text-danger').html('Password must be at least 8 characters long.');
+                    setFieldError('password', 'Password must be at least 8 characters long.');
                     isValid = false;
                 } 
                 else 
                 {
-                    $('#password').next('.text-danger').html('');
+                    setFieldError('password', '');
                 }
 
                 // Validate confirm password
                 var confirmPassword = $('#confirm_password').val().trim();
                 if (confirmPassword === '') {
-                    $('#confirm_password').next('.text-danger').html('Confirm Password is required.');
+                    setFieldError('confirm_password', 'Confirm Password is required.');
                     isValid = false;
                 } else if (confirmPassword !== password) {
-                    $('#confirm_password').next('.text-danger').html('Passwords do not match.');
+                    setFieldError('confirm_password', 'Passwords do not match.');
                     isValid = false;
                 } else {
-                    $('#confirm_password').next('.text-danger').html('');
+                    setFieldError('confirm_password', '');
                 }
 
 
@@ -373,9 +528,17 @@
                 }
 
                 // Validate reCAPTCHA
-                if (!$('.g-recaptcha-response').val()) 
+                var recaptchaResponse = 'local-bypass';
+                if ({{ $recaptchaEnabled ? 'true' : 'false' }}) {
+                    recaptchaResponse = '';
+                }
+
+                if ({{ $recaptchaEnabled ? 'true' : 'false' }} && typeof grecaptcha !== 'undefined' && typeof grecaptcha.getResponse === 'function') {
+                    recaptchaResponse = grecaptcha.getResponse();
+                }
+
+                if ({{ $recaptchaEnabled ? 'true' : 'false' }} && !recaptchaResponse) 
                 {
-                    //console.log('ok');
                     $('#recaptcha_error').html('Please complete the reCAPTCHA verification.');
                     isValid = false;
                 } 
@@ -391,30 +554,6 @@
                     this.submit();
                 }
             });
-
-            function isValidEmail(email) 
-            {
-                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-
-            function checkEmailUnique(email) {
-                $.ajax({
-                    url: '/check-email-unique',
-                    type: 'POST', // Use POST method
-                    data: {email: email, _token: '{{ csrf_token() }}'},
-                    success: function(response) {
-                        if (!response.unique) {
-                            $('#email').next('.text-danger').html('This email is already in use.');
-                            isValid = false;
-                        }
-                    },
-                    error: function() {
-                        $('#email').next('.text-danger').html('Error checking email uniqueness.');
-                        isValid = false;
-                    }
-                });
-            }
         });
     </script>
 

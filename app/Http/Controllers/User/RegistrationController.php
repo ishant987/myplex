@@ -11,6 +11,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Auth;
 use Mail;
 use Illuminate\Mail\Message;
@@ -19,6 +20,8 @@ use ReCaptcha\ReCaptcha;
 
 class RegistrationController extends BaseController
 {
+    protected const REGISTRATION_OTP_SESSION_KEY = 'registration_email_otp';
+
 
     public function index(Request $request)
     {
@@ -29,27 +32,35 @@ class RegistrationController extends BaseController
     public function store(Request $request)
     {
         //dd('ok');
+        $recaptchaEnabled = !empty(env('RECAPTCHA_SITE_KEY')) && !empty(env('RECAPTCHA_SECRET_KEY'));
+
+        $rules = [
+            'company_name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'email_otp' => 'required|digits:6',
+            'contact_person' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'arn' => 'required|numeric',
+            'pan' => 'required|regex:/^[0-9A-Za-z]{10}$/',
+            'gst' => 'required|regex:/^[0-9A-Za-z]{15}$/',
+            'privacy_policy' => 'required',
+            'password' => 'required',
+            //'file' => 'mimes:jpg,jpeg,png',
+        ];
+
+        if ($recaptchaEnabled) {
+            $rules['g-recaptcha-response'] = 'required';
+        }
+
         $validatedData = $request->validate(
-            [
-                'company_name' => 'required|string',
-                'email' => 'required|email|unique:users',
-                'contact_person' => 'required|string',
-                'city' => 'required|string',
-                'state' => 'required|string',
-                'arn' => 'required|numeric',
-                'pan' => 'required|regex:/^[0-9A-Za-z]{10}$/',
-                'gst' => 'required|regex:/^[0-9A-Za-z]{15}$/',
-                'privacy_policy' => 'required',
-                'password' => 'required',
-                'g-recaptcha-response' => 'required',
-                //'file' => 'mimes:jpg,jpeg,png',
-
-
-            ],
+            $rules,
             [
                 'company_name.required' => 'Please enter  company name.',
                 'email.required' => 'Please enter your email address.',
                 'email.unique' => 'This email already exists.',
+                'email_otp.required' => 'Please enter the OTP sent to your email.',
+                'email_otp.digits' => 'Email OTP must be 6 digits.',
                 'password.required' => 'Please enter your password.',
                 'contact_person.required' => 'Please enter contact person name.',
                 'city.required' => 'Please enter your city.',
@@ -63,11 +74,18 @@ class RegistrationController extends BaseController
                 'gst.regex' => 'GST must be exactly 15 characters long and alphanumeric.',
 
                 'privacy_policy.required' => 'Check privacy policy',
+                'g-recaptcha-response.required' => 'Please complete the reCAPTCHA verification.',
                 //'file.mimes' => 'Logo must be jpg,jpeg,png'
-                // 'g-recaptcha-response.required' => 'Please complete the reCAPTCHA verification.',
-
             ]
         );
+
+        if (!$this->emailOtpMatches($request)) {
+            return redirect()
+                ->back()
+                ->withInput($request->except(['password', 'confirm_password']))
+                ->with('error', 'Please verify your email with the correct OTP before registering.');
+        }
+
         // dd('hii');
         // $recaptcha = new ReCaptcha(env('RECAPTCHA_SECRET_KEY'));
         // $response = $recaptcha->verify($request->input('g-recaptcha-response'), $request->ip());
@@ -122,6 +140,13 @@ class RegistrationController extends BaseController
         $insert['subscription_expiry_date'] = $expiryDate;
         $insert['acc_type'] = 'a';
         $insert['created_by'] = 'u';
+        $insert['created_id'] = 0;
+        $insert['updated_by'] = 'u';
+        $insert['updated_id'] = 0;
+        if (app()->environment('local')) {
+            $insert['is_approved'] = 'y';
+            $insert['email_verified_at'] = now();
+        }
         // dd($insert);
 
         $user = User::create($insert);
@@ -153,44 +178,17 @@ class RegistrationController extends BaseController
 
 
 
-        try {
-            // Mail::send('web.auth.email.registration_email',  ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function ($message) use ($request) {
-            //    $message->to($request->email);
-            //     $message->subject('Welcome to our myplexus');
-            // });
+        $user->forceFill([
+            'is_approved' => 'y',
+            'email_verified_at' => now(),
+        ])->save();
 
-            // Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message) use($request){
-            //     $message->to($request->email);
-            //     $message->subject('Application Status');
-            // });
+        Auth::guard()->login($user);
+        $request->session()->forget(self::REGISTRATION_OTP_SESSION_KEY);
 
-
-            // Mail::raw('This is a test email', function ($message) {
-            //     $message->to('paromita@infosolz.in')->subject('Test Email');
-            // });
-            // registration_email
-            //  Mail::send('web.auth.email.registration_email', ['id' => $userId,'email'=>$request->email,'password'=>$plainPassword,'date'=>$registrationDate], function($message){
-            //     $message->to('paromita@infosolz.in');
-            //     $message->subject('Application Status');
-            // });
-
-
-            Mail::send('web.auth.email.registration_email', ['id' => base64_encode($userId), 'email' => $request->email, 'password' => $plainPassword, 'date' => $registrationDate], function ($message) use ($request) {
-                $message->to($request->email);
-                $message->subject('Application Status');
-            });
-            //return 'Email sent successfully';
-
-
-
-            // die;
-
-
-        } catch (\Exception $e) {
-            return 'Failed to send email: ' . $e->getMessage();
-            die;
-        }
-        return redirect()->route('user.registration')->with('success', 'You have successfully register and email send your email id -' . $request->email);
+        return redirect()
+            ->route('user.auth-dashboard')
+            ->with('success', 'You have successfully registered and verified your email.');
     }
 
     public function verify(Request $request, $id)
@@ -198,6 +196,7 @@ class RegistrationController extends BaseController
         // echo 'hii';
         // die;
         $update['is_approved'] = 'y';
+        $update['email_verified_at'] = now();
         $id = base64_decode($id);
         $user_find = User::find($id);
         $update_data = $user_find->update($update);
@@ -212,5 +211,79 @@ class RegistrationController extends BaseController
         $user = User::where('email', $email)->first();
 
         return response()->json(['unique' => !$user]);
+    }
+
+    public function sendRegistrationOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+        ], [
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email already exists.',
+        ]);
+
+        $otp = (string) random_int(100000, 999999);
+        $otpData = [
+            'email' => strtolower(trim($request->email)),
+            'otp_hash' => Hash::make($otp),
+            'expires_at' => now()->addMinutes(10)->timestamp,
+        ];
+
+        $request->session()->put(self::REGISTRATION_OTP_SESSION_KEY, $otpData);
+
+        try {
+            Mail::send('web.auth.email.registration_otp', [
+                'email' => $request->email,
+                'otp' => $otp,
+                'expiresInMinutes' => 10,
+            ], function ($message) use ($request) {
+                $message->to($request->email);
+                $message->subject('Your registration OTP');
+            });
+        } catch (\Exception $exception) {
+            Log::warning('Registration OTP email failed to send.', [
+                'email' => $request->email,
+                'message' => $exception->getMessage(),
+            ]);
+
+            if (!app()->environment('local')) {
+                $request->session()->forget(self::REGISTRATION_OTP_SESSION_KEY);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'We could not send the OTP right now. Please try again.',
+                ], 422);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'OTP generated locally. Use this code: ' . $otp,
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP sent successfully to your email address.',
+        ]);
+    }
+
+    protected function emailOtpMatches(Request $request): bool
+    {
+        $otpData = $request->session()->get(self::REGISTRATION_OTP_SESSION_KEY);
+
+        if (!$otpData || empty($otpData['email']) || empty($otpData['otp_hash']) || empty($otpData['expires_at'])) {
+            return false;
+        }
+
+        if (strtolower(trim((string) $request->email)) !== $otpData['email']) {
+            return false;
+        }
+
+        if (now()->timestamp > (int) $otpData['expires_at']) {
+            return false;
+        }
+
+        return Hash::check((string) $request->email_otp, $otpData['otp_hash']);
     }
 }

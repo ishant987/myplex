@@ -93,8 +93,17 @@ tbody tr:last-child {
                 <tbody style="">
                     <tr style="">
                         <td style="">
-                            <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">myplexus.com</span></p>
-                            <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">Search, Research Mutual Funds</span></p>
+                            @if(!empty($branding['has_custom_logo']) && !empty($branding['pdf_logo_path']))
+                                <div style="width: 480px; margin: 0 auto; text-align: center; background-color: #6ab130; padding: 24px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;">
+                                    <img src="{{ $branding['pdf_logo_path'] }}" alt="{{ $branding['company_name'] ?: 'White label logo' }}" style="max-width: 220px; max-height: 88px; object-fit: contain; margin-bottom: 12px;">
+                                    @if(!empty($branding['company_name']))
+                                        <p style="font-size:28px; text-align: center; color: #fff;"><span style="position: relative; z-index: 1;">{{ $branding['company_name'] }}</span></p>
+                                    @endif
+                                </div>
+                            @else
+                                <p style="width: 480px; margin: 0 auto; text-transform: uppercase; font-size: 55px; line-height: 50px; font-family: 'Volte-Bold'; text-align: center; color: #fff; background-color: #6ab130; padding: 35px 30px 0 30px;"><span style="position: relative; z-index: 1;">myplexus.com</span></p>
+                                <p style="width: 480px; margin: 0 auto; font-size:28px; text-align: center; color: #fff; background-color: #6ab130; padding: 0px 30px 30px 30px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px;"><span style="position: relative; z-index: 1;">Search, Research Mutual Funds</span></p>
+                            @endif
                         </td>
                     </tr>
                     <tr style=" margin-top: 90px;">
@@ -169,7 +178,9 @@ tbody tr:last-child {
     <table style=" background-image: url('{{ url('images/footer-bg.jpg') }}'); background-size: 100%; background-repeat: no-repeat; padding: 28px 0 10px 0;">
         <tbody style="" class="container">
             <tr style="justify-content:space-between">
-                <td class="half" style="padding-left:20px;margin-top: -10px"><img src="{{ url('images/myplexus-footer-logo.png') }}" /></td>
+                <td class="half" style="padding-left:20px;margin-top: -10px">
+                    <img src="{{ !empty($branding['has_custom_logo']) && !empty($branding['pdf_logo_path']) ? $branding['pdf_logo_path'] : url('images/myplexus-footer-logo.png') }}" style="max-width: 180px; max-height: 50px; object-fit: contain;" />
+                </td>
                 <td class="half" style="text-align: right;padding-right:20px">
                     <a href="https://www.facebook.com/MyplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/facebook-icon.png') }}"></a>
                     <a href="https://twitter.com/myplexusMF" target="_blank" style="margin-right: 8px;"><img src="{{ url('images/twiiter-icon.png') }}"></a>

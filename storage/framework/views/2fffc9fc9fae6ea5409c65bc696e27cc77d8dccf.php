@@ -1,28 +1,27 @@
-@extends('web.layout.app')
-@section('captcha') @stop
-@section('jquery-validate') @stop
-@if(isset($dataArr['meta_title']))
-@section('page-title'){{$dataArr['meta_title']}}@stop
-@else
-@section('page-title'){{$dataArr['title']}}@stop
-@endif
-@if(isset($dataArr['meta_key']))
-@section('meta-keywords'){{$dataArr['meta_key']}}@stop
-@endif
-@if(isset($dataArr['meta_descp']))
-@section('meta-description'){{$dataArr['meta_descp']}}@stop
-@endif
-@if(isset($dataArr['image_path']))
-@section('meta-image'){{$dataArr['image_path']}}@stop
-@push('style')
+<?php $__env->startSection('captcha'); ?> <?php $__env->stopSection(); ?>
+<?php $__env->startSection('jquery-validate'); ?> <?php $__env->stopSection(); ?>
+<?php if(isset($dataArr['meta_title'])): ?>
+<?php $__env->startSection('page-title'); ?><?php echo e($dataArr['meta_title']); ?><?php $__env->stopSection(); ?>
+<?php else: ?>
+<?php $__env->startSection('page-title'); ?><?php echo e($dataArr['title']); ?><?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php if(isset($dataArr['meta_key'])): ?>
+<?php $__env->startSection('meta-keywords'); ?><?php echo e($dataArr['meta_key']); ?><?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php if(isset($dataArr['meta_descp'])): ?>
+<?php $__env->startSection('meta-description'); ?><?php echo e($dataArr['meta_descp']); ?><?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php if(isset($dataArr['image_path'])): ?>
+<?php $__env->startSection('meta-image'); ?><?php echo e($dataArr['image_path']); ?><?php $__env->stopSection(); ?>
+<?php $__env->startPush('style'); ?>
 <style>
   .custom-banner {
-    background-image: url('{{ $dataArr['image_path'] }}');
+    background-image: url('<?php echo e($dataArr['image_path']); ?>');
   }
 </style>
-@endpush
-@endif
-@push('style')
+<?php $__env->stopPush(); ?>
+<?php endif; ?>
+<?php $__env->startPush('style'); ?>
 <style>
   .forgot-flow {
     position: relative;
@@ -247,6 +246,12 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     box-shadow: 0 18px 36px rgba(55, 153, 98, 0.24);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .forgot-action button:hover,
+  .forgot-action .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 20px 38px rgba(55, 153, 98, 0.28);
   }
   .forgot-message {
     margin-top: 18px;
@@ -261,12 +266,12 @@
     font-weight: 700;
     text-decoration: none;
   }
-  @media only screen and (max-width: 991px) {
+  @media  only screen and (max-width: 991px) {
     .forgot-panel {
       padding: 34px 26px;
     }
   }
-  @media only screen and (max-width: 575px) {
+  @media  only screen and (max-width: 575px) {
     .forgot-flow {
       padding: 38px 0 54px;
     }
@@ -291,23 +296,23 @@
     }
   }
 </style>
-@endpush
-@if($dataArr['full_url'])
-@section('cur-url'){{$dataArr['full_url']}}@stop
-@endif
-@section('content')
+<?php $__env->stopPush(); ?>
+<?php if($dataArr['full_url']): ?>
+<?php $__env->startSection('cur-url'); ?><?php echo e($dataArr['full_url']); ?><?php $__env->stopSection(); ?>
+<?php endif; ?>
+<?php $__env->startSection('content'); ?>
 <div class="forgot-flow">
   <div class="container">
     <div class="forgot-shell">
       <div class="forgot-panel">
         <div class="forgot-panel__intro">
-          <h2>Create a New Password</h2>
-          <p>Set a new password for your account and confirm it once more before saving the change.</p>
+          <h2>Forgot Password?</h2>
+          <p>Enter the email address linked to your account and we will send a verification code so you can continue.</p>
         </div>
 
-        @if(!empty(trim(strip_tags($dataArr['descp'] ?? ''))))
-          <div class="forgot-rich-text">{!! $dataArr['descp'] !!}</div>
-        @endif
+        <?php if(!empty(trim(strip_tags($dataArr['descp'] ?? '')))): ?>
+          <div class="forgot-rich-text"><?php echo $dataArr['descp']; ?></div>
+        <?php endif; ?>
 
         <div class="forgot-form-box">
           <div class="forgot-help-box">
@@ -315,7 +320,7 @@
             <h3>Recover your account in three quick steps.</h3>
             <p>We will guide you from email verification to setting a fresh password without losing access to your account.</p>
             <div class="forgot-help-steps">
-              <div class="forgot-help-step">
+              <div class="forgot-help-step is-active">
                 <span>1</span>
                 <strong>Share email</strong>
                 <p>Tell us which account needs the reset code.</p>
@@ -325,7 +330,7 @@
                 <strong>Verify code</strong>
                 <p>Confirm the code we send to your inbox.</p>
               </div>
-              <div class="forgot-help-step is-active">
+              <div class="forgot-help-step">
                 <span>3</span>
                 <strong>Set password</strong>
                 <p>Choose a secure new password and sign in.</p>
@@ -334,25 +339,54 @@
           </div>
 
           <div class="forgot-note">
-            A good password mixes letters, numbers, and symbols and should be easy for you to recognize later.
+            Use the same email you signed up with. The reset code will be sent there.
           </div>
 
-          <form action="{{ route('web.forgot.reset.password.save', $code) }}" name="fgtRstPassFrm" id="fgtRstPassFrm" method="post">
-            {{ csrf_field() }}
-            <x-form.field.hidden name="recaptcha_v3" id="recaptcha_v3" />
+          <form action="<?php echo e(route('web.forgot.password.sendcode')); ?>" name="fgtPassFrm" id="fgtPassFrm" method="post">
+            <?php echo e(csrf_field()); ?>
+
+            <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.form.field.hidden','data' => ['name' => 'recaptcha_v3','id' => 'recaptcha_v3']]); ?>
+<?php $component->withName('form.field.hidden'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes(['name' => 'recaptcha_v3','id' => 'recaptcha_v3']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
 
             <div class="forgot-input">
-              <label class="forgot-label">{{ __('common.password_txt') }}</label>
-              <x-form.field.text2 type="password" id="password" name="password" class="box-shadow" placeholder="{{ __('subscribeduser.placeholder.password_txt') }}" />
-            </div>
-
-            <div class="forgot-input">
-              <label class="forgot-label">{{ __('common.c_password_txt') }}</label>
-              <x-form.field.text2 type="password" id="password_confirmation" name="password_confirmation" class="box-shadow" placeholder="{{ __('subscribeduser.placeholder.password_txt') }}" />
+              <label class="forgot-label"><?php echo e(__('common.email_txt')); ?></label>
+              <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.form.field.text2','data' => ['type' => 'email','id' => 'email','name' => 'email','class' => 'box-shadow','placeholder' => ''.e(__('subscribeduser.placeholder.email_txt')).'','value' => ''.e(old('email')).'']]); ?>
+<?php $component->withName('form.field.text2'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes(['type' => 'email','id' => 'email','name' => 'email','class' => 'box-shadow','placeholder' => ''.e(__('subscribeduser.placeholder.email_txt')).'','value' => ''.e(old('email')).'']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
             </div>
 
             <div class="forgot-action">
-              <x-form.field.button3 class="text-uppercase btn-bg-2 f-b text-white" type="button" id="sendFgtRstPassFrm" name="sendFgtRstPassFrm" text="{{ $defDataArr['web_lang']['reset_now_txt'] }}" />
+              <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.form.field.button3','data' => ['class' => 'text-uppercase btn-bg-2 f-b text-white','type' => 'button','id' => 'sendFgtPassFrm','name' => 'sendFgtPassFrm','text' => ''.e($defDataArr['web_lang']['send_code_txt']).'']]); ?>
+<?php $component->withName('form.field.button3'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes(['class' => 'text-uppercase btn-bg-2 f-b text-white','type' => 'button','id' => 'sendFgtPassFrm','name' => 'sendFgtPassFrm','text' => ''.e($defDataArr['web_lang']['send_code_txt']).'']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
             </div>
           </form>
 
@@ -360,15 +394,25 @@
         </div>
 
         <div class="forgot-footer">
-          <span>Remembered it already?</span>
-          <x-link url="{{ route('web.login') }}">Back to sign in</x-link>
+          <span><?php echo e(__('auth.sign_in_prfx_txt')); ?></span>
+          <?php if (isset($component)) { $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4 = $component; } ?>
+<?php $component = $__env->getContainer()->make(Illuminate\View\AnonymousComponent::class, ['view' => 'components.link','data' => ['url' => ''.e(route('web.login')).'']]); ?>
+<?php $component->withName('link'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes(['url' => ''.e(route('web.login')).'']); ?><?php echo e(__('auth.sign_in2_txt')); ?> <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4)): ?>
+<?php $component = $__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4; ?>
+<?php unset($__componentOriginalc254754b9d5db91d5165876f9d051922ca0066f4); ?>
+<?php endif; ?>
         </div>
       </div>
     </div>
   </div>
 </div>
-@stop
-@push('scripts')
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('scripts'); ?>
 <script>
   function runForgotRecaptcha(actionName, callback) {
     if (typeof grecaptcha === 'undefined' || typeof grecaptcha.ready !== 'function') {
@@ -377,7 +421,7 @@
     }
 
     grecaptcha.ready(function() {
-      grecaptcha.execute("{{ Config('commonconstants.recaptcha.site_key') }}", {
+      grecaptcha.execute("<?php echo e(Config('commonconstants.recaptcha.site_key')); ?>", {
         action: actionName
       }).then(function(token) {
         callback(token || 'local-bypass');
@@ -386,60 +430,51 @@
   }
 
   $(function() {
-    $("#fgtRstPassFrm").validate({
+    $("#fgtPassFrm").validate({
         rules: {
-          password: {
+          email: {
             required: true,
-            minlength: 6
-          },
-          password_confirmation: {
-            required: true,
-            minlength: 6,
-            equalTo: "#password"
+            email: true
           }
         },
         messages: {
-          password: {
-            required: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('common.password_txt')) }}"
-          },
-          password_confirmation: {
-            required: "{{ $defDataArr['web_lang']['jq_validate']['enter_a_txt'].strtolower(__('common.c_password_txt')) }}",
-            equalTo: "{{ __('front.validation.confirm_password_txt') }}"
+          email: {
+            required: "<?php echo e($defDataArr['web_lang']['jq_validate']['enter_an_txt'].strtolower(__('common.email_txt'))); ?>",
+            email: "<?php echo e($defDataArr['web_lang']['jq_validate']['enter_valid_txt'].strtolower(__('common.email_txt'))); ?>"
           }
         }
       }),
-      $("#sendFgtRstPassFrm").click(function(e) {
+      $("#sendFgtPassFrm").click(function(e) {
         e.preventDefault();
-        runForgotRecaptcha('forgot_reset_password_form', function(token) {
-          var a = $("#fgtRstPassFrm");
+        runForgotRecaptcha('forgot_password_form', function(token) {
+          var a = $("#fgtPassFrm");
           if (1 == a.valid()) {
             $("#recaptcha_v3").val(token);
             var formData = {
               "_token": $('meta[name="csrf-token"]').attr('content'),
-              password: $("#password").val(),
-              password_confirmation: $("#password_confirmation").val(),
+              email: $("#email").val(),
               recaptcha_v3: $("#recaptcha_v3").val()
             };
             $.ajax({
-              url: "{{ route('web.forgot.reset.password.save', $code) }}",
+              url: "<?php echo e(route('web.forgot.password.sendcode')); ?>",
               type: "post",
               data: formData,
               dataType: 'json',
               beforeSend: function() {
-                $('#sendFgtRstPassFrm').prop('disabled', true);
-                $("#sendFgtRstPassFrm").text("{{ $defDataArr['web_lang']['processing_txt'] }}");
+                $('#sendFgtPassFrm').prop('disabled', true);
+                $("#sendFgtPassFrm").text("<?php echo e($defDataArr['web_lang']['processing_txt']); ?>");
               },
               success: function(data) {
-                $('#sendFgtRstPassFrm').prop('disabled', false);
-                $("#sendFgtRstPassFrm").text("{{ $defDataArr['web_lang']['reset_now_txt'] }}");
+                $('#sendFgtPassFrm').prop('disabled', false);
+                $("#sendFgtPassFrm").text("<?php echo e($defDataArr['web_lang']['send_code_txt']); ?>");
                 $("#msg_id").html(data['msg']);
                 if (data['url'] != '') {
                   window.location.href = data['url'];
                 }
               },
               error: function() {
-                $('#sendFgtRstPassFrm').prop('disabled', false);
-                $("#sendFgtRstPassFrm").text("{{ $defDataArr['web_lang']['reset_now_txt'] }}");
+                $('#sendFgtPassFrm').prop('disabled', false);
+                $("#sendFgtPassFrm").text("<?php echo e($defDataArr['web_lang']['send_code_txt']); ?>");
                 $("#msg_id").html('There is error while submit');
               }
             });
@@ -448,4 +483,6 @@
       });
   });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('web.layout.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/frontend/pages/forgot-password.blade.php ENDPATH**/ ?>

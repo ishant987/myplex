@@ -78,7 +78,7 @@
                                 @endif --}}
                                 
                     <div class="form_group">
-					    <a href="#" class="forgot_pass">Forgot Password?</a>
+					    <a href="{{ route('web.forgot.password') }}" class="forgot_pass">Forgot Password?</a>
 				    </div>
                    
                     <input type="submit" value="Sign in">
@@ -94,12 +94,16 @@
             <img class="left_bg" src="{{asset('themes/frontend/assets/infosolz/images/left_img.png')}}" alt="">
 		    <img class="right_bg" src="{{asset('themes/frontend/assets/infosolz/images/rignt_img.png')}}" alt="">
     </div>
-        <script src="{{asset('themes/frontend/assets/infosolz/js/bootstrap.min.js')}}"></script>
 	    <script src="{{asset('themes/frontend/assets/infosolz/js/jquery.min.js')}}"></script>
-	    <script src="{{asset('themes/frontend/assets/infosolz/js/owl.carousel.min.js')}}"></script>
 	    <script src="{{asset('themes/frontend/assets/infosolz/js/icon.js')}}"></script>
-        <!-- <style media="all" id="fa-v4-font-face"> -->
-        <script src="{{ asset('themes/frontend/assets/infosolz/js/main.js') }}"></script>
-        
+        <script>
+            $(document).ready(function () {
+                $(".toggle_password").click(function () {
+                    $(this).toggleClass("fa-eye fa-eye-slash");
+                    var input = $(this).parent().find("input");
+                    input.attr("type", input.attr("type") === "password" ? "text" : "password");
+                });
+            });
+        </script>
     </body>
 </html>

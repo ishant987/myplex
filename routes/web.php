@@ -616,6 +616,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::post('login-process', 'AuthController@login')->name('login.request');
     Route::get('logout', 'AuthController@logout')->name('logout');
+    Route::get('web-logout', 'AuthController@logout')->name('web.logout');
 
     Route::get('signup', 'AuthController@signupData')->name('signup');
     Route::post('signup-process', 'AuthController@signup')->name('signup.save');
@@ -769,6 +770,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     Route::post('registration-store', 'RegistrationController@store')->name('registration-store');
     Route::get('verify-email/{id}', 'RegistrationController@verify')->name('verify-email');
     Route::post('check-email-unique', 'RegistrationController@checkEmailUnique')->name('check-email-unique');
+    Route::post('registration-send-otp', 'RegistrationController@sendRegistrationOtp')->name('registration-send-otp');
 
     //======================================== End Registration ======================================//
 
@@ -869,6 +871,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
             Route::get('predictive/jensen-alpha','PredictiveController@jensen_alpha')->name('predictive.jensen-alpha');
             Route::get('predictive/sharp-ratio','PredictiveController@sharp_ratio')->name('predictive.sharp-ratio');
             Route::get('predictive/trenyor','PredictiveController@trenyor')->name('predictive.trenyor');
+            Route::get('model-portfolio', 'ModelPortfolioController@index')->name('model_portfolio');
 
             Route::get('predictive/fund-details','PredictiveController@fund_details')->name('predictive.fund_details');
 
@@ -876,9 +879,11 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
 
         Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
         //======================================== End Dashboard ======================================//
-        
+
         //======================================== Subscription Start ======================================//
         Route::any('subscription', 'SubscriptionController@dashboard')->name('subscription');
+        Route::get('white-label-branding', 'WhiteLabelController@edit')->name('white_label.branding');
+        Route::post('white-label-branding', 'WhiteLabelController@update')->name('white_label.branding.update');
     });
       //======================================== End Subscription ======================================//
 

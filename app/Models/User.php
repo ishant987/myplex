@@ -20,6 +20,7 @@ use App\Models\Subscription;
 use App\Models\PaymentTransaction;
 use App\Models\UserSensitiveDetail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 
@@ -93,10 +94,33 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         parent::boot();
         self::creating(function ($model) {
-            if (!isset($model->u_id) && $model->u_id == 0) {
-                $model->u_code = IdGenerator::generate(['table' => env('DB_PREFIX') . $model->table, 'field' => 'u_code', 'length' => 8, 'prefix' => 'U']);
+            if (empty($model->u_code)) {
+                $model->u_code = self::generateUserCode($model->table);
             }
         });
+    }
+
+    protected static function generateUserCode(string $table): string
+    {
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            return IdGenerator::generate([
+                'table' => env('DB_PREFIX') . $table,
+                'field' => 'u_code',
+                'length' => 8,
+                'prefix' => 'U',
+            ]);
+        }
+
+        $maxNumericCode = static::query()
+            ->where('u_code', 'like', 'U%')
+            ->pluck('u_code')
+            ->map(function ($code) {
+                return preg_match('/^U(\d+)$/', (string) $code, $matches) ? (int) $matches[1] : null;
+            })
+            ->filter()
+            ->max();
+
+        return 'U' . str_pad((string) (($maxNumericCode ?? 0) + 1), 7, '0', STR_PAD_LEFT);
     }
 
     public static function days()
@@ -287,6 +311,66 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $settings;
+    }
+
+    public function whiteLabelCompanyName(): ?string
+    {
+        $companyName = trim((string) ($this->whiteLabelSettings()['company_name'] ?? ''));
+
+        return $companyName !== '' ? $companyName : null;
+    }
+
+    public function whiteLabelLogoPath(): ?string
+    {
+        $logoPath = trim((string) ($this->whiteLabelSettings()['logo'] ?? ''));
+
+        return $logoPath !== '' ? ltrim($logoPath, '/') : null;
+    }
+
+    public function whiteLabelLogoUrl(): ?string
+    {
+        $logoPath = $this->whiteLabelLogoPath();
+
+        if (!$logoPath) {
+            return null;
+        }
+
+        if (filter_var($logoPath, FILTER_VALIDATE_URL)) {
+            return $logoPath;
+        }
+
+        return asset($logoPath);
+    }
+
+    public function whiteLabelPdfLogoPath(): ?string
+    {
+        $logoPath = $this->whiteLabelLogoPath();
+
+        if (!$logoPath || filter_var($logoPath, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        $absolutePath = public_path($logoPath);
+
+        return File::exists($absolutePath) ? $absolutePath : null;
+    }
+
+    public function whiteLabelBranding(): array
+    {
+        $hasWhiteLabel = $this->hasWhiteLabel();
+        $defaultLogoUrl = asset('themes/frontend/assets/infosolz/images/small_logo.png');
+        $customLogoUrl = $hasWhiteLabel ? $this->whiteLabelLogoUrl() : null;
+        $customPdfLogoPath = $hasWhiteLabel ? $this->whiteLabelPdfLogoPath() : null;
+
+        return [
+            'is_white_label' => $hasWhiteLabel,
+            'company_name' => $hasWhiteLabel ? $this->whiteLabelCompanyName() : null,
+            'logo_path' => $hasWhiteLabel ? $this->whiteLabelLogoPath() : null,
+            'logo_url' => $customLogoUrl ?: $defaultLogoUrl,
+            'header_logo_url' => $customLogoUrl ?: asset('themes/frontend/assets/v1/img/logo_dash.png'),
+            'pdf_logo_path' => $customPdfLogoPath,
+            'has_custom_logo' => !empty($customLogoUrl),
+        ];
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)

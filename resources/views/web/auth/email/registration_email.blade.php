@@ -1,3 +1,6 @@
+@php
+    $verificationUrl = route('user.verify-email', ['id' => $id]);
+@endphp
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,11 +38,11 @@
         <td style="padding:5px 15px;">
             <p style="text-align:left; color:#4a4a4a; font-size:12px; margin:0; padding:0px 0;">
                 To confirm the email address and activate the account, please click on the button below.
-                <a href="https://myplexus.com/verify-email/{{$id}}"> Verify</a>
+                <a href="{{ $verificationUrl }}"> Verify</a>
                 <br>
                 or copy/paste the URL below into your browser:<br>
             
-                <span>https://myplexus.com/verify-email/{{$id}}</span>
+                <span>{{ $verificationUrl }}</span>
 
 
             </p>

@@ -463,7 +463,7 @@
                 var doc = new jsPDF();
 
                 var img = new Image();
-                img.src = "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
+                img.src = (window.myplexBranding && window.myplexBranding.logoUrl) ? window.myplexBranding.logoUrl : "{{ asset('themes/frontend/assets/infosolz/images/small_logo.png') }}";
                 img.onload = function() {
                     var pageWidth = doc.internal.pageSize.getWidth();
                     var imgWidth = 50;

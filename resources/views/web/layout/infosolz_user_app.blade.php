@@ -1,3 +1,18 @@
+@php
+    $loggedInUser = Auth::user();
+    $whiteLabelBranding = $loggedInUser ? $loggedInUser->whiteLabelBranding() : [
+        'is_white_label' => false,
+        'company_name' => null,
+        'logo_url' => asset('themes/frontend/assets/infosolz/images/small_logo.png'),
+        'header_logo_url' => asset('themes/frontend/assets/v1/img/logo_dash.png'),
+        'has_custom_logo' => false,
+    ];
+    $whiteLabelBrandingJson = json_encode([
+        'isWhiteLabel' => !empty($whiteLabelBranding['is_white_label']),
+        'companyName' => $whiteLabelBranding['company_name'],
+        'logoUrl' => $whiteLabelBranding['logo_url'],
+    ]);
+@endphp
 <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -31,8 +46,8 @@
                 <div class="top_bar">
                     <div class="tgl_menu">
                         <a href="{{route('user.auth-dashboard')}}" class="inner_logo">
-                            <img class="logo1" src="{{asset('themes/frontend/assets/v1/img/logo_dash.png')}}" alt="">
-                            <img class="logo2" src="{{asset('themes/frontend/assets/infosolz/images/small_logo.png')}}" alt="">
+                            <img class="logo1" src="{{ $whiteLabelBranding['header_logo_url'] }}" alt="{{ $whiteLabelBranding['company_name'] ?: 'myplexus' }}">
+                            <img class="logo2" src="{{ $whiteLabelBranding['logo_url'] }}" alt="{{ $whiteLabelBranding['company_name'] ?: 'myplexus' }}">
                         </a>
                         <div id="toggle">
                             <div class="one"></div>
@@ -92,8 +107,8 @@
                             <a href="{{route('user.indices_report')}}"><img src="{{asset('themes/frontend/assets/infosolz/images/indies.png') }}" alt="">Indices Report
                             </a>
                         </li>
-                        <li>
-                            <a href="#"><img src="{{asset('themes/frontend/assets/infosolz/images/model.png') }}" alt="">Model Portfolio
+                        <li @if (isset($active_menu) && $active_menu == 'model_portfolio') class="active" @endif>
+                            <a href="{{ route('user.model_portfolio') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/model.png') }}" alt="">Model Portfolio
                             </a>
                         </li>
                         <li @if (isset($active_menu) && $active_menu == 'filters_list') class="active" @endif>
@@ -107,6 +122,11 @@
                         <li @if (isset($active_menu) && $active_menu == 'subscription') class="active" @endif>
                             <a href="{{ route('web.subscriptions.index') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/ratop_report.png') }}" alt="">Subscription Plans</a>
                         </li>
+                        @if (!empty($whiteLabelBranding['is_white_label']))
+                            <li @if (isset($active_menu) && $active_menu == 'white_label_branding') class="active" @endif>
+                                <a href="{{ route('user.white_label.branding') }}"><img src="{{asset('themes/frontend/assets/infosolz/images/model.png') }}" alt="">White Label Branding</a>
+                            </li>
+                        @endif
                     </ul>
                 </nav>
         </header>
@@ -125,5 +145,8 @@
 
             
         </body>
+        <script>
+            window.myplexBranding = {!! $whiteLabelBrandingJson !!};
+        </script>
         @include('web.layout.includes.javascripts')
     </html>

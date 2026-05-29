@@ -1,3 +1,18 @@
+<?php
+    $loggedInUser = Auth::user();
+    $whiteLabelBranding = $loggedInUser ? $loggedInUser->whiteLabelBranding() : [
+        'is_white_label' => false,
+        'company_name' => null,
+        'logo_url' => asset('themes/frontend/assets/infosolz/images/small_logo.png'),
+        'header_logo_url' => asset('themes/frontend/assets/v1/img/logo_dash.png'),
+        'has_custom_logo' => false,
+    ];
+    $whiteLabelBrandingJson = json_encode([
+        'isWhiteLabel' => !empty($whiteLabelBranding['is_white_label']),
+        'companyName' => $whiteLabelBranding['company_name'],
+        'logoUrl' => $whiteLabelBranding['logo_url'],
+    ]);
+?>
 <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -31,8 +46,8 @@
                 <div class="top_bar">
                     <div class="tgl_menu">
                         <a href="<?php echo e(route('user.auth-dashboard')); ?>" class="inner_logo">
-                            <img class="logo1" src="<?php echo e(asset('themes/frontend/assets/v1/img/logo_dash.png')); ?>" alt="">
-                            <img class="logo2" src="<?php echo e(asset('themes/frontend/assets/infosolz/images/small_logo.png')); ?>" alt="">
+                            <img class="logo1" src="<?php echo e($whiteLabelBranding['header_logo_url']); ?>" alt="<?php echo e($whiteLabelBranding['company_name'] ?: 'myplexus'); ?>">
+                            <img class="logo2" src="<?php echo e($whiteLabelBranding['logo_url']); ?>" alt="<?php echo e($whiteLabelBranding['company_name'] ?: 'myplexus'); ?>">
                         </a>
                         <div id="toggle">
                             <div class="one"></div>
@@ -93,8 +108,8 @@
                             <a href="<?php echo e(route('user.indices_report')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/indies.png')); ?>" alt="">Indices Report
                             </a>
                         </li>
-                        <li>
-                            <a href="#"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/model.png')); ?>" alt="">Model Portfolio
+                        <li <?php if(isset($active_menu) && $active_menu == 'model_portfolio'): ?> class="active" <?php endif; ?>>
+                            <a href="<?php echo e(route('user.model_portfolio')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/model.png')); ?>" alt="">Model Portfolio
                             </a>
                         </li>
                         <li <?php if(isset($active_menu) && $active_menu == 'filters_list'): ?> class="active" <?php endif; ?>>
@@ -108,6 +123,11 @@
                         <li <?php if(isset($active_menu) && $active_menu == 'subscription'): ?> class="active" <?php endif; ?>>
                             <a href="<?php echo e(route('web.subscriptions.index')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/ratop_report.png')); ?>" alt="">Subscription Plans</a>
                         </li>
+                        <?php if(!empty($whiteLabelBranding['is_white_label'])): ?>
+                            <li <?php if(isset($active_menu) && $active_menu == 'white_label_branding'): ?> class="active" <?php endif; ?>>
+                                <a href="<?php echo e(route('user.white_label.branding')); ?>"><img src="<?php echo e(asset('themes/frontend/assets/infosolz/images/model.png')); ?>" alt="">White Label Branding</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
         </header>
@@ -126,6 +146,9 @@
 
             
         </body>
+        <script>
+            window.myplexBranding = <?php echo $whiteLabelBrandingJson; ?>;
+        </script>
         <?php echo $__env->make('web.layout.includes.javascripts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </html>
 <?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/layout/infosolz_user_app.blade.php ENDPATH**/ ?>

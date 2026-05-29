@@ -7,6 +7,8 @@ body {
 body {
     overflow-x: hidden;
     scroll-behavior: smooth;
+    min-height: 100vh;
+    background: #f7faf8;
 }
 
 html {
@@ -45,49 +47,52 @@ a{
 
 .login_main {
     width: 100%;
-    max-width: 630px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    max-width: 520px;
+    position: relative;
+    margin: 0 auto;
+    z-index: 2;
+    padding: 28px 0;
+}
+.login_main figure {
+    margin-bottom: 22px;
 }
 img.login_logo {
     width: 100%;
-    max-width: 570px;
+    max-width: 340px;
     margin: 0 auto;
     display: block;
 }
 .login_main h1 {
-    font-size: 56px;
-    margin: 20px;
+    font-size: clamp(34px, 3vw, 48px);
+    margin: 14px 0 0;
     font-weight: 600;
     text-align: center;
     color: #000;
 }
 .login_main form label {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 400;
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #000;
 }
 .login_main form input {
     width: 100%;
-    height: 75px;
-    border-radius: 16px;
+    height: 64px;
+    border-radius: 14px;
     border: 1px solid #4B4B4B;
-    padding: 0 30px;
-    font-size: 18px;
+    padding: 0 24px;
+    font-size: 17px;
 }
 .login_main form input:focus{
     outline: none;
 }
 .form_group {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
 }
 a.forgot_pass {
-    font-size: 20px;
-    line-height: 40px;
+    font-size: 17px;
+    line-height: 28px;
     font-weight: 400;
     color: #7E848B;
     margin: auto;
@@ -99,9 +104,9 @@ a.forgot_pass:hover{
 .login_main form input[type="submit"] {
     background: #28253A;
     color: #fff;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 600;
-    border-bottom: 8px solid #379962;
+    border-bottom: 6px solid #379962;
     transition: .4s all;
 }
 .login_main form input[type="submit"]:hover{
@@ -109,10 +114,10 @@ a.forgot_pass:hover{
 }
 p.dont_acc,
 p.dont_acc a {
-    font-size: 24px;
+    font-size: 19px;
     font-weight: 600;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 22px;
     color: #000;
 }
 p.dont_acc a{
@@ -124,17 +129,17 @@ p.dont_acc a:hover{
 }
 input.user_img {
     background: url(../images/user.png) no-repeat;
-    background-position: right 25px center;
-    background-size: 27px;
+    background-position: right 22px center;
+    background-size: 24px;
 }
 .show_hide_pass{
     position: relative;
 }
 i.toggle_password {
-    font-size: 24px;
+    font-size: 22px;
     position: absolute;
-    right: 20px;
-    top: 25px;
+    right: 18px;
+    top: 20px;
     color: #555555;
     cursor: pointer;
 }
@@ -317,18 +322,30 @@ img.left_bg {
     position: absolute;
     left: 0;
     bottom: 60px;
+    max-width: 24vw;
+    height: auto;
+    pointer-events: none;
 }
 img.right_bg {
     width: 275px;
     position: absolute;
     right: 0;
     top: -2px;
+    max-width: 22vw;
+    height: auto;
+    pointer-events: none;
 }
 .main{
     position: relative;
 }
 .main.log_main {
-    position: static;
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    overflow: hidden;
 }
 .free_trial{
     position: relative;
@@ -445,7 +462,7 @@ img.right_bg {
 
 .login_with {
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 14px;
 }
 .login_with li {
     list-style: none;
@@ -453,7 +470,7 @@ img.right_bg {
     margin: 0 10px;
 }
 .login_with h5 {
-    font-size: 16px;
+    font-size: 18px;
 }
 .login_with li a {
     width: 46px;
@@ -471,7 +488,7 @@ img.right_bg {
     border-color: #28253A;
 }
 .login_with ul {
-    margin: 10px 0;
+    margin: 12px 0;
 }
 /********************RESPONSIVE/********************/
 
@@ -481,13 +498,17 @@ img.right_bg {
     }
     .login_main {
         max-width: 360px;
+        padding: 16px 0;
+    }
+    .main.log_main {
+        padding: 40px 20px;
     }
     .login_main h1 {
         font-size: 26px;
-        margin: 15px;
+        margin-top: 10px;
     }
     img.login_logo {
-        max-width: 215px;
+        max-width: 220px;
     }
     .login_main form input {
         height: 48px;
@@ -616,9 +637,11 @@ img.right_bg {
 
 @media only screen and (max-width:767px){
     .login_main {
-        position: static;
-        transform: inherit;
-        margin: 30px auto;
+        margin: 0 auto;
+    }
+    .main.log_main {
+        min-height: auto;
+        padding: 36px 18px;
     }
     img.login_logo {
         max-width: 160px;
@@ -631,7 +654,7 @@ img.right_bg {
 
 @media only screen and (max-width:575px){
     .main.log_main {
-        padding: 0 15px;
+        padding: 24px 15px 32px;
     }
     .login_main h1 {
         font-size: 24px;
