@@ -20362,7 +20362,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -20471,7 +20470,7 @@ var CanvasJS = __webpack_require__(/*! ../canvasjs.min.js */ "./resources/js/can
       comp_scheme1_text: '',
       comp_scheme2_text: '',
       currentTab: 'daily_price',
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
+      app_url:  false ? 0 : '',
       loadingStatus: false,
       notice_text_comp: '',
       compositionValidationError: '',
@@ -21344,7 +21343,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -21406,7 +21404,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       selectedFundClassificationMonthly: null,
       selectedCategoryMonthly: 'corpus_change',
       monthly_snapshot_data: [],
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
+      app_url:  false ? 0 : '',
       lastAaumDate: ''
     };
   },
@@ -21732,7 +21730,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Common_loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Common/loading */ "./resources/js/components/Common/loading.vue");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -21781,7 +21778,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       for_text: null,
       process: false,
       totalAmount: "",
-      app_url: process.env.MIX_APP_ENV == "local" ? process.env.MIX_API_URL_LOCAL : "https://www.myplexus.com"
+      app_url:  false ? 0 : "https://www.myplexus.com"
     };
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapActions)("InputData", ["getFundClassifications"])), {}, {
@@ -21939,7 +21936,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _j_t_mcc_vue3_chartjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @j-t-mcc/vue3-chartjs */ "./node_modules/@j-t-mcc/vue3-chartjs/dist/vue3-chartjs.es.js");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -22006,7 +22002,7 @@ var CanvasJS = __webpack_require__(/*! ../canvasjs.min.js */ "./resources/js/can
       heading: '',
       modalClasses: ['modal', 'fade'],
       modalClasses1: ['modal', 'fade'],
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : 'https://www.myplexus.com'
+      app_url:  false ? 0 : 'https://www.myplexus.com'
     };
   },
   methods: _objectSpread(_objectSpread({
@@ -23202,7 +23198,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _suadelabs_vue3_multiselect__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_suadelabs_vue3_multiselect__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../mixin */ "./resources/js/mixin/index.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -23253,7 +23248,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       totalAmount: 0,
       process: false,
       numberToWords: 0,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : 'https://www.myplexus.com'
+      app_url:  false ? 0 : 'https://www.myplexus.com'
     };
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)('InputData', ['getFundHouses', 'getFunds'])), {}, {
@@ -23644,7 +23639,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -23692,7 +23686,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       snapshotText: null,
       snapshotTextHeding: null,
       process: false,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
+      app_url:  false ? 0 : '',
       counts: 2,
       defaultStart: 5,
       shareText: ''
@@ -24032,7 +24026,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../mixin */ "./resources/js/mixin/index.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var laravel_vue_pagination__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! laravel-vue-pagination */ "./node_modules/laravel-vue-pagination/dist/laravel-vue-pagination.es.js");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -24061,7 +24054,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       fund_directory: [],
       limits: [50, 100, 200, 300],
       process: false,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
+      app_url:  false ? 0 : '',
       counts: 2,
       defaultStart: 5,
       shareText: '',
@@ -24529,7 +24522,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -24585,7 +24577,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       selectedFundHouse: '',
       headingText: '',
       process: false,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : 'https://www.myplexus.com'
+      app_url:  false ? 0 : 'https://www.myplexus.com'
     };
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_5__.mapActions)('InputData', ['getFundHouses'])), {}, {
@@ -24742,7 +24734,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixin */ "./resources/js/mixin/index.js");
 /* harmony import */ var _Common_loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../Common/loading */ "./resources/js/components/Common/loading.vue");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -24780,7 +24771,7 @@ var CanvasJS = __webpack_require__(/*! ../../canvasjs.min.js */ "./resources/js/
       emailMsg: '',
       searchTimeout: null,
       output: null,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : ''
+      app_url:  false ? 0 : ''
     };
   },
   methods: {
@@ -25468,7 +25459,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../mixin */ "./resources/js/mixin/index.js");
 /* harmony import */ var _Common_loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../Common/loading */ "./resources/js/components/Common/loading.vue");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -25493,7 +25483,7 @@ __webpack_require__.r(__webpack_exports__);
       name: this.username,
       email: this.useremail,
       start: false,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : '',
+      app_url:  false ? 0 : '',
       questions: [{
         q: "How old are you?",
         o: {
@@ -25782,7 +25772,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../mixin */ "./resources/js/mixin/index.js");
 /* harmony import */ var _Common_loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Common/loading */ "./resources/js/components/Common/loading.vue");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -25834,7 +25823,7 @@ var CanvasJS = __webpack_require__(/*! ../../canvasjs.min.js */ "./resources/js/
       sipCalculatedData: [],
       showTable: false,
       processEmail: false,
-      app_url: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : 'https://myplexus.com'
+      app_url:  false ? 0 : 'https://myplexus.com'
     };
   },
   methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapActions)('InputData', ['getFunds'])), {}, {
@@ -26888,14 +26877,16 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   data: function data() {
     return {
       //sortKey: 'FUNDTYPE',
-      selectedDate: null,
+      selectedDate: new Date(),
       ascending: true,
       process: false,
       showTable1: true,
       showTable2: true,
       modalClasses: ['modal', 'fade'],
       per_changes: [],
-      selectedFundType: ''
+      selectedFundType: '',
+      fromDate: '',
+      toDate: ''
     };
   },
   methods: _objectSpread({
@@ -26928,12 +26919,16 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                // console.log('To Month: ',to_month);
                 _this.process = true;
                 date = _this.selectedDate;
                 console.log('Selected Date is: ', date);
                 _context.next = 5;
-                return axios.get('/api/v1/monthly-changes-fund-type').then(function (response) {
+                return axios.get("/api/v1/monthly-changes-fund-type?date=".concat(date)).then(function (response) {
                   _this.per_changes = response.data.data.changes_fund_type;
+                  _this.fromDate = response.data.data.to_date;
+                  // console.log('from_date',this.fromDate);
+                  _this.toDate = response.data.data.from_date;
                 })["catch"](function (error) {})["finally"](function () {
                   _this.process = false;
                 });
@@ -26968,6 +26963,14 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     },
     getYear: function getYear(date) {
       return moment__WEBPACK_IMPORTED_MODULE_2___default()(date, 'DD/MM/YYYY').format('YYYY');
+    },
+    submitForm: function submitForm() {
+      this.$refs.form.submit();
+    },
+    handleSubmit: function handleSubmit() {
+      console.log('selectedDate', selectedDate);
+      this.getMonthlyChangesFundType(this.selectedDate);
+      // Add additional form submission logic here if needed
     }
   }, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapActions)('InputData', ['getSnapshotDates', 'getIndexChanges', 'getCurrencyChanges', 'getCommodityChanges', 'getMonthlyBestFunds', 'getFundChanges'])),
   watch: {
@@ -27001,20 +27004,27 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     }
   }),
   mounted: function mounted() {
+    // console.log('New DAte: ',this.fromDate);
+    // console.log('From Date:', this.fromDate);
     var selectedDate = this.selectedDate;
     this.getSnapshotDates({
       type: 'monthly'
     });
     this.getIndexChanges({
-      type: 'monthly'
+      type: 'monthly',
+      from_date: this.fromDate
     });
     this.getCurrencyChanges({
-      type: 'monthly'
+      type: 'monthly',
+      from_date: this.fromDate
     });
     this.getCommodityChanges({
-      type: 'monthly'
+      type: 'monthly',
+      from_date: this.fromDate
     });
-    this.getMonthlyChangesFundType();
+    this.getMonthlyChangesFundType({
+      from_date: this.fromDate
+    });
     this.getMonthlyBestFunds();
   }
 });
@@ -27117,7 +27127,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       this.currentTab = tabName;
     },
     generateURL: function generateURL(tabName) {
-      var baseURL = 'https://myplexus.tech2dev.xyz/quick-ratio';
+      var baseURL = 'https://myplexus.com/quick-ratio';
       var queryParams = {
         fund_type_id: this.getURLParams('fund_type_id'),
         type: tabName,
@@ -27125,6 +27135,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         date: this.getURLParams("date"),
         tab: tabName
       };
+      console.log("queryParams: ", queryParams);
       var queryString = new URLSearchParams(queryParams).toString();
       return "".concat(baseURL, "?").concat(queryString);
     },
@@ -27335,7 +27346,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
                       that.selectedCategoryWeekly = report_category;
                     }
                     if (date) {
-                      that.selectedDateWeekly = moment__WEBPACK_IMPORTED_MODULE_3___default()().subtract(1, 'days');
+                      // that.selectedDateWeekly = moment().subtract(1, 'days')
+                      that.selectedDateWeekly = _this3.getURLParams('date');
                     }
                   } else if (type == 'monthly') {
                     that.currentTab = 'monthly';
@@ -27346,7 +27358,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
                       that.selectedCategoryMonthly = report_category;
                     }
                     if (date) {
-                      that.selectedDateMonthly = moment__WEBPACK_IMPORTED_MODULE_3___default()(date);
+                      // that.selectedDateMonthly = moment(date)
+                      that.selectedDateMonthly = _this3.getURLParams('date');
                     }
                   }
                 }
@@ -27528,6 +27541,14 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     }
   },
   computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_3__.mapGetters)('InputData', ['loading', 'index_change', 'currency_change', 'commodity_change', 'from_date', 'to_date', 'weekly_best_funds', 'fund_change'])), {}, {
+    weeklyUrl: function weeklyUrl() {
+      // Construct the URL for Weekly snapshot using the current domain
+      return "https://".concat(window.location.hostname, "/user-weekly-snapshot");
+    },
+    monthlyUrl: function monthlyUrl() {
+      // Construct the URL for Monthly snapshot using the current domain
+      return "https://".concat(window.location.hostname, "/user-monthly-snapshot");
+    },
     addDates: function addDates() {
       // console.log('From Date: ', this.from_date);
       var dtArr = this.from_date.split('/');
@@ -38649,9 +38670,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "Weekly", 8 /* PROPS */, _hoisted_10)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     "class": "active",
     href: $options.monthlyUrl
-  }, "Monthly", 8 /* PROPS */, _hoisted_11)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
+  }, "Monthly", 8 /* PROPS */, _hoisted_11)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"col-md-3\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <Datepicker placeholder=\"As On Date\" class=\"\" v-model=\"selectedDate\" :format=\"'dd/MM/yyyy'\" :enableTimePicker=\"false\" :autoApply=\"true\" :range=\"false\" :maxDate=\"maxDateRang\"></Datepicker> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    onSubmit: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+      return $options.handleSubmit && $options.handleSubmit.apply($options, arguments);
+    }, ["prevent"]))
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
+    name: "to_date",
     placeholder: "As On Date",
-    "class": "",
     modelValue: $data.selectedDate,
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $data.selectedDate = $event;
@@ -38660,8 +38685,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     enableTimePicker: false,
     autoApply: true,
     range: false,
-    maxDate: $options.maxDateRang
-  }, null, 8 /* PROPS */, ["modelValue", "maxDate"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_ctx.from_date && _ctx.to_date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_15, "Monthly Snapshot Report: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.from_date) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.to_date), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Indices <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>Closing Value <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody> \n                                                        <tr v-for=\"index in index_change\" :key=\"index.name\">\n                                                            <td>{{ index.name }}</td>\n                                                            <td>{{ index.cur_value }}</td>\n                                                            <td>{{ index.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
+    maxDate: $options.maxDateRang,
+    onChange: $options.submitForm
+  }, null, 8 /* PROPS */, ["modelValue", "maxDate", "onChange"])])], 32 /* HYDRATE_EVENTS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_ctx.from_date && _ctx.to_date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_15, "Monthly Snapshot Report: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.fromDate) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.toDate), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_hoisted_21, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <table class=\"table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Indices <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>Closing Value <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody> \n                                                        <tr v-for=\"index in index_change\" :key=\"index.name\">\n                                                            <td>{{ index.name }}</td>\n                                                            <td>{{ index.cur_value }}</td>\n                                                            <td>{{ index.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
     id: "best-monthly-index",
     columns: [{
       name: 'Indices',
@@ -38731,7 +38757,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     style: {
       "width": "47% !important"
     },
-    onClick: _cache[1] || (_cache[1] = function ($event) {
+    onClick: _cache[2] || (_cache[2] = function ($event) {
       return $options.sortTable('FUNDTYPE');
     })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Category "), _hoisted_46], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
@@ -38739,7 +38765,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       'sorting_asc': _ctx.sortKey == 'CHANGEVALUE' && $data.ascending,
       'sorting_desc': _ctx.sortKey == 'CHANGEVALUE' && !$data.ascending
     }]),
-    onClick: _cache[2] || (_cache[2] = function ($event) {
+    onClick: _cache[3] || (_cache[3] = function ($event) {
       return $options.sortTable('CHANGEVALUE');
     })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("% Change "), _hoisted_47], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
@@ -38747,7 +38773,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       'sorting_asc': _ctx.sortKey == 'MEDIANVAL' && $data.ascending,
       'sorting_desc': _ctx.sortKey == 'MEDIANVAL' && !$data.ascending
     }]),
-    onClick: _cache[3] || (_cache[3] = function ($event) {
+    onClick: _cache[4] || (_cache[4] = function ($event) {
       return $options.sortTable('MEDIANVAL');
     })
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Median "), _hoisted_48], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.per_changes, function (fund_type) {
@@ -38790,7 +38816,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_56, [_hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "close",
-    onClick: _cache[4] || (_cache[4] = function ($event) {
+    onClick: _cache[5] || (_cache[5] = function ($event) {
       $options.toggle();
       $data.selectedFundType = '';
     })
@@ -38838,103 +38864,94 @@ var _hoisted_2 = {
 var _hoisted_3 = {
   "class": "inner_padding"
 };
-var _hoisted_4 = {
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"head_brdcm\"><ul class=\"brdcmb\"><li><a href=\"https://myplexus.com/dashboard\">dashboard</a></li><li><a href=\"https://myplexus.com/ratio-dashboard\">Ratio Reports</a></li><li>quick ratio</li></ul></div><div class=\"perform_head\"><h2>quick ratio</h2></div>", 2);
+var _hoisted_6 = {
   "class": "info_monitor_sec"
 };
-var _hoisted_5 = {
+var _hoisted_7 = {
   "class": "compare-scemes-sec investing-tools perform-snapshot-tabs select2-styles"
 };
-var _hoisted_6 = {
+var _hoisted_8 = {
   "class": "container tab_snap_shot new-shot scnd-shot"
 };
-var _hoisted_7 = {
-  "class": "nav nav-pills mb-3 w_tab",
+var _hoisted_9 = {
+  "class": "wm_tab",
   id: "pills-tab",
   role: "tablist"
 };
-var _hoisted_8 = {
-  "class": "nav-item",
-  role: "presentation"
-};
-var _hoisted_9 = ["href"];
 var _hoisted_10 = {
   "class": "nav-item",
   role: "presentation"
 };
 var _hoisted_11 = ["href"];
 var _hoisted_12 = {
+  "class": "nav-item",
+  role: "presentation"
+};
+var _hoisted_13 = ["href"];
+var _hoisted_14 = {
   "class": "comp_schem_bdr"
 };
-var _hoisted_13 = {
+var _hoisted_15 = {
   "class": "tab_snap_shot"
 };
-var _hoisted_14 = {
+var _hoisted_16 = {
   "class": "tab-wrapper"
 };
-var _hoisted_15 = {
+var _hoisted_17 = {
   "class": "tab-content"
 };
-var _hoisted_16 = {
+var _hoisted_18 = {
   "class": "light_green_bg"
 };
-var _hoisted_17 = {
+var _hoisted_19 = {
   action: "#",
   method: "get"
 };
-var _hoisted_18 = {
+var _hoisted_20 = {
   "class": "invst-wrap wrp-new"
 };
-var _hoisted_19 = {
-  "class": "row"
-};
-var _hoisted_20 = {
-  "class": "col-md-3"
-};
 var _hoisted_21 = {
-  "class": "col-md-4"
+  "class": "row"
 };
 var _hoisted_22 = {
   "class": "col-md-3"
 };
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+var _hoisted_23 = {
+  "class": "col-md-4"
+};
+var _hoisted_24 = {
+  "class": "col-md-3"
+};
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: ""
-}, "Report Category", -1 /* HOISTED */);
-var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+}, "Select", -1 /* HOISTED */);
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: "return"
 }, "Return %", -1 /* HOISTED */);
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: "indices"
 }, "Indices", -1 /* HOISTED */);
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
   value: "return_less_index"
 }, "Return Less Index ", -1 /* HOISTED */);
-var _hoisted_27 = [_hoisted_23, _hoisted_24, _hoisted_25, _hoisted_26];
-var _hoisted_28 = {
+var _hoisted_29 = [_hoisted_25, _hoisted_26, _hoisted_27, _hoisted_28];
+var _hoisted_30 = {
   "class": "col-md-2"
 };
-var _hoisted_29 = ["disabled"];
-var _hoisted_30 = {
+var _hoisted_31 = ["disabled"];
+var _hoisted_32 = {
   key: 0,
   "class": "perform-snapshot-points mt-2 bordr-only prfrm-snapst"
 };
-var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Term of Fund : "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Long Term")])], -1 /* HOISTED */);
-var _hoisted_32 = {
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Term of Fund : "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Long Term")])], -1 /* HOISTED */);
+var _hoisted_34 = {
   "class": "datatable_ll main_trer fund_performance_table perform-snapshot-table full-table-style-2 custom-sort-table main-trer-wrapper graph_table"
 };
-var _hoisted_33 = {
+var _hoisted_35 = {
   id: "performance-weekly",
   "class": "display w-100 dataTable"
 };
-var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
 var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
@@ -38960,49 +38977,76 @@ var _hoisted_40 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_41 = {
+var _hoisted_41 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_42 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_43 = {
   key: 0
 };
-var _hoisted_42 = ["href"];
-var _hoisted_43 = {
+var _hoisted_44 = ["href"];
+var _hoisted_45 = {
   key: 1
 };
-var _hoisted_44 = {
-  key: 2
-};
-var _hoisted_45 = {
-  key: 3
-};
 var _hoisted_46 = {
-  key: 4
+  key: 2,
+  "class": "text_right"
 };
 var _hoisted_47 = {
-  key: 5
+  key: 3,
+  "class": "text_right"
 };
 var _hoisted_48 = {
-  key: 6
+  key: 4,
+  "class": "text_right"
 };
 var _hoisted_49 = {
-  key: 7
+  key: 5,
+  "class": "text_right"
 };
 var _hoisted_50 = {
-  key: 8
+  key: 6,
+  "class": "text_right"
 };
 var _hoisted_51 = {
-  key: 9
+  key: 7,
+  "class": "text_right"
 };
 var _hoisted_52 = {
-  key: 10
+  key: 8,
+  "class": "text_right"
 };
 var _hoisted_53 = {
-  key: 0
+  key: 9,
+  "class": "text_right"
 };
 var _hoisted_54 = {
-  "class": "top_th text-center",
-  colspan: "6",
-  rowspan: "1"
+  key: 10,
+  "class": "text_right"
 };
 var _hoisted_55 = {
+  key: 0
+};
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  colspan: "7",
+  "class": "text-center"
+}, "No information is available for this search ", -1 /* HOISTED */);
+var _hoisted_57 = [_hoisted_56];
+var _hoisted_58 = {
+  key: 2
+};
+var _hoisted_59 = {
+  "class": "top_th text-center",
+  colspan: "7",
+  rowspan: "1"
+};
+var _hoisted_60 = {
   style: {
     "width": "50px"
   },
@@ -39016,95 +39060,115 @@ var _hoisted_55 = {
   "enable-background": "new 0 0 100 100",
   "xml:space": "preserve"
 };
-var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
-var _hoisted_59 = [_hoisted_56];
-var _hoisted_60 = {
+var _hoisted_61 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
+var _hoisted_64 = [_hoisted_61];
+var _hoisted_65 = {
   "class": "light_green_bg"
 };
-var _hoisted_61 = {
+var _hoisted_66 = {
   action: "#",
   method: "get"
 };
-var _hoisted_62 = {
+var _hoisted_67 = {
   "class": "invst-wrap"
 };
-var _hoisted_63 = {
+var _hoisted_68 = {
   "class": "row"
 };
-var _hoisted_64 = {
+var _hoisted_69 = {
   "class": "col-md-3"
 };
-var _hoisted_65 = {
+var _hoisted_70 = {
   "class": "col-md-4"
 };
-var _hoisted_66 = {
+var _hoisted_71 = {
   "class": "col-md-3"
 };
-var _hoisted_67 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<option value=\"\">Report Category</option><option value=\"return\">Return %</option><option value=\"indices\">Indices</option><option value=\"return_less_index\">Return Less Index </option><option value=\"corpus_change\">Corpus Changes</option>", 5);
-var _hoisted_72 = [_hoisted_67];
-var _hoisted_73 = {
+var _hoisted_72 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<option value=\"\">Select</option><option value=\"return\">Return %</option><option value=\"indices\">Indices</option><option value=\"return_less_index\">Return Less Index </option><option value=\"corpus_change\">Corpus Changes </option>", 5);
+var _hoisted_77 = [_hoisted_72];
+var _hoisted_78 = {
   "class": "col-md-2"
 };
-var _hoisted_74 = ["disabled"];
-var _hoisted_75 = {
+var _hoisted_79 = ["disabled"];
+var _hoisted_80 = {
   key: 0,
   "class": "perform-snapshot-points mt-2 bordr-only prfrm-snapst"
 };
-var _hoisted_76 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Term of Fund : "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Long Term")])], -1 /* HOISTED */);
-var _hoisted_77 = {
+var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Term of Fund : "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Long Term")])], -1 /* HOISTED */);
+var _hoisted_82 = {
   "class": "datatable_ll main_trer fund_performance_table perform-snapshot-table full-table-style-2 custom-sort-table main-trer-wrapper graph_table"
 };
-var _hoisted_78 = {
+var _hoisted_83 = {
   key: 0,
   id: "performance-monthly",
   "class": "display w-100 dataTable"
 };
-var _hoisted_79 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_80 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_81 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_82 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_83 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
 var _hoisted_84 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_85 = {
+var _hoisted_85 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_86 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_87 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_88 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_89 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_90 = {
   key: 0
 };
-var _hoisted_86 = ["href"];
-var _hoisted_87 = {
+var _hoisted_91 = ["href"];
+var _hoisted_92 = {
   key: 1
 };
-var _hoisted_88 = {
+var _hoisted_93 = {
+  "class": "text_right"
+};
+var _hoisted_94 = {
+  "class": "text_right"
+};
+var _hoisted_95 = {
+  "class": "text_right"
+};
+var _hoisted_96 = {
+  "class": "text_right"
+};
+var _hoisted_97 = {
   key: 0
 };
-var _hoisted_89 = {
+var _hoisted_98 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  colspan: "6",
+  "class": "text-center"
+}, "No information is available for this search ", -1 /* HOISTED */);
+var _hoisted_99 = [_hoisted_98];
+var _hoisted_100 = {
+  key: 2
+};
+var _hoisted_101 = {
   "class": "top_th text-center",
   colspan: "6",
   rowspan: "1"
 };
-var _hoisted_90 = {
+var _hoisted_102 = {
   style: {
     "width": "50px"
   },
@@ -39118,43 +39182,52 @@ var _hoisted_90 = {
   "enable-background": "new 0 0 100 100",
   "xml:space": "preserve"
 };
-var _hoisted_91 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
-var _hoisted_94 = [_hoisted_91];
-var _hoisted_95 = {
+var _hoisted_103 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
+var _hoisted_106 = [_hoisted_103];
+var _hoisted_107 = {
   key: 1,
   id: "performance-monthly",
   "class": "display w-100 dataTable"
 };
-var _hoisted_96 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_108 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_97 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_109 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_98 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_110 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_99 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_111 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_100 = ["href"];
-var _hoisted_101 = {
+var _hoisted_112 = ["href"];
+var _hoisted_113 = {
+  "class": "text_right"
+};
+var _hoisted_114 = {
+  "class": "text_right"
+};
+var _hoisted_115 = {
+  "class": "text_right"
+};
+var _hoisted_116 = {
   key: 0
 };
-var _hoisted_102 = {
+var _hoisted_117 = {
   "class": "top_th text-center",
   colspan: "4",
   rowspan: "1"
 };
-var _hoisted_103 = {
+var _hoisted_118 = {
   style: {
     "width": "50px"
   },
@@ -39168,12 +39241,12 @@ var _hoisted_103 = {
   "enable-background": "new 0 0 100 100",
   "xml:space": "preserve"
 };
-var _hoisted_104 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
-var _hoisted_107 = [_hoisted_104];
+var _hoisted_119 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<circle fill=\"none\" stroke=\"#fff\" stroke-width=\"6\" stroke-miterlimit=\"15\" stroke-dasharray=\"14.2472,14.2472\" cx=\"50\" cy=\"50\" r=\"47\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><circle fill=\"none\" stroke=\"#fff\" stroke-width=\"1\" stroke-miterlimit=\"10\" stroke-dasharray=\"10,10\" cx=\"50\" cy=\"50\" r=\"39\"><animateTransform attributeName=\"transform\" attributeType=\"XML\" type=\"rotate\" dur=\"5s\" from=\"0 50 50\" to=\"-360 50 50\" repeatCount=\"indefinite\"></animateTransform></circle><g fill=\"#fff\"><rect x=\"30\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.1\"></animateTransform></rect><rect x=\"40\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.2\"></animateTransform></rect><rect x=\"50\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.3\"></animateTransform></rect><rect x=\"60\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.4\"></animateTransform></rect><rect x=\"70\" y=\"35\" width=\"5\" height=\"30\"><animateTransform attributeName=\"transform\" dur=\"1s\" type=\"translate\" values=\"0 5 ; 0 -5; 0 5\" repeatCount=\"indefinite\" begin=\"0.5\"></animateTransform></rect></g>", 3);
+var _hoisted_122 = [_hoisted_119];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Datepicker = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Datepicker");
   var _component_multiselect = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("multiselect");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"custom-banner no-bg fw-banner\" :class=\"{'monthly-ranking':!page_image}\" :style=\"(page_image)?{ 'background-image': 'url('+page_image+')'}:{}\">\n    <div class=\"container\">\n        <div class=\"banner-align-lft fw-title\">\n            <h1 class=\"f-b\" v-html=\"banner_title\" v-if=\"banner_title\"></h1>\n            <h3 v-if=\"page_description\" class=\"f-sb text-green\" v-html=\"page_description\"></h3>\n        </div>\n        <div class=\"banner-align-rgt fw-downlaod-btn mt-0\" v-if=\"weekly_snapshot_data.length || monthly_snapshot_data.length\">\n            <a href=\"javascript:void(0)\" class=\"btn-bg-3 br-5 f-b pdf-dwnld\" @click=\"downloadPDF\">\n            Download PDF \n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-download\" viewBox=\"0 0 16 16\">\n            <path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z\"/>\n            <path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z\"/>\n            </svg>\n            </a>\n        </div>\n        <div class=\"clear\"></div>\n    </div>\n</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li  class=\"nav-item\" role=\"presentation\"><a class=\"nav-link\" :class=\"{'active show':currentTab == 'weekly'}\" data-toggle=\"tab\" href=\"#tab-weekly\" @click=\"currentTab = 'weekly'\">Weekly</a></li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"custom-banner no-bg fw-banner\" :class=\"{'monthly-ranking':!page_image}\" :style=\"(page_image)?{ 'background-image': 'url('+page_image+')'}:{}\">\n    <div class=\"container\">\n        <div class=\"banner-align-lft fw-title\">\n            <h1 class=\"f-b\" v-html=\"banner_title\" v-if=\"banner_title\"></h1>\n            <h3 v-if=\"page_description\" class=\"f-sb text-green\" v-html=\"page_description\"></h3>\n        </div>\n        <div class=\"banner-align-rgt fw-downlaod-btn mt-0\" v-if=\"weekly_snapshot_data.length || monthly_snapshot_data.length\">\n            <a href=\"javascript:void(0)\" class=\"btn-bg-3 br-5 f-b pdf-dwnld\" @click=\"downloadPDF\">\n            Download PDF \n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-download\" viewBox=\"0 0 16 16\">\n            <path d=\"M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z\"/>\n            <path d=\"M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z\"/>\n            </svg>\n            </a>\n        </div>\n        <div class=\"clear\"></div>\n    </div>\n</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <li  class=\"nav-item\" role=\"presentation\"><a class=\"nav-link\" :class=\"{'active show':currentTab == 'weekly'}\" data-toggle=\"tab\" href=\"#tab-weekly\" @click=\"currentTab = 'weekly'\">Weekly</a></li> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["nav-link", {
       'active show': $data.currentTab === 'weekly'
     }]),
@@ -39181,8 +39254,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $options.switchTab('weekly');
     }),
-    href: $options.generateURL('weekly')
-  }, " Weekly ", 10 /* CLASS, PROPS */, _hoisted_9)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    href: _ctx.getURLParams('fund_type_id') ? $options.generateURL('weekly') : '#'
+  }, " Weekly ", 10 /* CLASS, PROPS */, _hoisted_11)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["nav-link", {
       'active show': $data.currentTab === 'monthly'
     }]),
@@ -39190,13 +39263,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $options.switchTab('monthly');
     }),
-    href: $options.generateURL('monthly')
-  }, " Monthly ", 10 /* CLASS, PROPS */, _hoisted_11)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT WEEKLY TAB START "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    href: _ctx.getURLParams('fund_type_id') ? $options.generateURL('monthly') : '#'
+  }, " Monthly ", 10 /* CLASS, PROPS */, _hoisted_13)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT WEEKLY TAB START "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "tab-weekly",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["tab-pane fade in", {
       'active show': $data.currentTab == 'weekly'
     }])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
     placeholder: "As On Date",
     "class": "",
     modelValue: $data.selectedDateWeekly,
@@ -39208,7 +39281,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     autoApply: true,
     range: false,
     maxDate: $options.maxDateRang
-  }, null, 8 /* PROPS */, ["modelValue", "maxDate"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, null, 8 /* PROPS */, ["modelValue", "maxDate"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     disabled: _ctx.loading || _ctx.process,
     "class": "",
     label: "name",
@@ -39227,20 +39300,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "block-keys": ['Tab', 'Enter', 'backspace'],
     "max-height": 150,
     showNoResults: true
-  }, null, 8 /* PROPS */, ["disabled", "modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 8 /* PROPS */, ["disabled", "modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.selectedCategoryWeekly = $event;
     }),
     id: "ps-weekly-return",
     "class": "custom-input"
-  }, _hoisted_27, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.selectedCategoryWeekly]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, _hoisted_29, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.selectedCategoryWeekly]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "perform-submit money_title_btn btn",
     onClick: _cache[5] || (_cache[5] = function () {
       return $options.getWeeklySnapshot && $options.getWeeklySnapshot.apply($options, arguments);
     }),
     disabled: !$data.selectedDateWeekly || !$data.selectedFundClassificationWeekly || !$data.selectedCategoryWeekly || $data.processWeekly
-  }, "Submit", 8 /* PROPS */, _hoisted_29)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"perform-snapshot-submit\">\n                                        <div class=\"col-12 text-right px-0\">\n                                            <button type=\"button\" class=\"perform-submit money_title_btn btn\" @click=\"getWeeklySnapshot\" :disabled=\"!selectedDateWeekly || !selectedFundClassificationWeekly || !selectedCategoryWeekly || processWeekly\">Submit</button>\n                                        </div>\n                                    </div> ")]), $data.weekly_snapshot_data.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [_hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Type of Fund : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.selectedFundClassificationWeekly.name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("As On : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formattedDate($data.selectedDateWeekly)), 1 /* TEXT */)])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_ctx.dataCategoryWeekly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
+  }, "Submit", 8 /* PROPS */, _hoisted_31)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"perform-snapshot-submit\">\n                                        <div class=\"col-12 text-right px-0\">\n                                            <button type=\"button\" class=\"perform-submit money_title_btn btn\" @click=\"getWeeklySnapshot\" :disabled=\"!selectedDateWeekly || !selectedFundClassificationWeekly || !selectedCategoryWeekly || processWeekly\">Submit</button>\n                                        </div>\n                                    </div> ")]), $data.weekly_snapshot_data.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Type of Fund : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.selectedFundClassificationWeekly.name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("As On : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formattedDate($data.selectedDateWeekly)), 1 /* TEXT */)])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [_ctx.dataCategoryWeekly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKey == 'fund_name' && $data.ascending,
@@ -39249,7 +39322,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[6] || (_cache[6] = function ($event) {
       return $options.sortTableW('fund_name');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Name "), _hoisted_34], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'indices' || _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Name "), _hoisted_36], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'indices' || _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
     key: 1,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKey == 'indices_name' && $data.ascending,
@@ -39258,61 +39331,65 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[7] || (_cache[7] = function ($event) {
       return $options.sortTableW('indices_name');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Index Name "), _hoisted_35], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Index Name "), _hoisted_37], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
     key: 2,
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKey == '5DAYS' && $data.ascending,
       'sorting_desc': $data.sortKey == '5DAYS' && !$data.ascending
     }]),
     onClick: _cache[8] || (_cache[8] = function ($event) {
       return $options.sortTableW('5DAYS');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Daily "), _hoisted_36], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Daily "), _hoisted_38], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKey == '7DAYS' && $data.ascending,
       'sorting_desc': $data.sortKey == '7DAYS' && !$data.ascending
     }]),
     onClick: _cache[9] || (_cache[9] = function ($event) {
       return $options.sortTableW('7DAYS');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("7 Days "), _hoisted_37], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 7 Days "), _hoisted_39], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKey == '14DAYS' && $data.ascending,
       'sorting_desc': $data.sortKey == '14DAYS' && !$data.ascending
     }]),
     onClick: _cache[10] || (_cache[10] = function ($event) {
       return $options.sortTableW('14DAYS');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("14 Days "), _hoisted_38], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 14 Days "), _hoisted_40], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKey == '30DAYS' && $data.ascending,
       'sorting_desc': $data.sortKey == '30DAYS' && !$data.ascending
     }]),
     onClick: _cache[11] || (_cache[11] = function ($event) {
       return $options.sortTableW('30DAYS');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("30 Days "), _hoisted_39], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 30 Days "), _hoisted_41], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKey == '60DAYS' && $data.ascending,
       'sorting_desc': $data.sortKey == '60DAYS' && !$data.ascending
     }]),
     onClick: _cache[12] || (_cache[12] = function ($event) {
       return $options.sortTableW('60DAYS');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("60 Days "), _hoisted_40], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.weekly_snapshot_data, function (data, index) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 60 Days "), _hoisted_42], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [$data.weekly_snapshot_data.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 0
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.weekly_snapshot_data, function (data, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: index
-    }, [_ctx.dataCategoryWeekly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    }, [_ctx.dataCategoryWeekly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
       "class": "text-white",
       href: "/fund-performance?fund_code=".concat(encodeURIComponent(data.fund_code)),
       target: "_blank"
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_42)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'indices' || _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.indices_name), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'return' && data['5DAYS'] != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_44, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number(data['5DAYS'].toFixed(3)).toFixed(2)), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<td v-else>0.00</td> "), data['14DAYS'] != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number(data['7DAYS'].toFixed(3)).toFixed(2)), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_46, "0.00")), data['14DAYS'] != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number(data['14DAYS'].toFixed(3)).toFixed(2)), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_48, "0.00")), data['30DAYS'] != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number(data['30DAYS'].toFixed(3)).toFixed(2)), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_50, "0.00")), data['60DAYS'] != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number(data['60DAYS'].toFixed(3)).toFixed(2)), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_52, "0.00"))]);
-  }), 128 /* KEYED_FRAGMENT */)), $data.processWeekly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_55, _hoisted_59))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT WEEKLY TAB END "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT MONTHLY TAB START "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_44)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'indices' || _ctx.dataCategoryWeekly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.indices_name), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.dataCategoryWeekly == 'return' && data['5DAYS'] !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['5DAYS'] !== 'N/A' ? Number(data['5DAYS']).toFixed(2) : ''), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<td v-else>0.00</td> "), data['14DAYS'] !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['7DAYS'] !== 'N/A' ? Number(data['7DAYS']).toFixed(2) : ''), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_48, "0.00")), data['14DAYS'] !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['14DAYS'] !== 'N/A' ? Number(data['14DAYS']).toFixed(2) : ''), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_50, "0.00")), data['30DAYS'] !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['30DAYS'] !== 'N/A' ? Number(data['30DAYS']).toFixed(2) : ''), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_52, "0.00")), data['60DAYS'] !== null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['60DAYS'] !== 'N/A' ? Number(data['60DAYS']).toFixed(2) : ''), 1 /* TEXT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_54, "0.00"))]);
+  }), 128 /* KEYED_FRAGMENT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 1
+  }, [!$data.processWeekly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_55, _hoisted_57)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */)), $data.processWeekly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_59, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_60, _hoisted_64))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT WEEKLY TAB END "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT MONTHLY TAB START "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "tab-monthly",
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["tab-pane fade", {
       'active show': $data.currentTab == 'monthly'
     }])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_60, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_63, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_64, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_69, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Datepicker, {
     placeholder: "As On Date",
     "class": "",
     modelValue: $data.selectedDateMonthly,
@@ -39324,7 +39401,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     autoApply: true,
     range: false,
     maxDate: $options.maxDateRang
-  }, null, 8 /* PROPS */, ["modelValue", "maxDate"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
+  }, null, 8 /* PROPS */, ["modelValue", "maxDate"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_70, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_multiselect, {
     disabled: _ctx.loading || _ctx.process,
     "class": "",
     label: "name",
@@ -39343,20 +39420,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "block-keys": ['Tab', 'Enter', 'backspace'],
     "max-height": 150,
     showNoResults: true
-  }, null, 8 /* PROPS */, ["disabled", "modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+  }, null, 8 /* PROPS */, ["disabled", "modelValue", "options"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
       return $data.selectedCategoryMonthly = $event;
     }),
     id: "ps-monthly-return",
     "class": "custom-input"
-  }, _hoisted_72, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.selectedCategoryMonthly]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, _hoisted_77, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.selectedCategoryMonthly]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" {{processMonthly}} "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_78, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "perform-submit money_title_btn btn",
     onClick: _cache[16] || (_cache[16] = function () {
       return $options.getMonthlySnapshot && $options.getMonthlySnapshot.apply($options, arguments);
     }),
     disabled: !$data.selectedDateMonthly || !$data.selectedFundClassificationMonthly || !$data.selectedCategoryMonthly || $data.processMonthly
-  }, "Submit", 8 /* PROPS */, _hoisted_74)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"perform-snapshot-submit\">\n                                        <div class=\"col-12 text-right px-0\">\n                                            <button type=\"button\" class=\"perform-submit money_title_btn btn\" @click=\"getMonthlySnapshot\" :disabled=\"!selectedDateMonthly || !selectedFundClassificationMonthly || !selectedCategoryMonthly || processMonthly\">Submit</button>\n                                        </div>\n                                    </div> ")]), $data.monthly_snapshot_data.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_75, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [_hoisted_76, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Type of Fund : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.selectedFundClassificationMonthly.name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("As On : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(this.aaum_date ? $options.formattedDate(this.aaum_date) : $options.formattedDate($data.selectedDateMonthly)), 1 /* TEXT */)])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_77, [$data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' || $data.dataCategoryMonthly == 'return_less_index' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_78, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [$data.dataCategoryMonthly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
+  }, "Submit", 8 /* PROPS */, _hoisted_79)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"perform-snapshot-submit\">\n                                        <div class=\"col-12 text-right px-0\">\n                                            <button type=\"button\" class=\"perform-submit money_title_btn btn\" @click=\"getMonthlySnapshot\" :disabled=\"!selectedDateMonthly || !selectedFundClassificationMonthly || !selectedCategoryMonthly || processMonthly\">Submit</button>\n                                        </div>\n                                    </div> ")]), $data.monthly_snapshot_data.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_80, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [_hoisted_81, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Type of Fund : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.selectedFundClassificationMonthly.name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("As On : "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(this.aaum_date ? $options.formattedDate(this.aaum_date) : $options.formattedDate($data.selectedDateMonthly)), 1 /* TEXT */)])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_82, [$data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' || $data.dataCategoryMonthly == 'return_less_index' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_83, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [$data.dataCategoryMonthly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKeyM == 'fund_name' && $data.ascendingM,
@@ -39365,7 +39442,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[17] || (_cache[17] = function ($event) {
       return $options.sortTableM('fund_name');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Name "), _hoisted_79], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Name "), _hoisted_84], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("th", {
     key: 1,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKeyM == 'indices_name' && $data.ascendingM,
@@ -39374,47 +39451,51 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[18] || (_cache[18] = function ($event) {
       return $options.sortTableM('indices_name');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Index Name "), _hoisted_80], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Index Name "), _hoisted_85], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKeyM == 'sixmonths' && $data.ascendingM,
       'sorting_desc': $data.sortKeyM == 'sixmonths' && !$data.ascendingM
     }]),
     onClick: _cache[19] || (_cache[19] = function ($event) {
       return $options.sortTableM('sixmonths');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Six Months "), _hoisted_81], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Six Months "), _hoisted_86], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKeyM == 'oneyear' && $data.ascendingM,
       'sorting_desc': $data.sortKeyM == 'oneyear' && !$data.ascendingM
     }]),
     onClick: _cache[20] || (_cache[20] = function ($event) {
       return $options.sortTableM('oneyear');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("One Year "), _hoisted_82], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" One Year "), _hoisted_87], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKeyM == 'twoyear' && $data.ascendingM,
       'sorting_desc': $data.sortKeyM == 'twoyear' && !$data.ascendingM
     }]),
     onClick: _cache[21] || (_cache[21] = function ($event) {
       return $options.sortTableM('twoyear');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Two Year "), _hoisted_83], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Two Year "), _hoisted_88], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': $data.sortKeyM == 'threeyear' && $data.ascendingM,
       'sorting_desc': $data.sortKeyM == 'threeyear' && !$data.ascendingM
     }]),
     onClick: _cache[22] || (_cache[22] = function ($event) {
       return $options.sortTableM('threeyear');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Three Year "), _hoisted_84], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.monthly_snapshot_data, function (data, index) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Three Year "), _hoisted_89], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <tr v-for=\"(data,index) in monthly_snapshot_data\" :key=\"index\">\n                                                <td v-if=\"dataCategoryMonthly != 'indices'\"><a class=\"text-white\" :href=\"`/fund-performance?fund_code=${encodeURIComponent(data.fund_code)}`\" target=\"_blank\">{{ data.fund_name }}</a></td>\n                                                <td v-if=\"dataCategoryMonthly == 'indices' || dataCategoryMonthly == 'return'\">{{ data.indices_name }}</td>\n                                                <td class=\"text_right\">{{ data['sixmonths'] !== null && data['sixmonths'] !== 'N/A' ? Number(data['sixmonths']).toFixed(2) : 'N/A' }}</td>\n                                                <td class=\"text_right\">{{ data['oneyear'] !== null && data['oneyear'] !== 'N/A' ? Number(data['oneyear']).toFixed(2) : 'N/A' }}</td>\n                                                <td class=\"text_right\">{{ data['twoyear'] !== null && data['twoyear'] !== 'N/A' ? Number(data['twoyear']).toFixed(2) : 'N/A' }}</td>\n                                                <td class=\"text_right\">{{ data['threeyear'] !== null && data['threeyear'] !== 'N/A' ? Number(data['threeyear']).toFixed(2) : 'N/A' }}</td>\n\n                                            </tr> "), $data.monthly_snapshot_data.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 0
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.monthly_snapshot_data, function (data, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: index
-    }, [$data.dataCategoryMonthly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_85, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    }, [$data.dataCategoryMonthly != 'indices' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_90, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
       "class": "text-white",
       href: "/fund-performance?fund_code=".concat(encodeURIComponent(data.fund_code)),
       target: "_blank"
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_86)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_87, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.indices_name), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['sixmonths'] != _ctx.NULL ? Number(data['sixmonths'].toFixed(3)).toFixed(2) : 0), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['oneyear'] != _ctx.NULL ? Number(data['oneyear'].toFixed(3)).toFixed(2) : 0), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['twoyear'] != _ctx.NULL ? Number(data['twoyear'].toFixed(3)).toFixed(2) : 0), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['threeyear'] != _ctx.NULL ? Number(data['threeyear'].toFixed(3)).toFixed(2) : 0), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */)), $data.processMonthly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_88, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_89, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_90, _hoisted_94))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'corpus_change' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_95, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_91)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'indices' || $data.dataCategoryMonthly == 'return' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_92, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.indices_name), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_93, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['sixmonths'] !== null && data['sixmonths'] !== 'N/A' ? parseFloat(Number(data['sixmonths'])).toFixed(2) : ' '), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_94, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['oneyear'] !== null && data['oneyear'] !== 'N/A' ? Number(data['oneyear']).toFixed(2) : ' '), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_95, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['twoyear'] !== null && data['twoyear'] !== 'N/A' ? Number(data['twoyear']).toFixed(2) : ' '), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_96, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['threeyear'] !== null && data['threeyear'] !== 'N/A' ? Number(data['threeyear']).toFixed(2) : ' '), 1 /* TEXT */)]);
+  }), 128 /* KEYED_FRAGMENT */)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 1
+  }, [!$data.processMonthly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_97, _hoisted_99)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */)), $data.processMonthly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_100, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_101, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_102, _hoisted_106))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.dataCategoryMonthly == 'corpus_change' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': _ctx.sortKeyC == 'fund_name' && $data.ascendingC,
       'sorting_desc': _ctx.sortKeyC == 'fund_name' && !$data.ascendingC
@@ -39422,39 +39503,39 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[23] || (_cache[23] = function ($event) {
       return $options.sortTableC('fund_name');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Name "), _hoisted_96], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Fund Name "), _hoisted_108], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': _ctx.sortKeyC == 'corpus_entry' && $data.ascendingC,
       'sorting_desc': _ctx.sortKeyC == 'corpus_entry' && !$data.ascendingC
     }]),
     onClick: _cache[24] || (_cache[24] = function ($event) {
       return $options.sortTableC('corpus_entry');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Current Amount (Rs.in Crores) "), _hoisted_97], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Current Amount (Rs.in Crores) "), _hoisted_109], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': _ctx.sortKeyC == 'corpus_change' && $data.ascendingC,
       'sorting_desc': _ctx.sortKeyC == 'corpus_change' && !$data.ascendingC
     }]),
     onClick: _cache[25] || (_cache[25] = function ($event) {
       return $options.sortTableC('corpus_change');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Change Amount (Rs.in Crores) "), _hoisted_98], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Change Amount (Rs.in Crores) "), _hoisted_110], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting text_center", {
       'sorting_asc': _ctx.sortKeyC == 'percentage_change' && $data.ascendingC,
       'sorting_desc': _ctx.sortKeyC == 'percentage_change' && !$data.ascendingC
     }]),
     onClick: _cache[26] || (_cache[26] = function ($event) {
       return $options.sortTableC('percentage_change');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("(%) Change "), _hoisted_99], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.monthly_snapshot_data, function (data, index) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" (%) Change "), _hoisted_111], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.monthly_snapshot_data, function (data, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
       "class": "text-white",
       href: "/fund-performance?fund_code=".concat(encodeURIComponent(data.fund_code)),
       target: "_blank"
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_100)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((data['corpus_entry'] / 100).toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((data['corpus_change'] / 100).toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['percentage_change'].toFixed(2)), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */)), $data.processMonthly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_101, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_102, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_103, _hoisted_107))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT MONTHLY TAB END ")])])])])])])])])])])], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data.fund_name), 9 /* TEXT, PROPS */, _hoisted_112)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_113, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((data['corpus_entry'] / 100).toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_114, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((data['corpus_change'] / 100).toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_115, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(data['percentage_change'].toFixed(2)), 1 /* TEXT */)]);
+  }), 128 /* KEYED_FRAGMENT */)), $data.processMonthly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_116, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_117, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("svg", _hoisted_118, _hoisted_122))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" PERFORMANCE SNAPSHOT MONTHLY TAB END ")])])])])])])])])])])], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);
 }
 
 /***/ }),
@@ -39494,164 +39575,166 @@ var _hoisted_7 = {
 var _hoisted_8 = {
   "class": "container p-0"
 };
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_9 = {
   "class": "wm_tab"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
-  "class": "active",
-  href: "https://myplexus.com/user-weekly-snapshot"
-}, "Weekly")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
-  href: "https://myplexus.com/user-monthly-snapshot"
-}, "Monthly")])])], -1 /* HOISTED */);
-var _hoisted_10 = {
+};
+var _hoisted_10 = ["href"];
+var _hoisted_11 = ["href"];
+var _hoisted_12 = {
   "class": "snapshot_inner"
 };
-var _hoisted_11 = {
+var _hoisted_13 = {
   "class": "snapshot_header",
   style: {
     "padding": "0 3px"
   }
 };
-var _hoisted_12 = {
+var _hoisted_14 = {
   key: 0
 };
-var _hoisted_13 = {
+var _hoisted_15 = {
   "class": "perform-paramtr monthly-compo-wrap weekly-snapshot-cols"
 };
-var _hoisted_14 = {
+var _hoisted_16 = {
   "class": "row perform-pmtr-lumpsum"
 };
-var _hoisted_15 = {
+var _hoisted_17 = {
   "class": "col-lg-4 col-md-12 col-sm-12 box_border_right"
 };
-var _hoisted_16 = {
+var _hoisted_18 = {
   "class": "dy-table-wrap"
 };
-var _hoisted_17 = {
+var _hoisted_19 = {
   "class": "dy-table-block br-5 index_changes_header"
 };
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Index Changes", -1 /* HOISTED */);
-var _hoisted_19 = {
-  "class": "changes_table"
-};
-var _hoisted_20 = {
-  "class": "col-lg-4 col-md-12 col-sm-12"
-};
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Index Changes", -1 /* HOISTED */);
 var _hoisted_21 = {
-  "class": "dy-table-wrap"
+  "class": "changes_table"
 };
 var _hoisted_22 = {
-  "class": "dy-table-block br-5 index_changes_header"
-};
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Currency Changes", -1 /* HOISTED */);
-var _hoisted_24 = {
-  "class": "changes_table"
-};
-var _hoisted_25 = {
   "class": "col-lg-4 col-md-12 col-sm-12"
 };
-var _hoisted_26 = {
+var _hoisted_23 = {
   "class": "dy-table-wrap"
 };
-var _hoisted_27 = {
+var _hoisted_24 = {
   "class": "dy-table-block br-5 index_changes_header"
 };
-var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Commodity Changes", -1 /* HOISTED */);
-var _hoisted_29 = {
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Currency Changes", -1 /* HOISTED */);
+var _hoisted_26 = {
   "class": "changes_table"
 };
-var _hoisted_30 = {
-  "class": "fund-c-analysis mt-4 m-t-30 custom-sort-table monthly-snap-full weekly-snapshot-blocks"
+var _hoisted_27 = {
+  "class": "col-lg-4 col-md-12 col-sm-12"
 };
-var _hoisted_31 = {
-  "class": "container p-0"
-};
-var _hoisted_32 = {
-  "class": "snapshot_inner"
-};
-var _hoisted_33 = {
-  "class": "perform-paramtr c-snapchot-parent"
-};
-var _hoisted_34 = {
-  "class": "row"
-};
-var _hoisted_35 = {
-  "class": "col-lg-12 col-md-12 col-sm-12 perform-pmtr-lumpsum"
-};
-var _hoisted_36 = {
+var _hoisted_28 = {
   "class": "dy-table-wrap"
 };
-var _hoisted_37 = {
-  "class": "dy-table-block br-5 total-table hide-table"
+var _hoisted_29 = {
+  "class": "dy-table-block br-5 index_changes_header"
 };
-var _hoisted_38 = {
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Commodity Changes", -1 /* HOISTED */);
+var _hoisted_31 = {
+  "class": "changes_table"
+};
+var _hoisted_32 = {
+  "class": "fund-c-analysis mt-4 m-t-30 custom-sort-table monthly-snap-full weekly-snapshot-blocks"
+};
+var _hoisted_33 = {
+  "class": "container p-0"
+};
+var _hoisted_34 = {
+  "class": "snapshot_inner"
+};
+var _hoisted_35 = {
+  "class": "perform-paramtr c-snapchot-parent"
+};
+var _hoisted_36 = {
   "class": "row"
 };
+var _hoisted_37 = {
+  "class": "col-lg-12 col-md-12 col-sm-12 perform-pmtr-lumpsum"
+};
+var _hoisted_38 = {
+  "class": "dy-table-wrap"
+};
 var _hoisted_39 = {
-  "class": "col-lg-6 col-md-12 col-sm-12 pl-0 weekly-table-block-one box_border_right"
+  "class": "dy-table-block br-5 total-table hide-table"
 };
 var _hoisted_40 = {
+  "class": "row"
+};
+var _hoisted_41 = {
+  "class": "col-lg-6 col-md-12 col-sm-12 pl-0 weekly-table-block-one box_border_right"
+};
+var _hoisted_42 = {
   "class": "changes_table ws-table-wrap"
 };
-var _hoisted_41 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "dy-table-block br-5 index_changes_header"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Percentage Change by Category of Funds")], -1 /* HOISTED */);
-var _hoisted_42 = {
+var _hoisted_44 = {
   key: 0,
   "class": "table dataTable no-footer table-striped",
   role: "grid"
 };
-var _hoisted_43 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
-var _hoisted_44 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-  "class": "filter__arrow"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-  "class": "ph-arrows-down-up-bold"
-})], -1 /* HOISTED */);
 var _hoisted_45 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "filter__arrow"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ph-arrows-down-up-bold"
 })], -1 /* HOISTED */);
-var _hoisted_46 = ["onClick"];
-var _hoisted_47 = {
+var _hoisted_46 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_47 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "filter__arrow"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ph-arrows-down-up-bold"
+})], -1 /* HOISTED */);
+var _hoisted_48 = ["onClick"];
+var _hoisted_49 = {
   "class": "col-lg-6 col-md-12 col-sm-12 pr-0 weekly-table-block-two"
 };
-var _hoisted_48 = {
+var _hoisted_50 = {
   "class": "changes_table ws-table-wrap"
 };
-var _hoisted_49 = {
+var _hoisted_51 = {
   "class": "main_trer monthly_snap_shot_table"
 };
-var _hoisted_50 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_52 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "dy-table-block br-5 index_changes_header"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "10 Best Performing Schemes")], -1 /* HOISTED */);
-var _hoisted_51 = {
+var _hoisted_53 = {
   "class": "modal-dialog"
 };
-var _hoisted_52 = {
+var _hoisted_54 = {
   "class": "modal-content fund-c-analysis"
 };
-var _hoisted_53 = {
+var _hoisted_55 = {
   "class": "modal-header"
 };
-var _hoisted_54 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", {
+var _hoisted_56 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h6", {
   "class": ""
 }, "Fund Changes", -1 /* HOISTED */);
-var _hoisted_55 = {
+var _hoisted_57 = {
   "class": "modal-body perform-paramtr c-snapchot-parent"
 };
-var _hoisted_56 = {
+var _hoisted_58 = {
   "class": "changes_table dy-table-wrap"
 };
-var _hoisted_57 = {
+var _hoisted_59 = {
   "class": "dy-table-block br-5"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_CustomTable = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("CustomTable");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"custom-banner no-bg fw-banner \" :class=\"{'monthly-ranking weekly-snapshot-banner':!page_image}\" :style=\"(page_image)?{ 'background-image': 'url('+page_image+')'}:{}\">\n        <div class=\"container\">\n            <div class=\"banner-align-lft fw-title\">\n                <h1 class=\"f-b\">{{ page_title }}</h1>\n                <h3 class=\"f-sb text-green\"  v-if=\"from_date && to_date\">Weekly Snapshot Report - {{from_date}} to </h3>\n            </div>\n            <div class=\"clear\"></div>\n        </div>\n    </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_ctx.from_date && _ctx.to_date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_12, "Weekly Snapshot Report: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.from_date) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.addDates), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Indices <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>Closing Value <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"index in index_change\" :key=\"index.name\">\n                                                            <td>{{ index.name }}</td>\n                                                            <td>{{ index.cur_value }}</td>\n                                                            <td>{{ index.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"custom-banner no-bg fw-banner \" :class=\"{'monthly-ranking weekly-snapshot-banner':!page_image}\" :style=\"(page_image)?{ 'background-image': 'url('+page_image+')'}:{}\">\n        <div class=\"container\">\n            <div class=\"banner-align-lft fw-title\">\n                <h1 class=\"f-b\">{{ page_title }}</h1>\n                <h3 class=\"f-sb text-green\"  v-if=\"from_date && to_date\">Weekly Snapshot Report - {{from_date}} to </h3>\n            </div>\n            <div class=\"clear\"></div>\n        </div>\n    </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    "class": "active",
+    href: $options.weeklyUrl
+  }, "Weekly", 8 /* PROPS */, _hoisted_10)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+    href: $options.monthlyUrl
+  }, "Monthly", 8 /* PROPS */, _hoisted_11)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_ctx.from_date && _ctx.to_date ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("p", _hoisted_14, "Weekly Snapshot Report: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.from_date) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.addDates), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Indices <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>Closing Value <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"index in index_change\" :key=\"index.name\">\n                                                            <td>{{ index.name }}</td>\n                                                            <td>{{ index.cur_value }}</td>\n                                                            <td>{{ index.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
     id: "best-weekly-index",
     columns: [{
       name: 'Indices',
@@ -39670,7 +39753,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     default_sort_key: "name",
     order_ascending: true,
     tabindex: "2"
-  }, null, 8 /* PROPS */, ["rows"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Currency <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>₹ <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"currency in currency_change\" :key=\"currency.name\">\n                                                        <td>{{ currency.name }}</td>\n                                                        <td>{{ currency.cur_value }}</td>\n                                                        <td>{{ currency.PER_CHANGE.toFixed(2) }}</td>\n                                                    </tr>\n                                                    </tbody>                                                    \n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
+  }, null, 8 /* PROPS */, ["rows"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                            <th class=\"w-50\">Currency <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th>₹ <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                            <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"currency in currency_change\" :key=\"currency.name\">\n                                                        <td>{{ currency.name }}</td>\n                                                        <td>{{ currency.cur_value }}</td>\n                                                        <td>{{ currency.PER_CHANGE.toFixed(2) }}</td>\n                                                    </tr>\n                                                    </tbody>                                                    \n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
     id: "best-weekly-currency",
     columns: [{
       name: 'Currency',
@@ -39689,7 +39772,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     default_sort_key: "name",
     order_ascending: true,
     tabindex: "2"
-  }, null, 8 /* PROPS */, ["rows"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                        <th class=\"w-50\">Commodity <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        <th>₹ <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"commodity in commodity_change\" :key=\"commodity.name\">\n                                                            <td>{{ commodity.name }}</td>\n                                                            <td>{{ commodity.cur_value }}</td>\n                                                            <td>{{ commodity.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
+  }, null, 8 /* PROPS */, ["rows"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n                                                    <thead>\n                                                        <tr>\n                                                        <th class=\"w-50\">Commodity <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        <th>₹ <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        <th style=\"min-width: 130px;\">% Change <span class=\"filter__arrow\"><i class=\"ph-arrows-down-up-bold\"></i></span></th>\n                                                        </tr>\n                                                    </thead>\n                                                    <tbody>\n                                                        <tr v-for=\"commodity in commodity_change\" :key=\"commodity.name\">\n                                                            <td>{{ commodity.name }}</td>\n                                                            <td>{{ commodity.cur_value }}</td>\n                                                            <td>{{ commodity.PER_CHANGE.toFixed(2) }}</td>\n                                                        </tr>\n                                                    </tbody>\n                                                </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
     "class": "table-responsive table-striped box-shadow",
     id: "best-weekly-commodity",
     columns: [{
@@ -39709,11 +39792,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     default_sort_key: "name",
     order_ascending: true,
     tabindex: "2"
-  }, null, 8 /* PROPS */, ["rows"])])])])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 8 /* PROPS */, ["rows"])])])])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["table-top", {
       'opened': $data.showTable1
     }])
-  }, [_hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"align-right-block\"><img src=\"../../images/toggle-arrow.png\" /></div> ")], 2 /* CLASS */), $data.showTable1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  }, [_hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"align-right-block\"><img src=\"../../images/toggle-arrow.png\" /></div> ")], 2 /* CLASS */), $data.showTable1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKey == 'FUNDTYPE' && $data.ascending,
       'sorting_desc': $data.sortKey == 'FUNDTYPE' && !$data.ascending
@@ -39724,7 +39807,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $options.sortTable('FUNDTYPE');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Category "), _hoisted_43], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Fund Category "), _hoisted_45], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKey == 'CHANGEVALUE' && $data.ascending,
       'sorting_desc': $data.sortKey == 'CHANGEVALUE' && !$data.ascending
@@ -39732,7 +39815,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $options.sortTable('CHANGEVALUE');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Average "), _hoisted_44], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Average "), _hoisted_46], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["sorting", {
       'sorting_asc': $data.sortKey == 'MEDIANVAL' && $data.ascending,
       'sorting_desc': $data.sortKey == 'MEDIANVAL' && !$data.ascending
@@ -39740,7 +39823,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[2] || (_cache[2] = function ($event) {
       return $options.sortTable('MEDIANVAL');
     })
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Median "), _hoisted_45], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.per_changes, function (fund_type) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Median "), _hoisted_47], 2 /* CLASS */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.per_changes, function (fund_type) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: fund_type.FUNDTYPE
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -39748,12 +39831,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onClick: function onClick($event) {
         $data.selectedFundType = fund_type.FundTypeID;
       }
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.FUNDTYPE), 9 /* TEXT, PROPS */, _hoisted_46)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.CHANGEVALUE.toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.MEDIANVAL.toFixed(2)), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.FUNDTYPE), 9 /* TEXT, PROPS */, _hoisted_48)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.CHANGEVALUE.toFixed(2)), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(fund_type.MEDIANVAL.toFixed(2)), 1 /* TEXT */)]);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["table-top", {
       'opened': $data.showTable2
     }])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [_hoisted_50, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"align-right-block\"><img src=\"../../images/toggle-arrow.png\" /></div> "), $data.showTable2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_CustomTable, {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [_hoisted_52, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"align-right-block\"><img src=\"../../images/toggle-arrow.png\" /></div> "), $data.showTable2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_CustomTable, {
     key: 0,
     id: "best-funds",
     columns: [{
@@ -39777,14 +39860,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([$data.modalClasses, "fade"]),
     id: "reject",
     role: "dialog"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [_hoisted_54, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_hoisted_56, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "close",
     onClick: _cache[3] || (_cache[3] = function ($event) {
       $options.toggle();
       $data.selectedFundType = '';
     })
-  }, "×")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n\t\t\t\t\t\t\t\t\t\t\t<thead>\n                                            <tr>\n                                                <th style=\"width: 80% !important;\">Fund Name</th>\n                                                <th style=\"min-width: 130px;\">% Change</th>\n                                            </tr>\n\t\t\t\t\t\t\t\t\t\t\t</thead>\n                                            <tbody v-if=\"fund_change.length && !loading\">\n                                                <tr v-for=\"index in fund_change\" :key=\"index.fund_code\">\n                                                    <td>{{ index.fund_name }}</td>\n                                                    <td>{{ index.change_value.toFixed(2) }}</td>\n                                                </tr>\n                                            </tbody>\n                                        </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
+  }, "×")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_58, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_59, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("<table class=\"table table-responsive table-striped box-shadow\">\n\t\t\t\t\t\t\t\t\t\t\t<thead>\n                                            <tr>\n                                                <th style=\"width: 80% !important;\">Fund Name</th>\n                                                <th style=\"min-width: 130px;\">% Change</th>\n                                            </tr>\n\t\t\t\t\t\t\t\t\t\t\t</thead>\n                                            <tbody v-if=\"fund_change.length && !loading\">\n                                                <tr v-for=\"index in fund_change\" :key=\"index.fund_code\">\n                                                    <td>{{ index.fund_name }}</td>\n                                                    <td>{{ index.change_value.toFixed(2) }}</td>\n                                                </tr>\n                                            </tbody>\n                                        </table> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_CustomTable, {
     id: "best-weekly-funds-changes",
     columns: [{
       name: 'Fund Name',
@@ -52444,7 +52527,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -52467,7 +52549,7 @@ function initialState() {
     indices: [],
     currencies: [],
     comodities: [],
-    apiURL: process.env.MIX_APP_ENV == 'local' ? process.env.MIX_API_URL_LOCAL : 'https://www.myplexus.com'
+    apiURL:  false ? 0 : 'https://www.myplexus.com'
   };
 }
 var getters = {
@@ -114944,7 +115026,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Calculators_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Calculators.vue?vue&type=script&lang=js */ "./resources/js/components/Calculators.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _Calculators_vue_vue_type_style_index_1_id_266e9fd4_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Calculators.vue?vue&type=style&index=1&id=266e9fd4&lang=css */ "./resources/js/components/Calculators.vue?vue&type=style&index=1&id=266e9fd4&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -114953,7 +115035,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_Calculators_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Calculators_vue_vue_type_template_id_266e9fd4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Calculators.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_Calculators_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Calculators_vue_vue_type_template_id_266e9fd4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Calculators.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -114975,13 +115057,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _CustomTable_vue_vue_type_template_id_7e1ed9c4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CustomTable.vue?vue&type=template&id=7e1ed9c4 */ "./resources/js/components/Common/CustomTable.vue?vue&type=template&id=7e1ed9c4");
 /* harmony import */ var _CustomTable_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CustomTable.vue?vue&type=script&lang=js */ "./resources/js/components/Common/CustomTable.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_CustomTable_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CustomTable_vue_vue_type_template_id_7e1ed9c4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Common/CustomTable.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_CustomTable_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CustomTable_vue_vue_type_template_id_7e1ed9c4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Common/CustomTable.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115004,7 +115086,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _loading_vue_vue_type_template_id_397c4c43_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./loading.vue?vue&type=template&id=397c4c43&scoped=true */ "./resources/js/components/Common/loading.vue?vue&type=template&id=397c4c43&scoped=true");
 /* harmony import */ var _loading_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loading.vue?vue&type=script&lang=js */ "./resources/js/components/Common/loading.vue?vue&type=script&lang=js");
 /* harmony import */ var _loading_vue_vue_type_style_index_0_id_397c4c43_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loading.vue?vue&type=style&index=0&id=397c4c43&scoped=true&lang=css */ "./resources/js/components/Common/loading.vue?vue&type=style&index=0&id=397c4c43&scoped=true&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115012,7 +115094,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_loading_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_loading_vue_vue_type_template_id_397c4c43_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-397c4c43"],['__file',"resources/js/components/Common/loading.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_loading_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_loading_vue_vue_type_template_id_397c4c43_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-397c4c43"],['__file',"resources/js/components/Common/loading.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115036,7 +115118,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CompareScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CompareScheme.vue?vue&type=script&lang=js */ "./resources/js/components/CompareScheme.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _CompareScheme_vue_vue_type_style_index_1_id_295014e2_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CompareScheme.vue?vue&type=style&index=1&id=295014e2&lang=css */ "./resources/js/components/CompareScheme.vue?vue&type=style&index=1&id=295014e2&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115045,7 +115127,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CompareScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CompareScheme_vue_vue_type_template_id_295014e2__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CompareScheme.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CompareScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CompareScheme_vue_vue_type_template_id_295014e2__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CompareScheme.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115069,7 +115151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CompareSchemeHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CompareSchemeHome.vue?vue&type=script&lang=js */ "./resources/js/components/CompareSchemeHome.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _CompareSchemeHome_vue_vue_type_style_index_1_id_0d9118e4_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CompareSchemeHome.vue?vue&type=style&index=1&id=0d9118e4&lang=css */ "./resources/js/components/CompareSchemeHome.vue?vue&type=style&index=1&id=0d9118e4&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115078,7 +115160,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CompareSchemeHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CompareSchemeHome_vue_vue_type_template_id_0d9118e4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CompareSchemeHome.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CompareSchemeHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CompareSchemeHome_vue_vue_type_template_id_0d9118e4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CompareSchemeHome.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115102,7 +115184,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CorpusDetails_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CorpusDetails.vue?vue&type=script&lang=js */ "./resources/js/components/CorpusDetails.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _CorpusDetails_vue_vue_type_style_index_1_id_264a9bff_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CorpusDetails.vue?vue&type=style&index=1&id=264a9bff&lang=css */ "./resources/js/components/CorpusDetails.vue?vue&type=style&index=1&id=264a9bff&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115111,7 +115193,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CorpusDetails_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CorpusDetails_vue_vue_type_template_id_264a9bff__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CorpusDetails.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_CorpusDetails_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_CorpusDetails_vue_vue_type_template_id_264a9bff__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/CorpusDetails.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115135,7 +115217,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FundCompositionSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FundCompositionSnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/FundCompositionSnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _FundCompositionSnapshot_vue_vue_type_style_index_1_id_1da2d96e_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FundCompositionSnapshot.vue?vue&type=style&index=1&id=1da2d96e&lang=css */ "./resources/js/components/FundCompositionSnapshot.vue?vue&type=style&index=1&id=1da2d96e&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115144,7 +115226,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_FundCompositionSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundCompositionSnapshot_vue_vue_type_template_id_1da2d96e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundCompositionSnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_FundCompositionSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundCompositionSnapshot_vue_vue_type_template_id_1da2d96e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundCompositionSnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115168,7 +115250,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FundPerformance_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FundPerformance.vue?vue&type=script&lang=js */ "./resources/js/components/FundPerformance.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _FundPerformance_vue_vue_type_style_index_1_id_15d4d1e0_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FundPerformance.vue?vue&type=style&index=1&id=15d4d1e0&lang=css */ "./resources/js/components/FundPerformance.vue?vue&type=style&index=1&id=15d4d1e0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115177,7 +115259,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_FundPerformance_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundPerformance_vue_vue_type_template_id_15d4d1e0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundPerformance.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_FundPerformance_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundPerformance_vue_vue_type_template_id_15d4d1e0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundPerformance.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115200,7 +115282,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FundPortfolio_vue_vue_type_template_id_097db228__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FundPortfolio.vue?vue&type=template&id=097db228 */ "./resources/js/components/FundPortfolio.vue?vue&type=template&id=097db228");
 /* harmony import */ var _FundPortfolio_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FundPortfolio.vue?vue&type=script&lang=js */ "./resources/js/components/FundPortfolio.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115208,7 +115290,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_FundPortfolio_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundPortfolio_vue_vue_type_template_id_097db228__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundPortfolio.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_FundPortfolio_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_FundPortfolio_vue_vue_type_template_id_097db228__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/FundPortfolio.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115231,7 +115313,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _KnowYourScheme_vue_vue_type_template_id_a9d48b64__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./KnowYourScheme.vue?vue&type=template&id=a9d48b64 */ "./resources/js/components/KnowYourScheme.vue?vue&type=template&id=a9d48b64");
 /* harmony import */ var _KnowYourScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KnowYourScheme.vue?vue&type=script&lang=js */ "./resources/js/components/KnowYourScheme.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115239,7 +115321,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_KnowYourScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_KnowYourScheme_vue_vue_type_template_id_a9d48b64__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/KnowYourScheme.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_KnowYourScheme_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_KnowYourScheme_vue_vue_type_template_id_a9d48b64__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/KnowYourScheme.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115263,7 +115345,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MonthlyRanking_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MonthlyRanking.vue?vue&type=script&lang=js */ "./resources/js/components/MonthlyRanking.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _MonthlyRanking_vue_vue_type_style_index_1_id_5067aa14_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MonthlyRanking.vue?vue&type=style&index=1&id=5067aa14&lang=css */ "./resources/js/components/MonthlyRanking.vue?vue&type=style&index=1&id=5067aa14&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115272,7 +115354,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_MonthlyRanking_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MonthlyRanking_vue_vue_type_template_id_5067aa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MonthlyRanking.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_MonthlyRanking_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MonthlyRanking_vue_vue_type_template_id_5067aa14__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MonthlyRanking.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115296,7 +115378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MonthlySnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/MonthlySnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _MonthlySnapshot_vue_vue_type_style_index_1_id_9782ce54_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MonthlySnapshot.vue?vue&type=style&index=1&id=9782ce54&lang=css */ "./resources/js/components/MonthlySnapshot.vue?vue&type=style&index=1&id=9782ce54&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115305,7 +115387,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_MonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MonthlySnapshot_vue_vue_type_template_id_9782ce54__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MonthlySnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_MonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MonthlySnapshot_vue_vue_type_template_id_9782ce54__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MonthlySnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115327,13 +115409,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _MutualFundDirectory_vue_vue_type_template_id_26356559__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MutualFundDirectory.vue?vue&type=template&id=26356559 */ "./resources/js/components/MutualFundDirectory.vue?vue&type=template&id=26356559");
 /* harmony import */ var _MutualFundDirectory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MutualFundDirectory.vue?vue&type=script&lang=js */ "./resources/js/components/MutualFundDirectory.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_MutualFundDirectory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MutualFundDirectory_vue_vue_type_template_id_26356559__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MutualFundDirectory.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_MutualFundDirectory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_MutualFundDirectory_vue_vue_type_template_id_26356559__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/MutualFundDirectory.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115357,7 +115439,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PerformanceSnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/PerformanceSnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _PerformanceSnapshot_vue_vue_type_style_index_1_id_2cea4df9_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PerformanceSnapshot.vue?vue&type=style&index=1&id=2cea4df9&lang=css */ "./resources/js/components/PerformanceSnapshot.vue?vue&type=style&index=1&id=2cea4df9&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115366,7 +115448,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_PerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PerformanceSnapshot_vue_vue_type_template_id_2cea4df9__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/PerformanceSnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_PerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PerformanceSnapshot_vue_vue_type_template_id_2cea4df9__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/PerformanceSnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115390,7 +115472,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PerformanceSynopsis_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PerformanceSynopsis.vue?vue&type=script&lang=js */ "./resources/js/components/PerformanceSynopsis.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _PerformanceSynopsis_vue_vue_type_style_index_1_id_6a2a25c9_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PerformanceSynopsis.vue?vue&type=style&index=1&id=6a2a25c9&lang=css */ "./resources/js/components/PerformanceSynopsis.vue?vue&type=style&index=1&id=6a2a25c9&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115399,7 +115481,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_PerformanceSynopsis_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PerformanceSynopsis_vue_vue_type_template_id_6a2a25c9__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/PerformanceSynopsis.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_PerformanceSynopsis_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_PerformanceSynopsis_vue_vue_type_template_id_6a2a25c9__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/PerformanceSynopsis.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115421,13 +115503,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _InflationCalculator_vue_vue_type_template_id_f1662a48__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InflationCalculator.vue?vue&type=template&id=f1662a48 */ "./resources/js/components/SIP/InflationCalculator.vue?vue&type=template&id=f1662a48");
 /* harmony import */ var _InflationCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InflationCalculator.vue?vue&type=script&lang=js */ "./resources/js/components/SIP/InflationCalculator.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_InflationCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_InflationCalculator_vue_vue_type_template_id_f1662a48__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/InflationCalculator.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_InflationCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_InflationCalculator_vue_vue_type_template_id_f1662a48__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/InflationCalculator.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115450,7 +115532,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _RetirementCalulator_vue_vue_type_template_id_2809b5d2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RetirementCalulator.vue?vue&type=template&id=2809b5d2 */ "./resources/js/components/SIP/RetirementCalulator.vue?vue&type=template&id=2809b5d2");
 /* harmony import */ var _RetirementCalulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RetirementCalulator.vue?vue&type=script&lang=js */ "./resources/js/components/SIP/RetirementCalulator.vue?vue&type=script&lang=js");
 /* harmony import */ var _RetirementCalulator_vue_vue_type_style_index_0_id_2809b5d2_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RetirementCalulator.vue?vue&type=style&index=0&id=2809b5d2&lang=css */ "./resources/js/components/SIP/RetirementCalulator.vue?vue&type=style&index=0&id=2809b5d2&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115458,7 +115540,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_RetirementCalulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_RetirementCalulator_vue_vue_type_template_id_2809b5d2__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/RetirementCalulator.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_RetirementCalulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_RetirementCalulator_vue_vue_type_template_id_2809b5d2__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/RetirementCalulator.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115480,13 +115562,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _RiskToleranceEvaluator_vue_vue_type_template_id_2e1a1c71__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RiskToleranceEvaluator.vue?vue&type=template&id=2e1a1c71 */ "./resources/js/components/SIP/RiskToleranceEvaluator.vue?vue&type=template&id=2e1a1c71");
 /* harmony import */ var _RiskToleranceEvaluator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RiskToleranceEvaluator.vue?vue&type=script&lang=js */ "./resources/js/components/SIP/RiskToleranceEvaluator.vue?vue&type=script&lang=js");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_RiskToleranceEvaluator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_RiskToleranceEvaluator_vue_vue_type_template_id_2e1a1c71__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/RiskToleranceEvaluator.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_RiskToleranceEvaluator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_RiskToleranceEvaluator_vue_vue_type_template_id_2e1a1c71__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/RiskToleranceEvaluator.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115509,7 +115591,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SIPPerformanceCalculator_vue_vue_type_template_id_54fa35b8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SIPPerformanceCalculator.vue?vue&type=template&id=54fa35b8 */ "./resources/js/components/SIP/SIPPerformanceCalculator.vue?vue&type=template&id=54fa35b8");
 /* harmony import */ var _SIPPerformanceCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SIPPerformanceCalculator.vue?vue&type=script&lang=js */ "./resources/js/components/SIP/SIPPerformanceCalculator.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115517,7 +115599,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_SIPPerformanceCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SIPPerformanceCalculator_vue_vue_type_template_id_54fa35b8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/SIPPerformanceCalculator.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_SIPPerformanceCalculator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SIPPerformanceCalculator_vue_vue_type_template_id_54fa35b8__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/SIPPerformanceCalculator.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115540,7 +115622,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SipPlanner_vue_vue_type_template_id_9aa44e90__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SipPlanner.vue?vue&type=template&id=9aa44e90 */ "./resources/js/components/SIP/SipPlanner.vue?vue&type=template&id=9aa44e90");
 /* harmony import */ var _SipPlanner_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SipPlanner.vue?vue&type=script&lang=js */ "./resources/js/components/SIP/SipPlanner.vue?vue&type=script&lang=js");
 /* harmony import */ var _SipPlanner_vue_vue_type_style_index_0_id_9aa44e90_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SipPlanner.vue?vue&type=style&index=0&id=9aa44e90&lang=css */ "./resources/js/components/SIP/SipPlanner.vue?vue&type=style&index=0&id=9aa44e90&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115548,7 +115630,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_SipPlanner_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SipPlanner_vue_vue_type_template_id_9aa44e90__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/SipPlanner.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_SipPlanner_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SipPlanner_vue_vue_type_template_id_9aa44e90__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SIP/SipPlanner.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115572,7 +115654,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SelectionsHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectionsHome.vue?vue&type=script&lang=js */ "./resources/js/components/SelectionsHome.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _SelectionsHome_vue_vue_type_style_index_1_id_fec2b3de_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SelectionsHome.vue?vue&type=style&index=1&id=fec2b3de&lang=css */ "./resources/js/components/SelectionsHome.vue?vue&type=style&index=1&id=fec2b3de&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115581,7 +115663,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_SelectionsHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SelectionsHome_vue_vue_type_template_id_fec2b3de__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SelectionsHome.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_SelectionsHome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_SelectionsHome_vue_vue_type_template_id_fec2b3de__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/SelectionsHome.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115605,7 +115687,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UserMonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserMonthlySnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/UserMonthlySnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _UserMonthlySnapshot_vue_vue_type_style_index_1_id_1b0ee48b_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UserMonthlySnapshot.vue?vue&type=style&index=1&id=1b0ee48b&lang=css */ "./resources/js/components/UserMonthlySnapshot.vue?vue&type=style&index=1&id=1b0ee48b&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115614,7 +115696,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_UserMonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserMonthlySnapshot_vue_vue_type_template_id_1b0ee48b__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserMonthlySnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_UserMonthlySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserMonthlySnapshot_vue_vue_type_template_id_1b0ee48b__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserMonthlySnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115637,7 +115719,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UserPerformanceSnapshot_vue_vue_type_template_id_52d891a4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserPerformanceSnapshot.vue?vue&type=template&id=52d891a4 */ "./resources/js/components/UserPerformanceSnapshot.vue?vue&type=template&id=52d891a4");
 /* harmony import */ var _UserPerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserPerformanceSnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/UserPerformanceSnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115645,7 +115727,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_UserPerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserPerformanceSnapshot_vue_vue_type_template_id_52d891a4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserPerformanceSnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_UserPerformanceSnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserPerformanceSnapshot_vue_vue_type_template_id_52d891a4__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserPerformanceSnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115669,7 +115751,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UserWeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserWeeklySnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/UserWeeklySnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _UserWeeklySnapshot_vue_vue_type_style_index_1_id_9d6e788a_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./UserWeeklySnapshot.vue?vue&type=style&index=1&id=9d6e788a&lang=css */ "./resources/js/components/UserWeeklySnapshot.vue?vue&type=style&index=1&id=9d6e788a&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115678,7 +115760,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_UserWeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserWeeklySnapshot_vue_vue_type_template_id_9d6e788a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserWeeklySnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_UserWeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_UserWeeklySnapshot_vue_vue_type_template_id_9d6e788a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/UserWeeklySnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115702,7 +115784,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _WeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WeeklySnapshot.vue?vue&type=script&lang=js */ "./resources/js/components/WeeklySnapshot.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _WeeklySnapshot_vue_vue_type_style_index_1_id_83084be0_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./WeeklySnapshot.vue?vue&type=style&index=1&id=83084be0&lang=css */ "./resources/js/components/WeeklySnapshot.vue?vue&type=style&index=1&id=83084be0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115711,7 +115793,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_WeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_WeeklySnapshot_vue_vue_type_template_id_83084be0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/WeeklySnapshot.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_WeeklySnapshot_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_WeeklySnapshot_vue_vue_type_template_id_83084be0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/WeeklySnapshot.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115734,7 +115816,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _asset_vue_vue_type_template_id_c3bf7ea0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./asset.vue?vue&type=template&id=c3bf7ea0 */ "./resources/js/components/other_objective/asset.vue?vue&type=template&id=c3bf7ea0");
 /* harmony import */ var _asset_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./asset.vue?vue&type=script&lang=js */ "./resources/js/components/other_objective/asset.vue?vue&type=script&lang=js");
 /* harmony import */ var _asset_vue_vue_type_style_index_0_id_c3bf7ea0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./asset.vue?vue&type=style&index=0&id=c3bf7ea0&lang=css */ "./resources/js/components/other_objective/asset.vue?vue&type=style&index=0&id=c3bf7ea0&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115742,7 +115824,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_asset_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_asset_vue_vue_type_template_id_c3bf7ea0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/asset.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_asset_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_asset_vue_vue_type_template_id_c3bf7ea0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/asset.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115765,7 +115847,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _child_education_vue_vue_type_template_id_234f14f6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./child_education.vue?vue&type=template&id=234f14f6 */ "./resources/js/components/other_objective/child_education.vue?vue&type=template&id=234f14f6");
 /* harmony import */ var _child_education_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./child_education.vue?vue&type=script&lang=js */ "./resources/js/components/other_objective/child_education.vue?vue&type=script&lang=js");
 /* harmony import */ var _child_education_vue_vue_type_style_index_0_id_234f14f6_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./child_education.vue?vue&type=style&index=0&id=234f14f6&lang=css */ "./resources/js/components/other_objective/child_education.vue?vue&type=style&index=0&id=234f14f6&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115773,7 +115855,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_child_education_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_child_education_vue_vue_type_template_id_234f14f6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/child_education.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_child_education_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_child_education_vue_vue_type_template_id_234f14f6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/child_education.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115796,7 +115878,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _child_marraiage_vue_vue_type_template_id_9e123c40__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./child_marraiage.vue?vue&type=template&id=9e123c40 */ "./resources/js/components/other_objective/child_marraiage.vue?vue&type=template&id=9e123c40");
 /* harmony import */ var _child_marraiage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./child_marraiage.vue?vue&type=script&lang=js */ "./resources/js/components/other_objective/child_marraiage.vue?vue&type=script&lang=js");
 /* harmony import */ var _child_marraiage_vue_vue_type_style_index_0_id_9e123c40_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./child_marraiage.vue?vue&type=style&index=0&id=9e123c40&lang=css */ "./resources/js/components/other_objective/child_marraiage.vue?vue&type=style&index=0&id=9e123c40&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115804,7 +115886,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_child_marraiage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_child_marraiage_vue_vue_type_template_id_9e123c40__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/child_marraiage.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_child_marraiage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_child_marraiage_vue_vue_type_template_id_9e123c40__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/child_marraiage.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115827,7 +115909,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _other_vue_vue_type_template_id_48827660__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./other.vue?vue&type=template&id=48827660 */ "./resources/js/components/other_objective/other.vue?vue&type=template&id=48827660");
 /* harmony import */ var _other_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./other.vue?vue&type=script&lang=js */ "./resources/js/components/other_objective/other.vue?vue&type=script&lang=js");
 /* harmony import */ var _other_vue_vue_type_style_index_0_id_48827660_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./other.vue?vue&type=style&index=0&id=48827660&lang=css */ "./resources/js/components/other_objective/other.vue?vue&type=style&index=0&id=48827660&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115835,7 +115917,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_other_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_other_vue_vue_type_template_id_48827660__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/other.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_other_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_other_vue_vue_type_template_id_48827660__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective/other.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -115859,7 +115941,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _other_objective_calulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./other_objective_calulator.vue?vue&type=script&lang=js */ "./resources/js/components/other_objective_calulator.vue?vue&type=script&lang=js");
 /* harmony import */ var _suadelabs_vue3_multiselect_dist_vue3_multiselect_css_vue_type_style_index_0_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css */ "./node_modules/@suadelabs/vue3-multiselect/dist/vue3-multiselect.css?vue&type=style&index=0&lang=css");
 /* harmony import */ var _other_objective_calulator_vue_vue_type_style_index_1_id_cebcb86a_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./other_objective_calulator.vue?vue&type=style&index=1&id=cebcb86a&lang=css */ "./resources/js/components/other_objective_calulator.vue?vue&type=style&index=1&id=cebcb86a&lang=css");
-/* harmony import */ var _Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -115868,7 +115950,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const __exports__ = /*#__PURE__*/(0,_Users_ishant_Documents_GitHub_myplex_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_other_objective_calulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_other_objective_calulator_vue_vue_type_template_id_cebcb86a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective_calulator.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_vhosts_myplexus_com_httpdocs_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_4__["default"])(_other_objective_calulator_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_other_objective_calulator_vue_vue_type_template_id_cebcb86a__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/other_objective_calulator.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -136048,7 +136130,7 @@ function styleChanged(style, prevStyle) {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
+module.exports = JSON.parse('{"_args":[["axios@0.21.4","/var/www/vhosts/dev.myplexus.com/httpdocs/my-plexus"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"/var/www/vhosts/dev.myplexus.com/httpdocs/my-plexus","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 

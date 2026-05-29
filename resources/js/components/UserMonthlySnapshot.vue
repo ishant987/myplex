@@ -29,12 +29,26 @@
                         <li><a class="active" :href="monthlyUrl">Monthly</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3">
-                    <Datepicker placeholder="As On Date" class="" v-model="selectedDate" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="false" :maxDate="maxDateRang"></Datepicker>
-                </div>
+                <!-- <div class="col-md-3"> -->
+                    <!-- <Datepicker placeholder="As On Date" class="" v-model="selectedDate" :format="'dd/MM/yyyy'" :enableTimePicker="false" :autoApply="true" :range="false" :maxDate="maxDateRang"></Datepicker> -->
+                    <form @submit.prevent="handleSubmit">
+                    <div class="col-md-3">
+                        <Datepicker name='to_date'
+                        placeholder="As On Date"
+                        v-model="selectedDate"
+                        :format="'dd/MM/yyyy'"
+                        :enableTimePicker="false"
+                        :autoApply="true"
+                        :range="false"
+                        :maxDate="maxDateRang"
+                        @change="submitForm"
+                        ></Datepicker>
+                    </div>
+                    </form>
+                <!-- </div> -->
                     <div class="snapshot_inner">
                             <div class="snapshot_header" style="padding: 0 3px;">
-                                <p v-if="from_date && to_date">Monthly Snapshot Report: {{from_date}} to {{to_date}}</p>
+                                <p v-if="from_date && to_date">Monthly Snapshot Report: {{fromDate}} to {{toDate}}</p>
                             </div>
                         <div class="perform-paramtr monthly-compo-wrap weekly-snapshot-cols">
                             <div class="row perform-pmtr-lumpsum">
@@ -304,14 +318,16 @@
        data() {
                 return {
                     //sortKey: 'FUNDTYPE',
-                    selectedDate: null,
+                    selectedDate: new Date(),
                     ascending: true,
                     process:false,
                     showTable1:true,
                     showTable2:true,
                     modalClasses: ['modal','fade'],
                     per_changes:[],					
-                    selectedFundType:''
+                    selectedFundType:'',
+                    fromDate:'',
+                    toDate:'',
                 }
       },
       methods: {
@@ -340,12 +356,16 @@
             }
         },
         async getMonthlyChangesFundType() {
+            // console.log('To Month: ',to_month);
             this.process = true
             var date = this.selectedDate
             console.log('Selected Date is: ',date);
-            await axios.get('/api/v1/monthly-changes-fund-type')
+            await axios.get(`/api/v1/monthly-changes-fund-type?date=${date}`)
                 .then(response => {
                     this.per_changes =  response.data.data.changes_fund_type
+                    this.fromDate = response.data.data.to_date
+                    // console.log('from_date',this.fromDate);
+                    this.toDate = response.data.data.from_date
                 })
                 .catch(error => {
                     
@@ -380,6 +400,15 @@
         getYear(date){
            return moment(date, 'DD/MM/YYYY').format('YYYY')
         },
+        submitForm() {
+            this.$refs.form.submit();
+        },
+        handleSubmit() {
+        console.log('selectedDate', selectedDate);
+            this.getMonthlyChangesFundType(this.selectedDate);
+            // Add additional form submission logic here if needed
+            
+        },
         
        ...mapActions('InputData', ['getSnapshotDates','getIndexChanges','getCurrencyChanges','getCommodityChanges','getMonthlyBestFunds','getFundChanges']),
       },
@@ -396,6 +425,7 @@
             }
         },
       computed: {
+        
         ...mapGetters('InputData', ['loading','index_change','currency_change','commodity_change','from_date','to_date','monthly_best_funds','fund_change']),
         maxDateRang(){
             let d = new Date();
@@ -410,14 +440,17 @@
             // Construct the URL for Monthly snapshot using the current domain
             return `https://${window.location.hostname}/user-monthly-snapshot`;
         },
+        
       },
       mounted() {
+        // console.log('New DAte: ',this.fromDate);
+        // console.log('From Date:', this.fromDate);
         var selectedDate = this.selectedDate
         this.getSnapshotDates({type:'monthly'})
-        this.getIndexChanges({type:'monthly'})
-        this.getCurrencyChanges({type:'monthly'})
-        this.getCommodityChanges({type:'monthly'})
-        this.getMonthlyChangesFundType()
+        this.getIndexChanges({type:'monthly',from_date:this.fromDate})
+        this.getCurrencyChanges({type:'monthly',from_date:this.fromDate})
+        this.getCommodityChanges({type:'monthly',from_date:this.fromDate})
+        this.getMonthlyChangesFundType({from_date:this.fromDate})
         this.getMonthlyBestFunds()
       },
     }

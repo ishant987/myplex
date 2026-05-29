@@ -10,12 +10,12 @@
                         <li>Fund Factsheet</li>
                     </ul>
                 </div>
-                <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                 <div class="perform">
 
                     <h1 class="page_heading">Fund Factsheet</h1>
                     <div class="perform_head">
                         <h2>Fund Factsheet</h2>
+                        <!-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> -->
                     </div>
                     <div class="fund_section new_fund_section fund_fact">
                         <form method="GET" action="{{ route('user.fund_factsheet') }}">
@@ -35,8 +35,8 @@
                                     </div>
                                     <div class="col-md-5">
                                         <div class="form_group">
-                                            <input type="date" id="from" class="form-control" name="to_date"
-                                                value="{{ !empty($_GET['to_date']) ? \Carbon\Carbon::parse($_GET['to_date'])->format('Y-m-d') : '' }}">
+                                            <input type="text" id="from" class="datepicker" name="to_date" readonly
+                                                value="{{ $_GET['to_date'] ?? '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">

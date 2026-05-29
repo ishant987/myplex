@@ -52,7 +52,19 @@
 
     <div class="news-listing">
         <div class="container">
-            <div class="row" id="news">                
+            <div class="row" id="news">
+                @foreach($newsData as $value)			
+                <div class="col-md-4 mb-4">
+                    <div class="money_left_sec" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="https://new.myplexus.com/storage/news/{{ $value->image }}" class="img-fluid" />
+                    </div>
+                    <div class="money_right_section" data-aos="fade-up" data-aos-duration="1000">
+                        <h4>{{ $value->title }}</h4>					
+                        
+                    <a href="{{ $value->news_source_link }}" target="_blank">Read More</a>
+                    </div>
+                </div> 
+                @endforeach              
             </div>
         </div>
     </div>
@@ -62,23 +74,25 @@
 @push('scripts')
 
 <script>
-	
+/*	
 $(document).ready(function() {
 
 	showNews();
 
 });
 	
-	async function showNews()
+	function showNews()
 	{			
-		const url = 'https://myplexus.com/api/v1/news';
+		//const url = 'https://myplexus.com/api/v1/news';
+		//const url = "<? //= URL::to('api/v1/news'); ?>";
+		const url = "https://blog.myplexus.com/wp-json/wp/v2/posts";
 		
-		const data = await $.ajax({			
+		const data = $.ajax({			
 		  type: 'GET',
           url: url,          
           dataType: "JSON"		
 		});
-		
+		console.log(data)
 		if(data.success)
 		{
 			let html = "";
@@ -109,7 +123,7 @@ $(document).ready(function() {
 		} else {
 			
 		}
-	}
+	}*/
 
 </script>
 

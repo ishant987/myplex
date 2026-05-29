@@ -36,7 +36,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <div class="Contact_heading text-center">
-                    <h4>Plexus Managment Service</h4>
+                    <h4>Plexus Management Services</h4>
                     <p>
                         We are here to show you a better way of investment using the tools that will help you make the best decisions for your wealth.
                     </p>
@@ -54,7 +54,7 @@
                                         <img src="{{asset('themes/frontend/assets/v1/img/contact_call.png')}}"/>
                                     </div>
                                     <div class="contact_text">
-                                        <span>INDIA - <a href="">09073977460</a></span>
+                                        <span>INDIA - <a href="">6290317605</a></span>
                                         <span>INDIA - <a href="">033-40646145</a></span>
                                     </div>
                                 </div>
@@ -79,8 +79,8 @@
                                         <img src="{{asset('themes/frontend/assets/v1/img/contact_map.png')}}"/>
                                     </div>
                                     <div class="contact_text">
-                                        <p>11/5, 75C Park Street.
-                                            Kolkata-700016</p>
+                                        <p>75C, Park Street, 11th Floor Unit-5, 
+                                            Kolkata- 700016</p>
                                     </div>
                                 </div>
                             </div>

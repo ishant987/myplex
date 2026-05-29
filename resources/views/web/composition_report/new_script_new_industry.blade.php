@@ -1,10 +1,5 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
-    @php
-        $scrips = $scrips ?? collect();
-        $industry = $industry ?? collect();
-        $isByFundMode = isset($request) && data_get($request, 'Category') === 'by_fund';
-    @endphp
 
     <div class="inner_main">
         <div class="page_detail">
@@ -18,6 +13,9 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>New Scrips New Industries</h2>
+                    </div>
 
                     <div class="light_green_bg">
                         <form action="">
@@ -25,15 +23,15 @@
                                 <div class="col-md-6">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category"
+                                            <input type="radio" id="type_Category" name="Category" checked
                                                 value="by_category"
-                                                @if (!$isByFundMode) checked @endif
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if ($isByFundMode) checked @endif
+                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
@@ -96,31 +94,32 @@
                                     </div>
                                 </div> --}}
 
-                                <div class="col-md-6 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
+                                <div class="col-md-6 div_show_1">
                                     <div class="form_group">
-                                        <select name="fund_type_id" id="fund_type_id" class="select2"
-                                            data-placeholder="Select Fund Classification" @if(!$isByFundMode) required @endif>
-                                            <option value=""></option>
+                                        <select name="fund_type" id="fund_type" class="select2"
+                                            data-placeholder="Select Fund Classification">
+
                                             @if (isset($all_fund_types))
                                                 @foreach ($all_fund_types as $fund_type)
+                                                    <option value=""></option>
                                                     <option value="{{ $fund_type->ft_id }}"
-                                                        @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id ?? $fund_type_id ?? '')) selected @endif>
+                                                        @if ($fund_type->ft_id == old('fund_type_id', isset($fund_type_id) ? $fund_type_id : '')) selected @endif>
                                                         {{ $fund_type->name }}
                                                     </option>
                                                 @endforeach
                                             @endif
                                         </select>
                                     </div>
-                                    @error('fund_type_id')
+                                    @error('fund_type')
                                         <div class="alert alert-danger">{{ $message }}</div>
                                     @enderror
-                                    <span class="text-danger" id="category_msgg"></span>
                                 </div>
 
-                                <div class="col-md-6 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
+                                <div class="col-md-6 div_hide_1">
                                     <div class="form_group multiple_select">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='set_fund_select_val(this.value)'>
+                                            <option value="">Select Fund</option>
                                             @if (isset($all_funds))
                                                 @foreach ($all_funds as $fund)
                                                     <option value="{{ $fund->fund_id }}"
@@ -215,7 +214,7 @@
 
                                 <div class="col-md-12">
                                     <div class="bttn_grp">
-                                        <button type="submit" name="search" id="submit_btn"
+                                        <button type="submit" name="search" id="fund_type_btn"
                                             value="search">Search</button>
                                     </div>
                                 </div>
@@ -227,17 +226,7 @@
                         value="{{ isset($fundCodes) ? json_encode($fundCodes) : '' }}">
                     <input type="hidden" name="lastDate" id="lastDate" value="{{ isset($lastDate) ? $lastDate : '' }}">
 
-                    @if (!empty($message))
-                        <div class="graph_table">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td class="text_center">{{ $message }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    @elseif (isset($month) && isset($year) && isset($month_second) && isset($year_second) && $request->Category != '')
+                    @if (isset($month) && isset($year) && isset($month_second) && isset($year_second) && $request->Category != '')
 
                         <div class="wm_tab">
                             <ul class="tabs">
@@ -300,7 +289,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($scrips->count() > 0)
+                                            @if (isset($scrips) && count($scrips) > 0)
                                                 @foreach ($scrips as $sc)
                                                     @if (number_format($sc->content_per, 2) > 0)
                                                         <tr>
@@ -373,7 +362,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($industry->count() > 0)
+                                            @if (isset($industry) && count($industry) > 0)
                                                 @foreach ($industry as $inds)
                                                     @if (number_format($inds->content_per, 2) > 0)
                                                         <tr>
@@ -415,7 +404,25 @@
                 @endif
             </div>
             <div class="popup-overlay"></div>
-            
+            <div class="table_popup">
+                <div class="graph_table">
+                    <h4>Fund Changes</h4>
+                    <div class="table_overflow table_height">
+                        <table class="table datatable">
+                            <thead>
+                                <tr>
+                                    <th>Fund Name </th>
+                                    <th>% Change </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button class="close_popup"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
 
     </div>
@@ -426,7 +433,8 @@
 
 <script>
     function set_fund_select_val() {
-        var thiss = $('input[name="Category"]:checked').val();
+
+        var thiss = $('#fund_Category').val();
         var count = $('#allocation_select_fund').select2('data').length;
 
         console.log(thiss + '  ' + count);
@@ -434,9 +442,11 @@
         if (thiss == 'by_fund') {
 
             if (count >= 2 && count <= 20) {
-                $('#fund_msgg').html('');
+                // console.log('enable');
                 $('#submit_btn').prop('disabled', false);
             } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
@@ -447,39 +457,22 @@
         }
     }
 
-    function validate_category_selection() {
-        var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
-        var selectedFundType = $('#fund_type_id').val();
-
-        if (selectedCategory === 'by_category') {
-            if (selectedFundType) {
-                $('#category_msgg').html('');
-                $('#submit_btn').prop('disabled', false);
-            } else {
-                $('#category_msgg').html('<p>Select a <b>Fund Classification</b> to run this report.</p>');
-                $('#submit_btn').prop('disabled', true);
-            }
-        }
-    }
-
 
     function get_fund_types(thiss) {
-        $('.div_show_1').toggle(thiss === 'by_category');
-        $('.div_hide_1').toggle(thiss === 'by_fund');
-        $('#fund_type_id').prop('required', thiss === 'by_category');
 
         var count = $('#allocation_select_fund').select2('data').length;
 
         if (thiss == 'by_category') {
-            $('#fund_msgg').html('');
-            validate_category_selection();
+
+            $('#submit_btn').prop('disabled', false);
         } else if (thiss == 'by_fund') {
-            $('#category_msgg').html('');
 
             if (count >= 2 && count <= 20) {
-                $('#fund_msgg').html('');
+                // console.log('enable');
                 $('#submit_btn').prop('disabled', false);
             } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
@@ -607,11 +600,6 @@
         $('#active-tab-input').val(tab_name);
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        get_fund_types($('input[name="Category"]:checked').val() || 'by_category');
-        $('#fund_type_id').on('change', validate_category_selection);
-    });
-
 
 
 
@@ -620,10 +608,6 @@
 
     document.addEventListener('DOMContentLoaded', function() {
     var exportButtonIndustries = document.getElementById('exportPDF-industries');
-
-    if (!exportButtonIndustries) {
-        return;
-    }
 
     exportButtonIndustries.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -673,11 +657,11 @@
             var table = new DataTable('#pdfData-industries');
             var tableData = [];
             table.rows({ search: 'applied' }).data().each(function(row) {
-                tableData.push([row[0], row[1], row[2]]);
+                tableData.push([row[0], row[1], row[2], row[3]]);
             });
 
             doc.autoTable({
-                head: [['Industry Name', 'Content %', 'Amount (in Cr.)']],
+                head: [['Industry Name', 'Category', 'Content %', 'Amount (in Cr.)']],
                 body: tableData,
                 startX: 15,
                 startY: yPosition + 10,
@@ -695,10 +679,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     var exportButtonScrips = document.getElementById('exportPDF-scrips');
-
-    if (!exportButtonScrips) {
-        return;
-    }
 
     exportButtonScrips.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -748,11 +728,11 @@ document.addEventListener('DOMContentLoaded', function() {
             var table = new DataTable('#pdfData-scrips');
             var tableData = [];
             table.rows({ search: 'applied' }).data().each(function(row) {
-                tableData.push([row[0], row[1], row[2]]);
+                tableData.push([row[0], row[1], row[2], row[3]]);
             });
 
             doc.autoTable({
-                head: [['Scrip Name', 'Content %', 'Amount (in Cr.)']],
+                head: [['Scrip Name', 'Industry', 'Content %', 'Amount (in Cr.)']],
                 body: tableData,
                 startX: 15,
                 startY: yPosition + 10,

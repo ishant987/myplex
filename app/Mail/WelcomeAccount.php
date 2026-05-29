@@ -28,6 +28,6 @@ class WelcomeAccount extends Mailable
     public function build()
     {
         return $this->subject('Welcome to myplexus')
-            ->view('emails.welcome_account');
+            ->view('emails.web.welcome_account');
     }
 }

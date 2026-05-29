@@ -515,7 +515,7 @@ class CompareSchemeController extends BaseController
                 $dateTimestampType5 = strtotime($type5_first_date);
                 //$dateTimestampType6 = strtotime($type6_first_date);
 
-                if ($dateTimestampFrom < $dateTimestampType1) {
+                /*if ($dateTimestampFrom < $dateTimestampType1) {
                     $from_date = $type1_first_date;
                     $notice_text = 'data available from ' . date('d/m/Y', $dateTimestampType1);
                     $notice_value_type = '1';
@@ -539,7 +539,7 @@ class CompareSchemeController extends BaseController
                     $from_date = $type5_first_date;
                     $notice_text = 'data available from ' . date('d/m/Y', $dateTimestampType5);
                     $notice_value_type = '5';
-                }
+                }*/
                 /* if ($dateTimestampFrom < $dateTimestampType6) {
                     $from_date = $type6_first_date;
                     $notice_text = 'data available from ' . date('d/m/Y', $dateTimestampType6);
@@ -561,6 +561,8 @@ class CompareSchemeController extends BaseController
 				
                 //$graphArr[5] = DB::select('CALL sp_fund_index_currency("' . $type2 . '","' . $from_date . '","' . $to_date . '",0,"' . $value6 . '","","",0)');
                 $responseArr['graph_data'] = $graphArr;
+                $responseArr['from_date'] = $from_date;
+                $responseArr['to_date'] = $to_date;
                 $responseArr['notice_text'] = $notice_text;
                 $responseArr['notice_value_type'] = $notice_value_type;
                 $responseArr['notice_value_type_text'] = $value3;

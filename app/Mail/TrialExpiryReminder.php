@@ -24,6 +24,6 @@ class TrialExpiryReminder extends Mailable
     public function build()
     {
         return $this->subject("Your MyPlexus trial expires in {$this->daysLeft} day(s)")
-            ->view('emails.trial-expiry-reminder');
+            ->view('emails.web.trial-expiry-reminder');
     }
 }

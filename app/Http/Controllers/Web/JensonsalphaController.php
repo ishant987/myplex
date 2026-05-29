@@ -95,8 +95,14 @@ class JensonsalphaController extends BaseController
             $start = Carbon::parse(date("Y-m-d", strtotime($input['search_from_date'])));
             $end = Carbon::parse(date("Y-m-d", strtotime($input['search_to_date'])));
 
-            $monthsDifference = $start->diffInMonths($end)+1;
-            $getYear = $monthsDifference/12;
+            $diffInDays = $start->diffInDays($end);
+            $diffInYears = $start->diffInYears($end);
+            // dd($diffInYears);
+
+            // $monthsDifference = $start->diffInMonths($end)+1;
+            // dd($monthsDifference);
+            // $getYear = $monthsDifference/12;
+            $getYear = $diffInYears;
 
             $allDates = [];
             $total_date_diffrence_in_days = $start->diff($end)->days+1;
@@ -566,17 +572,21 @@ class JensonsalphaController extends BaseController
                     $index_return_last_value = $foundIndicesRow['closing_value'] ?? 0;
                 }
             }
-
-            if($getYear > 1)
+            
+            if($getYear >= 1)
             {
+                // dd($getYear);
+                // $getYear = 1;
+                // dd('Last : '.$fund_return_last_value." First Value: ".$fund_return_first_value);
                 if(isset($fund_return_first_value) && $fund_return_first_value != 0)
                 {   
-                    $fund_return_absolute = ((pow($fund_return_last_value / $fund_return_first_value, 1 / $getYear) - 1) * 100);
+                    $fund_return_absolute = ((pow($fund_return_last_value / $fund_return_first_value, 1 / $getYear) - 1)) * 100;
                 }
                 else
                 {
                     $fund_return_absolute = 0;
                 }
+                // dd($fund_return_absolute);
                 if(isset($index_return_first_value) && $index_return_first_value != 0)
                 {   
                     $index_return_absolute = ((pow($index_return_last_value / $index_return_first_value, 1 / $getYear) - 1) * 100);

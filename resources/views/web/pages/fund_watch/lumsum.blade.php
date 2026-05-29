@@ -10,7 +10,7 @@
                 <td data-label="Amount">{{ $val['amount'] }}
                 </td>
                 <td data-label="Percentage %">
-                    {{ $val['percentage'] }}%</td>
+                    {{ $val['percentage'] }}</td>
             </tr>
 			@endif
         @empty

@@ -27,7 +27,7 @@ class SubscriptionController extends Controller
             'slug' => 'basic',
             'price_monthly' => 10000.00,
             'price_yearly' => 10000.00,
-            'duration_months' => 1,
+            'duration_months' => 6,
             'allow_trial' => true,
             'features' => ['Core research tools', 'Ratio and composition reports'],
             'is_active' => true,
@@ -151,7 +151,7 @@ class SubscriptionController extends Controller
     protected function calculatePlanEndDate(SubscriptionPlan $plan): Carbon
     {
         return match (strtolower((string) $plan->slug)) {
-            'basic' => now()->copy()->addDays(4),
+            'basic' => now()->copy()->addMonthsNoOverflow(6),
             default => now()->copy()->addMonthsNoOverflow($this->planDurationMonths($plan)),
         };
     }
@@ -344,19 +344,31 @@ class SubscriptionController extends Controller
         $startsAt = now();
         $endsAt = $plan ? $this->calculatePlanEndDate($plan) : now()->copy()->addMonthsNoOverflow(1);
 
-        DB::transaction(function () use ($validated, $transaction, $subscription, $user, $startsAt, $endsAt, $paymentDetails) {
-            Subscription::query()
+        DB::transaction(function () use ($validated, $transaction, $subscription, $user, $startsAt, $endsAt, $paymentDetails, $plan) {
+            $newPlanSlug = strtolower((string) optional($plan)->slug);
+            $subscriptionsToCancel = Subscription::query()
                 ->where('user_id', $user->u_id)
                 ->where('id', '!=', $subscription->id)
                 ->whereIn('status', [
                     Subscription::databaseStatusFor('active'),
                     Subscription::databaseStatusFor('pending'),
-                ])
-                ->update([
-                    'status' => Subscription::databaseStatusFor('cancelled'),
-                    'updated_by' => 'u',
-                    'updated_id' => $user->u_id,
                 ]);
+
+            if ($newPlanSlug === 'white-label') {
+                $subscriptionsToCancel->whereHas('plan', function ($query) {
+                    $query->where('slug', 'white-label');
+                });
+            } else {
+                $subscriptionsToCancel->whereHas('plan', function ($query) {
+                    $query->where('slug', '!=', 'white-label');
+                });
+            }
+
+            $subscriptionsToCancel->update([
+                'status' => Subscription::databaseStatusFor('cancelled'),
+                'updated_by' => 'u',
+                'updated_id' => $user->u_id,
+            ]);
 
             $transaction->update([
                 'razorpay_payment_id' => $validated['razorpay_payment_id'],
@@ -375,10 +387,17 @@ class SubscriptionController extends Controller
                 'updated_id' => $user->u_id,
             ]);
 
+            $userExpiry = $endsAt;
+
+            if ($newPlanSlug === 'white-label' && !empty($user->subscription_expiry_date)) {
+                $currentExpiry = Carbon::parse($user->subscription_expiry_date);
+                $userExpiry = $currentExpiry->isFuture() && $currentExpiry->greaterThan($endsAt) ? $currentExpiry : $endsAt;
+            }
+
             $user->update([
                 'trial_ends_at' => null,
                 'subscription_status' => 'active',
-                'subscription_expiry_date' => $endsAt->toDateString(),
+                'subscription_expiry_date' => $userExpiry->toDateString(),
             ]);
         });
 
@@ -389,7 +408,7 @@ class SubscriptionController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'redirect' => route('user.index_dashboard'),
+            'redirect' => route('user.auth-dashboard'),
         ]);
     }
 

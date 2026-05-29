@@ -97,6 +97,19 @@
       </div>
     </div>
   </div>
+  <div class="footer-amfi" style="background:#fff; border-top:1px solid #e0e0e0; border-bottom:1px solid #e0e0e0; padding:12px 0;">
+    <div class="container">
+      <div class="d-flex align-items-center flex-wrap" style="gap:16px;">
+        <span style="color:#1a7a5e; font-weight:600; display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="#1a7a5e"/><path d="M6 10.5l2.5 2.5 5.5-5.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Registered with AMFI
+        </span>
+        <span style="color:#555; border-left:1px solid #ccc; padding-left:16px;">AMFI Registration No: 2654</span>
+        <span style="color:#555; border-left:1px solid #ccc; padding-left:16px;">Initial Registration Date: 19th March 2003</span>
+        <span style="color:#555; border-left:1px solid #ccc; padding-left:16px;">Validity: 14th May 2025 to 23rd May 2028</span>
+      </div>
+    </div>
+  </div>
   <div class="footer-bottom bg-b">
     <div class="container">
       <div class="row">

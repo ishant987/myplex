@@ -138,25 +138,25 @@
                         <!--Tab-->
                         <div class="tab-content-box-item tab-content-box-item-active" id="companies">
                             <div class="service-style1-tab-content-box-item">
-                                @if(count($allnewfroms) >= 3)
                                 <div class="row">
                                     <!--Start Single Service Box Style1-->
                                     <div class="col-xl-4 col-lg-4 mt-4">
                                         <div class="single-service-box-style1 h-100">
 											<div class="top-float blog">
-												<p class="mb-0">{{ $allnewfroms[0]->type_id }}</p>
+												<p class="mb-0">NFO Monitor</p>
 											</div>
                                             <div class="icon">
                                                 <span class="icon-safebox"></span>
                                             </div>
-                                            
-                                            <h3><a href="{{ $allnewfroms[0]->link }}" target="_blank">{{ $allnewfroms[0]->title }}</a></h3>
+                                            @if(!empty($nfoMdl[0]))
+                                            <h3><a href="{{url('/nfo-monitor').'/'.$nfoMdl[0]->no_id}}" target="_blank">{{ $nfoMdl[0]->fund_name }}</a></h3>
                                             <div class="border-box"></div>
                                             <!--<p>Aditya Birla Sun Life Flexi Cap Fund</p>-->
                                             <!-- <h6><span>*</span> Interest rate up to 5% p.a</h6> -->
                                             <div class="btn-box">
-                            <a href="{{ $allnewfroms[0]->link }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                                <a href="{{url('/nfo-monitor').'/'.$nfoMdl[0]->no_id}}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
                                     <!--End Single Service Box Style1-->
@@ -174,7 +174,7 @@
                                             <!--<p>Future Value Calculator?</p> -->
                                             <!-- <h6><span>*</span> Terms &amp; Conditions</h6> -->
                                             <div class="btn-box"> 
-                                           <a href="{{ $allnewfroms[1]->link }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                                <a href="{{ $allnewfroms[1]->link }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -183,23 +183,22 @@
                                     <div class="col-xl-4 col-lg-4 mt-4">
                                         <div class="single-service-box-style1 h-100">
 											<div class="top-float">
-												<p class="mb-0">{{ $allnewfroms[2]->type_id }}</p>
+												<p class="mb-0">Blog</p>
 											</div>
                                             <div class="icon">
                                                 <span class="icon-loan"></span>
                                             </div>
-                                            <h3><a href="{{ $allnewfroms[2]->link }}" target="_blank">{{ $allnewfroms[2]->title }}</a></h3>
+                                            <h3><a href="{{ $blogResponses[0]['link'] }}" target="_blank">{{ $blogResponses[0]['title'] }}</a></h3>
                                             <div class="border-box"></div>
                                             <!--<p>With Compare Scheme</p> -->
                                             <!-- <h6><span>*</span> Check today’s Interest Rates</h6> -->
                                             <div class="btn-box">
-                                                <a href="{{ $allnewfroms[2]->link }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                                <a href="{{ $blogResponses[0]['link'] }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                     <!--End Single Service Box Style1-->
                                 </div>
-                                @endif
                             </div>
                         </div>
 
@@ -550,7 +549,9 @@
             <div class="money_seriously_title mb-4 mb-md-5">
                 <div class="col-md-12" data-aos="fade-up" data-aos-duration="1000">
                     <div class="money_seriously_title d-block d-sm-flex align-items-center">
-                        <h4>Money, Seriously!!</h4>					
+                        <h4 style="display: inline-flex;">Money, Seriously!! 
+                            <img src="{{ asset('themes/frontend/assets/v1/img/blog-image.png') }}" style="width: 40%;"/>
+                        </h4>					
 						
                         <p>
                             Mutual funds have become a popular investment option in recent years, as they offer the potential for higher returns than more traditional investments such as savings accounts or bonds.
@@ -725,12 +726,14 @@
             @php $i =1; @endphp
             @if($i <= 2)
                 @foreach($fndWtchMdl as $newfndWtchMdl)
-				<div class="col-md-6 mb-4" data-aos="fade-up" data-aos-duration="{{500*$i}}">
+				<div class="col-md-4 mb-4" data-aos="fade-up" data-aos-duration="{{500*$i}}">
+                @if($newfndWtchMdl->logo)
 					<div class="money_left_sec">
 						<div class="fund_watch_home_sec_single_img">
-                        <img src="{{ env('ADMIN_SITE') }}/assets/images/{{ $fndWtchMdl[0]->logo }}" />
+                            <img src="{{ env('ADMIN_SITE') }}/assets/images/{{ $newfndWtchMdl->logo }}" />
 						</div>
 					</div>
+                @endif    
 					<div class="money_right_section">
 						@php
                            $fid =base64_encode($newfndWtchMdl->fundDetails->fund_code);
@@ -801,9 +804,11 @@
                     <h3>NFO Monitor</h3>
                     <div class="patshala-new-rgt ml-3">
                         <ul>
+                            @if($nfoMdl)
                             @foreach ($nfoMdl as $key => $val)
                             <li><a href="{{url('/nfo-monitor').'/'.$val->no_id}}">{{$val->fund_name}}</a></li>
-                            @endforeach							
+                            @endforeach	
+                            @endif						
 							 <!--<li><a href="#">SBI Bluechip Fund</a></li> -->
                         </ul>
                         
@@ -977,7 +982,7 @@
                 <div class="single-features-style1-box mb-4">
                     <div class="col-md-12 aos-init" data-aos="fade-up" data-aos-duration="1000">
                         <div class="calculator_title text-center">
-                            <h4>Experts Interviews</h4>					
+                            <h4>Recent Interviews- Meet The Fund Man</h4>					
                         </div>
                     </div>
                 </div>
@@ -987,80 +992,23 @@
             <div class="row">
                 <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="2000">
                     <div class="MultiCarousel-inner">
-                        <div class="item">
-                            <div class="pad15">
-                                <div class="money_left_sec car-img">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/vihangNaik.jpg') }}" class="img-fluid">
-                                </div>
-                                <div class="money_right_section expertHeight">	
-                                    <a href="/fund-man-details"><h4>Vihang Naik</h4></a>				
-                                    <p>
-                                        Chief Investment Officer <br>
-                                        Baroda Asset Management India Limited
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="pad15">
-                                <div class="money_left_sec car-img" >
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/aniruddhaNaha.jpg') }}" class="img-fluid">
-                                </div>
-                                <div class="money_right_section expertHeight ">	
-                                    <a href="/fund-man-details/aniruddha-naha"><h4>Aniruddha Naha</h4></a>				
-                                    <p>
-                                        Director & Senior Fund Manager <br>
-                                        PGIM Investments
-                                    </p>
-                                
+                        @foreach($fundManMdl as $k_FM=> $fundManData)	
+                            <div class="item">
+                                <div class="pad15">
+                                    <div class="money_left_sec car-img">
+                                        <img src="{{ $fundManData->media->getModuleVars()['media_folder'].$fundManData->media['path'] }}" class="img-fluid">
+                                    </div>
+                                    <div class="money_right_section expertHeight">	
+                                        <a href="{{ route('web.fundman', $fundManData->slug) }}"><h4>{{ $fundManData->name }}</h4></a>				
+                                        <p>
+                                            {{ $fundManData->designation }} <br>
+                                            {{ $fundManData->company_name }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="pad15">
-                                <div class="money_left_sec car-img">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/sanjayChawla.jpg') }}" class="img-fluid">
-                                </div>
-                                <div class="money_right_section expertHeight">	
-                                    <a href="/fund-man-details/sanjay-chawla"><h4>Sanjay Chawla</h4></a>				
-                                    <p>
-                                        Chief Investment Officer <br>
-                                        Baroda Asset Management India Limited
-                                    </p>
-                                
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="pad15">
-                                <div class="money_left_sec car-img">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/shridattaBhandwaldar.jpg') }}" class="img-fluid">
-                                </div>
-                                <div class="money_right_section expertHeight">	
-                                    <a href="/fund-man-details/shridatta-bhandwaldar"><h4>Shridatta Bhandwaldar</h4></a>				
-                                    <p>
-                                        Head Equities <br>
-                                        Canara Robeco Mutual Fund
-                                    </p>
-                                
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="pad15">
-                                <div class="money_left_sec car-img">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/shreyasDevalkar.jpg') }}" class="img-fluid">
-                                </div>
-                                <div class="money_right_section expertHeight aos-init">	
-                                    <a href="/fund-man-details/shreyas-devalkar"><h4>Shreyas Devalkar</h4></a>				
-                                    <p>
-                                        Fund Manager <br>
-                                        Axis Mutual Fund
-                                    </p>
-                                
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+
                     </div>
                     <button class="carousal_btn leftLst"><</button>
                     <button class="carousal_btn rightLst">></button>
@@ -1075,9 +1023,9 @@
         <div class="row">
             <div class="col-lg-12 mb-4">
                 <div class="calculator_title text-center">
-                    <h4 data-aos="fade-up" data-aos-duration="500">Testimonials</h4>
-                    <p data-aos="fade-up" data-aos-duration="1000">Don’t just take our word for it.</p>
-                </div>
+					<h4 data-aos="fade-up" data-aos-duration="100" data-aos-offset="0">Testimonials</h4>
+					<p data-aos="fade-up" data-aos-duration="100" data-aos-offset="0">Don’t just take our word for it.</p>
+				</div>
             </div>
         </div>
         <div class="row">
@@ -1139,9 +1087,7 @@
 						<div class="single_testimonila_slide">
                             <div class="single_slider_message">
                                 <img src="{{ asset('themes/frontend/assets/v1/img/quote.png') }}" />
-                                <p>myplexus.com provides data and analysis like no other platform. It is a very evolved and contemporary platform to evaluate fund performance. The comparisons between funds that it provides by using exhaustive statistical tools lend to it the credibility that investors and advisors will certainly benefit from. Certain features and tools myplexus.com utilises provide insights unmatched anywhere else.
-
-                                </p>
+                                <p>myplexus.com provides data and analysis like no other platform. It is a very evolved and contemporary platform to evaluate fund performance. The comparisons between funds that it provides by using exhaustive statistical tools lend to it the credibility that investors and advisors will certainly benefit from. Certain features and tools myplexus.com utilises provide insights unmatched anywhere else.</p>
                             </div>
                             <div class="testimonila_user_group_sec d-flex align-items-center justify-content-center">
                                 <div class="user_img_group">
@@ -1165,23 +1111,23 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="research_titile">
-                    <h4 data-aos="fade-up" data-aos-duration="500">Are you a financial Advisor
-                    </h4>
-                    <p data-aos="fade-up" data-aos-duration="1000">We provide a range of services for financial advisers, including access to our fund research, performance data and analytical tools that will help you make the best investment decisions for your clients.</p>
-                    <a data-aos="fade-up" data-aos-duration="1500" href="#" class="money_title_btn  type2 ms-0">Discover</a>
+                    <h4>Are you a financial Advisor</h4>
+					<p>We provide a range of services for financial advisers, including access to our fund research, performance data and analytical tools that will help you make the best investment decisions for your clients.</p>
+					<a href="{{ route('user.user_login') }}" class="money_title_btn type2 ms-0">Login</a>
+					<a href="{{ route('user.registration') }}" class="money_title_btn type2 ms-0">Register</a>
                 </div>
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-7">
                 <div class="research_right_sec">
                     <div class="research_row d-md-block d-lg-flex d-block align-items-center mb-40">
-                        <div class="single_reserch d-flex align-items-center text-end mr-40 gb-right" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="single_reserch d-flex align-items-center text-end mr-40 gb-right">
                             <h4>Premium screens on various themes</h4>
                             <div class="research_icon">
                                 <img src="{{ asset('themes/frontend/assets/v1/img/research1.png') }}" />
                             </div>
                         </div>
-                        <div class="single_reserch d-flex align-items-center" data-aos="fade-down" data-aos-duration="1000">
+                        <div class="single_reserch d-flex align-items-center">
                             <div class="research_icon">
                                 <img src="{{ asset('themes/frontend/assets/v1/img/research2.png') }}" />
                             </div>
@@ -1191,13 +1137,13 @@
                     <span class="verticle_line d-none d-lg-block"></span>
                     <span class="horizotal_line d-none d-lg-block"></span>
                     <div class="research_row d-md-block d-lg-flex d-block  align-items-center">
-                        <div class="single_reserch d-flex align-items-center text-end mr-40 gb-right" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="single_reserch d-flex align-items-center text-end mr-40 gb-right">
                             <h4>Download data for offline analysis</h4>
                             <div class="research_icon">
                                 <img src="{{ asset('themes/frontend/assets/v1/img/research3.png') }}" />
                             </div>
                         </div>
-                        <div class="single_reserch d-flex align-items-center" data-aos="fade-down" data-aos-duration="1000">
+                        <div class="single_reserch d-flex align-items-center">
                             <div class="research_icon">
                                 <img src="{{ asset('themes/frontend/assets/v1/img/research4.png') }}" />
                             </div>
@@ -1211,9 +1157,11 @@
 </section>
 <section class="patshala-sec" id="askExpert">
     <div class="container-fluid">
-        <div class="row">
-            <h3 data-aos="fade-up" data-aos-duration="500" class="aos-init aos-animate">Ask An Expert</h3>
-            <p data-aos="fade-up" data-aos-duration="1000" class="aos-init aos-animate text-center">We bring a wealth of expereince and know-how to the table.</p>
+        <div class="row d-none">
+           <h3>Ask An Expert</h3>
+			<p class="text-center">
+				We bring a wealth of expereince and know-how to the table.
+			</p>
             <div class="col-lg-4 col-md-4 col-sm-12 patshala">
                                 
                 <div class="patshala-lft-wrap d-flex">
@@ -1411,15 +1359,24 @@
 <section class="cta_section section">
     <div class="container">
         <div class="row">
-            <div class="col-md-7 col-lg-5">
-                <div class="fund_man_expert_home" data-aos="fade-up" data-aos-duration="500">
+            <div class="col-md-12 col-lg-12">
+                <div class="fund_man_expert_home">
                     <h2>Performance Synopsis</h2>
                     <p>You can access performance data for all of our funds on our website. In addition,
                         we also offer a range of analytical tools that can help you evaluate a fund's performance and choose the right one for your clients.</p>
                     <!-- <a href="{{ route('web.login') }}" class="money_title_btn type2 me-3 ms-0">Login</a> -->
                     <!-- <a href="{{ route('web.investor-signup') }}" class="money_title_btn type2">Register</a> -->
-                    <a href="{{ route('user.user_login') }}" class="money_title_btn type2 me-3 ms-0">Login</a>
-                    <a href="{{ route('user.registration') }}" class="money_title_btn type2">Register</a>
+                    {{-- <a href="{{ route('user.user_login') }}" class="money_title_btn type2 me-3 ms-0">Login</a> --}}
+                    {{-- <a href="{{ route('user.registration') }}" class="money_title_btn type2">Register</a> --}}
+                    <a href="performance-synopsis" class="money_title_btn type2 me-3 ms-0">Discover</a>
+
+                    <!-- <a href="#" class="money_title_btn type2 me-3 ms-0 mb-2">Quartile Returns (Active)</a>
+                    <a href="#" class="money_title_btn type2 me-3 ms-0 mb-2">Quartile Returns (Passive)</a>
+
+                    <a href="#" class="money_title_btn type2 me-3 ms-0 mb-2">Decile Returns (Active)</a>
+                    <a href="#" class="money_title_btn type2 me-3 ms-0 mb-2">Decile Returns (Passive)</a> -->
+
+                    
                 </div>
             </div>
         </div>
@@ -1432,7 +1389,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-7 col-lg-5">
-                <div class="fund_man_expert_home" data-aos="fade-up" data-aos-duration="500">
+                <div class="fund_man_expert_home">
                     <h2>Know Your Scheme</h2>
                     <p>When considering schemes, it's vital to know the risk levels, returns, and other parameters, like asset allocation and periodic rebalancing, for the respective fund categories.</p>
                     <a href="{{ route('web.know.your.scheme') }}" class="money_title_btn ms-0 type2">Get Started</a>
@@ -1442,7 +1399,7 @@
     </div>
 </section>
 
-<section class="as_seen_on_section">
+<section class="as_seen_on_section d-none">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -1486,7 +1443,14 @@
             
         </div>
         <div class="row news-blocks">
-            <div class="col-lg-4 col-md-md-4 col-sm-12">
+            @foreach($nwsListMdl as $newsData)			
+            <div class="col-lg-4 col-md-md-4 col-sm-12">                
+                <div class="news-inner-block">
+                    <a href="{{ $newsData->news_source_link }}" target="_blank"><img src="https://new.myplexus.com/storage/news/{{ $newsData->image }}" class="img-fluid" alt="{{ $newsData->title }}" title="{{ $newsData->title }}"><span>How MFs can help students &amp; working professionals to achieve financial goals</span></a>
+                </div>
+            </div> 
+            @endforeach   
+            <!-- <div class="col-lg-4 col-md-md-4 col-sm-12">
                 <div class="news-inner-block">
                     <a href="https://utiswatantra.utimf.com/video/how-mfs-can-help-students-working-professionals-to-achieve-financial-goals/" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652244031-et-now-1.jpg" class="img-fluid" alt="How MFs can help students &amp; working professionals to achieve financial goals" title="How MFs can help students &amp; working professionals to achieve financial goals">                                                                        <span>How MFs can help students &amp; working professionals to achieve financial goals</span></a>
                 </div>
@@ -1500,7 +1464,7 @@
                 <div class="news-inner-block">
                     <a href="https://www.businesstoday.in/moneytoday/mutual-fund/rushing-to-lose/story/7205.html" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652243948-bs-1.jpg" class="img-fluid" alt="How can the well researched picks you found attractive?" title="How can the well researched picks you found attractive?">                                                                        <span>How can the well researched picks you found attractive?</span></a>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="row justify-content-center align-items-center press-header">
             <div class="col-md-12 mt-3 text-center">
@@ -1593,7 +1557,7 @@
 		
 		$(function() { 
 		
-			loadNews();		
+			//loadNews();		
 		
 		});
 		

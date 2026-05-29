@@ -131,6 +131,7 @@ class EnquiryController extends BaseController
           $content = view('emails.web.to-admin-contact', compact('mailArr', 'mailCssAtr', 'commaSign'));
 
           $toEmail = $mailPSObj->getToEmail();
+          // $toEmail = 'sayan.m@axiussoftware.com';
 
           $contactLang = __('contact');
 

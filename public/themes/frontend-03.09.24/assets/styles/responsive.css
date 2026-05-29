@@ -1,0 +1,2568 @@
+
+@media only screen and (max-width :1600px){
+    
+    /* Home */
+
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 40%;
+    }
+    .data-slider a.carousel-control-prev {
+        left: 13%;
+    }
+    .data-slider a.carousel-control-next {
+        right: 11%;
+    }
+    .data-slider .market-updates-slider a.carousel-control-prev {
+        right: 10px;
+    }
+    .data-slider .market-updates-slider a.carousel-control-next {
+        right: -10px;
+    }
+
+    /* Vertical Slider */
+
+    .data-slider .market-updates-slider {
+        width: 26%;
+    }
+    .vc_container {
+        width: 74%;
+    }
+
+}
+
+@media only screen and (max-width :1440px) and (min-width: 1400px) {
+
+    /* Home */
+
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 32%;
+    }
+    .data-slider a.carousel-control-prev {
+        left: 9%;
+    }
+    .data-slider a.carousel-control-next {
+        right: 5%;
+    }
+    .data-slider .market-updates-slider {
+        width: 33%;
+    }
+
+    /* Vertical Slider */
+
+    .vc_container {
+        width: 80%;
+    }
+
+}
+
+
+@media only screen and (max-width :1366px) and (min-width: 1300px) {
+
+    /* Home */
+
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 30%;
+    }
+    .data-slider a.carousel-control-prev {
+        left: 7%;
+    }
+    .data-slider a.carousel-control-next {
+        right: 4%;
+    }
+    .data-slider .market-updates-slider {
+        width: 33%;
+    }
+    
+    /* Vertical Slider */
+
+    .vc_container {
+        width: 80%;
+    }
+}
+
+/*----------------------------- Small Laptop -------------------------------*/
+@media only screen and (max-width :1280px) and (min-width: 1101px) {
+
+    /* Header */
+
+    nav.main-menu ul li {
+        margin-left: 30px;
+    }
+
+    /* Home */
+
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 30%;
+    }
+    .data-slider a.carousel-control-prev {
+        left: 7%;
+    }
+    .data-slider a.carousel-control-next {
+        right: 4%;
+    }
+    .data-slider .market-updates-slider {
+        width: 36%;
+    }
+    .data-slider .market-updates-slider a.carousel-control-prev {
+        right: 40px;
+        bottom: -40px;
+    }
+    .data-slider .market-updates-slider a.carousel-control-next {
+        right: 10px;
+        bottom: -40px;
+    }
+    .investing-tools .nav li a {
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    /* Fund Watch */
+
+    .perform-paramtr .dy-table-wrap .dy-table-block table tr th {
+        font-size: 17px;
+    }
+
+    /* Vertical Slider */
+
+    .vc_container {
+        width: 80%;
+    }
+
+    /* Fund Managers */
+
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::after {
+        right: 232px;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::before {
+        right: 223px;
+    }
+
+    
+
+}
+
+/*----------------------------- Media 1024 -------------------------------*/
+@media only screen and (max-width :1100px){
+
+    /* Header */
+
+    .expert-main .expert-inner .expert-common {
+        padding: 50px 25px;
+    }
+    .header-top .welcome .header-1,
+    .header-top .welcome .header-2 {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .header-top .welcome .header-1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .header-top .welcome .header-2 .header-menu ul {
+        justify-content: flex-start !important;
+    }
+    nav.main-menu .navbar-brand {
+        padding: 0;
+        width: 17%;
+    }
+    nav.main-menu ul li {
+        margin-left: 10px;
+    }
+    nav.main-menu ul li a {
+        font-size: 15px;
+    }
+    nav li.ask-expert-link a {
+        font-size: 14px !important;
+        padding: 12px 8px 10px 8px !important;
+    }
+    nav.main-menu .navbar-brand img {
+        width: 100%;
+    }
+
+    /* Home */
+
+    .data-slider .slider-c-wrapper .s-c-lft {
+        padding: 25px 0;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft {
+        width: 100%;
+        padding: 0;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft::after {
+        right: -30px;
+    }
+    .data-slider .main-slider a.carousel-control-prev {
+        left: 6%;
+    }
+    .data-slider .main-slider a.carousel-control-next {
+        right: 2%;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft::after {
+        display: none;
+    }
+    .data-slider .market-updates-slider .container {
+        margin: 0 auto !important;
+        padding: 0px 15px !important;
+    }
+    .data-slider .market-updates-slider a.carousel-control-prev,
+    .data-slider .market-updates-slider a.carousel-control-next {
+        bottom: 0;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft p {
+        font-size: 14px;
+        line-height: 20px;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft h3 {
+        font-size: 38px;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft a {
+        font-size: 15px;
+    }
+    .data-slider .market-updates-slider {
+        position: relative;
+        margin: 0;
+        bottom: 0;
+        background: #000;
+        width: 100%;
+        right: 0;
+        padding: 20px 0;
+        height: 174px;
+    }
+    .blogs-sec .b-block .block-lft,
+    .blogs-sec .b-block .block-rgt,
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image,
+    .faq-slider .faq-wrapper .faq-slides .faq-s-content,
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio .faq-bio-lft,
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio .faq-bio-rgt {
+        float: none !important;
+        width: 100%;
+    }
+    .blogs-sec .b-block .wrap {
+        display: block;
+    }
+    .blogs-sec .b-block .wrap .block-lft {
+        margin-bottom: 20px;
+    }
+    .advisor-slider .adv-s-image img {
+        height: 100%;
+    }
+    .advisor-slider .adv-s-content {
+        padding: 30px 40px;
+    }
+    .advisor-slider .carousel-control-next,
+    .advisor-slider .carousel-control-prev {
+        bottom: 30px;
+    }
+    .home-compare-scheme .tab-wrapper .tab-content {
+        width: 75%;
+    }
+    .compare-scemes-sec .cs-select2 .cs-select2-grp {
+        padding: 32px 15px;
+    }
+    .compare-scemes-sec .tab-wrapper .tab-content .cs-select2 .col-lg-6 {
+        max-width: 100%;
+        flex: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .compare-scemes-sec .tab-wrapper .tab-content .cs-select2 .cs-last {
+        margin-top: 30px;
+    }
+    .investing-tools .nav li a {
+        padding-right: 12px;
+        padding-left: 12px;
+        font-size: 16px;
+    }
+    .investing-tools .invst-wrap .invst-fields label {
+        font-size: 14px;
+    }
+    .fund-expert-sec .fund-expert .fe-info span.sign {
+        margin: 15px 0;
+    }
+    .fund-expert-sec .fund-expert .fe-info p.bio {
+        font-size: 15px;
+        line-height: 22px;
+    }
+    .customer-speaks .c-content {
+        width: 78%;
+    }
+    .patshala-sec .patshala,
+    .patshala-sec .newsletter {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .patshala-sec .newsletter {
+        margin-top: 30px;
+    }
+    .patshala-sec .patshala .patshala-rgt {
+        display: block;
+    }
+    .patshala-sec .patshala .patshala-rgt img {
+        width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    .press-release .press-lft-block,
+    .press-release .press-rgt-block,
+    .blog-wrapper .blog-post-meta .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .press-release .press-lft-block .p-row .p-image {
+        width: 25%;
+    }
+    .press-release .press-lft-block .p-row .p-image img {
+        width: 100%;
+    }
+    .press-release .press-lft-block .p-row .p-content {
+        width: 70%;
+    }
+    .press-release .press-rgt-block {
+        margin-top: 30px;
+    }
+    .press-release .press-rgt-block .yt-block {
+        width: 70%;
+        margin: 0 auto;
+    }
+    .press-release .press-rgt-block .yt-wrap img {
+        width: 100%;
+    }
+    .patshala-new .patshala-new-lft li a {
+        width: 100%;
+        font-size: 20px;
+        line-height: 19px;
+    }
+    .press-release .news-blocks .news-inner-block span {
+        font-size: 20px;
+    }
+
+    /* Fund Watch */
+
+    .research-philosophy .r-tem-rgt {
+        padding-left: 0;
+    }
+    .research-philosophy .research-team ul li {
+        margin-left: 0;
+    }
+    .perform-paramtr .dy-table-wrap .dy-table-block table tr th {
+        font-size: 15px;
+    }
+
+    /* Footer */
+
+    .footer .f-col-cn ul li a {
+        font-size: 16px;
+    }
+    .footer .footer-top .row .f-col-3 {
+        flex: 45%;
+        max-width: 45%;
+    }
+    .footer .f-col-social .social-div {
+        width: 18% !important;
+    }
+    .footer .f-col-social .social-div img {
+        width: 100%;
+    }
+    .press-release .yt-video-wrap {
+        width: 80% !important;
+    }
+
+    /* Composition Snapshot */
+
+    .custom-sort-table .c-snapshot .compo-cm {
+        flex: 50%;
+        max-width: 50%;
+    }
+    .custom-sort-table .c-snapshot .sort-table-three {
+        flex: 8%;
+        max-width: 8%;
+    }
+
+    /* Monthly Ranking */
+
+    .custom-sort-table .monthly-ranking-table table {
+        width: 530px !important;
+    }
+    .sort-table-cm.sort-table-one.p-0 {
+        border-right: 1px solid #000 !important;
+        overflow-x: scroll;
+    }
+    .monthly-ranking-wrap {
+        background: #00665e;
+    }
+
+    /* Vertical Slider */
+
+    .vc_container {
+        width: 90%;
+    }
+    .data-slider .market-updates-slider h3 {
+        margin-bottom: 25px;
+    }
+    .data-slider .market-updates-slider .verticalCarousel .verticalCarouselHeader {
+        top: 30px;
+    }
+    .live-market-data .live-market-wrap {
+        top: 0;
+        margin-top: 30px;
+    }
+
+    /* FAQ */
+
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image > div > img {
+        width: auto;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image {
+        display: flex;
+        align-items: center;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio {
+        margin: 0 0 0 20px;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio .faq-bio-rgt {
+        text-align: left;
+        margin-top: 16px;
+        line-height: normal;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio .faq-profile-sign {
+        margin-top: 20px;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-content {
+        margin-top: 30px;
+    }
+    .faq-slider .faq-wrapper a.carousel-control-next,
+    .faq-slider .faq-wrapper a.carousel-control-prev {
+        top: 0;
+    }
+
+    /* Know the ratios */
+
+    .know-ratio-wrap .faq-wrap .card-body > .row {
+        display: block;
+    }
+    .know-ratio-wrap .faq-wrap .card-body > .row > div {
+        max-width: 100%;
+        flex: 100%;
+    }
+    .know-ratio-wrap .faq-wrap .know-ration-img {
+        margin-top: 30px;
+    }
+    .know-ratio-wrap .faq-wrap .know-ration-img img {
+        display: block;
+        max-width: 100%;
+        width: auto;
+    }
+
+    /* About Us */
+    
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2 h3 {
+        margin-left: 150px;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3::after {
+        right: 53%;
+    }
+    .about-us-goals .goals-wrapper span {
+        font-size: 42px;
+    }
+    .our-team-slider .owl-carousel .owl-nav.disabled {
+        display: block;
+    }
+
+    /* Fund Managers */
+
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-lft::after {
+        bottom: 10px;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::before {
+        right: 172px;
+        bottom: -60px;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::after {
+        right: 182px;
+        height: 75px;
+        bottom: -51px;
+    }
+
+    /* Mutua Fund Classifications */
+
+    .fw-banner .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .fw-banner .banner-align-lft {
+        width: 73%;
+    }
+    .fw-banner .banner-align-rgt {
+        width: 23%;
+        text-align: right;
+        margin-left: 0;
+        padding-left: 0;
+        float: right;
+    }
+    .fw-banner .fw-downlaod-btn::before {
+        left: 30px;
+    }
+
+    /* NFO Monitor Mahindra */
+
+    .nfo-banner .nfo-banner-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .nfo-banner .nfo-banner-wrapper-lft {
+        flex: 75%;
+        max-width: 75%;
+        padding-right: 20px;
+    }
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-rgt {
+        flex: 25%;
+        max-width: 25%;
+    }
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-lft {
+        width: 98%;
+    }
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-rgt {
+        width: 80%;
+        text-align: left;
+        float: left;
+        margin-top: 20px;
+    }
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-rgt::before {
+        display: none;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt {
+        padding-left: 20px;
+        padding-right: 0;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt .allocation-data span {
+        font-size: 25px;
+    }
+
+    /* SIP Planner - Social Login */
+
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper {
+        flex: 70%;
+        max-width: 70%;
+    }
+
+    /* SIP Planner - Selection Popup */
+
+    .calculator-select-calc-popup .select-calc-popup-wrap {
+        width: 40%;
+    }
+
+    /* SIP Planner - TAB 1 */
+
+    .investing-tools .tab-wrapper ul.nav.nav-tabs li a {
+        padding-right: 26px;
+        padding-left: 26px;
+    }
+    .investing-tools .tab-wrapper .invst-sip-planner .sip-planner-ic-common {
+        flex: 48%;
+        max-width: 48%;
+    }
+
+    /* Performance Snapshot Page */
+
+    .perform-snapshot-tabs .nav li a {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    /* Know Your Scheme */
+
+    .know-scheme-tabs .accordion-table .card-body {
+        overflow-y: hidden;
+    }
+    .know-scheme-tabs .accordion-table .card-body table {
+        width: 1300px;
+    }
+
+    /* Ask an Expert */
+
+    .qna-main .experts-totals .experts-total-wrap h6 {
+        font-size: 16px;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap {
+        margin-left: 120px;
+    }
+    
+    /* Filter Page */
+
+    .pent-content-block .pent-cnt-lft span br {
+        display: none;
+    }
+    .pent-content-block .pent-cnt-lft {
+        flex: 42%;
+        max-width: 42%;
+    }
+
+}
+
+
+/*----------------------------- Media 768 -------------------------------*/
+@media only screen and (max-width:999px){
+
+    /* Header */
+
+    nav.main-menu {
+        position: relative;
+        background: #000;
+        margin: 0;
+        padding: 15px 0 !important;
+    }
+    nav.main-menu .navbar-brand {
+        width: 22%;
+    }
+    nav.main-menu button.navbar-toggler {
+        background: rgb(255, 255, 255);
+    }
+    .navbar-toggler-icon {
+        background-image: url('../images/toggle-icon.png');
+    }
+    nav.main-menu .align-items-center {
+        display: block !important;
+    }
+    nav.main-menu li {
+        margin: 10px 0 0 !important;
+    }
+    .dropdown:hover > .dropdown-menu {
+        display: none;
+    }
+    .dropdown > .dropdown-toggle:active {
+        pointer-events: initial;
+    }
+    nav.main-menu ul li.nav-item.dropdown.show .dropdown-menu.show {
+        display: block;
+    }
+    nav.main-menu ul li.nav-item.dropdown.show .dropdown-toggle::after {
+        transform: rotate(180deg);
+        vertical-align: 3px;
+    }
+
+    /* Ask Our Expert */
+
+    .expert-main .expert-inner .expert-common {
+        max-width: 100%;
+        flex: 100%;
+    }
+    .expert-main .expert-wrap .expert-inner .expert-footer {
+        padding: 32px 20px;
+    }
+    .expert-main .expert-wrap .expert-inner .expert-footer .col-sm-12 {
+        max-width: 50%;
+        flex: 50%;
+    }
+    .expert-main .expert-wrap .expert-inner .expert-footer .exptert-f-rgt-block {
+        max-width: 100%;
+        flex: 100%;
+        text-align: center !important;
+        margin-top: 20px;
+    }
+
+    /* Home */
+
+    .data-slider .slider-c-wrapper .s-c-lft h3 {
+        font-size: 26px;
+        line-height: 24px;
+    }
+    .data-slider .market-updates-slider {
+        height: 160px;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft p {
+        font-size: 15px;
+        padding: 10px 5px 12px 0;
+    }
+    .data-slider .market-updates-slider h3 {
+        font-size: 28px;
+    }
+    .data-slider .market-updates-slider .mupt-content {
+        width: 92%;
+    }
+    .vc_container {
+        width: 87%;
+    }
+    .blogs-sec .b-block img {
+        width: auto;
+    }
+    .blogs-sec .b-block {
+        margin-bottom: 20px;
+    }
+    .blogs-sec .b-block:last-child {
+        margin-bottom: 0;
+    }
+    .advisor-slider .adv-slides {
+        display: block !important;
+    }
+    .advisor-slider .adv-s-image,
+    .advisor-slider .adv-s-content {
+        width: 100%;
+    }
+    .compare-scemes-sec .nav li, .compare-scemes-sec .nav li a {
+        border-radius: 5px;
+    }
+    .investing-tools .nav li {
+        margin: 0px 5px 10px 5px;
+    }
+    .investing-tools .invst-wrap .invst-fields {
+        justify-content: space-between;
+    }
+    .investing-tools .invst-wrap .invst-fields .invst-field-1-c,
+    .investing-tools .invst-wrap .invst-field-2 .invst-field-2-c  {
+        flex: 48%;
+        max-width: 48%;
+    }
+    .investing-tools .invst-wrap .invst-field-2 .invst-field-2-c5 {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .investing-tools .invst-wrap .invst-field-2 {
+        margin-top: 25px;
+    }
+    .investing-tools .invst-wrap .invst-fields label {
+        margin-top: 20px;
+    }
+    .fund-expert-sec .fund-expert,
+    .fund-expert-sec .faq-sec {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .fund-expert-sec .faq-sec {
+        margin-top: 30px;
+    }
+    .press-release .press-rgt-block .yt-block::before {
+        height: 100px;
+    }
+    .press-release .yt-video-wrap div iframe {
+        height: 400px;
+    }
+    .home-select-service .row {
+        display: block;
+    }
+    .home-select-service .row > div {
+        max-width: 100%;
+        flex: 100%;
+        margin-bottom: 30px;
+    }
+    .home-select-service .row > div:last-child {
+        margin-bottom: 0;
+    }
+    .home-select-service .select-service-common {
+        padding: 30px 20px;
+    }
+    .home-compare-scheme .tab-wrapper .tab-content {
+        width: 100%;
+    }
+    .patshala-new .row {
+        display: block;
+    }
+    .patshala-new .row > div {
+        flex: 100%;
+        max-width: 100%;
+        margin-bottom: 30px;
+    }
+    .patshala-new .row > div:last-child {
+        margin-bottom: 0;
+    }
+    .patshala-new .patshala-new-rgt img {
+        width: 100%;
+    }
+    .press-release .news-blocks .news-inner-block span {
+        padding: 0;
+        font-size: 18px;
+    }
+
+    /* Contact Us */
+
+    .custom-banner {
+        padding: 120px 0;
+    }
+    .custom-banner::before {
+        height: 100%;
+    }
+    .connect-us-sec .c-lft,
+    .connect-us-sec .c-rgt {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .connect-us-sec .c-rgt {
+        padding-left: 0;
+        margin-top: 30px;
+    }
+    .connect-gmap iframe {
+        height: 400px;
+    }
+
+    /* Login */
+
+    .login-page .login-block .login-wrap > div {
+        flex: 80%;
+        max-width: 80%;
+    }
+
+    /* Analysis Register */
+
+    .login-page .login-block .login-wrap .analysis-login-main-box {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .file-upload .file-upload-select {
+        display: block;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-type {
+        margin-top: 30px;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-action {
+        margin-top: 35px;
+    }
+
+    /* Footer */
+
+    .footer .f-col-social {
+        margin-top: 0;
+    }
+    .footer .footer-top .footer-last {
+        flex: 100%;
+        max-width: 100%;
+        display: flex;
+        margin-top: 30px;
+    }
+    .footer .footer-top .footer-last .f-col-logo,
+    .footer .footer-top .footer-last .f-col-social {
+        flex: 50%;
+        max-width: 50%;
+    }
+    .footer .footer-top .footer-last .f-col-logo img {
+        display: block;
+    }
+    .footer .f-col-social .social-div {
+        width: 10% !important;
+    }
+
+    /* Fund Watch */
+
+    .fw-banner .banner-align-rgt {
+        margin: 30px 0 0 0;
+        padding-left: 0;
+    }
+    .fw-sec-2 .gry-lft {
+        flex: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+    .fw-sec-2 .gry-rgt {
+        padding: 0;
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 30px;
+    }
+    .research-philosophy .research-team .r-team-lft {
+        padding: 0 15px;
+        margin-bottom: 10px;
+    }
+    .research-philosophy .r-tem-rgt {
+        padding-left: 15px;
+    }
+    .research-philosophy .philosophy-wrap {
+        padding: 55px 25px 55px 25px;
+    }
+    .research-philosophy .philosophy-wrap .phy-lft {
+        padding-right: 25px;
+    }
+    .research-philosophy .philosophy-wrap .phy-rgt {
+        padding-left: 25px;
+    }
+    .fw-sec-4 .row {
+        display: block;
+    }
+    .fw-sec-4 .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .fw-sec-4 .row .perform-pmtr-sip {
+        margin-top: 30px;
+    }
+    .scheme-rank .sr-wrapper .row {
+        display: block;
+    }
+    .scheme-rank .sr-wrapper .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .scheme-rank .sr-wrapper .row .sr-wrap-rgt {
+        margin-top: 30px;
+    }
+    .portfolio-breakup .perform-paramtr .perform-pmtr-lumpsum table tr th,
+    .portfolio-breakup .perform-paramtr .perform-pmtr-lumpsum table tr td {
+        width: auto !important;
+        padding: 15px !important;
+    }
+
+    /* Fund Portfolio */
+
+    .fw-banner .banner-align-lft,
+    .fw-banner .banner-align-rgt {
+        float: none !important;
+    }
+    .fw-banner .fw-downlaod-btn::before {
+        display: none;
+    }
+
+    /* Composition Snapshot */
+
+    .fw-banner .banner-align-rgt {
+        margin-top: 30px !important;
+    }
+
+    .custom-sort-table .c-snapshot .compo-cm {
+        flex: 44%;
+        max-width: 44%;
+        background: #00665e;
+    }
+    .custom-sort-table .c-snapshot .sort-table-three {
+        flex: 14%;
+        max-width: 14%;
+    }
+    .custom-sort-table .c-snapshot .compo-cm table {
+        width: 530px;
+    }
+    .custom-sort-table .c-snapshot .sort-table-three table {
+        width: 120%;
+    }
+    .custom-sort-table .c-snapshot .compo-cm tr th {
+        height: 60px;
+    }
+
+    /* Monthly Snapshot */
+
+    .monthly-compo-wrap .monthly-compo-tables {
+        margin: 0;
+    }
+    .monthly-compo-wrap .monthly-compo-tables > div {
+        margin-bottom: 30px;
+        padding: 0;
+    }
+    .monthly-compo-wrap .monthly-compo-tables > div:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Weekly Snapshot */
+
+    .weekly-snapshot-blocks .weekly-table-block-one {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .weekly-snapshot-blocks .weekly-table-block-two {
+        padding-left: 0px !important;
+        margin-top: 30px;
+    }
+    .weekly-snapshot-cols .row {
+        margin: 0;
+    }
+    .weekly-snapshot-cols .row > div {
+        padding: 0;
+        margin-bottom: 30px;
+    }
+    .weekly-snapshot-cols .row > div:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Blog */
+
+    .blog-menu .container span.navbar-toggler-icon {
+        background-image: url('../images/toggle-icon-w.png');
+    }
+
+    /* About Us */
+
+    .about-us-main {
+        margin: 60px 0;
+    }
+    .about-us-main .about-us-lft, .about-us-main .about-us-rgt {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .about-us-main .about-us-rgt {
+        margin-top: 30px;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::before {
+        right: 81%;
+        margin-right: 4px;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::after {
+        left: 29%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3::after {
+        right: 76%;
+    }
+    .about-us-commitment .commit-lft, .about-us-commitment .commit-rgt {
+        flex: 100%;
+        max-width: 100%;
+        padding: 0 15px;
+    }
+    .about-us-commitment .commit-rgt {
+        margin-top: 30px;
+    }
+    .about-us-commitment .commit-lft h3 {
+        font-size: 30px;
+        line-height: 32px;
+    }
+    .about-us-goals .goals-wrapper {
+        padding: 40px;
+    }
+    .about-us-goals .goals-wrapper .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .about-us-goals .goals-wrapper .row > div:last-child {
+        margin-top: 30px;
+    }
+    .our-team-slider .our-team-para {
+        width: 85%;
+    }
+    .our-team-slider .our-team-carousel .owl-nav button.owl-prev {
+        left: -50px;
+    }
+    .our-team-slider .our-team-carousel .owl-nav button.owl-next {
+        right: -50px;
+    }
+
+    /* Fund Managers */
+
+    .fund-experts-wrap {
+        margin: 40px 0;
+    }
+    .fund-experts-wrap > div > .row {
+        display: block;
+    }
+    .fund-experts-wrap > div > .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .fund-experts-wrap .row .fund-el-profile-lft {
+        padding-right: 15px;
+    }
+    .fund-experts-wrap .row .fund-el-profile-lft {
+        flex: 35%;
+        max-width: 35%;
+    }
+    .fund-experts-wrap .row .fund-el-profile-lft img {
+        width: auto;
+    }
+    .fund-experts-wrap .fund-expert-rgt {
+        margin-top: 40px;
+    }
+    .fund-experts-wrap .fund-expert-rgt h3 br {
+        display: none;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-lft {
+        flex: 30%;
+        max-width: 30%;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-lft::after,
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::after,
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap > div::before {
+        display: none;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-rgt {
+        padding-left: 0;
+    }
+
+    /* Mutual Fund Classifications */
+
+    .fw-banner h1 {
+        font-size: 45px;
+        line-height: 45px;
+    }
+    .mutual-fund-pdf-wrap .inner-pdf-wrap {
+        padding: 70px 50px;
+    }
+    .fw-banner .banner-align-rgt {
+        margin-top: 0 !important;
+    }
+
+    /* Mutual Fund Taxation */
+
+    .mutual-f-taxation .row {
+        display: block;
+    }
+    .mutual-f-taxation .mutual-f-tax-rgt, .mutual-f-taxation .mutual-f-tax-lft {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .mutual-f-taxation .mutual-f-tax-lft {
+        margin-top: 30px;
+    }
+    .mutual-f-taxation .mutual-f-tax-lft .row {
+        display: flex;
+    }
+
+    /* NFO Monitor */
+
+    .nfo-archives .archives-posts .archive-block {
+        flex: 48%;
+        max-width: 48%;
+    }
+
+    /* NFO Monitor Mahindra */
+
+    .nfo-banner .nfo-banner-wrapper {
+        display: block;
+    }
+    .nfo-banner .container {
+        display: block;
+    }
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-lft,
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-lft,
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-rgt {
+        float: none;
+        width: 100%;
+        flex: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+    .nfo-banner .nfo-banner-wrapper-lft .banner-align-rgt {
+        margin-top: 20px !important;
+    }
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-rgt {
+        float: none;
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+        width: auto;
+    }
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-rgt img {
+        max-width: 30%;
+        width: 100%;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .row {
+        flex-direction: column;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .row > div {
+        flex: 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt {
+        border-left: 0;
+        border-top: 2px solid #fff;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt .allocation-data {
+        margin-top: 25px;
+    }
+    .oomp-factor .oomp-wrap {
+        padding: 40px 25px;
+    }
+
+    /* SIP Planner - Social Login */
+
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper .sip-calc-loginin-wrap .sip-calc-social-login {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 35px;
+    }
+
+    /* SIP Planner - Selection Popup */
+
+    .calculator-select-calc-popup .select-calc-popup-wrap {
+        width: 50%;
+    }
+
+    /* SIP Planner - TAB 1 */
+
+    .investing-tools .tab-wrapper ul.nav.nav-tabs li a {
+        border-radius: 0;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .investing-tools .tab-wrapper .invst-sip-planner .sip-planner-ic-common label {
+        margin-top: 0;
+    }
+    .investing-tools .invst-wrap .invst-fields {
+        display: block;
+        margin-top: 0;
+    }
+    .investing-tools .tab-wrapper .invst-sip-planner .sip-planner-ic-common {
+        max-width: 100%;
+        flex: 100%;
+        margin-top: 30px;
+    }
+    .investing-tools .invst-wrap .sip-planner-ic-action {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    /* SIP Planner - TAB 2 */
+
+    .invst-sip-performace .row {
+        display: flex !important;
+    }
+
+    /* SIP Planner - TAB 3 */
+
+    .investing-tools .inst-inflation-calc .invst-field-1 {
+        display: flex;
+    }
+    .investing-tools .inst-inflation-calc > .row > div {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* SIP Planner - TAB 4 */
+
+    .investing-tools .invst-retirement-calc .row,
+    .investing-tools .invst-risk-tol-calc .row {
+        display: flex;
+    }
+    .investing-tools .invst-retirement-calc .invst-retirement-column {
+        flex: 50%;
+        max-width: 50%;
+    }
+    .investing-tools .invst-retirement-calc .row label {
+        margin-top: 0;
+    }
+    .investing-tools .invst-retirement-calc .invst-inflation-data {
+        margin-top: 30px;
+    }
+
+    /* SIP Planner - TAB 5 */
+
+    .investing-tools .invst-risk-tol-calc label {
+        margin-top: 0 !important;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age > .risk-tol-age-wrap {
+        display: block;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in {
+        max-width: 100%;
+        flex: 100%;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-action {
+        max-width: 100%;
+        margin-top: 30px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt label {
+        padding-left: 40px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt input {
+        margin-left: -25px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results .risk-tol-eval-risk-profile {
+        overflow-x: scroll;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results .risk-tol-eval-risk-profile table {
+        width: 850px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results .risk-tol-eval-risk-profile .risk-profile-titles h3 {
+        font-size: 26px;
+    }
+
+    /* Performance Snapshot */
+
+    .perform-snapshot-tabs .nav li a {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .perform-snapshot-tabs .nav li {
+        margin-bottom: 0;
+        margin-left: 0;
+    }
+    .perform-snapshot-tabs .tab-content .perform-snapshot-table {
+        overflow-y: hidden;
+    }
+    .perform-snapshot-tabs .tab-content .perform-snapshot-table table {
+        width: 800px;
+    }
+
+    /* Fund Performance Returns */
+
+    .fund-perform-returns ul.nav li {
+        flex: 30%;
+        max-width: 30%;
+        margin-bottom: 0;
+    }
+    .fund-perform-returns ul.nav li,
+    .fund-perform-returns ul.nav li a {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .investing-tools .invst-wrap .invst-fields label {
+        margin-top: 0;
+    }
+    .fund-perform-returns .fund-perform-return-schema ul li,
+    .fund-perform-returns .fund-perform-return-schema ul li span {
+        font-size: 18px;
+    }
+    .fund-perform-returns .fund-perform-return-compare h4 {
+        font-size: 25px;
+    }
+    .fund-perform-returns .fund-perform-ratio-table {
+        overflow-y: hidden;
+    }
+    .fund-perform-returns .fund-perform-portfolios-table table {
+        width: 1000px;
+    }
+    .fund-perform-returns .fund-perform-return-compare .comapre-actions {
+        margin-top: 20px;
+    }
+    .fund-perform-returns .fund-perform-return-compare .comapre-actions .row {
+        justify-content: flex-start !important;
+        margin: 0;
+    }
+
+    /* Ask a Question */
+
+    .ask-expert-sec .ask-expert-cols .row > div {
+        flex: 50%;
+        max-width: 50%;
+        margin-bottom: 25px;
+    }
+    
+    /* Ask an Expert - Questions */
+
+    .ask-expert-qna .qna-main .questions-wrapper,
+    .ask-expert-qna .qna-main .experts-totals {
+        width: 100%;
+        float: none;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .row > .col-lg-2 {
+        flex: 18%;
+        max-width: 18%;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .row > .col-lg-10 {
+        flex: 80%;
+        max-width: 80%;
+    }
+    .ask-expert-qna .qna-main .experts-totals {
+        margin-top: 60px;
+    }
+    .qna-main .experts-totals .experts-total-wrap .row > div {
+        padding: 0 15px !important;
+    }
+    .ask-expert-qna .qna-main .experts-totals .experts-slider-wrap {
+        width: 60%;
+        margin: 0 auto;
+    }
+
+    /* Filter Page */
+
+    .pent-content-block .row {
+        display: block;
+    }
+    .pent-content-block .pent-cnt-lft,
+    .pent-content-block .pent-cnt-rgt {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .pent-content-block .pent-cnt-rgt {
+        margin-top: 20px;
+    }
+
+}
+
+/*----------------------------- Media 480 -------------------------------*/
+@media only screen and (max-width:767px){
+
+    h1,
+    .fw-banner h1 {
+        font-size: 36px;
+        line-height: 38px;
+    }
+    h3,
+    .fw-banner h3 {
+        font-size: 32px;
+    }
+    h4 {
+        font-size: 26px;
+        line-height: 28px;
+    }
+    .g-ads-sec .ads-continer {
+        width: 100%;
+    }
+
+    /* Header */
+
+    .header-top .welcome .header-2 .login-nav ul {
+        justify-content: center !important;
+        margin-top: 10px;
+    }
+    nav.main-menu .navbar-brand {
+        width: 30%;
+    }
+
+    /* Ask Our Expert */
+
+    .expert-main .expert-inner .expert-common .expert-bio-wrap .expert-profile {
+        margin-bottom: 30px;
+    }
+    .expert-main .expert-inner .expert-common .expert-bio-wrap .expert-profile img {
+        width: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    .expert-main .expert-wrap .expert-inner .expert-footer .col-sm-12 {
+        max-width: 100% !important;
+        flex: 100%;
+        text-align: left !important;
+        margin-top: 20px !important;
+    }
+    .expert-main .expert-wrap .expert-inner .expert-footer .exptert-f-lft-block {
+        margin-top: 0 !important;
+    }
+
+    /* Home */
+
+    .data-slider .market-updates-slider {
+        height: 180px;
+    }
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 22%;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft h3 {
+        font-size: 22px;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft p {
+        font-size: 14px;
+        line-height: 18px;
+        padding: 6px 0 8px 0;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft .sc-btn-1,
+    .data-slider .slider-c-wrapper .s-c-lft .sc-btn-2 {
+        width: 45%;
+    }
+    .vc_container {
+        width: 82%;
+    }
+    .advisor-slider .adv-s-content {
+        padding: 25px 20px;
+    }
+    .advisor-slider .adv-s-content h4 {
+        font-size: 28px;
+    }
+    .investing-tools .invst-wrap .invst-fields .invst-field-1-c,
+    .investing-tools .invst-wrap .invst-field-2 .invst-field-2-c {
+        flex: 49%;
+        max-width: 49%;
+    }
+    .investing-tools .invst-wrap .invst-field-2 .invst-field-2-c5 {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .fund-expert-sec .fund-expert .fe-profile,
+    .fund-expert-sec .fund-expert .fe-info {
+        width: 100%;
+        float: none;
+    }
+    .fund-expert-sec .fund-expert .fe-profile img {
+        width: auto;
+        display: block;
+        margin-right: auto;
+    }
+    .fund-expert-sec .fund-expert .fe-info {
+        margin-top: 30px;
+        padding: 0;
+    }
+    .fund-expert-sec .faq-sec .faq-ac .card button {
+        font-size: 17px;
+    }
+    .fund-expert-sec .faq-sec .faq-ac .card .card-body {
+        font-size: 15px;
+    }
+    .customer-speaks .c-content {
+        margin-top: 30px;
+    }
+    .blogs-sec .b-block a {
+        font-size: 20px;
+    }
+    .fund-expert-sec .fund-inner-wrap {
+        display: block;
+    }
+    .patshala-sec .patshala .patshala-lft-wrap {
+        flex-direction: column;
+    }
+    .patshala-sec .patshala .patshala-lft,
+    .patshala-sec .patshala .patshala-rgt {
+        width: 100%;
+    }
+    .patshala-sec .patshala .patshala-rgt {
+        margin-top: 30px;
+    }
+    .patshala-sec .patshala .patshala-rgt img {
+        width: auto;
+    }
+    .patshala-sec .newsletter .news-wrap {
+        padding: 25px 20px;
+    }
+    .press-release .press-lft-block .p-row .p-image,
+    .press-release .press-lft-block .p-row .p-content {
+        width: 100%;
+    }
+    .press-release .press-lft-block .p-row .p-content {
+        margin-top: 30px;
+    }
+    .press-release .press-lft-block .p-row .p-image img {
+        display: block;
+        width: auto;
+    }
+    .press-release .press-rgt-block .yt-block {
+        width: 90%;
+    }
+    .press-release .press-rgt-block .yt-block .yt-play-action img {
+        width: 65%;
+        display: block;
+        margin: 0 auto;
+    }
+    .press-release .yt-video-wrap {
+        width: 92% !important;
+    }
+    .press-release .news-blocks {
+        display: block;
+    }
+    .press-release .news-blocks > div {
+        margin-bottom: 30px;
+    }
+    .press-release .news-blocks > div:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Contact Us */
+
+    .custom-banner {
+        padding: 100px 0;
+    }
+    .custom-banner h1 br {
+        display: none;
+    }
+
+    /* Login */
+
+    .login-page .login-block .login-wrap > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .login-page .login-block .login-wrap {
+        padding: 45px 0;
+    }
+
+    /* Analysis Register */
+
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-file > label,
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-type > label,
+    .login-page .login-block .login-wrap .analysis-login-main-box .register-analysis-bottom .register-action > label {
+        display: none;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-type {
+        margin-top: 10px;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .register-analysis-bottom .register-action {
+        margin-top: 25px;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .register-analysis-bottom .register-action {
+        text-align: left !important;
+    }
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-type .row > div {
+        flex: 50%;
+        max-width: 50%;
+    }
+
+    /* Fund Watch */
+
+    .custom-banner {
+        padding: 60px 0;
+    }
+    .research-philosophy .philosophy-wrap::after {
+        display: none;
+    }
+    .research-philosophy .philosophy-wrap .phy-rgt {
+        padding-left: 0;
+        margin-top: 30px;
+    }
+    .perform-paramtr .dy-table-wrap .dy-table-block table tr th {
+        padding: 15px 20px;
+    }
+    .return-index .gry-block {
+        padding: 30px 25px;
+    }
+    .return-index .r-index-2 {
+        margin-top: 30px;
+    }
+    .risk-ratio .rr-2 {
+        margin-top: 15px;
+    }
+    .risk-ratio .rr-2 h6 {
+        text-align: left !important;
+    }
+
+    /* Footer */
+
+    .footer .footer-top .row .f-col-3 {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .footer .f-col-1, .footer .f-col-2 {
+        margin-top: 0;
+    }
+    .footer .f-col-cn h6 {
+        margin-bottom: 20px;
+    }
+    .footer .f-col-cn ul li {
+        margin-bottom: 8px;
+    }
+    .footer .f-col-1,
+    .footer .f-col-2 {
+        flex: 50%;
+        max-width: 50%;
+    }
+    .footer .f-col-3 .f-icon {
+        width: 8%;
+    }
+    .footer .f-col-social .social-div {
+        width: 14% !important;
+    }
+    .footer .footer-bottom .row div {
+        text-align: center;
+    }
+    .footer .footer-bottom .row .f-b-rgt {
+        margin-top: 6px;
+    }
+
+    /* Fund Portfolio */
+
+    .fund-port-cols .fund-port-col-2 {
+        padding-left: 0;
+        margin-top: 20px;
+    }
+    .fund-port-cols .fund-port-col-1 {
+        padding-right: 0;
+    }
+    .custom-sort-table .c-snapchot-parent .row,
+    .custom-sort-table .perform-paramtr .row {
+        margin: 0;
+    }
+    .custom-sort-table .c-snapchot-parent .row > div,
+    .custom-sort-table .perform-paramtr .row > div {
+        padding: 0;
+    }
+    .custom-sort-table .total-table {
+        background: #00665e;
+    }
+
+    /* Monthly Ranking */
+    
+    .monthly-ranking-wrap .sort-table-one {
+        flex: 65%;
+        max-width: 65%;
+    }
+    .monthly-ranking-wrap .sort-table-two {
+        flex: 35%;
+        max-width: 35%;
+    }
+
+    /* Weekly Snapshot */
+
+    .weekly-snapshot-blocks .total-table {
+        background: #fff;
+    }
+
+    /* FAQ */
+
+    .faq-slider .faq-wrapper {
+        padding: 60px 30px;
+    }
+    .faq-slider .faq-wrapper a.carousel-control-next,
+    .faq-slider .faq-wrapper a.carousel-control-prev {
+        top: -35px;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image {
+        display: block;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image .faq-profile-bio {
+        margin: 20px 0 0 0;
+    }
+
+    /* About Us */
+
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2 h3 {
+        margin-left: 110px;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::after {
+        left: 33%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3::after {
+        right: 65%;
+    }
+    .about-us-commitment .commit-lft h3 {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    .about-us-goals .goals-wrapper span {
+        font-size: 36px;
+        line-height: 38px;
+    }
+    .our-team-slider .our-team-para {
+        width: 100%;
+    }
+    .owl-carousel .owl-item img {
+        width: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    .our-team-slider .our-team-carousel .team-c-bio,
+    .our-team-slider .our-team-carousel .team-c-connect {
+        float: none;
+        width: 100%;
+        text-align: center;
+    }
+    .our-team-slider .our-team-carousel .team-c-cnt {
+        margin: 20px 0 15px 0;
+    }
+    .our-team-slider .our-team-carousel .team-c-connect {
+        margin-top: 20px;
+    }
+    .our-team-slider .our-team-carousel .team-c-connect img {
+        width: auto;
+    }
+    .our-team-slider .our-team-carousel .team-c-connect a {
+        display: inline-block;
+    }
+
+    /* Fund Managers */
+
+    .fund-experts-wrap .row .fund-el-profile-rgt {
+        flex: 60%;
+        max-width: 60%;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-rgt {
+        flex: 65%;
+        max-width: 65%;
+    }
+
+    /* Mutual Fund Classifications */
+
+    .fw-banner .container {
+        display: block;
+    }
+    .fw-banner .banner-align-lft, .fw-banner .banner-align-rgt {
+        width: 100%;
+        text-align: left;
+    }
+    .mutual-f-class .mutual-f-class-rgt ul.nav {
+        justify-content: flex-start;
+        margin-top: 25px;
+    }
+    .mutual-fund-pdf-wrap .inner-pdf-wrap {
+        padding: 70px 30px;
+    }
+    .fw-banner .banner-align-rgt {
+        margin-top: 20px !important;
+    }
+    .mutual-f-taxation .mutual-f-tax-lft .row .mutual-f-tax-in-rgt {
+        margin-top: 20px;
+    }
+
+    /* NFO Monitor Mahindra */
+
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-rgt img {
+        max-width: 40%;
+    }
+    .nfo-fund-facts .nfo-fund-inner ul li,
+    .fund-stats-wrap .fund-stats-inner-wrap .fund-stats-common .fund-stats-data ul {
+        display: block !important;
+    }
+    .nfo-fund-facts .nfo-fund-inner ul li > div,
+    .fund-stats-wrap .fund-stats-inner-wrap .fund-stats-common .fund-stats-data ul li {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .fund-stats-common .fund-stats-data ul li {
+        margin-top: 10px;
+    }
+
+    /* SIP Planner - Social Login */
+
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper .sip-calc-loginin-wrap {
+        width: 100%;
+    }
+
+    /* SIP Planner - Selection Popup */
+
+    .calculator-select-calc-popup .select-calc-popup-wrap {
+        width: 60%;
+    }
+
+    /* SIP Planner TAB 2 */
+
+    .sip-performance-calc-table .sip-p-table-inner {
+        overflow-x: scroll;
+    }
+
+    /* SIP Planner TAB 4 */
+
+    .investing-tools .invst-retirement-calc .row > div {
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 20px !important;
+    }
+    .investing-tools .invst-retirement-calc .row > div:first-child {
+        margin-top: 0 !important;
+    }
+    .investing-tools .invst-retirement-calc .invst-inflation-calc .invst-fields-action-buttons {
+        margin-top: 10px;
+    }
+    .investing-tools .invst-retirement-calc .row .invst-inflation-data {
+        margin-top: 30px !important;
+    }
+
+    /* SIP Planner - TAB 5 */
+
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in {
+        display: block;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in > div {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt {
+        margin-top: 20px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-wrap-in .risk-tol-age-rgt label {
+        padding-left: 30px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results .risk-tol-eval-result-table {
+        overflow-x: scroll;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results table {
+        width: 850px !important;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results .risk-tol-eval-risk-profile .risk-profile-titles .title-2 h3 {
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    /* Thoughts & Opinions on Funds */
+
+    .opinions-funds .opinions-funds-download,
+    .opinions-wrap .opinions-blocks .op-download {
+        text-align: left;
+        margin-top: 20px;
+    }
+    .opinions-funds .opinions-funds-title h3 br {
+        display: none;
+    }
+    .opinions-wrap .opinions-blocks .opinions-content {
+        margin-top: 25px;
+    }
+
+    /* Performance Snapshot */
+
+    .perform-snapshot-tabs .invst-wrap .row > div {
+        margin-bottom: 20px;
+    }
+    .perform-snapshot-tabs .invst-wrap .row > div:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Fund Performance Returns */
+
+    .fund-perform-returns .fund-perform-return-compare .comapre-actions button {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+    .fund-perform-returns ul.nav {
+        display: flex;
+    }
+    .fund-perform-returns ul.nav li {
+        margin: 0 5px 0;
+    }
+
+    /* Know Your Scheme */
+
+    .know-scheme-tabs .perform-snapshot-submit .text-right {
+        text-align: left !important;
+    }
+
+    /* Ask an Expert - Questions */
+
+    .ask-expert-qna .ask-expert-wrapper > div {
+        flex: 50%;
+        max-width: 50%;
+    }
+    .ask-expert-qna .ask-expert-wrapper > div:last-child {
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap {
+        margin-left: 50px;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block {
+        margin-top: 0;
+    }
+
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block > .row {
+        display: block;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block > .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block > .row > .col-lg-10 {
+        margin-top: 30px;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block > .row div > img {
+        width: 95px;
+        height: auto;
+    }
+    .qna-main .experts-totals .experts-total-wrap .row > div {
+        flex: 33%;
+        max-width: 33%;
+    }
+    .ask-expert-qna .qna-main .experts-totals .experts-slider-wrap {
+        width: 75%;
+    }
+    .ask-expert-qna .ask-expert-wrapper > div {
+        flex: 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+    .ask-expert-qna .ask-expert-wrapper > div:first-child {
+        margin-top: 0;
+    }
+
+    /* Fund Watch Single Page */
+
+    .fw-single-page .fw-single-block .fw-pdf-donwload img {
+        display: block;
+        margin-bottom: 10px;
+        margin-left: -6px;
+    }
+    .news-listing .new-lisiting-title a {
+        font-size: 20px;
+    }
+
+    /* Filter Page */
+
+    .pent-content-block {
+        padding: 30px 0;
+        margin-bottom: 40px;
+    }
+    .pent-content-block .pent-cnt-lft span {
+        font-size: 30px;
+        line-height: 30px;
+    }
+
+}
+
+
+/*----------------------------- Media 320 -------------------------------*/
+@media only screen and (max-width:479px){
+
+    h1,
+    .fw-banner h1 {
+        font-size: 32px;
+        line-height: 34px;
+    }
+    h3,
+    .fw-banner h3 {
+        font-size: 30px;
+        line-height: 32px;
+    }
+    h4 {
+        font-size: 24px;
+        line-height: 26px;
+    }
+    h5 {
+        font-size: 20px;
+        line-height: 20px;
+    }
+
+    /* Header */
+
+    .header-top .welcome .header-2 .header-menu ul {
+        display: block !important;
+    }
+    .header-top .welcome .header-2 .header-menu ul li {
+        font-size: 0;
+    }
+    .header-top .welcome .header-2 .header-menu ul li {
+        display: inline-block;
+        width: 48%;
+        vertical-align: top;
+    }
+    .header-top .header-menu ul li a {
+        margin: 0;
+        display: block;
+        text-align: center;
+    }
+    nav.main-menu .navbar-brand {
+        width: 50%;
+        margin: 0;
+    }
+
+    /* Home */
+
+    .data-slider .main-slider a.carousel-control-prev {
+        left: 8%;
+    }
+    .data-slider .main-slider a.carousel-control-next {
+        right: -3%;
+    }
+    .data-slider .main-slider {
+        height: 230px;
+    }
+    .data-slider .main-slider a.carousel-control-prev,
+    .data-slider .main-slider a.carousel-control-next {
+        top: 50%;
+    }
+    .data-slider .main-slider div {
+        height: 100%;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft {
+        padding: 0 30px;
+    }
+    .data-slider .main-slider div img {
+        height: 100%;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft .row {
+        display: block;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft .sc-btn-1,
+    .data-slider .slider-c-wrapper .s-c-lft .sc-btn-2 {
+        width: 100%;
+        height: initial;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft .row div {
+        padding-right: 15px;
+    }
+    .data-slider .slider-c-wrapper .s-c-lft .sc-btn-2 {
+        margin-top: 12px;
+    }
+    .data-slider .market-updates-slider p {
+        line-height: 20px;
+    }
+    .vc_container {
+        width: 72%;
+    }
+    .data-slider .market-updates-slider {
+        height: 220px;
+    }
+    .advisor-slider .adv-s-content h3 {
+        font-size: 26px;
+        line-height: 25px;
+    }
+    .advisor-slider .adv-s-content h4 {
+        font-size: 24px;
+        line-height: 26px;
+    }
+    .compare-scemes-sec .nav li {
+        margin: 10px 5px 0 5px;
+    }
+    .compare-scemes-sec .nav li a {
+        padding: 15px 10px 12px 10px;
+        font-size: 16px;
+    }
+    .investing-tools ul.nav {
+        display: block;
+    }
+    .investing-tools ul.nav li {
+        margin: 10px 0;
+    }
+    .investing-tools .invst-wrap .invst-field-2 .invst-field-2-c {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .blogs-sec .b-block a {
+        font-size: 18px;
+    }
+    .patshala-new .patshala-new-lft li a {
+        font-size: 18px;
+    }
+    .patshala-new .patshala-new-rgt .patshala-box-1 .home-fw-btn {
+        text-align: left;
+    }
+    .patshala-new .patshala-new-rgt .patshala-box-1 p {
+        margin-bottom: 15px;
+    }
+    .patshala-new .patshala-new-rgt .patshala-box-1 a {
+        font-size: 16px;
+    }
+    .patshala-sec .expert-says .expert-data {
+        display: block;
+    }
+    .patshala-sec .expert-says .exp-profile,
+    .patshala-sec .expert-says .expert-data .exp-btn {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .patshala-sec .expert-says .expert-data .exp-profile img,
+    .patshala-sec .expert-says .expert-data .exp-profile span {
+        display: block;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .patshala-sec .expert-says .expert-data .exp-profile span {
+        margin: 12px 0;
+    }
+    .patshala-sec .expert-says .expert-data .exp-btn {
+        text-align: center;
+    }
+    .fund-expert-sec .fund-expert .fe-info .float-left,
+    .fund-expert-sec .fund-expert .fe-info .float-right {
+        float: none !important;
+        padding: 0;
+    }
+    .fund-expert-sec .fund-expert .fe-info .float-right {
+        margin-top: 15px;
+    }
+    .fund-expert-sec .fund-expert .fe-info .float-right a {
+        display: inline-block;
+    }
+    .fund-expert-sec .faq-sec .faq-ac .card button::after,
+    .fund-expert-sec .faq-sec .faq-ac .card button.collapsed::after {
+        right: -30px;
+    }
+    .customer-speaks .c-content p {
+        line-height: 22px;
+        font-size: 15px;
+    }
+    .customer-speaks .c-content .profile {
+        display: block;
+    }
+    .customer-speaks .c-content .info {
+        margin: 20px 0 0 0;
+    }
+    .patshala-sec .newsletter .news-wrap .f-fields {
+        display: block !important;
+    }
+    .patshala-sec .newsletter .news-wrap .f-email,
+    .patshala-sec .newsletter .news-wrap .f-submit {
+        width: 100%;
+    }
+    .patshala-sec .newsletter .news-wrap .f-submit {
+        margin-top: 15px;
+    }
+    .patshala-sec .newsletter .news-wrap .f-email input,
+    .patshala-sec .newsletter .news-wrap .f-submit input {
+        border-radius: 5px;
+        padding: 12px;
+    }
+    .press-release .press-rgt-block .yt-block {
+        width: 100%;
+    }
+    .press-release .press-rgt-block .yt-block::before {
+        height: 200px;
+    }
+    .press-release .press-rgt-block .yt-block .yt-play-action img {
+        width: 58%;
+    }
+    .press-release .press-rgt-block .yt-block .yt-play-action span {
+        font-size: 20px;
+    }
+    .press-release .yt-video-wrap div iframe {
+        height: 260px;
+    }
+    .press-release .press-header {
+        display: block;
+    }
+    .press-release .press-rgt {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    /* Contact Us */
+
+    .custom-banner {
+        padding: 60px 0;
+    }
+    .connect-gmap iframe {
+        height: 260px;
+    }
+
+    /* Analysis Register */
+
+    .login-page .login-block .login-wrap .analysis-login-main-box .row .register-analysis-type .row > div {
+        flex: 100%;
+        max-width: 100%;
+    }
+
+    /* Fund Watch */
+
+    .fw-banner h3 {
+        margin-top: 5px;
+    }
+    .perform-paramtr .dy-table-wrap .dy-table-block table tr td,
+    .perform-paramtr .perform-pmtr-sip .dy-table-wrap .dy-table-block table tr th {
+        padding: 15px !important;
+    }
+    .return-index .gry-block {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .myplexus-feedback .wrapper {
+        padding: 40px 20px;
+    }
+
+    /* Footer */
+
+    .footer .f-col-cn ul li {
+        margin-bottom: 12px;
+    }
+    .footer .f-col-cn ul li a {
+        line-height: 17px;
+        display: block;
+    }
+    .footer .f-col-3 .f-icon {
+        width: 12%;
+    }
+    .footer .footer-top .footer-last {
+        display: block;
+    }
+    .footer .footer-top .footer-last .f-col-logo,
+    .footer .footer-top .footer-last .f-col-social {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .footer .footer-top .footer-last .f-col-social {
+        margin-top: 30px;
+    }
+    .footer .footer-top .footer-last .f-col-social .justify-content-end {
+        justify-content: flex-start !important;
+    }
+    .footer .f-col-social .social-div {
+        width: 11% !important;
+    }
+    .footer .f-col-social .social-div:first-child {
+        margin-left: 0;
+    }
+
+    .custom-banner {
+        background-position: center center;
+    }
+
+    /* Monthly Ranking */
+    
+    .monthly-ranking-wrap .sort-table-one {
+        flex: 75%;
+        max-width: 75%;
+    }
+    .monthly-ranking-wrap .sort-table-two {
+        flex: 25%;
+        max-width: 25%;
+    }
+
+    /* Monthly Snapshot */
+
+    .monthly-snap-full .total-table table {
+        width: 480px !important;
+    }
+
+    /* Weekly Snapshot */
+
+    .weekly-snapshot-blocks .total-table {
+        background: #00665e;
+    }
+
+    /* FAQ */
+
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image {
+        margin-top: 10px;
+    }
+    .faq-slider .faq-wrapper .faq-slides .faq-s-image > div > img {
+        width: 100%;
+    }
+
+    /* About Us */
+
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::before {
+        right: 70%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::after {
+        left: 52%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3 h3::after {
+        top: -20px;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3::after {
+        right: 48%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3 h3::before {
+        bottom: 8px;
+    }
+    .about-us-goals .goals-wrapper {
+        padding: 40px 20px;
+    }
+    .about-us-goals .goals-wrapper span {
+        font-size: 28px;
+        line-height: 32px;
+    }
+    .our-team-slider .our-team-carousel .owl-nav button.owl-prev {
+        left: -35px;
+    }
+    .our-team-slider .our-team-carousel .owl-nav button.owl-next {
+        right: -35px;
+    }
+
+    /* Fund Managers */
+
+    .fund-experts-wrap .disclaimer-wrap {
+        padding: 40px 20px;
+    }
+    .fund-experts-wrap .row .fund-el-profile-lft,
+    .fund-experts-wrap .row .fund-el-profile-rgt,
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-lft,
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-rgt {
+        flex: 100%;
+        max-width: 100%;
+    }
+    .fund-experts-wrap .row .fund-el-profile-rgt,
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-rgt {
+        margin-top: 30px;
+    }
+    .fund-experts-wrap .row .fund-el-profile-lft img {
+        display: block;
+        margin: 0 auto;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-rgt {
+        padding-left: 15px;
+    }
+    .fund-experts-wrap .fund-expert-rgt .experts-interviews-wrap .expert-interviews-lft img {
+        display: initial;
+    }
+
+    /* NFO Monitor */
+
+    .nfo-archives .archive-wrapper > .row {
+        display: block;
+    }
+    .nfo-archives .archive-wrapper .archive-title {
+        margin-bottom: 10px;
+    }
+    .nfo-archives .archive-title span {
+        line-height: 28px;
+    }
+    .nfo-archives .archives-posts .archive-block {
+        flex: 100%;
+        max-width: 100%;
+    }
+
+    /* NFO Monitor Mahindra */
+
+    .nfo-banner .nfo-banner-wrapper .nfo-banner-wrapper-rgt img {
+        max-width: 52%;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt .allocation-data,
+    .fund-prog .fund-stats-inner-wrap .asset-allocation-rgt ul.scheme-data {
+        display: block !important;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt .allocation-data .a-data {
+        margin-top: 15px;
+    }
+    .fund-stats-wrap .fund-stats-inner-wrap .asset-allocation-rgt .allocation-data span {
+        font-size: 20px;
+    }
+    .compare-existing-scheme .compare-table-wrap {
+        overflow-x: scroll;
+    }
+    .compare-existing-scheme table {
+        width: 500px;
+    }
+
+    /* SIP Planner - Social Login */
+
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper .sip-calc-loginin-wrap {
+        width: 100%;
+    }
+    .sip-calc-login .login-block .login-wrap .sip-calc-wrapper .sip-calc-loginin-wrap .sip-calc-social-login {
+        width: 100%;
+    }
+
+    /* SIP Planner - Selection Popup */
+
+    .calculator-select-calc-popup .select-calc-popup-wrap {
+        width: 86%;
+    }
+
+    /* SIP Planner - TAB 1 */
+
+    .investing-tools .tab-wrapper ul.nav.nav-tabs {
+        display: flex;
+    }
+
+    /* SIP Planner - TAB 2 */
+
+    .invst-sip-performace .row {
+        display: block !important;
+    }
+    .invst-sip-performace .row > div {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .invst-sip-performace .invst-fields-action-buttons .row > div {
+        margin: 0 0 20px 0 !important;
+    }
+    .invst-sip-performace .invst-fields-action-buttons .row > div:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* SIP Planner - TAB 5 */
+
+    .investing-tools .invst-risk-tol-calc .row,
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-action {
+        display: block;
+    }
+    .investing-tools .invst-risk-tol-calc .row > div {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .investing-tools .invst-risk-tol-calc .row > div {
+        margin-top: 20px;
+    }
+    .investing-tools .invst-risk-tol-calc .row > div:first-child {
+        margin-top: 0;
+    }
+    .investing-tools .tab-wrapper .risk-tol-choose-age .risk-tol-age-action .row > div {
+        margin-left: 0;
+    }
+    .investing-tools .tab-wrapper .invst-risk-tol-calc .invst-fields-action-buttons a {
+        padding: 15px;
+    }
+    .investing-tools .tab-wrapper .risk-tol-eval-results {
+        padding: 40px 20px;
+    }
+
+    /* Thoughts & Opinions on Funds */
+
+    .opinions-wrap .opinions-blocks {
+        padding: 25px 15px;
+    }
+
+    /* Performance Snapshot */
+
+    .perform-snapshot-tabs ul.nav {
+        display: flex;
+    }
+    .perform-snapshot-tabs ul.nav li {
+        margin-left: 5px;
+        margin-bottom: 0;
+    }
+    .investing-tools ul.nav li:first-child {
+        margin-left: 0;
+    }
+    .perform-snapshot-tabs ul.nav li a {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .perform-snapshot-tabs .perform-snapshot-submit .text-right {
+        text-align: left !important;
+    }
+    .perform-snapshot-tabs .perform-snapshot-points {
+        margin-top: 30px;
+    }
+
+    /* Fund Performance Returns */
+
+    .fund-perform-returns ul.nav {
+        display: flex;
+    }
+    .fund-perform-returns ul.nav li {
+        margin: 0 5px 0;
+    }
+    .fund-perform-returns .fund-perform-return-compare .row {
+        display: block;
+    }
+    .fund-perform-returns .fund-perform-return-compare .comapre-actions button {
+        display: block;
+        width: 100%;
+        margin: 12px 0 !important;
+    }
+    .fund-perform-returns .fund-perform-return-compare .comapre-actions button:first-child {
+        margin-top: 0 !important;
+    }
+    .fund-perform-returns .fund-perform-ratio-table table#fund-perform-ratio-data {
+        width: 500px;
+    }
+
+    /* Ask an Expert */
+
+    .ask-expert-qna .questions-wrapper .question-block .row {
+        display: block;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .row > .col-lg-2,
+    .ask-expert-qna .questions-wrapper .question-block .row > .col-lg-10  {
+        flex: 100% !important;
+        max-width: 100% !important;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .profile img {
+        width: auto;
+    }
+    .ask-expert-qna .question-block .user-data .row > div {
+        margin: 5px 0;
+        font-size: 0;
+    }
+    .ask-expert-qna .question-block .user-data .row > div span {
+        font-size: 15px;
+    }
+    .ask-expert-qna .question-block .question-data > .row .comment-data {
+        display: flex;
+        margin-bottom: 30px;
+    }
+    .ask-expert-qna .question-block .question-data > .row .comment-data > div {
+        flex: 50% !important;
+        max-width: 50% !important;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap {
+        margin-left: 0;
+    }
+    .ask-expert-qna .questions-wrapper .question-block .comment-replies-wrap .question-block:first-child {
+        margin-top: 0;
+    }
+    .qna-main .experts-totals .experts-total-wrap .row {
+        display: block;
+    }
+    .qna-main .experts-totals .experts-total-wrap .row > div {
+        flex: 100%;
+        max-width: 100%;
+        margin-bottom: 25px;
+    }
+    .qna-main .experts-totals .experts-total-wrap .row > div:last-child {
+        margin-bottom: 0;
+    }
+    .ask-expert-qna .qna-main .experts-totals .experts-slider-wrap {
+        width: 100%;
+    }
+    .ask-expert-qna .experts-totals .experts-slider .owl-item {
+        padding: 0 60px;
+    }
+
+    /* Filter Page */
+
+    .pent-content-block .pent-cnt-lft span {
+        font-size: 26px;
+        line-height: 26px;
+    }
+
+}
+
+@media only screen and (max-width:320px){
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-2::after {
+        left: 55%;
+    }
+    .about-us-main .about-us-rgt .timeline-wrap .timeline-block-3::after {
+        right: 40%;
+    }
+    .about-us-goals .goals-wrapper span {
+        font-size: 26px;
+    }
+}

@@ -33,25 +33,14 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
             Route::get('/comments/{id}', 'BlogController@comments')->name('blog.comments');
            
         });
+
         Route::group(['prefix'=>'latest_update'],function(){
             Route::get('/','HomeLatestController@index')->name('latest.index');
             Route::post('/create','HomeLatestController@create')->name('latest.create');
         });
-        Route::get('/calculatorlogin/list', 'CalculatorloginController@index')->name('calculatorlogin.list');
+
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-        if (config('features.subscription_enabled')) {
-            Route::get('/subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
-            Route::get('/subscriptions/{subscription}', 'SubscriptionController@show')->name('subscriptions.show');
-            Route::get('/secure-panel', 'SecurePanelController@login')->name('secure-panel.login');
-            Route::post('/secure-panel', 'SecurePanelController@authenticate')->name('secure-panel.authenticate');
-            Route::middleware(['secure.admin'])->prefix('secure-panel')->name('secure-panel.')->group(function () {
-                Route::get('/users', 'SecurePanelController@users')->name('users.index');
-                Route::get('/users/{user}', 'SecurePanelController@show')->name('users.show');
-                Route::get('/users/{user}/edit', 'SecurePanelController@edit')->name('users.edit');
-                Route::post('/users/{user}', 'SecurePanelController@update')->name('users.update');
-            });
-        }
 
         Route::get('/profile', 'AdminController@editprofile')->name('profile');
         Route::post('/profile/{id}', 'AdminController@update')->name('profile.update');
@@ -89,8 +78,6 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
         Route::post('/settings/general', 'SettingsController@updateGeneral')->name('settings.general.update');
         Route::get('/settings/options', 'SettingsController@editOptions')->name('settings.options');
         Route::post('/settings/options', 'SettingsController@updateOptions')->name('settings.options.update');
-        Route::get('/settings/razorpay', 'SettingsController@editRazorpay')->name('settings.razorpay');
-        Route::post('/settings/razorpay', 'SettingsController@updateRazorpay')->name('settings.razorpay.update');
         Route::get('/settings/mail_setting', 'SettingsController@editMail')->name('settings.mail');
         Route::post('/settings/mail_setting', 'SettingsController@updateMail')->name('settings.mail.update');
         Route::get('/settings/custom', 'SettingsController@editCustom')->name('settings.custom');
@@ -508,7 +495,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('composition-snapshot', 'PageController@compositionSnapshotData')->name('composition.snapshot');
 	
 	Route::get('corpus-details', 'PageController@corpusDetailsData')->name('corpus.details');	
-	Route::get('fund-man-details', 'PageController@fundManDetailsData')->name('fund.man.details');
+	Route::get('fund-man-details/{slug?}', 'PageController@fundManDetailsData')->name('fund.man.details');
 	//Route::get('new-from-myplexus');
 	
 	Route::get('get-news', 'PageController@getNewsApi')->name('get.news');
@@ -525,12 +512,13 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('weekly-snapshot', 'PageController@weeklySnapshotData')->name('weekly.snapshot');
 	
     Route::get('monthly-snapshot', 'PageController@monthlySnapshotData')->name('monthly.snapshot');
+    Route::get('getChangesFundNew', 'PageController@getChangesFundNew')->name('getChangesFundNew');
 	
 	 Route::get('return-calculator', 'PageController@returnCalculationData')->name('return.calculator');
 	
 	 Route::get('volatility-calculator', 'PageController@volatilityCalculationData')->name('volatility.calculator');
 
-     //Route::get('performance-synopsis', 'PageController@performanceSynopsisData')->name('performance.synopsis');
+     Route::get('performance-synopsis', 'PageController@performanceSynopsisData')->name('performance.synopsis');
 	
     Route::get('monthly-ranking', 'PageController@monthlyRankingData')->name('monthly.ranking');
     Route::get('monthly-ranking-pdf/{type_id}', 'PDFDataController@monthlyRankingPDF')->name('monthly.ranking.pdf');
@@ -578,7 +566,12 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('fund-watch', 'FundWatchController@index')->name('fundwatch');
     Route::get('new-fundwatch/{fund_code}', 'NewfundwatchController@index')->name('new_fundwatch');
+
+    Route::get('new-fundwatch2/{fund_code}', 'NewfundwatchController@index2')->name('new_fundwatch2');
+
+
     Route::get('new-fundwatch-list', 'NewfundwatchController@list')->name('new-fundwatch-list');
+    Route::get('new-fundwatch-list/{year?}', 'NewfundwatchController@list')->name('new-fundwatch-list');
     Route::get('return-less-index-link/{fund_code}/{fund_type_id}', 'NewfundwatchController@getReturnlessIndexRank')->name('return-less-index-link');
     Route::get('get-quartile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getQuartile')->name('get-quartile');
     Route::get('get-decile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getDecile')->name('get-decile');
@@ -595,7 +588,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'NewfundwatchController@breakUP')->name('fundwatch.breakUP');
 	Route::get('fund-watch/fund-return-continus/{fund_code}', 'NewfundwatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
 	Route::get('fund-watch/fund-return-discontinus/{fund_code}', 'NewfundwatchController@getReturndisContinous')->name('fundwatch.getReturndisContinous');
-	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'NewfundwatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
+    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'NewfundwatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
 	Route::get('fund-watch/fund-sip/{fund_code}', 'NewfundwatchController@getSIPData')->name('fundwatch.getSIPData');
 	
 
@@ -606,7 +599,21 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     //  added by pixel end
 
     #== Start: Manage by AuthController only ==#
-    Route::get('login', 'AuthController@loginForm')->name('login');
+    // Route::get('login', 'AuthController@loginForm')->name('login');
+
+    Route::get('/login', function () 
+    {
+        $cal = Request::get('cal');
+        //return view('web.auth.login');
+     
+        if (!$cal) 
+        {
+            
+            $cal = '';
+        }
+        return view('web.auth.login', ['cal' => $cal]);
+    })->name('login');
+
     Route::post('login-process', 'AuthController@login')->name('login.request');
     Route::get('logout', 'AuthController@logout')->name('logout');
 
@@ -632,6 +639,11 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     #==Auth dependent pages ==#
     Route::group(['middleware' => ['auth']], function () {
         Route::get('myaccount', 'UserController@myAccountData')->name('myaccount');
+        Route::get('subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
+        Route::post('subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
+        Route::post('subscription/verify', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+        Route::post('subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
+        Route::post('subscription/upgrade-preview', 'SubscriptionController@calculateUpgradeAmount')->name('subscription.upgrade-preview');
         Route::get('edit-profile', 'UserController@editProfileData')->name('edit.profile');
         Route::post('edit-profile', 'UserController@updateProfile')->name('edit.profile.save');
         Route::get('reset-password', 'UserController@resetPasswordData')->name('reset.password');
@@ -646,25 +658,6 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::post('draft-answer/{aeqa_id}', 'AskExpertController@draftAnswerSave')->name('draft-answer.save');
     });
 
-    if (config('features.subscription_enabled')) {
-        Route::get('/subscription', 'SubscriptionController@index')->name('subscription.index');
-        Route::middleware(['auth'])->group(function () {
-            Route::post('/subscription/calculate-upgrade', 'SubscriptionController@calculateUpgradeAmount')->name('subscription.calculate-upgrade');
-            Route::post('/subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
-            Route::post('/subscription/verify-payment', 'SubscriptionController@verifyPayment')->name('subscription.verify');
-            Route::post('/subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
-        });
-        Route::post('/razorpay/webhook', 'RazorpayWebhookController@handle')->name('razorpay.webhook');
-
-        // Backward-compatible aliases for any stale route() usage without the `web.` prefix.
-        Route::get('/subscription-legacy', 'SubscriptionController@index')->name('subscription.index');
-        Route::middleware(['auth'])->group(function () {
-            Route::post('/subscription/checkout-legacy', 'SubscriptionController@checkout')->name('subscription.checkout');
-            Route::post('/subscription/verify-payment-legacy', 'SubscriptionController@verifyPayment')->name('subscription.verify');
-            Route::post('/subscription/cancel-legacy', 'SubscriptionController@cancel')->name('subscription.cancel');
-        });
-    }
-
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
     Route::get('money_seriously/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
     Route::post('money_seriously','BlogController@postBlogDetails')->name('post-blogs-detail');
@@ -677,24 +670,68 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 
     Route::get('report-dashboard','CalculatordashbordController@index')->name('report-dashboard');
     Route::get('report-beta','CalculatordashbordController@beta_calculator')->name('report-beta');
+    Route::get('report-beta-api','CalculatordashbordAPIController@beta_calculator')->name('report-beta-api');
     Route::get('get-indices-name','CalculatordashbordController@get_indices_name')->name('get-indices-name');
     Route::get('report-volatility','VolatilityController@volatility_calculator')->name('report-volatility');
+    Route::get('report-volatility-api','VolatilityAPIController@volatility_calculator')->name('report-volatility-api');
     Route::get('report-jensens-alpla','JensonsalphaController@jensonsalpha_calculator')->name('report-jensens-alpla');
+    Route::get('report-jensens-alpla-api','JensonsalphaAPIController@jensonsalpha_calculator')->name('report-jensens-alpla-api');
     Route::get('report-sharpe','SharpeController@sharpe_calculator')->name('report-sharpe');
+    Route::get('report-sharpe-api','SharpeAPIController@sharpe_calculator')->name('report-sharpe-api');
     Route::get('report-treynor','TreynorController@treynor_calculator')->name('report-treynor');
+    Route::get('report-treynor-api','TreynorAPIController@treynor_calculator')->name('report-treynor-api');
     Route::get('report-tracking-error','TrackingerrorController@tracking_error_calculator')->name('report-tracking-error');
+    Route::get('report-tracking-error-api','TrackingerrorAPIController@tracking_error_calculator')->name('report-tracking-error-api');
+    // Route::get('report-tracking-error-api','TrackingerrorAPIController@tracking_error_calculator')->name('report-tracking-error-api');
     Route::get('report-information-ratio','InformationratioController@information_ratio_calculator')->name('report-information-ratio');
+    Route::get('report-information-ratio-api','InformationratioAPIController@information_ratio_calculator')->name('report-information-ratio-api');
     Route::get('report-r-squere','rsquereController@r_squere_calculator')->name('report-r-squere');
+    Route::get('report-r-squere-api','rsquereAPIController@r_squere_calculator')->name('report-r-squere-api');
     Route::get('report-skewness','SkewnessController@skewness_calculator')->name('report-skewness');
+    Route::get('report-skewness-api','SkewnessAPIController@skewness_calculator')->name('report-skewness-api');
     Route::get('report-kurtosis','KurtosisController@kurtosis_calculator')->name('report-kurtosis');
+    Route::get('report-kurtosis-api','KurtosisAPIController@kurtosis_calculator')->name('report-kurtosis-api');
     Route::get('report-rolling-return','RollingreturnController@rolling_return_calculator')->name('report-rolling-return');
+    Route::get('report-rolling-return-api','RollingreturnAPIController@rolling_return_calculator')->name('report-rolling-return-api');
     Route::get('report-cagr','CagrController@cagr_calculator')->name('report-cagr');
     Route::get('report-sip-return','SipreturnController@sipreturn_calculator')->name('report-sip-return');
     Route::get('report-sortino','SortinoController@sortino_calculator')->name('report-sortino');
+    Route::get('report-sortino-api','SortinoAPIController@sortino_calculator')->name('report-sortino-api');
 
     Route::get('test-report-beta','BetaController@beta_calculator')->name('test-report-beta');
 
 
+    /*----------mar index api------------*/
+    Route::get('report-beta-api-mar','CalculatordashbordAPIController@beta_calculator_mar')->name('report-beta-api-mar');
+
+    Route::get('report-volatility-api-mar','VolatilityAPIController@volatility_calculator_mar')->name('report-volatility-api-mar');
+
+    Route::get('report-tracking-error-api-mar','TrackingerrorAPIController@tracking_error_calculator_mar')->name('report-tracking-error-api-mar');
+
+    Route::get('report-jensens-alpla-api-mar','JensonsalphaAPIController@jensonsalpha_calculator_mar')->name('report-jensens-alpla-api-mar');
+
+    Route::get('report-sharpe-api-mar','SharpeAPIController@sharpe_calculator_mar')->name('report-sharpe-api-mar');
+
+    Route::get('report-treynor-api-mar','TreynorAPIController@treynor_calculator_mar')->name('report-treynor-api-mar');
+
+    Route::get('report-information-ratio-api-mar','InformationratioAPIController@information_ratio_calculator_mar')->name('report-information-ratio-api-mar');
+
+    Route::get('report-skewness-api-mar','SkewnessAPIController@skewness_calculator_mar')->name('report-skewness-api-mar');
+
+    Route::get('report-kurtosis-api-mar','KurtosisAPIController@kurtosis_calculator_mar')->name('report-kurtosis-api-mar');
+
+    Route::get('report-r-squere-api-mar','rsquereAPIController@r_squere_calculator_mar')->name('report-r-squere-api-mar');
+
+    Route::get('report-rolling-return-api-mar','RollingreturnAPIController@rolling_return_calculator_mar')->name('report-rolling-return-api-mar');
+
+
+    /*----------mar index api------------*/
+
+    /*---------predictive api-----------*/
+
+    Route::get('report-jensens-alpla-api-predictive','JensonsalphaAPIController@jensonsalpha_calculator_predictive')->name('report-jensens-alpla-api-predictive');
+
+    /*----------predictive api---------*/
     
 });
 //Auth::routes();
@@ -718,6 +755,7 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     // Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::post('post-login', 'LoginController@postLogin')->name('loginpost');
+    Route::get('logout', 'LoginController@logout')->name('logout');
 
     Route::get('login/google', 'LoginController@redirectToGoogle')->name('login.google');
     Route::get('login/google/callback', 'LoginController@handleGoogleCallback');
@@ -735,70 +773,121 @@ Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
     //======================================== End Registration ======================================//
 
     //======================================== Start Dashboard ======================================//
-    // Route::middleware(['auth'])->group(function () {
-    Route::middleware(['auth', 'nocache'])->group(function () {
-        Route::get('logout', 'LoginController@logout')->name('logout');
+    Route::middleware(['auth'])->group(function () {
+        Route::get('dashboard', 'LoginController@dashboard')->name('auth-dashboard');
+
+        Route::get('ratio-dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+        Route::get('performance-ratios', 'RatioController@dashboard')->name('performance_ratios');
+
+
+
+        // Route::get('filters/jensens','FiltersController@jensens')->name('filters.jensens');
+        // Route::get('filters/beta','FiltersController@beta')->name('filters.beta');
+        // Route::get('filters/volatility','FiltersController@volatility')->name('filters.volatility');
+        // Route::get('filters/ratios','FiltersController@ratios')->name('filters.ratios');
+
+        Route::get('filters/fund_count','FiltersController@fund_count')->name('filters.fund-count');
+
+        // Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
         Route::middleware(['subscription'])->group(function () {
-            Route::get('dashboard', 'RatioController@index_dashboard')->name('index_dashboard');
-            Route::get('ratio-reports', 'RatioController@dashboard')->name('ratio_dashboard');
-            Route::get('auth-dashboard', function () {
-                return redirect()->route('user.index_dashboard');
-            })->name('auth-dashboard');
-            Route::get('notifications', 'RatioController@notifications')->name('notifications');
-            Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
-            Route::get('user-risk-ratio', 'RatioController@risk_ratio')->name('risk_ratio');
-            Route::get('user-return-ratio', 'RatioController@return_ratio')->name('return_ratio');
-            Route::get('user-sortino-ratio', 'RatioController@sortino_ratio')->name('sortino_ratio');
-            Route::get('user-composition-report', 'RatioController@composition_report')->name('composition_report');
-            Route::get('user-allocation-snapshot', 'RatioController@allocation_snapshot')->name('allocation_snapshot');
-            Route::get('user-scheme-portfolio', 'RatioController@scheme_portfolio')->name('scheme_portfolio');
-            Route::get('user-occurrence-report', 'RatioController@occurrence_report')->name('occurrence_report');
-            Route::get('user-top-script-rop-industry', 'RatioController@top_script_rop_industry')->name('top_script_rop_industry');
-            Route::get('user-new-script-new-industry', 'RatioController@new_script_new_industry')->name('new_script_new_industry');
-            Route::get('user-boomers', 'RatioController@boomers')->name('boomers');
-            Route::get('user-busters', 'RatioController@busters')->name('busters');
-            Route::get('user-get-funds', 'RatioController@composition_get_funds')->name('get_funds');
-            Route::get('user-get-fund-by-scrips', 'RatioController@composition_get_fund_by_scrips')->name('get_fund_by_scrips');
-            Route::get('user-indies-report', 'RatioController@indies_report')->name('indies_report');
-            Route::get('user-indices-report', 'RatioController@indies_report')->name('indices_report');
-            Route::get('user-indices-history', 'RatioController@indices_history')->name('indices-history');
-            Route::get('user-indices-composition', 'RatioController@indices_composition')->name('indices-composition');
-            Route::get('user-schemes-associated-with-index', 'RatioController@schemes_associated_with_index')->name('schemes-associated-with-index');
-            Route::get('user-indices-report-boomers', 'RatioController@indices_boomers')->name('indices-report.boomers');
-            Route::get('user-indices-report-busters', 'RatioController@indices_busters')->name('indices-report.busters');
-            Route::get('user-index-vs-nav', 'RatioController@index_vs_nav')->name('index_vs_NAV');
-            Route::get('user-model-portfolio', 'RatioController@model_portfolio')->name('model_portfolio');
-            Route::get('user-filters', 'RatioController@filters')->name('filters');
-            Route::get('user-filters-ratios', 'RatioController@filters_ratios')->name('filters.ratios');
-            Route::get('user-filters-composition', 'RatioController@filters_composition')->name('filters.composition');
-            Route::get('user-filters-jensens', 'RatioController@filters_jensens')->name('filters.jensens');
-            Route::get('user-filters-beta', 'RatioController@filters_beta')->name('filters.beta');
-            Route::get('user-filters-volatility', 'RatioController@filters_volatility')->name('filters.volatility');
-            Route::get('user-filters-fund-count', 'RatioController@filters_fund_count')->name('filters.fund-count');
-            Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
-            Route::get('user-predictive-jensen-alpha', 'RatioController@predictive_jensen_alpha')->name('predictive.jensen-alpha');
-            Route::get('user-predictive-sharp-ratio', 'RatioController@predictive_sharp_ratio')->name('predictive.sharp-ratio');
-            Route::get('user-predictive-trenyor', 'RatioController@predictive_trenyor')->name('predictive.trenyor');
-            Route::get('fund-details', 'RatioController@predictive_fund_details');
-            Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
-            Route::get('performance-ratios', 'RatioController@stats')->name('performance_ratios');
+
+            Route::get('composition-report', 'RatioController@composition_report')->name('composition_report');
+            Route::get('composition-report/boomers', 'CompositionController@boomers')->name('boomers');
+            Route::get('composition-report/busters', 'CompositionController@busters')->name('busters');
+
+            Route::get('indices-report', 'IndicesReportController@indices_report')->name('indices_report');
+            Route::get('indices-report/indices-history', 'IndicesReportController@indices_history')->name('indices-history');
+            Route::get('indices-report/indices-history-data', 'IndicesReportController@indiceFetchData')->name('indices-history-data');
+            // Route::get('indices-report/indices-composition', 'IndicesReportController@indices_composition')->name('indices-composition');
+            Route::get('indices-report/indices-composition', 'ComparativeQuartileDecileController@indices_composition')->name('indices-composition');
+            Route::get('indices-report/schemes-associated-with-index', 'IndicesReportController@schemes_associated_with_index')->name('schemes-associated-with-index');
+            Route::get('indices-report/boomers', 'IndicesReportController@boomers')->name('indices-report.boomers');
+            Route::get('indices-report/busters', 'IndicesReportController@busters')->name('indices-report.busters');
+
+
+            // Route::get('indices-report/index-vs-NAV', 'IndicesReportController@index_vs_NAV')->name('index_vs_NAV');
+            Route::get('indices-report/index-vs-NAV', 'IndicesReportTestController@index_vs_NAV')->name('index_vs_NAV');
+            Route::get('indices-report/index-vs-NAV-test', 'IndicesReportTestController@index_vs_NAV')->name('index_vs_NAV-test');
+
+
+            Route::get('filters', 'FiltersController@filters')->name('filters');
+            // Route::get('filters/composition','FiltersController@composition')->name('filters.composition');
+            Route::get('ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
+            // Route::get('ratio-analysis/risk-ratio', 'RatioAnalysisController@risk_ratio')->name('risk_ratio');
+            Route::get('ratio-analysis/risk-ratio', 'RatioReportController@risk_ratio')->name('risk_ratio');
+            Route::get('ratio-analysis/return-ratio', 'RatioAnalysisController@return_ratio')->name('return_ratio');
+            Route::get('ratio-analysis/sortino-ratio', 'RatioAnalysisController@sortino_ratio')->name('sortino_ratio');
+            Route::get('quick-ratio-old', 'RatioController@quick_ratio')->name('quick_ratio_old');
+            // Route::get('quick-ratio-new', 'RatioController@quick_ratio_new')->name('quick_ratio_new');
+            Route::get('quick-ratio', 'RatioController@quick_ratio_new')->name('quick_ratio');
             Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
+            Route::get('user-monthly-snapshot-new', 'SnapshotController@monthly_snapshot_new')->name('monthly_snapshot_new');
             Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
-            Route::get('user-monthly-snapshot-new', 'RatioController@monthly_snapshot')->name('monthly_snapshot_new');
-            Route::get('user-weekly-snapshot-new', 'RatioController@weekly_snapshot')->name('weekly_snapshot_new');
+            Route::get('user-weekly-snapshot-new', 'SnapshotController@weekly_snapshot_new')->name('weekly_snapshot_new');
             Route::get('user-fund-factsheet', 'RatioController@fund_factsheet')->name('fund_factsheet');
-            Route::get('user-stats', 'RatioController@stats')->name('stats');
-            Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
-            Route::get('user-comparative', 'RatioController@comparative')->name('comparative');
-            Route::get('user-r-square-comparison', 'RatioController@comparative')->name('r_square_comparison');
-            Route::get('whitelabel-settings', 'RatioController@whitelabel_settings')->name('whitelabel_settings');
-            Route::post('whitelabel-settings', 'RatioController@whitelabel_settings')->name('whitelabel_settings.save');
+            // Route::get('user-stats', 'RatioController@stats')->name('stats');
+            Route::get('stats', 'RatioReportController@stats')->name('stats');
+            Route::get('r-square-comparison', 'RatioReportController@r_square_comparison')->name('r_square_comparison');
+
+            // Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
+            Route::get('user-comparative', 'ComparativeQuartileDecileController@index')->name('comparative');
+            Route::get('user-quartile-decile', 'QuartileDecileController@index')->name('quartile_decile');
+
+            // Route::get('user-comparative-quartile-decile', 'ComparativeQuartileDecileController@index')->name('comp_quartile_decile');
+
+            Route::get('allocation-snapshot', 'CompositionReportController@allocation_snapshot')->name('allocation_snapshot');
+
+            Route::get('scheme-portfolio', 'CompositionReportController@scheme_portfolio')->name('scheme_portfolio');
+
+            // Route::get('occurrence-report', 'CompositionReportController@occurrence_report')->name('occurrence_report');
+
+            Route::get('occurrence-report', 'CompositionController@occurrence_report')->name('occurrence_report');
+
+            Route::get('get-fund-by-scrips', 'CompositionController@get_fund_by_scrips')->name('get_fund_by_scrips');
+
+            Route::get('top-scrip-top-industry', 'CompositionReportController@top_script_rop_industry')->name('top_script_rop_industry');
+
+            Route::get('/scrip-industry-details-fundwise','CompositionReportController@scrip_industry_details_fundwise')->name('scrip_industry_details_fundwise');
+
+            // Route::get('new-script-new-industry', 'CompositionReportController@new_script_new_industry')->name('new_script_new_industry');
+
+            Route::get('new-script-new-industry', 'NewScripsNewIndustryController@new_script_new_industry')->name('new_script_new_industry');
+
+            // Route::get('boomers', 'CompositionReportController@boomers')->name('boomers');
+
+            // Route::get('busters', 'CompositionReportController@busters')->name('busters');
+
+            Route::get('getChangesFund','SnapshotController@getChangesFund')->name('getChangesFund');
+
+            Route::get('fundFasctSheet/getTopScripTopIndustries','RatioController@getTopScripTopIndustries')->name('getTopScripTopIndustries');
+
+            Route::get('type-wise-funds', 'CompositionReportController@get_funds')->name('get_funds');
+
+            Route::get('insertReport/fundReturn', 'ReportInsertController@index')->name('insertFundReturn');
+
+            Route::get('predictive/','PredictiveController@index')->name('predictive');
+            Route::get('predictive/jensen-alpha','PredictiveController@jensen_alpha')->name('predictive.jensen-alpha');
+            Route::get('predictive/sharp-ratio','PredictiveController@sharp_ratio')->name('predictive.sharp-ratio');
+            Route::get('predictive/trenyor','PredictiveController@trenyor')->name('predictive.trenyor');
+
+            Route::get('predictive/fund-details','PredictiveController@fund_details')->name('predictive.fund_details');
+
         });
+
         Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
         //======================================== End Dashboard ======================================//
+        
         //======================================== Subscription Start ======================================//
-        Route::any('user/subscription', 'SubscriptionController@dashboard')->name('subscription');
+        Route::any('subscription', 'SubscriptionController@dashboard')->name('subscription');
     });
       //======================================== End Subscription ======================================//
 
 });
+
+
+/*=================correlation_new Corn====================*/
+
+Route::get('correlation-update', 'App\Http\Controllers\CorrelationCornController@index')->name('index');
+
+
+/*=================correlation_new Corn end====================*/

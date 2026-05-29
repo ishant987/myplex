@@ -1,22 +1,6 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
-    @php
-        $selectedRanking = old('ranking', $request->ranking ?? 'range');
-        $selectedCategory = old('Category', $request->Category ?? 'by_category');
-        $selectedQuartileSet = old('quartile_set', $request->quartile_set ?? ($quartile_set ?? 'quartile'));
-        $isAsOnMode = $selectedRanking === 'as_on';
-        $isByFundMode = $selectedCategory === 'by_fund';
-    @endphp
-    <style>
-        .fund_section.new_fund_section ul li.fund-name-item span {
-            display: block;
-            max-width: 100%;
-            white-space: normal;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            line-height: 1.45;
-        }
-    </style>
+    {{-- @dd($fund_type_name) --}}
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -28,7 +12,9 @@
                     </ul>
                 </div>
 
-            
+                <div class="perform_head">
+                    <h2>Quartile & Decile</h2>
+                </div>
 
                 <div class="new_page">
 
@@ -62,25 +48,25 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category"
+                                            <input type="radio" id="type_Category" name="Category" checked
                                                 value="by_category"
-                                                {{ $selectedCategory === 'by_category' ? 'checked' : '' }}
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types_js(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                {{ $selectedCategory === 'by_fund' ? 'checked' : '' }}
+                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types_js(this.value)'>
                                             By Fund
                                         </label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show_1">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2" data-placeholder="Select Fund Type"
-                                            id="fund_type" {{ $isByFundMode ? 'disabled' : '' }}>
+                                            id="fund_type">
                                             <option value="">Select Fund Type</option>
                                             @foreach ($all_fund_types as $fund_type)
                                                 <option value="{{ $fund_type->ft_id }}"
@@ -95,11 +81,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide_1">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple id="select_fund_multiple"
-                                            data-max="20" data-min="{{ $selectedQuartileSet === 'decile' ? 10 : 4 }}"
-                                            onchange='fund_multiple(this)' {{ $isByFundMode ? '' : 'disabled' }}>
+                                            data-max="20" multiple onchange='fund_multiple(this)'>
                                             @foreach ($all_funds as $fund)
                                                 <option value="{{ $fund->fund_id }}"
                                                     @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
@@ -119,7 +104,7 @@
                                 <div class="col-md-4">
                                     <div class="form_group">
                                         <select name="report_category">
-
+                                            <option value="">Ratio</option>
                                             <optgroup label="Return Ratio">
                                                 <option value="returns" @if (old('report_category', $request->report_category) == 'returns') selected @endif>
                                                     Returns/CAGR
@@ -192,13 +177,11 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" name="ranking" value="range"
-                                                {{ $selectedRanking === 'range' ? 'checked' : '' }}>
+                                            <input type="radio" name="ranking" value="range" checked>
                                             Range
                                         </label>
                                         <label>
-                                            <input type="radio" name="ranking" value="as_on"
-                                                {{ $selectedRanking === 'as_on' ? 'checked' : '' }}>
+                                            <input type="radio" name="ranking" value="as_on">
                                             As on
                                         </label>
                                         @error('ranking')
@@ -207,36 +190,33 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="Start date" name="start_date"
-                                            {{ $isAsOnMode ? 'disabled' : '' }}
-                                            value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
+                                        <input type="text" class="datepicker" placeholder="Start date" name="start_date"
+                                            value="{{ $request->has('start_date') ? $request->start_date : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="End date" name="end_date"
-                                            {{ $isAsOnMode ? 'disabled' : '' }}
-                                            value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
+                                        <input type="text" class="datepicker" placeholder="End date" name="end_date"
+                                            value="{{ $request->has('end_date') ? $request->end_date : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
-                                            {{ $isAsOnMode ? '' : 'disabled' }}
-                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
+                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
+                                            value="{{ $request->as_on_date }}">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame" {{ $isAsOnMode ? '' : 'disabled' }}>
+                                        <select name="as_on_time_frame">
                                             <option value="1_month"
                                                 @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
                                             </option>
@@ -320,7 +300,7 @@
                                             </span>
                                         </li>
 
-                                        @if (!empty($as_on_time_frame_data))
+                                        @if (isset($as_on_time_frame_data))
                                             <li>
                                                 <p>Duration :</p>
                                                 <span>
@@ -359,7 +339,7 @@
                                         @endif
 
                                         @if (isset($request) && $request->Category == 'by_fund')
-                                            <li class="fund-name-item">
+                                            <li>
                                                 <p>fund name :</p>
                                                 <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
                                             </li>
@@ -479,7 +459,7 @@
                                         </li>
 
 
-                                        @if (!empty($as_on_time_frame_data))
+                                        @if (isset($as_on_time_frame_data))
                                             <li>
                                                 <p>Duration :</p>
                                                 <span>
@@ -518,7 +498,7 @@
                                         @endif
 
                                         @if (isset($request) && $request->Category == 'by_fund')
-                                            <li class="fund-name-item">
+                                            <li>
                                                 <p>fund name :</p>
                                                 <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
                                             </li>
@@ -744,99 +724,57 @@
         }
     }*/
 
-    function currentQuartileMode() {
-        return $('#quartile_set').val() || 'quartile';
-    }
-
-    function selectedFundCount() {
-        return ($('#select_fund_multiple').val() || []).length;
-    }
-
-    function toggleRankingFields() {
-        var ranking = $('input[name="ranking"]:checked').val() || 'range';
-        var isAsOn = ranking === 'as_on';
-
-        $('.div_show').toggle(!isAsOn);
-        $('.div_hide').toggle(isAsOn);
-
-        $('input[name="start_date"], input[name="end_date"]').prop('disabled', isAsOn);
-        $('input[name="as_on_date"], select[name="as_on_time_frame"]').prop('disabled', !isAsOn);
-    }
-
-    function toggleCategoryFields() {
-        var category = $('input[name="Category"]:checked').val() || 'by_category';
-        var isByFund = category === 'by_fund';
-
-        $('.div_show_1').toggle(!isByFund);
-        $('.div_hide_1').toggle(isByFund);
-
-        $('select[name="fund_type_id"]').prop('disabled', isByFund);
-        $('select[name="fund_id[]"]').prop('disabled', !isByFund);
-    }
-
-    function updateQuartileSelectionState() {
-        var category = $('input[name="Category"]:checked').val() || 'by_category';
-        var mode = currentQuartileMode();
-        var count = selectedFundCount();
-        var min = mode === 'decile' ? 10 : 4;
-
-        $('#select_fund_multiple').attr('data-min', min);
-
-        if (mode === 'quartile') {
-            $('.quartile_table').show();
-            $('.decile_table').hide();
-        } else {
-            $('.quartile_table').hide();
-            $('.decile_table').show();
-        }
-
-        if (category !== 'by_fund') {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
-        }
-
-        if (count >= min && count <= 20) {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
-        }
-
-        $('#fund_msgg').html('<p>Selection limit minimum ' + min + ' and maximum 20 for <b>' + (mode === 'decile' ? 'Decile' : 'Quartile') + '</b></p>');
-        $('#submit_btn').prop('disabled', true);
-    }
-
     function max_min_fund(element) {
         var value = element.getAttribute('data-value');
 
         $('#quartile_set').val(value);
-        $('#quartile_tab').toggleClass('active', value === 'quartile');
-        $('#decile_tab').toggleClass('active', value === 'decile');
 
-        updateQuartileSelectionState();
+        var selectedOptions = $('#select_fund_multiple').val() || [];
+        var selectedCategory = $('input[name="Category"]:checked').val();
+
+        var min = 0;
+
+        var message = '';
+        if (value === 'quartile') {
+            $('#select_fund_multiple').attr('data-min', 4);
+            var min = 4;
+            message = '<p>You need to select at least ' + min + ' and maximum 20 funds.</p>';
+
+            $('.decile_table').hide();
+            $('.quartile_table').show();
+        } else if (value === 'decile') {
+            $('#select_fund_multiple').attr('data-min', 10);
+            var min = 10;
+            message = '<p>You need to select at least ' + min + ' and maximum 20 funds.</p>';
+
+            $('.quartile_table').hide();
+            $('.decile_table').show();
+        }
+
+        $('#fund_msgg').html(message);
+
+        // console.log(selectedCategory == 'by_fund');
+
+        // console.log('selectedOptions====',selectedOptions);
+
+        if (selectedCategory == 'by_fund') {
+            if (selectedOptions.length >= min) {
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                $('#submit_btn').prop('disabled', true);
+            }
+        } else {
+            $('#submit_btn').prop('disabled', false);
+        }
     }
 
-    function get_fund_types_js(thiss) {
-        toggleCategoryFields();
-        updateQuartileSelectionState();
-    }
+    window.addEventListener('load', function() {
+        document.getElementById('select_fund_multiple').setAttribute('data-min', 4);
+        var value = document.getElementById('quartile_set').value;
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
-        toggleRankingFields();
-        toggleCategoryFields();
-        updateQuartileSelectionState();
-
-        $('input[name="ranking"]').on('change', toggleRankingFields);
-        $('input[name="Category"]').on('change', function() {
-            get_fund_types_js(this.value);
-        });
-        $('#select_fund_multiple').on('change', updateQuartileSelectionState);
-
         var exportButton = document.getElementById('exportPDFquartile');
-
-        if (!exportButton) {
-            return;
-        }
 
         exportButton.addEventListener('click', function() {
             var {

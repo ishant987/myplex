@@ -1,2 +1,0 @@
-
-<?php echo $__env->make('themes.backend.pages.dashboard', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/themes/backend/index.blade.php ENDPATH**/ ?>

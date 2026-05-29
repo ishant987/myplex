@@ -1,0 +1,553 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Models\FundMaster;
+use App\Models\FundType;
+use Illuminate\Http\Request;
+use DB;
+use Carbon\Carbon;
+
+class FiltersController extends Controller
+{
+    public function composition()
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'By Composition';
+        $data['active_menu'] = 'filters_list';
+
+        return view('web.filters.composition', $data);
+    }
+
+    public function jensens()
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'By Jensen’s';
+        $data['active_menu'] = 'filters_list';
+
+        return view('web.filters.jensens', $data);
+    }
+
+    public function beta()
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'By Beta';
+        $data['active_menu'] = 'filters_list';
+
+        return view('web.filters.beta', $data);
+    }
+
+    public function volatility()
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'By Volatility';
+        $data['active_menu'] = 'filters_list';
+
+        return view('web.filters.volatility', $data);
+    }
+
+    public function ratios()
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'By Ratios';
+        $data['active_menu'] = 'filters_list';
+
+
+        return view('web.filters.ratios', $data);
+    }
+
+    public function filters(Request $request)
+    {
+        
+        $data['active_menu']  = 'filters_list';
+        $data = RatioController::loggedInUserData();
+        $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+        $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+
+        $data['industries'] = DB::table('fund_composition')->select('industry')->distinct()->get();
+        $data['mpx_fund_scrips'] = DB::table('scrips')->groupBy('actual_scrip')->get();
+
+        $getdata = $request->all();
+
+        if (isset($getdata) && count($getdata) > 0) {
+
+            // dd($getdata);
+
+            $request->validate(
+                [
+                    'ranking'  =>  ['required_unless:disable,1'],
+                    'Category'  =>  ['required_unless:disable,1'],
+                    'checkedFundIds' => ['required_if:disable,1'],
+                    'filter'  =>  'required',
+                ],
+                [
+                    'ranking.required_unless'  =>  'Please select range or as on',
+                    'Category.required_unless'  =>  'Please select category',
+                    'checkedFundIds.required_if' => 'Please select at least one fund',
+                    'filter.required'  =>  'Please select a filter',
+                ]
+            );
+
+            $data['records'] = $request->records ?? null;
+            $data['fund_type'] = $request->fund_type ?? null;
+            $data['report_category'] = $request->report_category ?? null;
+            $data['Category'] = $request->Category  ?? null;
+            $data['filter'] = $request->filter ?? null;
+
+            // $history = session()->has('history') ? session('history') : [
+            //     'Category' => null,
+            //     'filter'    => []
+            // ];
+
+            $history = [];
+
+            if (isset($getdata['ranking']) && $getdata['disable'] == null) {
+                if (isset($getdata['ranking']) && $getdata['ranking'] == 'range') {
+
+                    $request->validate(
+                        [
+                            'start_date'  =>  'required',
+                            'end_date'  =>  'required',
+                        ],
+                        [
+                            'start_date.required'  =>  'Please select start date',
+                            'end_date.required'  =>  'Please select end date',
+                        ]
+                    );
+
+                    if (isset($getdata['report_category']) && $getdata['report_category'] == 'one_month_rolling_return') {
+
+                        $data['start_date'] =  $start_date = date('Y-m-d', strtotime('-1 month', strtotime($request->end_date)));
+
+                        $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->end_date));
+                    } else {
+
+                        $data['start_date'] = $start_date = date('Y-m-d', strtotime($request->start_date));
+                        $data['end_date'] = $end_date = date('Y-m-d', strtotime($request->end_date));
+                    }
+                } elseif (isset($getdata['ranking']) && $getdata['ranking'] == 'as_on') {
+
+                    $request->validate(
+                        [
+                            'as_on_date'  =>  'required',
+                            'as_on_time_frame'  =>  'required',
+                        ],
+                        [
+                            'as_on_date.required'  =>  'Please select as on date',
+                            'as_on_time_frame.required'  =>  'Please select as on time',
+                        ]
+                    );
+
+                    $data['as_on_date'] = $as_on_date = $request->as_on_date;
+
+                    if (isset($getdata['report_category']) && $getdata['report_category'] == 'one_month_rolling_return') {
+
+                        $data['start_date'] =  $start_date =  date('Y-m-d', strtotime('-1 month', strtotime($request->as_on_date)));
+
+                        $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->as_on_date));
+                    } else {
+
+                        $end_date = date('Y-m-d', strtotime($request->as_on_date));
+
+                        $data['as_on_time_frame'] = $request->as_on_time_frame;
+
+                        $data['end_date'] = $end_date;
+                        // dd($request->as_on_time_frame);
+                        switch ($request->as_on_time_frame) {
+                            case '1_month':
+                                $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                                break;
+                            case '3_months':
+                                $start_date = date('Y-m-d', strtotime('-3 months', strtotime($end_date)));
+                                break;
+                            case '6_months':
+                                $start_date = date('Y-m-d', strtotime('-6 months', strtotime($end_date)));
+                                break;
+                            case '1_year':
+                                $start_date = date('Y-m-d', strtotime('-1 year', strtotime($end_date)));
+                                break;
+                            case '2_years':
+                                $start_date = date('Y-m-d', strtotime('-2 year', strtotime($end_date)));
+                                break;
+                            case '3_years':
+                                $start_date = date('Y-m-d', strtotime('-3 years', strtotime($end_date)));
+                                break;
+                            case '5_years':
+                                $start_date = date('Y-m-d', strtotime('-5 years', strtotime($end_date)));
+                                break;
+                            default:
+                                $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                                break;
+                        }
+                        $data['start_date'] = $start_date;
+
+                        // dd('as_on_time_frame',$request->as_on_time_frame,'start Date =',$data['start_date'],'end date',$data['end_date']);
+                    }
+                }
+            } else {
+                if (isset($getdata['report_category']) && $getdata['report_category'] == 'one_month_rolling_return') {
+
+                    $data['start_date'] =  $start_date = date('Y-m-d', strtotime('-1 month', strtotime($request->end_date)));
+
+                    $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->end_date));
+                } else {
+
+                    $data['start_date'] = $start_date = date('Y-m-d', strtotime($request->start_date));
+                    $data['end_date'] = $end_date = date('Y-m-d', strtotime($request->end_date));
+                }
+            }
+
+            if (isset($getdata['disable'])) {
+
+                $data['checkedFundIds'] = $getdata['checkedFundIds'];
+                $fund_id = explode(',', $getdata['checkedFundIds']);
+
+                $fund_code_arr = FundMaster::whereIn('fund_id', $fund_id)
+                    ->select('fund_id', 'fund_code')
+                    ->pluck('fund_code', 'fund_id')
+                    ->toArray();
+
+                $data['records'] = null;
+
+                // $data['Category'] = 'by_fund';
+
+                $data['records'] = $request->records;
+            } else {
+                if (isset($getdata['Category']) && $getdata['Category'] == 'by_category') {
+
+                    $request->validate(
+                        [
+                            'fund_type'  =>  'required',
+                            'records'   =>  'required'
+                        ],
+                        [
+                            'fund_type.required'  =>  'Please select a valid fund type',
+                            'records.required'  =>  'Please select a valid fund type'
+                        ]
+                    );
+
+                    $data['fund_type'] = $fund_type = $request->fund_type;
+
+                    $data['records'] = $request->records;
+
+                    $fund_code_arr = FundMaster::where('fund_type_id', $fund_type)
+                        ->select('fund_id', 'fund_code')
+                        ->pluck('fund_code', 'fund_id')
+                        ->toArray();
+
+                    $data['checkedFundIds'] = implode(',', array_keys($fund_code_arr));
+                } elseif (isset($getdata['Category']) && $getdata['Category'] == 'by_fund') {
+
+                    $data['records'] = null;
+
+                    $request->validate(
+                        [
+                            'fund_id'  =>  'required'
+                        ],
+                        [
+                            'fund_id.required'  =>  'Please select fund'
+                        ]
+                    );
+
+                    $data['fund_id'] = $fund_id = $request->fund_id;
+
+                    $fund_code_arr = FundMaster::whereIn('fund_id', $fund_id)
+                        ->select('fund_id', 'fund_code')
+                        ->pluck('fund_code', 'fund_id')
+                        ->toArray();
+
+                    $data['records'] = count($fund_code_arr);
+
+                    $data['checkedFundIds'] = implode(',', array_keys($fund_code_arr));
+                }
+
+                // $history['Category'] = $getdata['Category'];
+            }
+
+            if (isset($getdata['filter']) && $getdata['filter'] == 'by_ratio') {
+
+                $request->validate(
+                    [
+                        'report_category'  =>  'required'
+                    ],
+                    [
+                        'report_category.required'  =>  'Please select fund'
+                    ]
+                );
+
+                $data['report_category'] = $request->report_category;
+
+                if ($request->report_category == 'returns') {
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::jensenalphaApi($fund_code, $start_date, $end_date);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['fund_return_absolute'];
+                        }
+                    }
+                } elseif ($request->report_category == 'jensens_alpha') {
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::jensenalphaApi($fund_code, $start_date, $end_date);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['jensens_alpha'];
+                        }
+                    }
+                } elseif ($request->report_category == 'sharpe') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::sharpeApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['sharpe'];
+                        }
+                    }
+                } elseif ($request->report_category == 'treynor') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::treynorApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['treynor'];
+                        }
+                    }
+                } elseif ($request->report_category == 'information_ratio') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::informationRatioApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['information_ratio'];
+                        }
+                    }
+                } elseif ($request->report_category == 'beta') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::betaApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['beta'];
+                        }
+                    }
+                } elseif ($request->report_category == 'volatility') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::volatilityApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['volatility'];
+                        }
+                    }
+                } elseif ($request->report_category == 'tracking_error') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::trackingErrorApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['tracking_error'];
+                        }
+                    }
+                } elseif ($request->report_category == 'skewness') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::skewnessApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['skewness'];
+                        }
+                    }
+                } elseif ($request->report_category == 'kurtosis') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::kurtosisApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['kurtosis'];
+                        }
+                    }
+                } elseif ($request->report_category == 'r_square') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::r_squareApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['r_squere'];
+                        }
+                    }
+                } elseif ($request->report_category == 'one_month_rolling_return') {
+                    // dd('sharpe');
+                    foreach ($fund_code_arr as $fund_individual_id => $fund_code) {
+                        $fund_return = QuartileDecileController::oneMonthRollingReturnApi($fund_code, $start_date, $end_date);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual_id] = $fund_return['one_month_interval_percentage_change'];
+                        }
+                    }
+                }
+
+                // dd($fund_absolute_return);
+
+                $data['fund_absolute_return'] = isset($fund_absolute_return) && count($fund_absolute_return) > 0 ? $fund_absolute_return : [];
+            } elseif (isset($getdata['filter']) && $getdata['filter'] == 'by_composition') {
+
+                $last_date = Carbon::parse($end_date)->endOfMonth()->format('Y-m-d');
+
+                $request->validate(
+                    [
+                        'composition'  =>  'required'
+                    ],
+                    [
+                        'composition.required'  =>  'Please select composition'
+                    ]
+                );
+
+                $data['composition'] = $request->composition;
+
+                // $total_corpus_entry = DB::table('corpus_entry')
+                //     ->whereIn('fund_code', $fund_code_arr)
+                //     ->where('entry_date', $last_date)
+                //     ->select(
+                //         DB::raw('SUM(corpus_entry/100) as total_corpus_entry')
+                //     )->first()->total_corpus_entry;
+
+                // dd($fund_code_arr);
+
+                if ($getdata['composition'] == 'industry') {
+
+                    $request->validate(
+                        [
+                            'industry'  =>  'required'
+                        ],
+                        [
+                            'industry.required'  =>  'Please select industry'
+                        ]
+                    );
+
+                    $query = DB::table('view_corpus_with_allocation')
+                        ->leftJoin('fund_master', 'fund_master.fund_code', '=', 'view_corpus_with_allocation.fund_code')
+                        ->whereIn('view_corpus_with_allocation.fund_code', $fund_code_arr)
+                        ->where('view_corpus_with_allocation.corpus_entry_date', $last_date)
+                        ->where('view_corpus_with_allocation.composition_entry_date', $last_date)
+                        ->where('view_corpus_with_allocation.category', 'Equity')
+                        ->select(
+                            'fund_master.fund_id',
+                            DB::raw("
+                                CASE 
+                                    WHEN SUM(CASE WHEN industry = '{$request->industry}' THEN 1 ELSE 0 END) > 0 
+                                    THEN SUM(CASE WHEN industry = '{$request->industry}' THEN mpx_view_corpus_with_allocation.content_per ELSE 0 END)
+                                    ELSE 'N/A' 
+                                END as content_per
+                            ")
+                        )
+                        ->orderBy('content_per', 'desc')
+                        ->groupBy('view_corpus_with_allocation.fund_code');
+
+                    $data['industry'] = $request->industry;
+
+                    $data['fund_absolute_return']  = $query->pluck('content_per', 'fund_id');
+                } elseif ($getdata['composition'] == 'scrip') {
+
+                    $request->validate(
+                        [
+                            'fund_scrips'  =>  'required'
+                        ],
+                        [
+                            'fund_scrips.required'  =>  'Please select scrip'
+                        ]
+                    );
+
+                    $query = DB::table('view_corpus_with_allocation')
+                        ->leftJoin('fund_master', 'fund_master.fund_code', '=', 'view_corpus_with_allocation.fund_code')
+                        ->whereIn('view_corpus_with_allocation.fund_code', $fund_code_arr)
+                        ->where('view_corpus_with_allocation.corpus_entry_date', $last_date)
+                        ->where('view_corpus_with_allocation.composition_entry_date', $last_date)
+                        ->where('view_corpus_with_allocation.category', 'Equity')
+                        ->select(
+                            'fund_master.fund_id',
+                            DB::raw("
+                                CASE 
+                                    WHEN SUM(CASE WHEN scrip_name = '{$request->fund_scrips}' THEN 1 ELSE 0 END) > 0 
+                                    THEN SUM(CASE WHEN scrip_name = '{$request->fund_scrips}' THEN mpx_view_corpus_with_allocation.content_per ELSE 0 END)
+                                    ELSE 'N/A' 
+                                END as content_per
+                            ")
+                        )
+                        ->orderBy('content_per', 'desc')
+                        ->groupBy('view_corpus_with_allocation.fund_code');
+
+
+                    // dd($request->fund_scrips, $last_date, $fund_code_arr, $query->get());
+
+                    $data['fund_scrips'] = $request->fund_scrips;
+
+                    $data['fund_absolute_return']  = $query->pluck('content_per', 'fund_id')->toArray();
+                } elseif ($getdata['composition'] == 'aum') {
+
+                    $data['fund_absolute_return'] = DB::table('corpus_entry')
+                        ->leftJoin('fund_master', 'fund_master.fund_code', '=', 'corpus_entry.fund_code')
+                        ->whereIn('corpus_entry.fund_code', $fund_code_arr)
+                        ->where('corpus_entry.entry_date', $last_date)
+                        ->select(
+                            'fund_master.fund_id',
+                            DB::raw('SUM(mpx_corpus_entry.corpus_entry/100) as aum'),
+                        )
+                        ->groupBy('corpus_entry.fund_code')
+                        ->pluck('aum', 'fund_id')->toArray();
+
+                    // dd($data['fund_absolute_return']);
+                } elseif ($getdata['composition'] == 'fund_manager') {
+
+                    $data['fund_absolute_return'] = DB::table('fund_master')
+                        ->whereIn('fund_code', $fund_code_arr)
+                        ->select(
+                            'fund_id',
+                            'fund_manager',
+                        ) // Group by fund_code to sum up corpus_entry
+                        ->pluck('fund_manager', 'fund_id')->toArray();
+                }
+            }
+
+            // $filter = [
+            //     'records'  =>  $data['records'] ?? null,
+            //     'filtered_by' => $data['filter'],
+            //     'report_category'    =>  $data['report_category'] ?? null,
+            //     'composition'        =>  $data['composition'] ?? null,
+            //     'scrip'             =>  $data['fund_scrips'] ?? null,
+            //     'industry'      =>  $data['industry'] ?? null
+            // ];
+
+            // array_push($history['filter'],$filter);
+
+            $history = [
+                'Category'           =>  $data['Category'] ?? null,
+                'report_category'    =>  $data['report_category'] ?? null,
+                'fund_type'          =>  $data['fund_type'] ?? null,
+                'composition'        =>  $data['composition'] ?? null,
+                'scrip'              =>  $data['fund_scrips'] ?? null,
+                'industry'           =>  $data['industry'] ?? null,
+                'filter'             =>  $data['filter'],
+                'records'            =>  $data['records'] ?? null,
+                'fund_id'            =>  $fund_id ?? null,
+                'last_date'          =>  $last_date ?? null
+            ];
+
+            session()->push('history', $history);
+
+            // dd($data);
+
+            return view('web.filters.filtered', $data);
+        } else {
+            session()->forget('history');
+        }
+
+        return view('web.filters.index', $data);
+    }
+
+    public function fund_count(Request $request)
+    {
+        $fund_type_id = $request['fund_type_id'];
+
+        $fund_count = FundMaster::where('fund_type_id', $fund_type_id)->where('status', 1)->count();
+
+        return $fund_count;
+    }
+}

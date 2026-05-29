@@ -1,0 +1,2288 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\User\RatioController;
+use App\Models\FundMaster;
+use App\Models\FundType;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Web\JensonsalphaAPIController;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Http;
+
+class QuartileDecileController extends Controller
+{
+    function index(Request $request)
+    {
+        // dd($request->all());
+        $data = RatioController::loggedInUserData();
+        // dd($userData);
+        $jensonAlphaController = new JensonsalphaAPIController;
+        $data['browser_title'] = 'Quartile & Decile Score';
+        $data['active_menu'] = 'dashboard';
+        $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+        // dd($data['all_funds']);
+        $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+        $data['quartile_set'] =  $request->quartile_set;
+        // dd($request->all());
+        //search block..........
+        $quartile_result = [];
+        //for searching with fund classification
+        if ($request->has('Category') && $request->Category == 'by_category') {
+            // dd('search_by_classification');
+            //validation
+            $request->validate(
+                [
+                    'ranking' => 'required'
+                ],
+                [
+                    'ranking' . 'required' => 'Please Select Range Or As on for Searching'
+                ]
+            );
+
+            if ($request->ranking == 'range') {
+                //validation for range
+                $request->validate(
+                    [
+                        'start_date' => 'required',
+                        'end_date' => 'required',
+                        'fund_type_id' => 'required',
+                        'report_category' => 'required',
+                    ],
+                    [
+                        'ranking' . 'start_date' => 'Please Select the Start Date',
+                        'ranking' . 'end_date' => 'Please Select the End Date',
+                        'ranking' . 'fund_type_id' => 'Please Select the Fund Type',
+                        'ranking' . 'report_category' => 'Please Select the Report Category',
+                    ]
+                );
+                // dd($request->report_category);
+
+                $data['fund_type_id'] = $request->fund_type_id;
+                $fund_type = FundType::where('ft_id', $request->fund_type_id)->first();
+                // dd($fund_type->name);
+                $data['fund_type_name'] = $fund_type->name;
+                // dd($data['fund_type']);
+
+                if ($request->report_category == 'one_month_rolling_return') {
+
+                    $data['start_date'] =  $start_date = date('Y-m-d', strtotime('-1 month', strtotime($request->end_date)));
+
+                    $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->end_date));
+                } else {
+
+                    $start_date = date('Y-m-d', strtotime($request->start_date));
+                    $data['start_date'] = $start_date;
+                    $end_date = date('Y-m-d', strtotime($request->end_date));
+                    $data['end_date'] = $end_date;
+                }
+
+                $fund_type_id = $request->fund_type_id;
+                $fund_code_in = FundMaster::where('fund_type_id', $fund_type_id)->get();
+                $data['report_category'] = $request->report_category;
+                //quartile fetch new method.......
+                // dd($request->report_category);
+                // dd($request->report_category);
+
+                if (isset($fund_code_in) && count($fund_code_in) > 0) {
+                    $quartile = [];
+                    $decile = [];
+                    if (isset($request->quartile_set) && $request->quartile_set == 'quartile') {
+                        $quartile = self::get_quartile('search_by_classification', $request->report_category, 0, $fund_type_id, $start_date, $end_date);
+                    }
+                    if (isset($request->quartile_set) && $request->quartile_set == 'decile') {
+                        $decile = self::get_decile('search_by_classification', $request->report_category, 0, $fund_type_id, $start_date, $end_date);
+                    }
+                    // dd($quartile);
+
+                    if ($request->report_category == 'returns') {
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::jensenalphaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['fund_return_absolute'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'jensens_alpha') {
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::jensenalphaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['jensens_alpha'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'sharpe') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::sharpeApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['sharpe'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'treynor') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::treynorApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['treynor'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'information_ratio') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::informationRatioApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['information_ratio'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'beta') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::betaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['beta'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'volatility') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::volatilityApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['volatility'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'tracking_error') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::trackingErrorApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['tracking_error'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'skewness') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::skewnessApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['skewness'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'kurtosis') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::kurtosisApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['kurtosis'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'r_square') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::r_squareApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['r_squere'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'one_month_rolling_return') {
+                        // dd('information_ratio');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::oneMonthRollingReturnApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['one_month_interval_percentage_change'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    }
+                }
+
+
+                // dd($fund_absolute_return);
+                // dd($quartile);
+                $quartile_result['fund_absolute_return'] = isset($fund_absolute_return) && count($fund_absolute_return) > 0 ? $fund_absolute_return : [];
+                $quartile_result['quartile'] = isset($quartile) && count($quartile) > 0 ? $quartile : [];
+                $quartile_result['decile'] = isset($decile) && count($decile) > 0 ? $decile : [];
+            } elseif ($request->ranking == 'as_on') {
+                // dd('category_as_on');
+                $request->validate(
+                    [
+                        'as_on_date' => 'required',
+                        'as_on_time_frame' => 'required',
+                        'fund_type_id' => 'required',
+                        'report_category' => 'required',
+                    ],
+                    [
+                        'ranking' . 'as_on_date' => 'Please Select the Date',
+                        'ranking' . 'as_on_time_frame' => 'Please Select the Time Period',
+                        'ranking' . 'fund_type_id' => 'Please Select the Fund Type',
+                        'ranking' . 'report_category' => 'Please Select the Report Category',
+                    ]
+                );
+
+                $data['fund_type_id'] = $request->fund_type_id;
+                $fund_type = FundType::where('ft_id', $request->fund_type_id)->first();
+                // dd($fund_type->name);
+                $data['fund_type_name'] = $fund_type->name;
+                // dd($data['fund_type']);
+
+
+                // $start_date = date('Y-m-d', strtotime($request->start_date));
+                // $data['start_date'] = $start_date;
+                // $end_date = date('Y-m-d', strtotime($request->end_date));
+                // $data['end_date'] = $end_date;
+
+                if ($request->report_category == 'one_month_rolling_return') {
+
+                    $data['start_date'] =  $start_date =  date('Y-m-d', strtotime('-1 month', strtotime($request->as_on_date)));
+
+                    $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->as_on_date));
+                } else {
+
+                    $end_date = date('Y-m-d', strtotime($request->as_on_date));
+                    $data['as_on_time_frame_data'] = $request->as_on_time_frame;
+
+                    $data['end_date'] = $end_date;
+                    // dd($request->as_on_time_frame);
+                    switch ($request->as_on_time_frame) {
+                        case '1_month':
+                            $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                            break;
+                        case '3_months':
+                            $start_date = date('Y-m-d', strtotime('-3 months', strtotime($end_date)));
+                            break;
+                        case '6_months':
+                            $start_date = date('Y-m-d', strtotime('-6 months', strtotime($end_date)));
+                            break;
+                        case '1_year':
+                            $start_date = date('Y-m-d', strtotime('-1 year', strtotime($end_date)));
+                            break;
+                        case '2_year':
+                            $start_date = date('Y-m-d', strtotime('-2 year', strtotime($end_date)));
+                            break;
+                        case '3_years':
+                            $start_date = date('Y-m-d', strtotime('-3 years', strtotime($end_date)));
+                            break;
+                        case '5_years':
+                            $start_date = date('Y-m-d', strtotime('-5 years', strtotime($end_date)));
+                            break;
+                        default:
+                            // Handle unexpected values or set a default interval
+                            // For example, set the start date to one month before by default
+                            $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                            break;
+                    }
+
+                    $data['start_date'] = $start_date;
+                }
+
+                $fund_type_id = $request->fund_type_id;
+                $fund_code_in = FundMaster::where('fund_type_id', $fund_type_id)->get();
+                $data['report_category'] = $request->report_category;
+                //quartile fetch new method.......
+                // dd($request->report_category);
+
+                if (isset($fund_code_in) && count($fund_code_in) > 0) {
+                    $quartile = [];
+                    $decile = [];
+
+                    if (isset($request->quartile_set) && $request->quartile_set == 'quartile') {
+                        $quartile = self::get_quartile('search_by_classification', $request->report_category, 0, $fund_type_id, $start_date, $end_date);
+                    }
+                    if (isset($request->quartile_set) && $request->quartile_set == 'decile') {
+                        $decile = self::get_decile('search_by_classification', $request->report_category, 0, $fund_type_id, $start_date, $end_date);
+                    }
+
+                    // dd($quartile);
+                    if ($request->report_category == 'returns') {
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::jensenalphaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['fund_return_absolute'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'jensens_alpha') {
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::jensenalphaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['jensens_alpha'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'sharpe') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::sharpeApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['sharpe'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'treynor') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::treynorApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['treynor'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'information_ratio') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::informationRatioApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['information_ratio'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'beta') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::betaApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['beta'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'volatility') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::volatilityApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['volatility'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'tracking_error') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::trackingErrorApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['tracking_error'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'skewness') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::skewnessApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['skewness'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'kurtosis') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::kurtosisApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['kurtosis'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'r_square') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::r_squareApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['r_squere'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    } elseif ($request->report_category == 'one_month_rolling_return') {
+                        // dd('sharpe');
+                        foreach ($fund_code_in as $fund_individual) {
+                            $fund_return = self::oneMonthRollingReturnApi($fund_individual->fund_code, $start_date, $end_date);
+                            // dd($call_sp);
+                            // dd($fund_return);
+                            if (!empty($fund_return)) {
+                                $fund_absolute_return[$fund_individual->fund_id] = $fund_return['one_month_interval_percentage_change'];
+                                // dd($fund_absolute_return);
+                            }
+                        }
+                    }
+                    // dd($fund_absolute_return);
+                    // dd($quartile);
+                    $quartile_result['fund_absolute_return'] = isset($fund_absolute_return) && count($fund_absolute_return) > 0 ? $fund_absolute_return : [];
+                    $quartile_result['quartile'] = isset($quartile) && count($quartile) > 0 ? $quartile : [];
+                    $quartile_result['decile'] = isset($decile) && count($decile) > 0 ? $decile : [];
+                }
+            }
+        }
+        // dd($quartile_result);
+        if ($request->has('Category') && $request->Category == 'by_fund') {
+            // dd('search by fund');
+            //validation
+            $request->validate(
+                [
+                    'ranking' => 'required'
+                ],
+                [
+                    'ranking' . 'required' => 'Please Select Range Or As on for Searching'
+                ]
+            );
+
+            if ($request->ranking == 'range') {
+                //validation for range
+                $request->validate(
+                    [
+                        'start_date' => 'required',
+                        'end_date' => 'required',
+                        'fund_id' => 'required',
+                        'report_category' => 'required',
+                    ],
+                    [
+                        'ranking' . 'start_date' => 'Please Select the Start Date',
+                        'ranking' . 'end_date' => 'Please Select the End Date',
+                        'ranking' . 'fund_id' => 'Please Select the Fund',
+                        'ranking' . 'report_category' => 'Please Select the Report Category',
+                    ]
+                );
+
+
+
+                // dd($data['fund_id']);
+
+                $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+                // dd($fundMaterData);
+                // $fund_type_id = $fundMaterData->fund_type_id;
+                // $fund_code = $fundMaterData->fund_code;
+
+                $fund_type_id = [];
+                $fund_code = [];
+                $fund_id = [];
+
+                $fund_code_id_arra = [];
+                $fund_name_array = [];
+                foreach ($fundMaterData as $funds) {
+
+                    array_push($fund_id, $funds->fund_id);
+                    array_push($fund_name_array, $funds->fund_name);
+
+                    array_push($fund_type_id, $funds->fund_type_id);
+                    array_push($fund_code, $funds->fund_code);
+
+                    // $fund_code_id_arra['fund_id'] = $funds->fund_id;
+                    // $fund_code_id_arra['fund_code'] = $funds->fund_code;
+
+                    $fund_code_id = array(
+                        'fund_id' => $funds->fund_id,
+                        'fund_code' => $funds->fund_code
+                    );
+
+                    array_push($fund_code_id_arra, $fund_code_id);
+                }
+
+                $data['fund_id'] = $fund_id;
+
+                // dd($fund_code_id_arra);
+
+                // foreach($fund_code_id_arra as $val){
+                //     echo $val['fund_code']."---".$val['fund_id']."<br>";
+                // }die;
+
+                // dd($fund_type_id);
+                $fund_type = FundType::whereIn('ft_id', $fund_type_id)->get();
+                // dd($fund_type->name);
+                $fund_type_name_arr = [];
+
+                foreach ($fund_type as $f_type) {
+                    array_push($fund_type_name_arr, $f_type->name);
+                }
+                $data['fund_type_name'] = $fund_type_name_arr;
+                // dd($data['fund_type_name']);
+                //test start
+
+                $quartile = [];
+                $decile = [];
+
+                if (isset($request->quartile_set) && $request->quartile_set == 'quartile') {
+                    $quartile = self::get_quartile('single_fund', $request->report_category, $fund_id, $fund_type_id, $request->start_date, $request->end_date);
+                }
+                if (isset($request->quartile_set) && $request->quartile_set == 'decile') {
+                    $decile = self::get_decile('single_fund', $request->report_category, $fund_id, $fund_type_id, $request->start_date, $request->end_date);
+                }
+
+                if ($request->report_category == 'one_month_rolling_return') {
+
+                    $data['start_date'] =  $start_date = date('Y-m-d', strtotime('-1 month', strtotime($request->end_date)));
+
+                    $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->end_date));
+                } else {
+                    $start_date = date('Y-m-d', strtotime($request->start_date));
+                    $data['start_date'] = $start_date;
+                    $end_date = date('Y-m-d', strtotime($request->end_date));
+                    $data['end_date'] = $end_date;
+                }
+
+
+                $data['report_category'] = $request->report_category;
+
+                if ($request->report_category == 'returns') {
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::jensenalphaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['fund_return_absolute'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'jensens_alpha') {
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::jensenalphaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['jensens_alpha'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'sharpe') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::sharpeApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['sharpe'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'treynor') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::treynorApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['treynor'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'information_ratio') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::informationRatioApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['information_ratio'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'beta') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::betaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['beta'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'volatility') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::volatilityApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['volatility'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'tracking_error') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::trackingErrorApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['tracking_error'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'skewness') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::skewnessApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['skewness'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'kurtosis') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::kurtosisApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['kurtosis'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'r_square') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::r_squareApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['r_squere'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'one_month_rolling_return') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::oneMonthRollingReturnApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['one_month_interval_percentage_change'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                }
+                $quartile_result['fund_absolute_return'] = isset($fund_absolute_return) && count($fund_absolute_return) > 0 ? $fund_absolute_return : [];
+                $quartile_result['quartile'] = $quartile;
+                $quartile_result['decile'] = $decile;
+            } elseif ($request->ranking == 'as_on') {
+                // dd($as_on);
+                $request->validate(
+                    [
+                        'as_on_date' => 'required',
+                        'as_on_time_frame' => 'required',
+                        'fund_id' => 'required',
+                        'report_category' => 'required',
+                    ],
+                    [
+                        'ranking' . 'as_on_date' => 'Please Select the Date',
+                        'ranking' . 'as_on_time_frame' => 'Please Select the Time Period',
+                        'ranking' . 'fund_id' => 'Please Select the Fund',
+                        'ranking' . 'report_category' => 'Please Select the Report Category',
+                    ]
+                );
+
+                // $data['fund_id'] = $request->fund_id;
+                // $fundMaterData = FundMaster::where('fund_id', $request->fund_id)->first();
+                // $fund_type_id = $fundMaterData->fund_type_id;
+                // $fund_code = $fundMaterData->fund_code;
+                // // dd($fund_type_id);
+                // $fund_type = FundType::where('ft_id', $fund_type_id)->first();
+                // // dd($fund_type->name);
+                // $data['fund_type_name'] = $fund_type->name;
+                // // dd($data['fund_type_name']);
+                // //test start
+
+
+                // $quartile = self::get_quartile('single_fund',$request->report_category, $request->fund_id, $fund_type_id, $request->start_date, $request->end_date);
+                // $decile = self::get_decile('single_fund',$request->report_category, $request->fund_id, $fund_type_id, $request->start_date, $request->end_date);
+                // dd($quartile);
+                //test end
+                // dd($request);
+                $data['fund_id'] = $request->fund_id;
+
+                // dd($data['fund_id']);
+
+                $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+                // dd($fundMaterData);
+                // $fund_type_id = $fundMaterData->fund_type_id;
+                // $fund_code = $fundMaterData->fund_code;
+
+                $fund_type_id = [];
+                $fund_code = [];
+                $fund_id = [];
+
+                $fund_code_id_arra = [];
+                $fund_name_array = [];
+                foreach ($fundMaterData as $funds) {
+
+                    array_push($fund_id, $funds->fund_id);
+                    array_push($fund_name_array, $funds->fund_name);
+
+                    array_push($fund_type_id, $funds->fund_type_id);
+                    array_push($fund_code, $funds->fund_code);
+
+                    // $fund_code_id_arra['fund_id'] = $funds->fund_id;
+                    // $fund_code_id_arra['fund_code'] = $funds->fund_code;
+
+                    $fund_code_id = array(
+                        'fund_id' => $funds->fund_id,
+                        'fund_code' => $funds->fund_code
+                    );
+
+                    array_push($fund_code_id_arra, $fund_code_id);
+                }
+
+                // dd($fund_type_id);
+                $fund_type = FundType::whereIn('ft_id', $fund_type_id)->get();
+                // dd($fund_type->name);
+                $fund_type_name_arr = [];
+
+                foreach ($fund_type as $f_type) {
+                    array_push($fund_type_name_arr, $f_type->name);
+                }
+                $data['fund_type_name'] = $fund_type_name_arr;
+                // dd($data['fund_type_name']);
+                //test start
+
+
+                // dd($quartile);
+
+                if ($request->report_category == 'one_month_rolling_return') {
+
+                    $data['start_date'] =  $start_date =  date('Y-m-d', strtotime('-1 month', strtotime($request->as_on_date)));
+
+                    $data['end_date'] =  $end_date = date('Y-m-d', strtotime($request->as_on_date));
+                } else {
+                    $end_date = date('Y-m-d', strtotime($request->as_on_date));
+                    $data['as_on_time_frame_data'] = $request->as_on_time_frame;
+
+                    $data['end_date'] = $end_date;
+                    // dd($request->as_on_time_frame);
+                    switch ($request->as_on_time_frame) {
+                        case '1_month':
+                            $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                            break;
+                        case '3_months':
+                            $start_date = date('Y-m-d', strtotime('-3 months', strtotime($end_date)));
+                            break;
+                        case '6_months':
+                            $start_date = date('Y-m-d', strtotime('-6 months', strtotime($end_date)));
+                            break;
+                        case '1_year':
+                            $start_date = date('Y-m-d', strtotime('-1 year', strtotime($end_date)));
+                            break;
+                        case '2_year':
+                            $start_date = date('Y-m-d', strtotime('-2 year', strtotime($end_date)));
+                            break;
+                        case '3_years':
+                            $start_date = date('Y-m-d', strtotime('-3 years', strtotime($end_date)));
+                            break;
+                        case '5_years':
+                            $start_date = date('Y-m-d', strtotime('-5 years', strtotime($end_date)));
+                            break;
+                        default:
+                            // Handle unexpected values or set a default interval
+                            // For example, set the start date to one month before by default
+                            $start_date = date('Y-m-d', strtotime('-1 month', strtotime($end_date)));
+                            break;
+                    }
+
+                    $data['start_date'] = $start_date;
+                }
+
+
+
+                // dd($start_date."---".$end_date);
+
+                $data['report_category'] = $request->report_category;
+
+                $quartile = [];
+                $decile = [];
+
+                if (isset($request->quartile_set) && $request->quartile_set == 'quartile') {
+                    $quartile = self::get_quartile('single_fund', $request->report_category, $fund_id, $fund_type_id, $start_date, $end_date);
+                }
+                if (isset($request->quartile_set) && $request->quartile_set == 'decile') {
+                    $decile = self::get_decile('single_fund', $request->report_category, $fund_id, $fund_type_id, $start_date, $end_date);
+                }
+
+                $fund_return = self::jensenalphaApi($fund_code, $start_date, $end_date);
+                // dd($call_sp);
+                if ($request->report_category == 'returns') {
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::jensenalphaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['fund_return_absolute'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'jensens_alpha') {
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::jensenalphaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['jensens_alpha'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'sharpe') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::sharpeApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['sharpe'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'treynor') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::treynorApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['treynor'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'information_ratio') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::informationRatioApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['information_ratio'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'beta') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::betaApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['beta'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'volatility') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::volatilityApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['volatility'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'tracking_error') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::trackingErrorApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['tracking_error'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'skewness') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::skewnessApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['skewness'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'kurtosis') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::kurtosisApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['kurtosis'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'r_square') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::r_squareApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['r_squere'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                } elseif ($request->report_category == 'one_month_rolling_return') {
+                    // dd('sharpe');
+                    foreach ($fund_code_id_arra as $fund_individual) {
+                        $fund_return = self::oneMonthRollingReturnApi($fund_individual['fund_code'], $start_date, $end_date);
+                        // dd($call_sp);
+                        // dd($fund_return);
+                        if (!empty($fund_return)) {
+                            $fund_absolute_return[$fund_individual['fund_id']] = $fund_return['one_month_interval_percentage_change'];
+                            // dd($fund_absolute_return);
+                        }
+                    }
+                }
+                $quartile_result['fund_absolute_return'] = isset($fund_absolute_return) && count($fund_absolute_return) > 0 ? $fund_absolute_return : [];
+
+                $quartile_result['quartile'] = $quartile;
+                $quartile_result['decile'] = $decile;
+            }
+           
+            $data['fund_names'] = implode(", ", $fund_name_array);
+        }
+
+        // Pass the request parameters back to the view for form repopulation
+        $data['request'] = $request;
+        $data['quartile_decile_result'] = $quartile_result;
+        // dd($data['quartile_decile_result']);
+        return view('web.ratio-reports.quartile_decile', $data);
+    }
+
+    public static function get_quartile($search_by, $report_type, $fund_ids, $fund_type_id, $start_date, $end_date)
+    {
+        // dd('search_by:'.$search_by." report_type:".$report_type." fund_id:".$fund_id." fund_type_id:".$fund_type_id." start_date:".$start_date." end_date:".$end_date);
+
+        // dd($report_type);
+        //search by fund......
+        // dd($fund_type_id);
+        //getting all funds all returns....
+        if ($search_by == 'single_fund') {
+
+            if ($report_type == 'returns' || $report_type == 'jensens_alpha') {
+                $all_fund_return = self::all_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'sharpe') {
+                $sharpe_fund_return = self::sharpe_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'treynor') {
+                $treynor_fund_return = self::treynor_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'information_ratio') {
+                $information_ratio_fund_return = self::information_ratio_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'beta') {
+                $beta_fund_return = self::beta_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($beta_fund_return);
+            } elseif ($report_type == 'volatility') {
+                $volatility_fund_return = self::volatility_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'tracking_error') {
+                $tracking_error_fund_return = self::tracking_error_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'skewness') {
+                $skewness_fund_return = self::skewness_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'kurtosis') {
+                $kurtosis_fund_return = self::kurtosis_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'r_square') {
+                $r_square_fund_return = self::r_square_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'one_month_rolling_return') {
+                $rolling_return_fund_return = self::rolling_return_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            }
+        } else if ($search_by == 'search_by_classification') {
+
+            if ($report_type == 'returns' || $report_type == 'jensens_alpha') {
+                $all_fund_return = self::all_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'sharpe') {
+                $sharpe_fund_return = self::sharpe_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'treynor') {
+                $treynor_fund_return = self::treynor_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'information_ratio') {
+                $information_ratio_fund_return = self::information_ratio_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'beta') {
+                $beta_fund_return = self::beta_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($beta_fund_return);
+            } elseif ($report_type == 'volatility') {
+                $volatility_fund_return = self::volatility_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'tracking_error') {
+                $tracking_error_fund_return = self::tracking_error_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'skewness') {
+                $skewness_fund_return = self::skewness_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'kurtosis') {
+                $kurtosis_fund_return = self::kurtosis_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'r_square') {
+                $r_square_fund_return = self::r_square_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'one_month_rolling_return') {
+                $rolling_return_fund_return = self::rolling_return_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            }
+        }
+
+
+
+        // dd($information_ratio_fund_return);
+        // dd($information_ratio_fund_return);
+        // dd($treynor_fund_return);
+        // $fund_returns = array_column($all_fund_return,'fund_return_absolute');
+        $fund_returns = [];
+        if ($report_type == 'returns') {
+            // dd('returns');
+            foreach ($all_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['fund_return_absolute'];
+            }
+        } elseif ($report_type == 'jensens_alpha') {
+            // dd('jensens');
+            foreach ($all_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['jensens_alpha'];
+                // dd($fund_returns[$fundId]);
+            }
+        } elseif ($report_type == 'sharpe') {
+            // dd('jensens');
+            // dd($sharpe_fund_return);
+            foreach ($sharpe_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['sharpe'];
+                // dd($fund_returns[$fundId]);
+            }
+        } elseif ($report_type == 'treynor') {
+            // dd('jensens');
+            foreach ($treynor_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['treynor'];
+                // dd($fund_returns[$fundId]);
+            }
+        } elseif ($report_type == 'information_ratio') {
+            // dd('jensens');
+            foreach ($information_ratio_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['information_ratio'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'beta') {
+            // dd('jensens');
+            foreach ($beta_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['beta'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'volatility') {
+            // dd('jensens');
+            foreach ($volatility_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['volatility'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'tracking_error') {
+            // dd('jensens');
+            foreach ($tracking_error_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['tracking_error'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'skewness') {
+            // dd('jensens');
+            foreach ($skewness_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['skewness'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'kurtosis') {
+            // dd('jensens');
+            foreach ($kurtosis_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['kurtosis'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'r_square') {
+            // dd('jensens');
+            foreach ($r_square_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['r_squere'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'one_month_rolling_return') {
+            // dd('jensens');
+            foreach ($rolling_return_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['one_month_interval_percentage_change'];
+                // dd($fund_returns);
+            }
+        }
+        // dd($fund_returns);
+        if (!empty($fund_returns)) {
+            $numeric_fund_returns = array_filter($fund_returns, function ($value) {
+                return is_numeric($value);
+            });
+            $leader = max($numeric_fund_returns);
+            // $leader = 8.08;
+            // dd($max_fund_return_val);
+            $laggard = min($numeric_fund_returns);
+            // $laggard = 8.03;
+            // dd($min_fund_return_val);
+            $class_interval = $leader - $laggard;
+            // dd($class_interval);
+            $quartile_interval = ($class_interval / 4);
+            // dd($quartile_interval);
+            $interval_4th = $leader - $quartile_interval;
+            // dd($interval_4th);
+            $interval_3rd = $interval_4th - $quartile_interval;
+            // dd($interval_3rd);
+            $interval_2nd = $interval_3rd - $quartile_interval;
+            // dd($interval_2nd);
+            $interval_1st = $interval_2nd - $quartile_interval;
+
+            if ($search_by == 'single_fund') {
+                // if($report_type=='returns'){
+                //     $selected_fund_return = $all_fund_return[$fund_id]['fund_return_absolute'];
+                // }elseif($report_type=='jensens_alpha'){
+                //     $selected_fund_return = $all_fund_return[$fund_id]['jensens_alpha'];
+                // }elseif($report_type=='sharpe'){
+                //     $selected_fund_return = $sharpe_fund_return[$fund_id]['sharpe'];
+                // }
+
+                // $selected_fund_return = $fund_returns[$fund_id];
+                // // dd($fund_id);
+
+                // // dd($selected_fund_return);
+                // // dd('fund');
+                // $params['selected_fund_return'] = $selected_fund_return;
+                // $params['leader'] = $leader;
+                // $params['laggard'] = $laggard;
+                // $params['interval_4th'] = $interval_4th;
+                // $params['interval_3rd'] = $interval_3rd;
+                // $params['interval_2nd'] = $interval_2nd;
+                // $params['interval_1st'] = $interval_1st;
+
+                // $quartile = self::quartile_calc($params);
+                // dd($quartile);
+
+                $fund_type_quartile_array = [];
+                $params['leader'] = $leader;
+                $params['laggard'] = $laggard;
+                $params['interval_4th'] = $interval_4th;
+                $params['interval_3rd'] = $interval_3rd;
+                $params['interval_2nd'] = $interval_2nd;
+                $params['interval_1st'] = $interval_1st;
+                // dd($fund_returns);
+                foreach ($fund_returns as $fundID => $fundReturn) {
+                    // dd($fundReturn);
+                    $params['selected_fund_return'] = $fundReturn;
+                    $quartile = self::quartile_calc($params);
+                    // dd($quartile);
+                    $fund_type_quartile_array[$fundID] = $quartile;
+                    // dd($fund_type_quartile_array);
+                }
+                // dd($fund_type_quartile_array);
+                return $fund_type_quartile_array;
+
+                // return $quartile;
+            } elseif ($search_by == 'search_by_classification') {
+                // dd('fund');
+                // dd($fund_returns);
+                $fund_type_quartile_array = [];
+                $params['leader'] = $leader;
+                $params['laggard'] = $laggard;
+                $params['interval_4th'] = $interval_4th;
+                $params['interval_3rd'] = $interval_3rd;
+                $params['interval_2nd'] = $interval_2nd;
+                $params['interval_1st'] = $interval_1st;
+                // dd($fund_returns);
+                foreach ($fund_returns as $fundID => $fundReturn) {
+                    // dd($fundReturn);
+                    $params['selected_fund_return'] = $fundReturn;
+                    $quartile = self::quartile_calc($params);
+                    // dd($quartile);
+                    $fund_type_quartile_array[$fundID] = $quartile;
+                    // dd($fund_type_quartile_array);
+                }
+                // dd($fund_type_quartile_array);
+                return $fund_type_quartile_array;
+            }
+        }
+    }
+
+    public static function quartile_calc($params)
+    {
+        $selected_fund_return = floatval($params['selected_fund_return']);
+        // $selected_fund_return = 3.0181409536041;
+        $leader = $params['leader'];
+        $laggard = $params['laggard'];
+        // dd($laggard);
+        $interval_4th = $params['interval_4th'];
+        $interval_3rd = $params['interval_3rd'];
+        $interval_2nd = floatval($params['interval_2nd']);
+        // $interval_2nd = 3.1920756346725;
+        $interval_1st = floatval($params['interval_1st']);
+        // $interval_1st = 3.0181409536041;
+
+        // echo $interval_1st.'-------------'.$selected_fund_return."-------------|".$interval_2nd;
+        $quartile = null;
+        /*if($selected_fund_return > $interval_4th && $selected_fund_return <= $leader){
+            $quartile = 4;
+        }elseif($selected_fund_return > $interval_3rd && $selected_fund_return <= $interval_4th){
+            $quartile = 3;
+        }elseif($selected_fund_return > $interval_2nd && $selected_fund_return <= $interval_3rd){
+            $quartile = 2;
+        }elseif($selected_fund_return >= $interval_1st && $selected_fund_return <= $interval_2nd){
+            $quartile = 1;
+        }else{
+            $quartile = 0;
+        }*/
+        $tolerance = 0.0000001;
+
+        if ($selected_fund_return > $interval_4th + $tolerance && $selected_fund_return <= $leader) {
+            $quartile = 4;
+        } elseif ($selected_fund_return > $interval_3rd + $tolerance && $selected_fund_return <= $interval_4th) {
+            $quartile = 3;
+        } elseif ($selected_fund_return > $interval_2nd + $tolerance && $selected_fund_return <= $interval_3rd) {
+            $quartile = 2;
+        } elseif ($selected_fund_return >= $interval_1st - $tolerance && $selected_fund_return <= $interval_2nd) {
+            $quartile = 1;
+        } else {
+            $quartile = 0;
+        }
+        // dd($quartile);
+
+        return $quartile;
+    }
+
+    public static function get_decile($search_by, $report_type, $fund_ids, $fund_type_id, $start_date, $end_date)
+    {
+        //search by fund......
+        // dd($fund_type_id);
+        //getting all funds all returns....
+        // $all_fund_return = self::all_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+        // $sharpe_fund_return = self::sharpe_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+        // $treynor_fund_return = self::treynor_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+
+        if ($search_by == 'single_fund') {
+
+            if ($report_type == 'returns' || $report_type == 'jensens_alpha') {
+                $all_fund_return = self::all_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'sharpe') {
+                $sharpe_fund_return = self::sharpe_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'treynor') {
+                $treynor_fund_return = self::treynor_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'information_ratio') {
+                $information_ratio_fund_return = self::information_ratio_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+            } elseif ($report_type == 'beta') {
+                $beta_fund_return = self::beta_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($beta_fund_return);
+            } elseif ($report_type == 'volatility') {
+                $volatility_fund_return = self::volatility_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'tracking_error') {
+                $tracking_error_fund_return = self::tracking_error_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'skewness') {
+                $skewness_fund_return = self::skewness_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'kurtosis') {
+                $kurtosis_fund_return = self::kurtosis_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'r_square') {
+                $r_square_fund_return = self::r_square_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'one_month_rolling_return') {
+                $rolling_return_fund_return = self::rolling_return_by_multiple_fund_ids($fund_ids, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            }
+        } else if ($search_by == 'search_by_classification') {
+
+            if ($report_type == 'returns' || $report_type == 'jensens_alpha') {
+                $all_fund_return = self::all_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'sharpe') {
+                $sharpe_fund_return = self::sharpe_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'treynor') {
+                $treynor_fund_return = self::treynor_returns_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'information_ratio') {
+                $information_ratio_fund_return = self::information_ratio_by_fund_type($fund_type_id, $start_date, $end_date);
+            } elseif ($report_type == 'beta') {
+                $beta_fund_return = self::beta_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($beta_fund_return);
+            } elseif ($report_type == 'volatility') {
+                $volatility_fund_return = self::volatility_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'tracking_error') {
+                $tracking_error_fund_return = self::tracking_error_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'skewness') {
+                $skewness_fund_return = self::skewness_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'kurtosis') {
+                $kurtosis_fund_return = self::kurtosis_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'r_square') {
+                $r_square_fund_return = self::r_square_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            } elseif ($report_type == 'one_month_rolling_return') {
+                $rolling_return_fund_return = self::rolling_return_by_fund_type($fund_type_id, $start_date, $end_date);
+                // dd($volatility_fund_return);
+            }
+        }
+        // dd($all_fund_return);
+        // $fund_returns = array_column($all_fund_return,'fund_return_absolute');
+        $fund_returns = [];
+        if ($report_type == 'returns') {
+            foreach ($all_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['fund_return_absolute'];
+            }
+            // dd($fund_returns);
+            // dd($fund_id);
+        } elseif ($report_type == 'jensens_alpha') {
+            foreach ($all_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['jensens_alpha'];
+            }
+        } elseif ($report_type == 'sharpe') {
+            // dd('jensens');
+            foreach ($sharpe_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['sharpe'];
+                // dd($fund_returns[$fundId]);
+            }
+        } elseif ($report_type == 'treynor') {
+            // dd('jensens');
+            foreach ($treynor_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['treynor'];
+                // dd($fund_returns[$fundId]);
+            }
+        } elseif ($report_type == 'information_ratio') {
+            // dd('jensens');
+            foreach ($information_ratio_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['information_ratio'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'beta') {
+            // dd('jensens');
+            foreach ($beta_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['beta'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'volatility') {
+            // dd('jensens');
+            foreach ($volatility_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['volatility'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'tracking_error') {
+            // dd('jensens');
+            foreach ($tracking_error_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['tracking_error'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'skewness') {
+            // dd('jensens');
+            foreach ($skewness_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['skewness'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'kurtosis') {
+            // dd('jensens');
+            foreach ($kurtosis_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['kurtosis'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'r_square') {
+            // dd('jensens');
+            foreach ($r_square_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['r_squere'];
+                // dd($fund_returns);
+            }
+        } elseif ($report_type == 'one_month_rolling_return') {
+            // dd('jensens');
+            foreach ($rolling_return_fund_return as $fundId => $fundValue) {
+                $fund_returns[$fundId] = $fundValue['one_month_interval_percentage_change'];
+                // dd($fund_returns);
+            }
+        }
+        // dd($fund_returns);
+
+        $numeric_fund_returns = array_filter($fund_returns, function ($value) {
+            return is_numeric($value);
+        });
+
+        $leader = max($numeric_fund_returns);
+        // $leader = 8.08;
+        // dd($max_fund_return_val);
+        $laggard = min($numeric_fund_returns);
+        // $laggard = 8.03;
+        // dd($min_fund_return_val);
+        $class_interval = $leader - $laggard;
+        // dd($class_interval);
+        $decile_interval = ($class_interval / 10);
+        // dd($quartile_interval);
+        $interval_10th = $leader - $decile_interval;
+        // dd($interval_4th);
+        $interval_9th = $interval_10th - $decile_interval;
+        // dd($interval_3rd);
+        $interval_8th = $interval_9th - $decile_interval;
+        // dd($interval_2nd);
+        $interval_7th = $interval_8th - $decile_interval;
+        $interval_6th = $interval_7th - $decile_interval;
+        $interval_5th = $interval_6th - $decile_interval;
+        $interval_4th = $interval_5th - $decile_interval;
+        $interval_3rd = $interval_4th - $decile_interval;
+        $interval_2nd = $interval_3rd - $decile_interval;
+        $interval_1st = $interval_2nd - $decile_interval;
+
+        if ($search_by == 'single_fund') {
+            // $selected_fund_return = $all_fund_return[$fund_id]['fund_return_absolute'];
+            // $selected_fund_return = $fund_returns[$fund_id];
+            // // dd($selected_fund_return);
+            // $params['selected_fund_return'] = $selected_fund_return;
+            // $params['leader'] = $leader;
+            // $params['laggard'] = $laggard;
+            // $params['interval_10th'] = $interval_10th;
+            // $params['interval_9th'] = $interval_9th;
+            // $params['interval_8th'] = $interval_8th;
+            // $params['interval_7th'] = $interval_7th;
+            // $params['interval_6th'] = $interval_6th;
+            // $params['interval_5th'] = $interval_5th;
+            // $params['interval_4th'] = $interval_4th;
+            // $params['interval_3rd'] = $interval_3rd;
+            // $params['interval_2nd'] = $interval_2nd;
+            // $params['interval_1st'] = $interval_1st;
+
+            // $decile = self::decile_calc($params);            
+            // // dd($quartile);
+            // return $decile;
+
+            $params['leader'] = $leader;
+            $params['laggard'] = $laggard;
+            $params['interval_10th'] = $interval_10th;
+            $params['interval_9th'] = $interval_9th;
+            $params['interval_8th'] = $interval_8th;
+            $params['interval_7th'] = $interval_7th;
+            $params['interval_6th'] = $interval_6th;
+            $params['interval_5th'] = $interval_5th;
+            $params['interval_4th'] = $interval_4th;
+            $params['interval_3rd'] = $interval_3rd;
+            $params['interval_2nd'] = $interval_2nd;
+            $params['interval_1st'] = $interval_1st;
+            // dd($fund_returns);
+            foreach ($fund_returns as $fundID => $fundReturn) {
+                // dd($fundReturn);
+                $params['selected_fund_return'] = $fundReturn;
+                $decile = self::decile_calc($params);
+                $fund_type_decile_array[$fundID] = $decile;
+                // dd($fund_type_quartile_array);
+            }
+            // dd($fund_type_quartile_array);
+            return $fund_type_decile_array;
+        } elseif ($search_by == 'search_by_classification') {
+            $fund_type_quartile_array = [];
+            $params['leader'] = $leader;
+            $params['laggard'] = $laggard;
+            $params['interval_10th'] = $interval_10th;
+            $params['interval_9th'] = $interval_9th;
+            $params['interval_8th'] = $interval_8th;
+            $params['interval_7th'] = $interval_7th;
+            $params['interval_6th'] = $interval_6th;
+            $params['interval_5th'] = $interval_5th;
+            $params['interval_4th'] = $interval_4th;
+            $params['interval_3rd'] = $interval_3rd;
+            $params['interval_2nd'] = $interval_2nd;
+            $params['interval_1st'] = $interval_1st;
+            // dd($fund_returns);
+            foreach ($fund_returns as $fundID => $fundReturn) {
+                // dd($fundReturn);
+                $params['selected_fund_return'] = $fundReturn;
+                $decile = self::decile_calc($params);
+                $fund_type_decile_array[$fundID] = $decile;
+                // dd($fund_type_quartile_array);
+            }
+            // dd($fund_type_quartile_array);
+            return $fund_type_decile_array;
+        }
+    }
+    public static function decile_calc($params)
+    {
+        $selected_fund_return = $params['selected_fund_return'];
+        $leader = $params['leader'];
+        $laggard = $params['laggard'];
+        // dd($laggard);
+        $interval_10th = $params['interval_10th'];
+        $interval_9th = $params['interval_9th'];
+        $interval_8th = $params['interval_8th'];
+        $interval_7th = $params['interval_7th'];
+        $interval_6th = $params['interval_6th'];
+        $interval_5th = $params['interval_5th'];
+        $interval_4th = $params['interval_4th'];
+        $interval_3rd = $params['interval_3rd'];
+        $interval_2nd = $params['interval_2nd'];
+        $interval_1st = $params['interval_1st'];
+
+
+        // echo $interval_1st.'-------------'.$selected_fund_return."-------------|".$interval_2nd;
+        $decile = null;
+
+        $tolerance = 0.0000001;
+
+        if ($selected_fund_return > $interval_10th + $tolerance && $selected_fund_return <= $leader) {
+            $decile = 10;
+        } elseif ($selected_fund_return > $interval_9th + $tolerance && $selected_fund_return <= $interval_10th) {
+            $decile = 9;
+        } elseif ($selected_fund_return > $interval_8th + $tolerance && $selected_fund_return <= $interval_9th) {
+            $decile = 8;
+        } elseif ($selected_fund_return > $interval_7th + $tolerance && $selected_fund_return <= $interval_8th) {
+            $decile = 7;
+        } elseif ($selected_fund_return > $interval_6th + $tolerance && $selected_fund_return <= $interval_7th) {
+            $decile = 6;
+        } elseif ($selected_fund_return > $interval_5th + $tolerance && $selected_fund_return <= $interval_6th) {
+            $decile = 5;
+        } elseif ($selected_fund_return > $interval_4th + $tolerance && $selected_fund_return <= $interval_5th) {
+            $decile = 4;
+        } elseif ($selected_fund_return > $interval_3rd + $tolerance && $selected_fund_return <= $interval_4th) {
+            $decile = 3;
+        } elseif ($selected_fund_return > $interval_2nd + $tolerance && $selected_fund_return <= $interval_3rd) {
+            $decile = 2;
+        } elseif ($selected_fund_return > $interval_1st - $tolerance && $selected_fund_return <= $interval_2nd) {
+            $decile = 1;
+        }
+
+        return $decile;
+    }
+
+
+
+    public static function jensenalphaApi($fund_code, $start_date, $end_date)
+    {
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-jensens-alpla-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+
+
+        return $ratioData;
+    }
+
+    public static function sharpeApi($fund_code, $start_date, $end_date)
+    {
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-sharpe-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function treynorApi($fund_code, $start_date, $end_date)
+    {
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-treynor-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function informationRatioApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-information-ratio-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+
+        // dd('params===',$params,'ratioData====',$ratioData);
+        return $ratioData;
+    }
+
+    public static function betaApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-beta-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function volatilityApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-volatility-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function trackingErrorApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-tracking-error-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function skewnessApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-skewness-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function kurtosisApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-kurtosis-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function r_squareApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-r-squere-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function oneMonthRollingReturnApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-rolling-return-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function sortinoApi($fund_code, $start_date, $end_date)
+    {
+        // dd('informationRatioApi');
+        $baseUrl = URL::to('/');
+        $endpoint = 'report-sortino-api';
+
+        // Construct the full URL
+        $url = $baseUrl . '/' . $endpoint;
+        // dd($url);
+
+        $params = [
+            'search_fund_name' => $fund_code,
+            'search_from_date' => $start_date,
+            'search_to_date' => $end_date,
+            'search' => 'Search'
+        ];
+        $fullUrl = $url . '?' . http_build_query($params);
+        // dd($fullUrl);
+        // Send a GET request to the URL with the query parameters
+        $response = Http::get($url, $params);
+        // dd($response);
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Get the data from the response
+            $ratioData = $response->json();
+        } else {
+            $ratioData = [];
+        }
+        return $ratioData;
+    }
+
+    public static function all_returns_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::jensenalphaApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function all_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::jensenalphaApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function sharpe_returns_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::sharpeApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function sharpe_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::sharpeApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function treynor_returns_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::treynorApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function treynor_returns_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::treynorApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function information_ratio_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::informationRatioApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function information_ratio_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::informationRatioApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function beta_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::betaApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function beta_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::betaApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function volatility_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::volatilityApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function volatility_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::volatilityApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function tracking_error_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::trackingErrorApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function tracking_error_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::trackingErrorApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function skewness_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::skewnessApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function skewness_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::skewnessApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function kurtosis_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::kurtosisApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function kurtosis_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::kurtosisApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+
+
+    public static function r_square_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::r_squareApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function r_square_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::r_squareApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function rolling_return_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::oneMonthRollingReturnApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function rolling_return_by_multiple_fund_ids($fund_ids, $start_date, $end_date)
+    {
+        // dd($end_date);
+        $all_funds = FundMaster::whereIn('fund_id', $fund_ids)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::oneMonthRollingReturnApi($individual_fund_code, $start_date, $end_date);
+            // dd($individual_fund_return);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function all_jensens_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::jensenalphaApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+
+    public static function all_sharpe_by_fund_type($fund_type_id, $start_date, $end_date)
+    {
+        $all_funds = FundMaster::where('fund_type_id', $fund_type_id)->get();
+        $all_fund_all_return = [];
+        foreach ($all_funds as $fund) {
+            $individual_fund_code = $fund->fund_code;
+            $individual_fund_return = self::jensenalphaApi($individual_fund_code, $start_date, $end_date);
+            // array_push($all_fund_all_return, $individual_fund_return);
+            $all_fund_all_return[$fund->fund_id] = $individual_fund_return;
+        }
+        return $all_fund_all_return;
+    }
+}

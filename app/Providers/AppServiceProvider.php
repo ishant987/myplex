@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path('Support/helpers.php');
+        //
     }
 
     /**
@@ -64,5 +64,7 @@ class AppServiceProvider extends ServiceProvider
                 return $item->setAppends($attributes);
             });
         });
+
+        require_once app_path('Helpers/helpers.php');
     }
 }

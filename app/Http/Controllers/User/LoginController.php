@@ -8,82 +8,14 @@ use App\Http\Controllers\Web\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subscription;
-use App\Support\WelcomeEmailSender;
 
 // use Illuminate\Support\Facades\Auth;
- use Auth;
- use Illuminate\Support\Facades\Http;
- use Carbon\Carbon;
+use Auth;
+use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class LoginController extends BaseController
 {
-    protected int $trialDays = 0;
-
-    protected function createTrialSubscription(User $user, string $expiryDate): void
-    {
-        $existingTrial = Subscription::query()
-            ->where(function ($query) use ($user) {
-                $query->where('user_id', $user->u_id)
-                    ->orWhere('u_id', $user->u_id);
-            })
-            ->whereIn('subscription_type', ['trial', 'free_subscription'])
-            ->exists();
-
-        if ($existingTrial) {
-            return;
-        }
-
-        Subscription::create([
-            'user_id' => $user->u_id,
-            'u_id' => $user->u_id,
-            'u_code' => $user->u_code,
-            'subscription_type' => 'trial',
-            'created_date' => date('Y-m-d'),
-            'subscription_expiry_date' => $expiryDate,
-            'trial_ends_at' => $expiryDate,
-            'ends_at' => $expiryDate,
-            'status' => 'a',
-            'created_by' => 'u',
-            'created_id' => $user->u_id,
-        ]);
-    }
-
-    protected function establishUserSession(Request $request, User $user): void
-    {
-        $request->session()->regenerate();
-
-        $user->update([
-            'session_token' => $request->session()->getId(),
-            'is_session_active' => true,
-        ]);
-    }
-
-    protected function loginRedirectFor(User $user)
-    {
-        if (config('features.subscription_enabled') && $user->isOnTrial()) {
-            return redirect()->route('web.subscription.index')->with('success', 'Your free trial is active. You can continue the trial or choose a paid plan.');
-        }
-
-        return redirect()->route('user.index_dashboard')->with('success','You have successfully logged in');
-    }
-
-    public function logout(Request $request)
-    {
-        $user = Auth::user();
-
-        if ($user) {
-            $user->update([
-                'session_token' => null,
-                'is_session_active' => false,
-            ]);
-        }
-
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('user.user_login')->with('success', 'You have successfully logged out.');
-    }
 
     public function postLogin(Request $request)
     {
@@ -99,31 +31,28 @@ class LoginController extends BaseController
 
         // dd($credentials);
 
-        if (Auth::attempt($credentials)) 
-        {
-                 //  dd("ok4");
+        $auth = Auth::attempt($credentials);
+
+        // dd($auth);
+
+        //$auth = Auth::attempt($credentials);
+
+        if (Auth::attempt($credentials)) {
+            //  dd("ok4");
             $user = Auth::user();
-            $this->establishUserSession($request, $user);
-             //dd($user);
+            //dd($user);
             // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
-            if(isset($request->pageurl))
-            {
+            if (isset($request->pageurl)) {
                 //dd($request->pageurl);
-                if($request->pageurl=='subcription')
-                {
-                    return redirect()->route(config('features.subscription_enabled') ? 'web.subscription.index' : 'user.subscription');
+                if ($request->pageurl == 'subcription') {
+                    return redirect()->route('user.subscription');
                 }
-                
+            } else {
+                return redirect()->route('user.auth-dashboard')->with('success', 'You have successfully logged in');
             }
-            else
-            {
-                return $this->loginRedirectFor($user);
-            }
-                 
-              // return redirect()->back();
-        }
-        else
-        {
+
+            // return redirect()->back();
+        } else {
             // dd("ok5");
             return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
         }
@@ -131,6 +60,20 @@ class LoginController extends BaseController
         // return redirect()->route("user.user_login")->with('error', 'Wrong credentials');
     }
     //callback
+
+    public function logout(Request $request)
+    {
+        Auth::guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        // return $this->loggedOut($request) ?: redirect('/');
+
+        return redirect()->guest(route('user.user_login'));
+    }
+
 
     public function redirectToGoogle()
     {
@@ -147,13 +90,13 @@ class LoginController extends BaseController
     //         // dd($user);
     //         // $finduser = User::where('social_id', $user->u_id)->first();
     //         $finduser = User::where('email', $user->email)->first();
-        
+
     //  //dd($findUser);
     //         if ($finduser) 
     //         {
     //            // dd('ok');
     //             $token = $finduser->createToken('MyApp')->plainTextToken;
-    
+
     //             //  $api_url = env('API_BASE_URL').'google/login';
     //             // dd($api_url);
     //             $response = Http::withHeaders([
@@ -162,12 +105,12 @@ class LoginController extends BaseController
     //             ]);
     //             callback
     //             //  dd($response);
-    
+
     //             if ($response->successful()) 
     //             {
     //                 $request->session()->put('user_data', $finduser);
     //                 $request->session()->put('access_token', ['access_token' => $token]);
-    
+
     //                 return redirect()->intended('user.ratio_dashboard')->withSuccess('You have Successfully logged in');
     //             } 
     //             else 
@@ -188,22 +131,22 @@ class LoginController extends BaseController
     //                 'password' => bcrypt('my-google'),
     //                 'subscription_expiry_date' => now()->addDays(14), // Example: set expiry date to 1 month from now
     //             ]);
-                
-    
+
+
     //             $token = $newUser->createToken('MyApp')->plainTextToken;
-    
+
     //             // $api_url = env('API_BASE_URL').'google/login';
-    
+
     //             $response = Http::withHeaders([
     //                 'Accept' => 'application/json',
     //                 'callbackAuthorization' => 'Bearer '.$token
     //             ]);
-    
+
     //             if ($response->successful()) 
     //             {
     //                 $request->session()->put('user_data', $newUser);
     //                 $request->session()->put('access_token', ['access_token' => $token]);
-    
+
     //                 return redirect("user.registration")->with('success', 'You have successfully registered.');
     //             } 
     //             else 
@@ -219,84 +162,88 @@ class LoginController extends BaseController
     // }
     public function handleGoogleCallback(Request $request)
     {
-        try 
-        {
+        try {
             $user_google = Socialite::driver('google')->user();
-           // $user_facebook = Socialite::driver('facebook')->user();
-            if(isset($user_google))
-            {
-                $email=$user_google->email;
+            // $user_facebook = Socialite::driver('facebook')->user();
+            if (isset($user_google)) {
+                $email = $user_google->email;
                 $finduser = User::where('email', $user_google->email)->first();
-                $google_id =$user_google->id;
-
+                $google_id = $user_google->id;
             }
             // elseif(isset($user_facebook))
             // {
             //     dd($user_facebook);
 
             // }
-           
-           // $finduser = User::where('email', $email)->first();
-          // dd($user_google);
-           
-           // dd( $finduser);
-            if(isset($finduser))
-            {
-                if(isset($finduser->s_account) && !$finduser->s_account)
-                {
 
-               
-                    $update['s_account']=$user_google->id;
-                    $update['s_acc_medium']='g';
-                    $update['updated_by']='u';
-                    $update['acc_type']='s';
-                    User::where('email',$user_google->email)->update($update);
+            // $finduser = User::where('email', $email)->first();
+            // dd($user_google);
+
+            // dd( $finduser);
+            if (isset($finduser)) {
+                if (isset($finduser->s_account) && !$finduser->s_account) {
+
+
+                    $update['s_account'] = $user_google->id;
+                    $update['s_acc_medium'] = 'g';
+                    $update['updated_by'] = 'u';
+                    $update['acc_type'] = 's';
+                    User::where('email', $user_google->email)->update($update);
                 }
-                
 
-        
+
+
 
 
                 auth()->login($finduser);
-                $this->establishUserSession($request, $finduser);
-                return $this->loginRedirectFor($finduser);
-            }
-            else
-            {
-                if(isset($finduser->email))
-                {
+                return redirect()->route('user.ratio_dashboard');
+            } else {
+                if (isset($finduser->email)) {
                     auth()->login($finduser);
-                    return redirect()->route('user.index_dashboard');
+                    return redirect()->route('user.ratio_dashboard');
                 }
-                $expiryDate = Carbon::now()->addDays($this->trialDays)->format('Y-m-d');
-                $insert['email']=$user_google->email;
-                $insert['subscription_expiry_date']=$expiryDate;
-                $insert['trial_ends_at']=$expiryDate;
-                $insert['subscription_status']='trial';
-                $insert['acc_type']='s';
-                $insert['created_by']='u';
-                $insert['s_acc_medium']='g';
-                $insert['s_account']=$user_google->id;
+                $registrationDate = date('Y-m-d');
+                $registrationDates = Carbon::now();
+
+                $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+                $registrationDate = date('Y-m-d');
+                $registrationDates = Carbon::now();
+                $insert['email'] = $user_google->email;
+                $insert['subscription_expiry_date'] = $expiryDate;
+                $insert['acc_type'] = 's';
+                $insert['created_by'] = 'u';
+                $insert['s_acc_medium'] = 'g';
+                $insert['s_account'] = $user_google->id;
                 $user = User::create($insert);
-                $this->createTrialSubscription($user, $expiryDate);
-                WelcomeEmailSender::send($user, null, null, route('user.user_login'));
+                $userId = $user->u_id;
+                $userCode = $user->u_code;
+
+                $subscription_table['u_id'] = $userId;
+                $subscription_table['u_code'] = $userCode;
+                $subscription_table['subscription_type'] = 'free_subscription';
+                $subscription_table['created_date'] = date('Y-m-d');
+                $subscription_table['subscription_expiry_date'] = $expiryDate;
+                $subscription_table['status'] = 'a';
+                $subscription_table['created_by'] = 'u';
+                $subscription_table['created_id'] = $userId;
+                $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
-                $this->establishUserSession($request, $user);
-                return $this->loginRedirectFor($user);
-              //  return redirect()->back();
+                return redirect()->route('user.ratio_dashboard');
+                //  return redirect()->back();
             }
 
-           
 
 
-        }
-        catch (Exception $e) {
-            return redirect()->route('user.user_login')->with('error','Wrong Credentials');
+
+
+            $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+        } catch (Exception $e) {
+            return redirect()->route('user.user_login')->with('error', 'Wrong Credentials');
             // dd($e->getMessage());
         }
-       
-       // dd($user);
-       // return redirect()->route('user.ratio_dashboard');
+
+        // dd($user);
+        // return redirect()->route('user.ratio_dashboard');
     }
 
     public function redirectToFacebook()
@@ -307,83 +254,90 @@ class LoginController extends BaseController
 
     public function handleFacebookCallback(Request $request)
     {
-     
-        try 
-        {
-            $user_facebook = Socialite::driver('facebook')->user();
-          //  dd($user_facebook);
-           // $user_facebook = Socialite::driver('facebook')->user();
-           
-                $email=$user_facebook->email;
-                $finduser = User::where('email', $user_facebook->email)->first();
-                $google_id =$user_facebook->id;
 
-           
+        try {
+            $user_facebook = Socialite::driver('facebook')->user();
+            //  dd($user_facebook);
+            // $user_facebook = Socialite::driver('facebook')->user();
+
+            $email = $user_facebook->email;
+            $finduser = User::where('email', $user_facebook->email)->first();
+            $google_id = $user_facebook->id;
+
+
             // elseif(isset($user_facebook))
             // {
             //     dd($user_facebook);
 
             // }
-           
-           // $finduser = User::where('email', $email)->first();
-          // dd($user_google);
-           
-           // dd( $finduser);
-            if(isset($finduser))
-            {
-                if(isset($finduser->s_account) && !$finduser->s_account)
-                {
 
-               
-                    $update['s_account']=$user_facebook->id;
-                    $update['s_acc_medium']='f';
-                    $update['updated_by']='u';
-                    $update['acc_type']='s';
-                    User::where('email',$user_facebook->email)->update($update);
+            // $finduser = User::where('email', $email)->first();
+            // dd($user_google);
+
+            // dd( $finduser);
+            if (isset($finduser)) {
+                if (isset($finduser->s_account) && !$finduser->s_account) {
+
+
+                    $update['s_account'] = $user_facebook->id;
+                    $update['s_acc_medium'] = 'f';
+                    $update['updated_by'] = 'u';
+                    $update['acc_type'] = 's';
+                    User::where('email', $user_facebook->email)->update($update);
                 }
-                
 
-        
+
+
 
 
                 auth()->login($finduser);
-                $this->establishUserSession($request, $finduser);
-                return $this->loginRedirectFor($finduser);
-            }
-            else
-            {
-                if(isset($finduser->email))
-                {
+                return redirect()->route('user.ratio_dashboard');
+            } else {
+                if (isset($finduser->email)) {
                     auth()->login($finduser);
-                    $this->establishUserSession($request, $finduser);
-                    return redirect()->route('user.index_dashboard');
+                    return redirect()->route('user.ratio_dashboard');
                 }
-                $expiryDate = Carbon::now()->addDays($this->trialDays)->format('Y-m-d');
-                $insert['email']=$user_facebook->email;
-                $insert['subscription_expiry_date']=$expiryDate;
-                $insert['trial_ends_at']=$expiryDate;
-                $insert['subscription_status']='trial';
-                $insert['acc_type']='s';
-                $insert['created_by']='u';
-                $insert['s_acc_medium']='f';
-                $insert['s_account']=$user_facebook->id;
+                $registrationDate = date('Y-m-d');
+                $registrationDates = Carbon::now();
+
+                $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+                $registrationDate = date('Y-m-d');
+                $registrationDates = Carbon::now();
+                $insert['email'] = $user_facebook->email;
+                $insert['subscription_expiry_date'] = $expiryDate;
+                $insert['acc_type'] = 's';
+                $insert['created_by'] = 'u';
+                $insert['s_acc_medium'] = 'f';
+                $insert['s_account'] = $user_facebook->id;
                 $user = User::create($insert);
-                $this->createTrialSubscription($user, $expiryDate);
-                WelcomeEmailSender::send($user, null, null, route('user.user_login'));
+                $userId = $user->u_id;
+                $userCode = $user->u_code;
+
+                $subscription_table['u_id'] = $userId;
+                $subscription_table['u_code'] = $userCode;
+                $subscription_table['subscription_type'] = 'free_subscription';
+                $subscription_table['created_date'] = date('Y-m-d');
+                $subscription_table['subscription_expiry_date'] = $expiryDate;
+                $subscription_table['status'] = 'a';
+                $subscription_table['created_by'] = 'u';
+                $subscription_table['created_id'] = $userId;
+                $subscription = Subscription::create($subscription_table);
                 auth()->login($user);
-                $this->establishUserSession($request, $user);
-                return $this->loginRedirectFor($user);
-              //  return redirect()->back();
+                return redirect()->route('user.ratio_dashboard');
+                //  return redirect()->back();
             }
 
-           
-
-
-        }
-        catch (Exception $e) 
-        {
+            $expiryDate = $registrationDates->addDays(14)->format('Y-m-d');
+        } catch (Exception $e) {
             return redirect()->route('user.user_login')->with('error', 'An error occurred. Please try again later.');
         }
     }
 
+    public function dashboard()
+    {
+		// dd('okk');
+        $data = RatioController::loggedInUserData();
+
+        return view('web.auth.dashboard', $data);
+    }
 }

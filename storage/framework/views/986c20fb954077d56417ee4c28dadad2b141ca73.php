@@ -27,7 +27,7 @@
 <!-- <meta property="og:image" content="<?php echo $__env->yieldContent('meta-image'); ?>" /> -->
 <?php endif; ?>
 <?php if(View::hasSection('moneycontrol')): ?>
-    <link rel="stylesheet" href="https://stat.moneycontrol.co.in/mccss/mcradar/https_style.css?ver=1.6" />
+    <!-- <link rel="stylesheet" href="https://stat.moneycontrol.co.in/mccss/mcradar/https_style.css?ver=1.6" /> -->
 <?php endif; ?>
 <link href="<?php echo e(asset('themes/frontend/assets/v1/css/bootstrap.min.css')); ?>" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -39,6 +39,7 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <link href="<?php echo e(asset('themes/frontend/assets/v1/css/all.min.css')); ?>" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
 <script src="https://unpkg.com/phosphor-icons"></script>
 <?php echo $__env->yieldPushContent('style'); ?>

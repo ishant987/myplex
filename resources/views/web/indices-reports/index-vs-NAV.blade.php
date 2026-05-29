@@ -13,12 +13,14 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Index vs NAV</h2>
+                    </div>
                     <form action="" method="get">
                         <div class="index_nav">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="nav_in">
-                                        <p><strong>Primary</strong></p>
                                         <div class="wm_tab">
                                             <ul class="">
                                                 <li>
@@ -83,15 +85,15 @@
                                         <div class="col-md-6">
                                             <label>From date</label>
                                             <div class="form_group">
-                                                <input type="date" name="from_date" class="form-control"
-                                                    value="{{ !empty($request['from_date']) ? \Carbon\Carbon::parse($request['from_date'])->format('Y-m-d') : '' }}">
+                                                <input type="text" name="from_date" class="datepicker"
+                                                    value="{{ isset($request['from_date']) ? $request['from_date'] : '' }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <label>To date</label>
                                             <div class="form_group">
-                                                <input type="date" name="to_date" class="form-control"
-                                                    value="{{ !empty($request['to_date']) ? \Carbon\Carbon::parse($request['to_date'])->format('Y-m-d') : '' }}">
+                                                <input type="text" name="to_date" class="datepicker"
+                                                    value="{{ isset($request['to_date']) ? $request['to_date'] : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -100,7 +102,6 @@
                                     <div class="index_five">
 
                                         <div class="single_index">
-                                            <p><strong>Compare With</strong></p>
                                             <div class="wm_tab">
                                                 <ul class="">
                                                     <li>
@@ -158,14 +159,293 @@
                                             </div>
                                         </div>
 
+                                        <div class="single_index">
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_2('scheme')"
+                                                            id="select_scheme_2"
+                                                            class="{{ (isset($request['select_2']) && $request['select_2'] == 'scheme') || !isset($request['select_2']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_2" name="select_2"
+                                                            value="{{ isset($request['select_2']) ? $request['select_2'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_2('index')"
+                                                            id="select_index_2"
+                                                            class="{{ isset($request['select_2']) && $request['select_2'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+                                                </ul>
 
+                                            </div>
+
+                                            <div class="tabsct">
+                                                <div class="" id="scheme_2"
+                                                    style="{{ isset($request['select_2']) && $request['select_2'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_2" class="select2"
+                                                            data-placeholder="Select Scheme"
+                                                            onchange="drpdown_2('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_2']) && $scheme->fund_code == $request['scheme_2']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="" id="index_2"
+                                                    style="{{ (isset($request['select_2']) && $request['select_2'] == 'scheme') || !isset($request['select_2']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_2" class="select2"
+                                                            onchange="drpdown_2('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_2']) && $index->corelation == $request['index_2']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- ===============3========= --}}
+
+                                        <div class="single_index">
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_3('scheme')"
+                                                            id="select_scheme_3"
+                                                            class="{{ (isset($request['select_3']) && $request['select_3'] == 'scheme') || !isset($request['select_3']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_3" name="select_3"
+                                                            value="{{ isset($request['select_3']) ? $request['select_3'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_3('index')"
+                                                            id="select_index_3"
+                                                            class="{{ isset($request['select_3']) && $request['select_3'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+
+                                            <div class="tabsct">
+                                                <div class="" id="scheme_3"
+                                                    style="{{ isset($request['select_3']) && $request['select_3'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_3" class="select2"
+                                                            data-placeholder="Select Scheme"
+                                                            onchange="drpdown_3('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_3']) && $scheme->fund_code == $request['scheme_3']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="" id="index_3"
+                                                    style="{{ (isset($request['select_3']) && $request['select_3'] == 'scheme') || !isset($request['select_3']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_3" class="select2"
+                                                            onchange="drpdown_3('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_3']) && $index->corelation == $request['index_3']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         {{-- ===============4========= --}}
 
+                                        <div class="single_index">
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_4('scheme')"
+                                                            id="select_scheme_4"
+                                                            class="{{ (isset($request['select_4']) && $request['select_4'] == 'scheme') || !isset($request['select_4']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_4" name="select_4"
+                                                            value="{{ isset($request['select_4']) ? $request['select_4'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_4('index')"
+                                                            id="select_index_4"
+                                                            class="{{ isset($request['select_4']) && $request['select_4'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+
+                                            <div class="tabsct">
+                                                <div class="" id="scheme_4"
+                                                    style="{{ isset($request['select_4']) && $request['select_4'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_4" class="select2"
+                                                            data-placeholder="Select Scheme"
+                                                            onchange="drpdown_4('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_4']) && $scheme->fund_code == $request['scheme_4']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="" id="index_4"
+                                                    style="{{ (isset($request['select_4']) && $request['select_4'] == 'scheme') || !isset($request['select_4']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_4" class="select2"
+                                                            onchange="drpdown_4('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_4']) && $index->corelation == $request['index_4']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         {{-- ===============5========= --}}
 
+                                        <div class="single_index">
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_5('scheme')"
+                                                            id="select_scheme_5"
+                                                            class="{{ (isset($request['select_5']) && $request['select_5'] == 'scheme') || !isset($request['select_5']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_5" name="select_5"
+                                                            value="{{ isset($request['select_5']) ? $request['select_5'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_5('index')"
+                                                            id="select_index_5"
+                                                            class="{{ isset($request['select_5']) && $request['select_5'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+                                                </ul>
 
+                                            </div>
+
+                                            <div class="tabsct">
+                                                <div class="" id="scheme_5"
+                                                    style="{{ isset($request['select_5']) && $request['select_5'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_5" class="select2"
+                                                            data-placeholder="Select Scheme"
+                                                            onchange="drpdown_5('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_5']) && $scheme->fund_code == $request['scheme_5']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="" id="index_5"
+                                                    style="{{ (isset($request['select_5']) && $request['select_5'] == 'scheme') || !isset($request['select_5']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_5" class="select2"
+                                                            onchange="drpdown_5('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_5']) && $index->corelation == $request['index_5']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- ===============6========= --}}
+
+                                        <div class="single_index">
+                                            <div class="wm_tab">
+                                                <ul class="">
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_6('scheme')"
+                                                            id="select_scheme_6"
+                                                            class="{{ (isset($request['select_6']) && $request['select_6'] == 'scheme') || !isset($request['select_6']) ? 'active' : '' }}">Schemes</a>
+                                                        <input type="hidden" id="select_6" name="select_6"
+                                                            value="{{ isset($request['select_6']) ? $request['select_6'] : '' }}">
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:void(0)" onclick="select_6('index')"
+                                                            id="select_index_6"
+                                                            class="{{ isset($request['select_6']) && $request['select_6'] == 'index' ? 'active' : '' }}">Index</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+
+                                            <div class="tabsct">
+                                                <div class="" id="scheme_6"
+                                                    style="{{ isset($request['select_6']) && $request['select_6'] == 'index' ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="scheme_6" class="select2"
+                                                            data-placeholder="Select Scheme"
+                                                            onchange="drpdown_6('scheme')">
+                                                            <option value="">Select Scheme</option>
+                                                            @isset($schemes)
+                                                                @foreach ($schemes as $scheme)
+                                                                    <option value="{{ $scheme->fund_code }}"
+                                                                        @if (isset($request['scheme_6']) && $scheme->fund_code == $request['scheme_6']) selected @endif>
+                                                                        {{ $scheme->fund_name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="" id="index_6"
+                                                    style="{{ (isset($request['select_6']) && $request['select_6'] == 'scheme') || !isset($request['select_6']) ? 'display:none' : '' }}">
+                                                    <div class="form_group">
+                                                        <select name="index_6" class="select2"
+                                                            onchange="drpdown_6('index')">
+                                                            <option value="">Select Index</option>
+                                                            @isset($indices)
+                                                                @foreach ($indices as $index)
+                                                                    <option value="{{ $index->corelation }}"
+                                                                        @if (isset($request['index_6']) && $index->corelation == $request['index_6']) selected @endif>
+                                                                        {{ $index->name }}</option>
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
 
@@ -176,6 +456,18 @@
                                     <div class="bttn_grp">
                                         <input type="hidden" id="indices_graph_1"
                                             value="{{ isset($indices_vals_1) ? json_encode($indices_vals_1) : '' }}">
+                                        <input type="hidden" id="indices_graph_2"
+                                            value="{{ isset($indices_vals_2) ? json_encode($indices_vals_2) : '' }}">
+                                        <input type="hidden" id="indices_graph_3"
+                                            value="{{ isset($indices_vals_3) ? json_encode($indices_vals_3) : '' }}">
+                                        <input type="hidden" id="indices_graph_4"
+                                            value="{{ isset($indices_vals_4) ? json_encode($indices_vals_4) : '' }}">
+                                        <input type="hidden" id="indices_graph_5"
+                                            value="{{ isset($indices_vals_5) ? json_encode($indices_vals_5) : '' }}">
+                                        <input type="hidden" id="indices_graph_6"
+                                            value="{{ isset($indices_vals_6) ? json_encode($indices_vals_6) : '' }}">
+
+
                                         <button class="btn btn-success" type="submit">Compare</button>
                                     </div>
                                 </div>
@@ -184,7 +476,7 @@
                     </form>
 
                     
-                    @if (isset($indices_vals_1))
+                    @if (isset($indices_vals_1) || isset($request['scheme_2']) || isset($request['scheme_3']) || isset($request['scheme_4']) || isset($request['scheme_5']) || isset($request['scheme_6'])   )
                     <div class="share_pdf">
                         <div class="sharethis-inline-share-buttons" ></div>
                         {{-- <a href="javascript:void(0)" id="exportPDF" class="pdf"><img
@@ -203,9 +495,39 @@
                         </div>
                     @endif
 
+                    @if(isset($request['scheme_2']) && !empty($request['scheme_2']) || isset($request['index_2']) && !empty($request['index_2']))
+                        <div class="graph_section">
+                            <div id="chartContainer_2" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @endif
+
+                    @if(isset($request['scheme_3']) && !empty($request['scheme_3']) || isset($request['index_3']) && !empty($request['index_3']))
+                        <div class="graph_section">
+                            <div id="chartContainer_3" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @endif
+
+                    @if(isset($request['scheme_4']) && !empty($request['scheme_4']) || isset($request['index_4']) && !empty($request['index_4']))
+                        <div class="graph_section">
+                            <div id="chartContainer_4" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @endif
+
+                    @if(isset($request['scheme_5']) && !empty($request['scheme_5']) || isset($request['index_5']) && !empty($request['index_5']))
+                        <div class="graph_section">
+                            <div id="chartContainer_5" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @endif
+
+                    @if(isset($request['scheme_6']) && !empty($request['scheme_6']) || isset($request['index_6']) && !empty($request['index_6']))
+                        <div class="graph_section">
+                            <div id="chartContainer_6" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
+                        </div>
+                    @endif
+
 
                 </div>
-                @if (isset($indices_vals_1))
+                @if (isset($indices_vals_6))
                 <div class="disclaimer">
                     <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
                 </div>
@@ -568,7 +890,14 @@
                 $('.highcharts-credits').hide();
             }
 
+            // Example usage
             initializeChart('indices_graph_1', 'chartContainer_1');
+            initializeChart('indices_graph_2', 'chartContainer_2');
+            initializeChart('indices_graph_3', 'chartContainer_3');
+            initializeChart('indices_graph_4', 'chartContainer_4');
+            initializeChart('indices_graph_5', 'chartContainer_5');
+            initializeChart('indices_graph_6', 'chartContainer_6');
+            // Repeat for other charts as needed
         });
     </script>
     <style type="text/css">

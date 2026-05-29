@@ -20,8 +20,8 @@
                 <div class="container p-0">
                 <div class="wm_tab">
                     <ul>
-                        <li><a class="active" href="https://myplexus.com/user-weekly-snapshot">Weekly</a></li>
-                        <li><a href="https://myplexus.com/user-monthly-snapshot">Monthly</a></li>
+                        <li><a class="active" :href="weeklyUrl">Weekly</a></li>
+                        <li><a :href="monthlyUrl">Monthly</a></li>
                     </ul>
                 </div>
                     <div class="snapshot_inner">
@@ -388,6 +388,15 @@
     },
       computed: {
         ...mapGetters('InputData', ['loading','index_change','currency_change','commodity_change','from_date','to_date','weekly_best_funds','fund_change']),
+
+        weeklyUrl() {
+            // Construct the URL for Weekly snapshot using the current domain
+            return `https://${window.location.hostname}/user-weekly-snapshot`;
+        },
+        monthlyUrl() {
+            // Construct the URL for Monthly snapshot using the current domain
+            return `https://${window.location.hostname}/user-monthly-snapshot`;
+        },
 		  
 		  addDates()
 		  {

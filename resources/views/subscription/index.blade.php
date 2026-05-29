@@ -76,7 +76,7 @@
                     @elseif ($user->isOnTrial())
                     <h2 class="h4 mb-2">Free trial active</h2>
                     <p class="mb-3">Your trial ends on {{ optional($user->trial_ends_at)->format('d M Y') }}. You can continue using the trial or choose a paid plan right now.</p>
-                    <a href="{{ route('user.index_dashboard') }}" class="btn btn-outline-success">Continue With Free Trial</a>
+                    <a href="{{ route('user.auth-dashboard') }}" class="btn btn-outline-success">Continue With Free Trial</a>
                     <p class="muted-note mt-3 mb-0">This is your one-time free trial. Upgrading to Premium will not start a second trial.</p>
                     @else
                     <h2 class="h4 mb-2">Subscription required</h2>
@@ -99,7 +99,7 @@
                         default => (bool) ($plan->allow_trial ?? false),
                     };
                     $durationLabel = match ($plan->slug) {
-                        'basic' => '4 Days',
+                        'basic' => '6 Months',
                         'premium' => '12 Months',
                         'white-label' => 'Per Month',
                         default => ((int) ($plan->duration_months ?? 0) > 0
@@ -188,7 +188,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="paymentModalLabel">Confirm Plan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

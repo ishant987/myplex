@@ -200,13 +200,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasWhiteLabel(): bool
     {
-        $subscription = $this->activeSubscription()->with('plan')->first();
-
-        if (!$subscription || !$subscription->isActive()) {
-            return false;
-        }
-
-        return strtolower((string) optional($subscription->plan)->slug) === 'white-label';
+        return $this->razorpaySubscriptions()
+            ->with('plan')
+            ->whereNotNull('plan_id')
+            ->whereIn('status', ['a', 'active'])
+            ->get()
+            ->contains(function ($subscription) {
+                return $subscription->isActive()
+                    && strtolower((string) optional($subscription->plan)->slug) === 'white-label';
+            });
     }
 
     public function hasUsedTrial(): bool

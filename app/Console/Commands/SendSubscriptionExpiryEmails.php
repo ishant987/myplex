@@ -18,7 +18,7 @@ class SendSubscriptionExpiryEmails extends Command
     public function handle()
     {
         $targetDate = now()->addDays(3)->toDateString();
-        $renewalUrl = route('web.subscription.index');
+        $renewalUrl = url('/subscriptions');
 
         $this->info("Looking for subscriptions expiring on: {$targetDate}");
 

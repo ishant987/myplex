@@ -14,9 +14,12 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Schemes Associated With Index</h2>
+                    </div>
 
                     <div class="light_green_bg">
-                        <form action="{{ route('user.schemes-associated-with-index') }}" method="get">
+                        <form action="">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="form_group">
@@ -32,8 +35,8 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div class="form_group">
-                                        <input type="date" id="schemes-associated-date" class="form-control" name="date" placeholder="Date"
-                                            value="{{ !empty($request->date) ? \Carbon\Carbon::parse($request->date)->format('Y-m-d') : '' }}">
+                                        <input type="text" class="datepicker" name="date" placeholder="Date"
+                                            value="{{ isset($request->date) ? date('d/m/Y', strtotime($request->date)) : '' }}">
                                     </div>
                                 </div>
 
@@ -103,22 +106,10 @@
 
 @endsection
 
-@push('scripts')
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var dateInput = document.getElementById('schemes-associated-date');
-        if (dateInput && typeof dateInput.showPicker === 'function') {
-            ['click', 'focus'].forEach(function(eventName) {
-                dateInput.addEventListener(eventName, function() {
-                    this.showPicker();
-                });
-            });
-        }
-
         var exportButton = document.getElementById('exportPDF-schemes-associated');
-        if (!exportButton) {
-            return;
-        }
 
         exportButton.addEventListener('click', function() {
             var { jsPDF } = window.jspdf;
@@ -155,9 +146,6 @@
 
                 // Get table data
                 var table = document.getElementById('pdfData-schemes-associated');
-                if (!table) {
-                    return;
-                }
                 var tableData = [];
 
                 table.querySelectorAll('tbody tr').forEach(function(row) {
@@ -189,5 +177,7 @@
             };
         });
     });
+
+
+
 </script>
-@endpush

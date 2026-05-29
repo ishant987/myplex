@@ -2,11 +2,6 @@
 @section('content')
     @php
         $fund_names = '';
-        $isByFundMode = isset($request) && $request->Category === 'by_fund';
-        $selectedCategory = $isByFundMode ? 'by_fund' : 'by_category';
-        $selectedCompositionType = isset($getData['scrip_industry']) ? $getData['scrip_industry'] : 'scrip';
-        $selectedIndustry = trim((string) ($getData['industry'] ?? ''));
-        $selectedScrip = trim((string) ($getData['fund_scrips'] ?? ''));
     @endphp
     <div class="inner_main">
         <div class="page_detail">
@@ -20,6 +15,9 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Occurrence Report</h2>
+                    </div>
 
                     <div class="wm_tab">
                         <ul class="tabs">
@@ -31,7 +29,11 @@
                             <li>
                                 <!-- <a class="{{ isset($getData) && $getData['scrip_industry'] == 'scrip' ? 'active' : '' }}"
                                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a> -->
-                                <a href="javascript:void(0)" class="{{ $selectedCompositionType === 'scrip' ? 'active' : '' }}"
+                                <a class="@if (isset($getData['scrip_industry'])) @if ($getData['scrip_industry'] == 'scrip')
+                                            active @endif
+@else
+active
+                                         @endif"
                                     id="decile_tab" data-value="scrip" onclick="industry_scrip_select(this)">Scrip</a>
                             </li>
                             <li>
@@ -44,7 +46,7 @@ active
                                 "
                                                     id="quartile_tab" data-value="industry"
                                                     onclick="industry_scrip_select(this)">Industry</a> -->
-                                <a href="javascript:void(0)" class="{{ $selectedCompositionType === 'industry' ? 'active' : '' }}"
+                                <a class="{{ isset($getData) && $getData['scrip_industry'] == 'industry' ? 'active' : '' }}"
                                     id="quartile_tab" data-value="industry"
                                     onclick="industry_scrip_select(this)">Industry</a>
                             </li>
@@ -54,7 +56,7 @@ active
                     </div>
 
                     <div class="light_green_bg">
-                        <form action="{{ route('user.occurrence_report') }}" method="GET" id="occurrence-report-form">
+                        <form action="">
                             <div class="row">
 
                                 {{-- <input type="hidden" name="scrip_industry" id="scrip_industry" value="{{ isset($getData['scrip_industry']) ? $getData['scrip_industry'] : ''}}"> --}}
@@ -69,29 +71,31 @@ industry
                                         @endif"> -->
 
                                 <input type="hidden" name="scrip_industry" id="scrip_industry"
-                                    value="{{ $selectedCompositionType }}">
+                                    value="@if (isset($getdata)) @if ($getData['scrip_industry'] == 'industry') industry @elseif($getData['scrip_industry'] == 'scrip') scrip @endif
+@else
+scrip @endif">
 
 
 
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category"
+                                            <input type="radio" id="type_Category" name="Category" checked
                                                 value="by_category"
-                                                @if (!$isByFundMode) checked @endif
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
                                         <label>
                                             <input type="radio" id="fund_Category" name="Category" value="by_fund"
-                                                @if ($isByFundMode) checked @endif
+                                                @if (isset($request) && $request->Category == 'by_fund') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Fund
                                         </label>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide_1">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange="set_fund_select_val(this.value)">
@@ -113,7 +117,7 @@ industry
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show_1">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2" data-placeholder="Select Fund Type">
                                             <option value="">Select Fund Type</option>
@@ -132,13 +136,13 @@ industry
                                 <!-- <div class="col-md-4 industry"
                                                     style="{{ isset($getData) ? ($getData['scrip_industry'] == 'industry' ? 'display:block' : 'display:none') : 'display:block' }}"> -->
                                 <div class="col-md-4 industry"
-                                    style="{{ $selectedCompositionType === 'industry' ? 'display:block' : 'display:none' }}">
+                                    style="{{ isset($getData) && $getData['scrip_industry'] == 'industry' ? 'display:block' : 'display:none' }}">
                                     <div class="form_group">
-                                        <select class="select2" id="industry_select" name="industry" data-placeholder="Select Industry">
+                                        <select class="select2" name="industry" data-placeholder="Select Industry">
                                             <option value="">Select Industry</option>
                                             @foreach ($industries as $industry)
                                                 <option
-                                                    value="{{ $industry->industry }}"{{ strcasecmp(trim((string) $industry->industry), $selectedIndustry) === 0 ? 'selected' : '' }}>
+                                                    value="{{ $industry->industry }}"{{ isset($getData['industry']) && $getData['industry'] == $industry->industry ? 'selected' : '' }}>
                                                     {{ $industry->industry }} </option>
                                             @endforeach
                                         </select>
@@ -151,13 +155,13 @@ industry
                                 <!-- <div class="col-md-4 scrip"
                                                     style="{{ isset($getData) && $getData['scrip_industry'] == 'scrip' ? 'display:block' : 'display:none' }}"> -->
                                 <div class="col-md-4 scrip"
-                                    style="{{ $selectedCompositionType === 'scrip' ? 'display:block' : 'display:none' }}">
+                                    style="{{ isset($getData) ? ($getData['scrip_industry'] == 'scrip' ? 'display:block' : 'display:none') : 'display:block' }}">
                                     <div class="form_group">
-                                        <select class="select2" id="fund_scrips_select" name="fund_scrips" data-placeholder="Select Scrip">
+                                        <select class="select2" name="fund_scrips" data-placeholder="Select Scrip">
                                             <option value="">Select Scrip</option>
                                             @foreach ($mpx_fund_scrips as $scr)
                                                 <option
-                                                    value="{{ $scr->actual_scrip }}"{{ strcasecmp(trim((string) $scr->actual_scrip), $selectedScrip) === 0 ? 'selected' : '' }}>
+                                                    value="{{ $scr->actual_scrip }}"{{ isset($getData['fund_scrips']) && $getData['fund_scrips'] == $scr->actual_scrip ? 'selected' : '' }}>
                                                     {{ $scr->actual_scrip }}</option>
                                             @endforeach
                                         </select>
@@ -215,7 +219,7 @@ industry
                             </div>
                         </form>
                     </div>
-                    @if (!empty($has_searched))
+                    @if (isset($fund_composition))
                         <div class="fund_section new_fund_section">
                             <ul>
                                 @if (isset($getData['month']) && isset($getData['year']))
@@ -231,7 +235,7 @@ industry
                                     <li>
                                         <p>Scrip Name: </p>
 
-                                        <span>{{ $selectedScrip !== '' ? $selectedScrip : 'N/A' }},
+                                        <span>{{ getNameTable('scrips', 'actual_scrip', 'actual_scrip', $getData['fund_scrips']) }},
                                         </span>
 
                                     </li>
@@ -239,7 +243,7 @@ industry
                                     <li>
                                         <p>Industry Name: </p>
 
-                                        <span>{{ $selectedIndustry !== '' ? $selectedIndustry : 'N/A' }},
+                                        <span>{{ getNameTable('fund_composition', 'industry', 'industry', $getData['industry']) }},
                                         </span>
 
                                     </li>
@@ -251,11 +255,11 @@ industry
                                         <p>Fund type : </p>
                                         <span>{{ isset($fund_type_get_data->name) ? $fund_type_get_data->name : 'N/A' }}</span>
                                     </li>
-                                @elseif(!empty($getData['fund_id']))
+                                @elseif($getData['fund_id'])
                                     <li>
                                         <p>Fund Names: </p>
 
-                                        @foreach ((array) $getData['fund_id'] as $fund_id)
+                                        @foreach ($getData['fund_id'] as $fund_id)
                                             @php
                                                 $fund_names .=
                                                     getNameTable('fund_master', 'fund_name', 'fund_id', $fund_id) .
@@ -281,9 +285,9 @@ industry
                                     <tr>
                                         <th class="text_left">name of the Fund</th>
                                         <th class="text_left">
-                                            @if ($selectedCompositionType === 'industry') Industry
+                                            @if ($getData['scrip_industry'] == 'industry') Industry
                                                 Name
-                                            @elseif($selectedCompositionType === 'scrip')
+                                            @elseif($getData['scrip_industry'] == 'scrip')
                                                 Scrip Name @endif
                                         </th>
                                         <th class="text_center">content (%)</th>
@@ -298,11 +302,11 @@ industry
                                                     {{ getNameTable('fund_master', 'fund_name', 'fund_code', $val->fund_code) }}
                                                 </td>
 
-                                                @if ($selectedCompositionType === 'industry')
+                                                @if ($getData['scrip_industry'] == 'industry')
                                                     <td class="text_left">
                                                         {{ isset($val->industry) ? $val->industry : 'N/A' }}
                                                     </td>
-                                                @elseif($selectedCompositionType === 'scrip')
+                                                @elseif($getData['scrip_industry'] == 'scrip')
                                                     <td class="text_left">
                                                         {{ isset($val->scrip_name) ? $val->scrip_name : 'N/A' }}
                                                     </td>
@@ -319,8 +323,8 @@ industry
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="4" class="text_center">
-                                                {{ $message ?: 'No information available for this search.' }}
+                                            <td colspan="4" class="text_center">No information available for this
+                                                search
                                             </td>
                                         </tr>
                                     @endif
@@ -331,7 +335,7 @@ industry
                         {!! printNoData() !!}
                     @endif
                 </div>
-                @if (isset($fund_composition) && count($fund_composition) > 0)
+                @if (isset($fund_composition))
                     <div class="disclaimer">
                         <p><strong>Disclaimer : </strong>{{ $disclaimer }}</p>
                     </div>
@@ -401,103 +405,73 @@ industry
     }
 
 
-    function updateOccurrenceModeUI(mode) {
-        var isByFund = mode === 'by_fund';
-        $('.div_show_1').toggle(!isByFund);
-        $('.div_hide_1').toggle(isByFund);
-
-        if (!isByFund) {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-        } else {
-            set_fund_select_val();
-        }
-    }
-
     function set_fund_select_val() {
-        var thiss = $('input[name="Category"]:checked').val();
-        var count = ($('#allocation_select_fund').val() || []).length;
+
+        var thiss = $('#fund_Category').val();
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+
+        console.log(thiss + '  ' + count);
 
         if (thiss == 'by_fund') {
+
             if (count >= 2 && count <= 20) {
-                $('#fund_msgg').html('');
+                // console.log('enable');
                 $('#submit_btn').prop('disabled', false);
+
             } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
                 $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
                 $('#submit_btn').prop('disabled', true);
             }
+
+
         } else {
-            $('#fund_msgg').html('');
+
             $('#submit_btn').prop('disabled', false);
+
         }
+
     }
 
+
     function get_fund_types(thiss) {
-        updateOccurrenceModeUI(thiss);
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+        if (thiss == 'by_category') {
+
+            $('#submit_btn').prop('disabled', false);
+        } else if (thiss == 'by_fund') {
+            if (count >= 2 && count <= 20) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 20 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+        }
     }
 
     function industry_scrip_select(element) {
         var dataValue = element.getAttribute('data-value');
         $('#scrip_industry').val(dataValue);
-        $('.wm_tab .tabs a').removeClass('active');
-        $(element).addClass('active');
-
         if (dataValue === 'scrip') {
             $('.industry').hide();
             $('.scrip').show();
-            $('#industry_select').prop('disabled', false);
-            $('#fund_scrips_select').prop('disabled', false);
         } else if (dataValue === 'industry') {
             $('.industry').show();
             $('.scrip').hide();
-            $('#industry_select').prop('disabled', false);
-            $('#fund_scrips_select').prop('disabled', false);
         }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        function keepOccurrenceMonthEnabled() {
-            var monthSelect = document.getElementById('month');
-
-            if (!monthSelect) {
-                return;
-            }
-
-            monthSelect.disabled = false;
-            monthSelect.removeAttribute('disabled');
-            $(monthSelect).prop('disabled', false).trigger('change.select2');
-        }
-
-        var selectedCategory = $('input[name="Category"]:checked').val() || 'by_category';
-        updateOccurrenceModeUI(selectedCategory);
-        keepOccurrenceMonthEnabled();
-        $('#allocation_select_fund').on('change', set_fund_select_val);
-        $('#year').on('change', keepOccurrenceMonthEnabled);
-        $('#month').on('focus click change', keepOccurrenceMonthEnabled);
-        setTimeout(keepOccurrenceMonthEnabled, 0);
-        setTimeout(keepOccurrenceMonthEnabled, 300);
-        setTimeout(keepOccurrenceMonthEnabled, 1000);
-        setInterval(keepOccurrenceMonthEnabled, 2000);
-        industry_scrip_select(document.querySelector('.wm_tab .tabs a.active') || document.getElementById('decile_tab'));
-
-        $('#occurrence-report-form').on('submit', function() {
-            var compositionType = $('#scrip_industry').val() || 'scrip';
-            keepOccurrenceMonthEnabled();
-
-            if (compositionType === 'industry') {
-                $('#industry_select').prop('disabled', false);
-                $('#fund_scrips_select').prop('disabled', false).val('');
-            } else {
-                $('#industry_select').prop('disabled', false).val('');
-                $('#fund_scrips_select').prop('disabled', false);
-            }
-        });
-
         var exportButton = document.getElementById('exportPDF');
-
-        if (!exportButton) {
-            return;
-        }
 
         exportButton.addEventListener('click', function() {
             var {
@@ -552,7 +526,7 @@ industry
                 // @endif
 
                 // Fund Classification
-                @if ($selectedCategory === 'by_category')
+                @if (isset($getData) && $getData['Category'] == 'by_category')
                     var fundClassificationText =
                         `Fund Classification: {{ isset($fund_type_get_data->name) ? $fund_type_get_data->name : 'N/A' }}`;
                     doc.text(fundClassificationText, 15, yPosition);
@@ -560,7 +534,7 @@ industry
                 @endif
                 
                 // Fund Name
-                @if ($selectedCategory === 'by_fund')
+                @if (isset($getData) && $getData['Category'] == 'by_fund')
                     // Split the fund names if too long to fit within 180 units (adjust width as necessary)
                     var splitFundNames = doc.splitTextToSize(fundNames, 160);
                     doc.text('Fund Names: ', startX, yPosition);
@@ -579,7 +553,7 @@ industry
                     tableData.push(row);
                 });
 
-                var middle_name = `{{ $selectedCompositionType === 'industry' ? 'Industry Name' : 'Scrip Name' }}`;
+                var middle_name = `{{isset($getData) && $getData['scrip_industry'] == 'industry' ? 'Industry Name' : 'Scrip Name' }}`;
                 doc.autoTable({
                     head: [
                         ['Name of The Fund', middle_name, 'Content(%)']

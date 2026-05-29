@@ -117,12 +117,16 @@ class IndicesDetail extends Model
 
     public static function getLastPublishedDate($indicesName)
     {
+        $dtMdl = [];
         $corealtion_sql= DB::select("SELECT `corelation` FROM `mpx_indices_corelation` where `name`='$indicesName'");
         // dd($corealtion_sql);
-        $corealtion =  $corealtion_sql[0]->corelation; 
-        // dd($corealtion);
-        $dtMdl = IndicesDetail::select('entry_date')->where('name', $indicesName)->orWhere('name', $corealtion)->where('publish', 'y')->groupBy('entry_date')->orderBy('entry_date', 'desc')->first();
+        if(!empty($corealtion_sql)){
+            $corealtion =  $corealtion_sql[0]->corelation;
+            // dd($corealtion);
+            $dtMdl = IndicesDetail::select('entry_date')->where('name', $indicesName)->orWhere('name', $corealtion)->where('publish', 'y')->groupBy('entry_date')->orderBy('entry_date', 'desc')->first();
         // dd($dtMdl);
+        }
+        
         return $dtMdl ? $dtMdl->entry_date : '';
     }
     public static function getFirstPublishedDate($indicesName)

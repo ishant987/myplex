@@ -1,12 +1,12 @@
 
         @forelse($RiskAdjustedAlpha as $key=>$val)
             <tr>
-                <td data-label="Ratios">{{ $key }}</td>
+                <td data-label="Ratios">{{ $val->label }}</td>
                 <td data-label="Jensen’s Alpha">
-                    {{ round($val['jensen_alpha'], 2) }}</td>
-                <td data-label="Beta">{{ round($val['beta'], 2) }}</td>
+                    {{ number_format($val->jensens_alpha, 2) }}</td>
+                <td data-label="Beta">{{ number_format($val->beta, 2) }}</td>
                 <td data-label="Votality">
-                    {{ round($val['volatality'], 2) }}</td>
+                    {{ number_format($val->volatality, 2) }}</td>
             </tr>
         @empty
             <tr>

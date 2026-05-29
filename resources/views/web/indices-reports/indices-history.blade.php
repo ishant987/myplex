@@ -13,6 +13,9 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Indices History</h2>
+                    </div>
 
                     <div class="light_green_bg">
                         <form action="{{ route('user.indices-history') }}" method="get" id="searchForm">
@@ -24,8 +27,8 @@
                                             onchange='fund_multiple(this)'>
                                             <option value="">Select Indices</option>
                                             @foreach ($indices as $index)
-                                                <option value="{{ $index->name }}"
-                                                    @if (isset($request['indices']) && in_array($index->name, $request['indices'])) selected @endif>{{ $index->name }}
+                                                <option value="{{ $index->corelation }}"
+                                                    @if (isset($request['indices']) && in_array($index->corelation, $request['indices'])) selected @endif>{{ $index->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -34,15 +37,14 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="Start Date"
-                                            name="start_date"
-                                            value="{{ !empty($request['start_date']) ? \Carbon\Carbon::parse($request['start_date'])->format('Y-m-d') : '' }}">
+                                        <input type="text" class="datepicker" placeholder="Start Date" name="start_date"
+                                            value="{{ $request['start_date'] ?? '' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="End Date" name="end_date"
-                                            value="{{ !empty($request['end_date']) ? \Carbon\Carbon::parse($request['end_date'])->format('Y-m-d') : '' }}">
+                                        <input type="text" class="datepicker" placeholder="End Date" name="end_date"
+                                            value="{{ $request['end_date'] ?? '' }}">
                                         <input type="hidden" id="indices_graph" value="{{ json_encode($indices_vals) }}">
                                     </div>
                                 </div>
@@ -66,10 +68,6 @@
                         <div class="graph_section">
                             <div id="chartContainer" style="height: 500px; width: 100%; margin-bottom: 20px;"></div>
                         </div>
-                    @elseif (!empty($request['indices']) && !empty($request['start_date']) && !empty($request['end_date']))
-                        <div class="graph_section">
-                            <p style="text-align: center;">No data found for the selected indices and date range.</p>
-                        </div>
                     @else
                         <div class="graph_section">
                             <p style="text-align: center;">Please search above to show the results</p>
@@ -88,98 +86,95 @@
         </div>
     </div>
 
-@endsection
-
-@push('scripts')
+    <!-- Highcharts library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script>
-        function initIndicesHistoryPage() {
-            var indicesGraphField = document.getElementById('indices_graph');
 
-            if (!indicesGraphField) {
-                return;
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+    let indicesGraphData = document.getElementById('indices_graph').value;
+
+    if (indicesGraphData !== '') {
+        indicesGraphData = JSON.parse(indicesGraphData);
+
+        let seriesData = [];
+        console.log('indicesGraphData====',indicesGraphData);
+        
+
+        // Prepare series data for each index
+        for (let index in indicesGraphData) {
+            if (indicesGraphData.hasOwnProperty(index)) {
+                let series = {
+                    name: index,
+                    data: [],
+                    dataLabels: {
+                        enabled: false // Ensure data labels are disabled
+                    }
+                };
+
+                indicesGraphData[index].forEach((item) => {
+                    // Ensure date is parsed correctly (example assumes item[0] is the date)
+                    let date = new Date(item[0]).getTime(); // Convert to timestamp
+                    let value = parseFloat(item[1]); // Convert value to number
+
+                    if (!isNaN(value)) { // Check if value is a valid number
+                        series.data.push([date, value]);
+                    } else {
+                        console.warn(`Invalid data value encountered: ${item[1]}`);
+                    }
+                });
+
+                seriesData.push(series);
             }
+        }
 
-            var indicesGraphData = indicesGraphField.value;
-
-            if (indicesGraphData !== '') {
-                indicesGraphData = JSON.parse(indicesGraphData);
-
-                var seriesData = [];
-
-                for (var index in indicesGraphData) {
-                    if (Object.prototype.hasOwnProperty.call(indicesGraphData, index)) {
-                        var series = {
-                            name: index,
-                            data: [],
-                            dataLabels: {
-                                enabled: false
-                            }
-                        };
-
-                        indicesGraphData[index].forEach(function(item) {
-                            var date = new Date(item[0]).getTime();
-                            var value = parseFloat(item[1]);
-
-                            if (!isNaN(value)) {
-                                series.data.push([date, value]);
-                            }
-                        });
-
-                        seriesData.push(series);
+        // Initialize Highcharts chart
+        Highcharts.chart('chartContainer', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Indices History'
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: 'Date'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                min: 0 // Adjust as needed
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: false // Disable data labels for the line chart
                     }
                 }
+            },
+            series: seriesData, // Assign series data
+            
+        });
+    } else {
+        console.error('No data found for indicesGraphData.');
+    }
 
-                Highcharts.chart('chartContainer', {
-                    chart: {
-                        type: 'line'
-                    },
-                    title: {
-                        text: 'Indices History'
-                    },
-                    xAxis: {
-                        type: 'datetime',
-                        title: {
-                            text: 'Date'
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Value'
-                        },
-                        min: 0
-                    },
-                    legend: {
-                        layout: 'horizontal',
-                        align: 'center',
-                        verticalAlign: 'bottom'
-                    },
-                    plotOptions: {
-                        line: {
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }
-                    },
-                    series: seriesData
-                });
-            }
-
-            if (window.jQuery) {
-                $('.highcharts-credits').hide();
-            }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initIndicesHistoryPage);
-        } else {
-            initIndicesHistoryPage();
-        }
+    $('.highcharts-credits').hide();
+});
     </script>
-@endpush
+@endsection
 
 <style type="text/css">
     

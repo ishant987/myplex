@@ -13,6 +13,9 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Scheme Portfolio</h2>
+                    </div>
 
                     <div class="light_green_bg">
                         <form action="">
@@ -37,12 +40,12 @@
                                 <div class="col-md-6">
                                     <div class="form_group">
                                         <select name="fund_master" id="fund_master" class="select2">
-                                            <option value="">Select Fund</option>
+                                            <option>Select Any Funds</option>
                                             @if (isset($fund_master))
                                                 @foreach ($fund_master as $val)
-                                                    <option value="{{ data_get($val, 'fund_code', '') }}"
-                                                        {{ request()->get('fund_master') == data_get($val, 'fund_code') ? 'selected' : '' }}>
-                                                        {{ data_get($val, 'fund_name', '') }}
+                                                    <option value="{{ $val->fund_code }}"
+                                                        {{ request()->get('fund_master') == $val->fund_code ? 'selected' : '' }}>
+                                                        {{ $val->fund_name }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -51,7 +54,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <select name="month" id="month" class="select2" required>
+                                        <select name="month" id="month" required>
                                             <option value="">select month</option>
                                             @foreach ($months as $m)
                                                 <option value="{{ $m }}"
@@ -63,7 +66,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form_group">
-                                        <select name="year" id="year" class="select2" required>
+                                        <select name="year" id="year" required>
                                             <option value="">select year</option>
                                             @foreach ($years as $y)
                                                 <option
@@ -91,7 +94,7 @@
 
                                 <li>
                                     <p>name of Fund :</p>
-                                    <span>{{ data_get($fund_details, 'fund_name', '') }}</span>
+                                    <span>{{ isset($fund_details) ? $fund_details->fund_name : '' }}</span>
                                 </li>
                                 <li>
                                     <p>Scheme Portfolio :</p>
@@ -184,12 +187,8 @@
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     var exportButton = document.getElementById('exportPDF');
-
-    if (!exportButton) {
-        return;
-    }
 
     exportButton.addEventListener('click', function() {
         var { jsPDF } = window.jspdf;
@@ -214,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Fetch dynamic data for AUM, fund name, and scheme portfolio
             var aumFund = "{{ isset($total_corpus_entry) ? number_format($total_corpus_entry, 2) : '' }}";
-            var fundName = "{{ data_get($fund_details, 'fund_name', '') }}";
+            var fundName = "{{ isset($fund_details) ? $fund_details->fund_name : '' }}";
             var schemePortfolioMonth = "{{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : '' }}";
             var schemePortfolioYear = "{{ isset($year) ? $year : '' }}";
 
@@ -241,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             doc.autoTable({
-                head: [['Name of the Scrip', 'Industry', 'Category', 'Content (%)', 'Amount (Rs.In Crores)']],
+                head: [['Fund Name', 'Ratio', 'Rank']],
                 body: tableData,
                 startX: startX,
                 startY: yPosition + 10,

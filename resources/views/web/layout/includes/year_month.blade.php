@@ -1,41 +1,39 @@
 @php
-    $yearFieldName = $yearFieldName ?? 'year';
-    $monthFieldName = $monthFieldName ?? 'month';
-    $selectedYear = $selectedYear ?? '';
-    $selectedMonth = $selectedMonth ?? '';
-    $size = $size ?? 6;
-    $months = $months ?? range(1, 12);
-    $years = $years ?? range((int) now()->format('Y'), 1950);
+    $years = range(Carbon\Carbon::now()->year, Carbon\Carbon::now()->year - 4);
+    // sort($years);
 @endphp
 
-<div class="col-md-{{ $size }}">
+<div class="col-md-{{ $size ?? 4 }}">
     <div class="form_group">
-        <select name="{{ $monthFieldName }}" id="{{ $monthFieldName }}" class="select2" required data-placeholder="Select Month">
-            <option value="">select month</option>
-            @foreach ($months as $m)
-                <option value="{{ $m }}" {{ (string) $selectedMonth === (string) $m ? 'selected' : '' }}>
-                    {{ date('F', mktime(0, 0, 0, (int) $m, 10)) }}
-                </option>
+        <select name="{{ $yearFieldName }}" id="dynamic_year" required>
+            <option value="">Select Year</option>
+            @foreach ($years as $yearValue)
+            <option value="{{ $yearValue }}" {{ old($yearFieldName, isset($selectedYear) && $selectedYear == $yearValue) ? 'selected' : '' }}>{{ $yearValue }}</option>            
             @endforeach
         </select>
-        @error($monthFieldName)
-            <div class="alert alert-danger">{{ $message }}</div>
-        @enderror
     </div>
 </div>
 
-<div class="col-md-{{ $size }}">
+
+<div class="col-md-{{ $size ?? 4 }}">
     <div class="form_group">
-        <select name="{{ $yearFieldName }}" id="{{ $yearFieldName }}" class="select2" required data-placeholder="Select Year">
-            <option value="">select year</option>
-            @foreach ($years as $y)
-                <option value="{{ $y }}" {{ (string) $selectedYear === (string) $y ? 'selected' : '' }}>
-                    {{ $y }}
-                </option>
-            @endforeach
+        <select name="{{ $monthFieldName }}" id="dynamic_month" required {{ empty($selectedYear) ? 'disabled' : '' }}>
+            <option value="">Select Month</option>
+            @if ($selectedYear)
+                @php
+                    $currentYear = date('Y');
+                    $currentMonth = date('n');
+                @endphp
+                @foreach (range(1, 12) as $monthValue)
+                    @if ($selectedYear < $currentYear || ($selectedYear == $currentYear && $monthValue < $currentMonth))
+                        <option value="{{ $monthValue }}"
+                            {{ old($monthFieldName, isset($selectedMonth) && $selectedMonth == $monthValue) ? 'selected' : '' }}>
+                            {{ DateTime::createFromFormat('!m', $monthValue)->format('F') }}
+                        </option>
+                    @endif
+                @endforeach
+            @endif
         </select>
-        @error($yearFieldName)
-            <div class="alert alert-danger">{{ $message }}</div>
-        @enderror
     </div>
 </div>
+

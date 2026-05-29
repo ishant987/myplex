@@ -11,10 +11,12 @@
                 </ul>
             </div>
 
-          
+            <div class="perform_head">
+                        <h2>Monthly snapshot</h2>
+            </div>
 
                 <section class="monthly_snapshop_sec">
-                <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                     <div class="container">
                         <div class="wm_tab">
                             <ul>
@@ -32,8 +34,8 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form_group">
-                                            <input type="date" class="form-control" name="date"
-                                                id="dateInput" value="{{ date('Y-m-d', strtotime($to_date)) }}">
+                                            <input type="text" placeholder="As on Date" class="datepicker" name="date"
+                                                id="dateInput" value="{{ $to_date }}">
 
                                         </div>
                                     </div>
@@ -46,11 +48,6 @@
 
                             </form>
                         </div>
-                        @if(!empty($message))
-                        <div class="alert alert-warning mt-3">
-                            {{ $message }}
-                        </div>
-                        @endif
                         <input type="hidden" value="monthly" name="type" id="type">
                         <div class="fund_section new_fund_section monthly_new">
                             <ul>
@@ -72,7 +69,7 @@
                             @for($i=1;$i<=3;$i++)
                             <div class="col-md-4">
                                 <div class="graph_table green_bg">
-                                    <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon1.png" alt="">@if($i==1){{' BSE Index'}}@elseif($i==2){{' NSE Index'}}@else{{ ' Global & Sectoral Index' }}@endif</h4>
+                                    <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon1.png')}}" alt="">@if($i==1){{' BSE Index'}}@elseif($i==2){{' NSE Index'}}@else{{ ' Global & Sectoral Index' }}@endif</h4>
                                     <table class="table bs_ns_gl datatable">
                                         <thead>
                                             <tr>
@@ -83,7 +80,7 @@
                                         </thead>
                                         <tbody>
                                         @if($i==1)
-                                            @foreach (($array_bse ?? collect()) as $indices_details)
+                                            @foreach ($array_bse as $indices_details)
                                                 <tr>
                                                     {{-- <td>{{ getNameTableMultiple('indices_master','name','corelation',$indices_details->name, 'status', '1') }}</td> --}}
                                                     <td>{{$indices_details->name}}</td>
@@ -92,7 +89,7 @@
                                                 </tr>
                                             @endforeach
                                         @elseif($i==2)
-                                            @foreach (($array_nse ?? collect()) as $indices_details)
+                                            @foreach ($array_nse as $indices_details)
                                                 <tr>
                                                     {{-- <td>{{ getNameTableMultiple('indices_master','name','corelation',$indices_details->name, 'status', '1') }}</td> --}}
                                                     <td>{{ $indices_details->name }}</td>
@@ -102,7 +99,7 @@
                                                 </tr>
                                             @endforeach
                                         @else
-                                            @foreach (($array_global_it ?? collect()) as $indices_details)
+                                            @foreach ($array_global_it as $indices_details)
                                                 <tr>
                                                     {{-- <td>{{ getNameTableMultiple('indices_master','name','corelation',$indices_details->name, 'status', '1') }}</td> --}}
 
@@ -120,7 +117,7 @@
                             @endfor
                             <div class="col-md-4">
                                 <div class="graph_table sky_bg">
-                                    <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon2.png" alt=""> Currency Changes</h4>
+                                    <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon2.png')}}" alt=""> Currency Changes</h4>
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
@@ -130,7 +127,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (($changes_currency ?? collect()) as $curr_details)
+                                            @foreach ($changes_currency as $curr_details)
                                                 <tr>
                                                     <td>{{ $curr_details->name }}</td>
                                                     <td class="text_right">{{ printValue($curr_details->cur_value) }}</td>
@@ -143,7 +140,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="graph_table yellow_bg">
-                                    <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon3.png" alt=""> Commodity Changes</h4>
+                                    <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon3.png')}}" alt=""> Commodity Changes</h4>
                                     <table class="table datatable">
                                         <thead>
                                             <tr>
@@ -153,7 +150,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (($changes_commodity ?? collect()) as $commodity_details)
+                                            @foreach ($changes_commodity as $commodity_details)
                                                 <tr>
                                                     <td>{{ $commodity_details->name }}</td>
                                                     <td class="text_right">{{ printValue($commodity_details->cur_value) }}</td>
@@ -166,7 +163,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="graph_table orange_bg">
-                                    <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon4.png" alt=""> Percentage Change by Category of Funds(Returns)</h4>
+                                    <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon4.png')}}" alt=""> Percentage Change by Category of Funds(Returns)</h4>
                                     <div class="">
                                     <table class="table datatable">
                                         <thead>
@@ -177,7 +174,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (($monthly_benchmark ?? collect()) as $benchmark_details)
+                                            @foreach ($monthly_benchmark as $benchmark_details)
                                                 <tr>
                                                     <td class="open_popup" FundTypeID="{{ $benchmark_details->FundTypeID }}">{{ $benchmark_details->FUNDTYPE }}</td>
                                                     <td class="text_right">{{ printValue($benchmark_details->CHANGEVALUE_NEW) }}</td>
@@ -195,7 +192,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="graph_table blue_bg">
-                                    <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon5.png" alt=""> 10 Best Performing Schemes</h4>
+                                    <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon5.png')}}" alt=""> 10 Best Performing Schemes</h4>
                                     <div class="">
                                     <table class="table datatable">
                                         <thead>
@@ -206,7 +203,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (($best_schemes ?? collect()) as $scheme_details)
+                                            @foreach ($best_schemes as $scheme_details)
                                                 <tr>
                                                     <td>{{ $scheme_details->fund_name }}</td>
                                                     <td>{{ $scheme_details->name }}</td>
@@ -431,3 +428,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </Script>
+
+
+

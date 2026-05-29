@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Carbon\Carbon;
 
 class SubscriptionMiddleware
 {
@@ -18,17 +19,26 @@ class SubscriptionMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // Check if the user is authenticated
         if (Auth::check()) {
             $user = Auth::user();
-            $userdetails = User::where('u_id', $user->u_id)->first() ?: $user;
+            $userId = $user->u_id;
 
-            if (method_exists($userdetails, 'hasValidAccess') && $userdetails->hasValidAccess()) {
-                return $next($request);
+            // Retrieve user details
+            $userdetails = User::where('u_id', $userId)->first();
+
+            // Parse and compare subscription expiry date
+            $expiry_datetime = Carbon::parse($userdetails->subscription_expiry_date);
+            $today = Carbon::now();
+
+            if ($expiry_datetime->isPast()) {
+                // Redirect to the subscription lock route if the subscription has expired
+                return redirect()->route('user.subscription_lock');
             }
-
-            return redirect()->route('user.subscription_lock');
         }
 
+        // Proceed with the request
         return $next($request);
     }
 }
+

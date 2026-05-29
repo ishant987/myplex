@@ -12,19 +12,10 @@
                     </ul>
                 </div>
                 <div class="new_page">
-                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    @php
-                        $selectedSortinoFundIds = collect((array) ($fund_id ?? request()->input('fund_id', [])))
-                            ->map(fn ($id) => (int) $id)
-                            ->all();
-                        $selectedSortinoCategory = (string) request()->input('Category', '');
-                        $selectedSortinoReportCategory = (string) request()->input('report_category', '');
-                        $selectedSortinoMar = (string) request()->input('limit', '');
-                        $selectedSortinoTimeFrame = (string) request()->input('as_on_time_frame', '');
-                        $showSortinoResults = isset($request, $start_date, $end_date)
-                            && $selectedSortinoCategory !== ''
-                            && $selectedSortinoReportCategory !== '';
-                    @endphp
+                    {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}}
+                    <div class="perform_head">
+                        <h2>Sortino Ratio</h2>
+                    </div>
 
                     <div class="light_green_bg">
                         <form method="GET" action="">
@@ -124,8 +115,8 @@
                                 
                                 {{-- <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
-                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
+                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
+                                            value="{{ $request->as_on_date }}">
                                     </div>
                                 </div> --}}
                                 {{-- <div class="col-md-4 div_hide">
@@ -203,7 +194,9 @@
                                             <option value=""></option>
                                             @foreach ($all_funds as $fund)
                                                 <option value="{{ $fund->fund_id }}"
-                                                    {{ in_array((int) $fund->fund_id, $selectedSortinoFundIds, true) ? 'selected' : '' }}>
+                                                    @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
+                                                @elseif(isset($fund_id) && in_array($fund->fund_id, $fund_id))
+                                                selected @endif>
                                                     {{ $fund->fund_name }}
                                                 </option>
                                             @endforeach
@@ -251,6 +244,27 @@
                                     </div>
                                 </div>
 
+
+                                <!-- <div class="col-md-4 div_hide_1">
+                                    <div class="form_group">
+                                        <select name="fund_id">
+                                            @foreach ($all_funds as $fund)
+    <option value="{{ $fund->fund_id }}"
+                                                    @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected @endif>
+                                                    {{ $fund->fund_name }}
+                                                </option>
+    @endforeach
+                                        </select>
+                                        @error('fund_id')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+                                    </div>
+                                    
+                                </div> -->
+
+
+
+
                                 <div class="col-md-12">
                                     <div class="bttn_grp">
                                         <button type="submit" id="submit_btn">Search</button>
@@ -263,7 +277,7 @@
 
 
 
-                    @if($showSortinoResults)
+                    @if(isset($request)&& isset($start_date) && isset($end_date) &&  $request->Category !='' && $request->report_category !='')
                         <div class="fund_section new_fund_section">
                             <ul>
                                 <li>
@@ -281,54 +295,54 @@
                                     <p>By Ratio :</p>
 
                                     <span>
-                                        @if ($selectedSortinoReportCategory === 'sortino')
+                                        @if (isset($request->report_category) && $request->report_category == 'sortino')
                                             {{ 'Sortino' }}
-                                        @elseif($selectedSortinoReportCategory === 'upside_potential')
+                                        @elseif(isset($request->report_category) && $request->report_category == 'upside_potential')
                                             {{ 'Upside Potential' }}
-                                        @elseif($selectedSortinoReportCategory === 'downside_risk')
+                                        @elseif(isset($request->report_category) && $request->report_category == 'downside_risk')
                                             {{ 'Downside Risk' }}
                                         @endif
                                     </span>
                                 </li>
 
-                                @if (!empty($as_on_time_frame_data))
+                                @if (isset($as_on_time_frame_data))
                                     <li>
                                         <p>Duration :</p>
                                         <span>
-                                            @if ($selectedSortinoTimeFrame === '1_month')
+                                            @if (isset($request) && $request->as_on_time_frame == '1_month')
                                                 {{ '1 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '3_months')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '3_months')
                                                 {{ '3 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '6_months')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '6_months')
                                                 {{ '6 Month' }}
-                                            @elseif($selectedSortinoTimeFrame === '1_year')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '1_year')
                                                 {{ '1 Year' }}
-                                            @elseif($selectedSortinoTimeFrame === '2_year')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '2_year')
                                                 {{ '2 Year' }}
-                                            @elseif($selectedSortinoTimeFrame === '3_years')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '3_years')
                                                 {{ '3 Years' }}
-                                            @elseif($selectedSortinoTimeFrame === '5_years')
+                                            @elseif(isset($request) && $request->as_on_time_frame == '5_years')
                                                 {{ '5 Years' }}
                                             @endif
                                         </span>
                                     </li>
                                 @endif
 
-                                @if($selectedSortinoMar !== '')
+                                @if(isset($request->limit))
                                     <li>
                                         <p>Minimum Acceptable Rate (in %)  :</p>
-                                        <span>{{ $selectedSortinoMar }}</span>
+                                        <span>{{$request->limit}}</span>
                                     </li>
                                 @endif
 
-                                @if ($selectedSortinoCategory === 'by_category')
+                                @if (isset($request) && $request->Category == 'by_category')
                                 <li>
                                     <p>fund classification :</p>
                                     <span>{{ isset($fund_type_name) ? $fund_type_name : '' }}</span>
                                 </li>
                             @endif
 
-                                @if ($selectedSortinoCategory === 'by_fund')
+                                @if (isset($request) && $request->Category == 'by_fund')
                                 <li>
                                     <p>fund name :</p>
                                     <span>{{ isset($fund_names) ? $fund_names : '' }}</span>
@@ -356,10 +370,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @php
-                                        $sortedFundReturns = [];
-                                        $ranks = [];
-                                    @endphp
                                     @if (isset($stat_result['fund_absolute_return']) && count($stat_result['fund_absolute_return']) > 0)
                                     @php
                                         $fundReturns = $stat_result['fund_absolute_return'];
@@ -378,7 +388,7 @@
                                         $rank = 1;
                                         foreach ($sortedFundReturns as $key => $value) {
 
-                                            if ($value === 'N/A' || $value === '') {
+                                            if($value == 'N/A' || $value =''){
                                                 
                                                 $ranks[$key] = 'N/A';
                                             }else{
@@ -392,7 +402,7 @@
                                     @endphp
                                     @endif
 
-                                    @if (!empty($fund_all_return) && !empty($sortedFundReturns))
+                                    @if (!empty($fund_all_return))
                                         @foreach ($sortedFundReturns as $fundId => $value)
                                             <tr>
                                                 <td class="text_left">
@@ -402,13 +412,13 @@
                                                 <td class="text_right">
                                                     {{ printValue($fund_all_return[$fundId]['downside_risk']) }}</td>
                                                 <td class="text_right">{{ printValue($value) }}</td>
-                                                <td class="text_right">{{ printRank($ranks[$fundId] ?? 'N/A') }}</td>
+                                                <td class="text_right">{{ printRank($ranks[$fundId]) }}</td>
                                             </tr>
                                         @endforeach
-                                    @else
+                                        {{-- @else
                                         <tr>
                                             <td colspan="5">No records found</td>
-                                        </tr>
+                                        </tr> --}}
                                     @endif
                                 </tbody>
                             </table>
@@ -436,29 +446,6 @@
         </div>
     </div>
 @endsection
-
-@php
-    $sortinoPdfRatio = match ($selectedSortinoReportCategory ?? null) {
-        'sortino' => 'Sortino',
-        'upside_potential' => 'Upside Potential',
-        'downside_risk' => 'Downside Risk',
-        default => '',
-    };
-
-    $sortinoPdfDuration = '';
-    if (!empty($as_on_time_frame_data) && $selectedSortinoTimeFrame !== '') {
-        $sortinoPdfDuration = match ($selectedSortinoTimeFrame) {
-            '1_month' => '1 Month',
-            '3_months' => '3 Months',
-            '6_months' => '6 Months',
-            '1_year' => '1 Year',
-            '2_year' => '2 Years',
-            '3_years' => '3 Years',
-            '5_years' => '5 Years',
-            default => '',
-        };
-    }
-@endphp
 
 <script>
     function get_date(thiss) {
@@ -676,13 +663,35 @@ document.addEventListener('DOMContentLoaded', function() {
             var startDate = "{{ isset($start_date) ? date('F, Y', strtotime($start_date)) : '00/00/0000' }}";
             var endDate = "{{ isset($end_date) ? date('F, Y', strtotime($end_date)) : '00/00/0000' }}";
             
-            var ratio = @json($sortinoPdfRatio);
+            var ratio = @if (isset($request->report_category))
+                            @if ($request->report_category == 'sortino')
+                                'Sortino'
+                            @elseif ($request->report_category == 'upside_potential')
+                                'Upside Potential'
+                            @elseif ($request->report_category == 'downside_risk')
+                                'Downside Risk'
+                            @endif
+                         @else
+                            ''
+                         @endif;
 
-            var duration = @json($sortinoPdfDuration);
+            var duration = @if (isset($as_on_time_frame_data))
+                            @switch($request->as_on_time_frame)
+                                @case('1_month') '1 Month' @break
+                                @case('3_months') '3 Months' @break
+                                @case('6_months') '6 Months' @break
+                                @case('1_year') '1 Year' @break
+                                @case('2_year') '2 Years' @break
+                                @case('3_years') '3 Years' @break
+                                @case('5_years') '5 Years' @break
+                            @endswitch
+                         @else
+                            ''
+                         @endif;
 
-            var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name : '' }}";
+            var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
             var fundNames = "{{ isset($fund_names) ? $fund_names : '' }}";
-            var minimumAcceptableRate = @json($selectedSortinoMar);
+            var minimumAcceptableRate = "{{ isset($request->limit) ? $request->limit : '' }}";
 
             // Add data to the PDF
             doc.text('Start Month & Year: ' + startDate, startX, yPosition);

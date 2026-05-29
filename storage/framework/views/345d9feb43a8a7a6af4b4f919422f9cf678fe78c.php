@@ -11,11 +11,12 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
-                    <?php ($selectedPredictiveFundId = (int) ($selected_fund_id ?? request()->input('fund_id', 0))); ?>
+                    <div class="perform_head">
+                        <h2>By Jensen’s</h2>
+                    </div>
 
                     <div class="light_green_bg">
-                        <form action="<?php echo e(route('user.predictive.jensen-alpha')); ?>" method="GET">
-                            <input type="hidden" name="duration" id="duration_input" value="<?php echo e($duration ?? '6'); ?>">
+                        <form action="">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form_group">
@@ -23,7 +24,7 @@
                                             onchange="set_fund_select_val(this.value)">
                                             <?php $__currentLoopData = $fundMasterData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fund): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($fund->fund_id); ?>"
-                                                    <?php echo e($selectedPredictiveFundId === (int) $fund->fund_id ? 'selected' : ''); ?>>
+                                                    <?php if($fund->fund_id == old('fund_id', isset($getData) ? $getData['fund_id'] : null)): ?> selected <?php endif; ?>>
                                                     <?php echo e($fund->fund_name); ?>
 
                                                 </option>
@@ -65,14 +66,8 @@ unset($__errorArgs, $__bag); ?>
                                 <input type="hidden" name="current_date" id="current_date">
                                 <div class="col-md-2">
                                     <div class="bttn_grp alpha_btn">
-                                        <button type="submit" data-duration="6"
-                                            <?php echo e(($duration ?? '6') === '6' ? 'style=background:#379962;color:#fff;' : ''); ?>>
-                                            6m
-                                        </button>
-                                        <button type="submit" data-duration="1"
-                                            <?php echo e(($duration ?? '6') === '1' ? 'style=background:#379962;color:#fff;' : ''); ?>>
-                                            1y
-                                        </button>
+                                        <button type="submit" name="duration" value="6">6m</button>
+                                        <button type="submit" name="duration" value="1">1y</button>
                                     </div>
                                 </div>
                             </div>
@@ -98,36 +93,11 @@ unset($__errorArgs, $__bag); ?>
 
                     
 
-                    <?php if(!empty($message)): ?>
-                        <div class="graph_table">
-                            <p><?php echo e($message); ?></p>
-                        </div>
-                    <?php elseif(!empty($fund_series) || !empty($index_series)): ?>
-                        <div class="graph_section">
-                            <div id="container1" style="width: 100%; min-height: 420px;"></div>
-                        </div>
-                    <?php else: ?>
-                        <div class="graph_table">
-                            <p>Select a scheme and period to view the graph.</p>
-                        </div>
-                    <?php endif; ?>
+                    <div class="graph_section">
+                        
 
-                    <?php if(!empty($predictive_debug)): ?>
-                        <div class="graph_table" style="margin-top: 12px;">
-                            <p>
-                                Debug:
-                                route=<?php echo e($predictive_debug['route'] ?? 'n/a'); ?>,
-                                fund_id=<?php echo e($predictive_debug['fund_id'] ?? 'n/a'); ?>,
-                                fund_code=<?php echo e($predictive_debug['fund_code'] ?? 'n/a'); ?>,
-                                duration=<?php echo e($predictive_debug['duration'] ?? 'n/a'); ?>,
-                                fund_points=<?php echo e($predictive_debug['fund_points_count'] ?? 0); ?>,
-                                index_points=<?php echo e($predictive_debug['index_points_count'] ?? 0); ?>,
-                                fund_series=<?php echo e($predictive_debug['fund_series_count'] ?? 0); ?>,
-                                index_series=<?php echo e($predictive_debug['index_series_count'] ?? 0); ?>
-
-                            </p>
-                        </div>
-                    <?php endif; ?>
+                        <div id="container1"></div>
+                    </div>
 
                 </div>
 
@@ -148,7 +118,7 @@ unset($__errorArgs, $__bag); ?>
         function set_fund_select_val(fundId) {
 
             $.ajax({
-                url: '<?php echo e(url('fund-details')); ?>?id=' + fundId,
+                url: 'fund-details' + '?id=' + fundId,
                 type: 'GET',
                 success: function(data) {
                     $('#date').html(data.entry_date);
@@ -165,76 +135,182 @@ unset($__errorArgs, $__bag); ?>
         document.addEventListener("DOMContentLoaded", function() {
             var fund_id = document.getElementById('allocation_select_fund').value;
             set_fund_select_val(fund_id);
-
-            document.querySelectorAll('.alpha_btn button[data-duration]').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var durationInput = document.getElementById('duration_input');
-                    if (durationInput) {
-                        durationInput.value = this.getAttribute('data-duration');
-                    }
-                });
-            });
         });
     </script>
 
-    <?php if(!empty($fund_series) || !empty($index_series)): ?>
-        <script>
-            var indexSeries = <?php echo json_encode($index_series ?? [], 15, 512) ?>;
-            var fundSeries = <?php echo json_encode($fund_series ?? [], 15, 512) ?>;
+    <script>
+        var indicesName = document.getElementById('indices_details_name').value;
+        var fundName = document.getElementById('fund_details_name').value;
 
-            indexSeries = (indexSeries || []).map(function(point) {
-                return [Date.parse(point[0]), point[1]];
-            }).filter(function(point) {
-                return !isNaN(point[0]) && point[1] !== null;
-            });
+        // Fetching arrays
+        var graphDates = JSON.parse(document.getElementById('graph_date').value);
+        var navValues = JSON.parse(document.getElementById('nav_value').value);
+        var closingValues = JSON.parse(document.getElementById('closing_value').value);
 
-            fundSeries = (fundSeries || []).map(function(point) {
-                return [Date.parse(point[0]), point[1]];
-            }).filter(function(point) {
-                return !isNaN(point[0]) && point[1] !== null;
-            });
+        // console.log("Indices Name:", indicesName);
+        // console.log("Fund Name:", fundName);
+        // console.log("Graph Dates:", graphDates);
+        // console.log("NAV Values:", navValues);
+        // console.log("Closing Values:", closingValues);
 
-            Highcharts.chart('container1', {
-                chart: {
-                    type: 'spline',
-                    zoomType: 'x'
-                },
-                title: {
-                    text: ''
-                },
-                xAxis: {
-                    type: 'datetime'
-                },
-                yAxis: [{
-                    title: {
-                        text: '<?php echo e(addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index'))); ?>'
+        var value1_text = indicesName;
+        var value2_text = fundName;
+        var graph_data1_date = graphDates;
+        var graph_data1_value = closingValues;
+        var graph_data2_date = graphDates;
+        var graph_data2_value = navValues;
+
+        Highcharts.chart('container1', {
+            chart: {
+                type: 'spline',
+                zoomType: 'xy'
+            },
+
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: function() {
+                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
                     }
-                }, {
+                },
+                tickPositioner: function() {
+                    // Combine both graph_data1_date and graph_data2_date to show all available dates
+                    let allDates = graph_data1_date.concat(graph_data2_date).map(function(date) {
+                        return Date.parse(date);
+                    });
+
+                    // Sort the dates and return unique values
+                    allDates = Array.from(new Set(allDates.sort(function(a, b) {
+                        return a - b;
+                    })));
+
+                    return allDates;
+                }
+            },
+
+            yAxis: [{
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
                     title: {
-                        text: '<?php echo e(addslashes($fund_details->fund_name ?? 'Fund NAV')); ?>'
+                        text: value1_text,
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    }
+                },
+                {
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    },
+                    title: {
+                        text: value2_text,
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
                     },
                     opposite: true
-                }],
-                time: {
-                    useUTC: false
-                },
-                tooltip: {
-                    shared: true
-                },
-                series: [{
-                    name: '<?php echo e(addslashes($indices_details->name ?? ($fund_details->indices_name ?? 'Index'))); ?>',
+                }
+            ],
+            time: {
+                useUTC: false
+            },
+
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+
+            legend: {
+                title: {
+                    text: ''
+                }
+            },
+
+            series: [{
                     yAxis: 0,
-                    data: indexSeries,
-                    color: '#d94f30'
-                }, {
-                    name: '<?php echo e(addslashes($fund_details->fund_name ?? 'Fund NAV')); ?>',
+                    name: value1_text,
+                    marker: {
+                        enabled: true,
+                        symbol: 'circle'
+                    },
+                    data: (function() {
+                        // First part of the red line (solid)
+                        return graph_data1_date.slice(0, 4).map(function(date, i) {
+                            return [Date.parse(date), graph_data1_value[i]];
+                        });
+                    })(),
+                    color: 'red',
+                    lineWidth: 1
+                },
+                {
+                    yAxis: 0,
+                    name: value1_text,
+                    marker: {
+                        enabled: true,
+                        symbol: 'circle'
+                    },
+                    data: (function() {
+                        // Last part of the red line (dashed)
+                        return graph_data1_date.slice(3, 5).map(function(date, i) {
+                            return [Date.parse(date), graph_data1_value[i + 3]];
+                        });
+                    })(),
+                    color: 'red',
+                    lineWidth: 1,
+                    dashStyle: 'Dash', // This makes the last line dashed
+                    showInLegend: false // Hide this series name in the legend
+                },
+                {
+                    name: value2_text,
                     yAxis: 1,
-                    data: fundSeries,
-                    color: '#1f5f99'
-                }]
-            });
-        </script>
-    <?php endif; ?>
+                    marker: {
+                        enabled: true,
+                        symbol: 'circle'
+                    },
+                    data: (function() {
+                        // First part of the blue line (solid)
+                        return graph_data2_date.slice(0, 4).map(function(date, i) {
+                            return [Date.parse(date), graph_data2_value[i]];
+                        });
+                    })(),
+                    color: 'blue',
+                    lineWidth: 1,
+                    type: 'spline' // Ensures this part is curved
+                },
+                {
+                    name: value2_text,
+                    yAxis: 1,
+                    marker: {
+                        enabled: true,
+                        symbol: 'circle'
+                    },
+                    data: (function() {
+                        // Last part of the blue line (dashed)
+                        return graph_data2_date.slice(3, 5).map(function(date, i) {
+                            return [Date.parse(date), graph_data2_value[i + 3]];
+                        });
+                    })(),
+                    color: 'blue',
+                    lineWidth: 1,
+                    dashStyle: 'Dash', // This makes the last line dashed
+                    showInLegend: false // Hide this series name in the legend
+                }
+            ]
+        });
+    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('web.layout.infosolz_user_app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/web/predictive/jensen_alpha.blade.php ENDPATH**/ ?>

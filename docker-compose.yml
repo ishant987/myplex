@@ -10,7 +10,10 @@ services:
     image: myplexus
     container_name: myplexus-app
     restart: unless-stopped
-    working_dir: /var/www/
+    working_dir: /var/www
+    environment:
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/database/database.sqlite
     volumes:
       - ./:/var/www
     networks:

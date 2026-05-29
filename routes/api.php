@@ -44,8 +44,12 @@ Route::group([
     Route::get('monthly-ranking-date', [FrontDataController::class, 'getMonthlyRankingDate']);
     Route::get('monthly-ranking/{type_id}', [FrontDataController::class, 'monthlyRanking']);
     Route::get('fund-return-scheme', [FrontDataController::class, 'fundReturnScheme']);
+    Route::get('fund-return-scheme-dis', [FrontDataController::class, 'fundReturnSchemeDis']);
     Route::get('fund-return-benchmark', [FrontDataController::class, 'fundReturnBenchmark']);
+    Route::get('fund-return-benchmark-dis', [FrontDataController::class, 'fundReturnBenchmarkDis']);
     Route::get('fund-performance-compare-category', [FrontDataController::class, 'fundPerformanceCompareToCategory']);
+    Route::get('fund-performance-compare-category2', [FrontDataController::class, 'fundPerformanceCompareToCategory2']);
+    Route::get('fund-performance-compare-category-new', [FrontDataController::class, 'fundPerformanceCompareToCategoryNew']);
 	Route::get('fund-performance-compare-category-dis', [FrontDataController::class, 'fundPerformanceCompareToCategorydis']);
     Route::get('fund-performance-scheme-sip', [FrontDataController::class, 'fundPerformanceSchemeSIP']);
     Route::get('fund-performance-benchmark-sip', [FrontDataController::class, 'fundPerformanceBenchmarkSIP']);

@@ -5,6 +5,12 @@
 <div class="inner_main">
             <div class="page_detail">
                     <div class="inner_padding">
+                    <div class="head_brdcm">
+                        <ul class="brdcmb">
+                            <li><a href="{{route('user.auth-dashboard')}}">dashboard</a></li>
+                            <li>Composition Report</li>
+                        </ul>
+                    </div>
                         <div class="all_dash">
                             <h1 class="page_heading">Composition Report</h1>
                             <ul>

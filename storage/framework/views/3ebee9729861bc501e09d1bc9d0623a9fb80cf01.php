@@ -12,6 +12,9 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>New Scrips New Industries</h2>
+                    </div>
 
                     <div class="light_green_bg">
                         <form action="">

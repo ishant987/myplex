@@ -9,38 +9,38 @@
                             <h1 class="page_heading">Indices Report</h1>
                             <ul>
                                 <li>
-                                    <a href="{{route('user.indices-history')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Indices-History.png')}}" alt=""></figure>
                                         <h4>Indices History</h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.indices-composition')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Indices-Composition.png')}}" alt=""></figure>
                                         <h4>Indices<br> Composition</h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.schemes-associated-with-index')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Schemes-Associated-With-Index.png')}}" alt=""></figure>
                                         <h4>Schemes<br> Associated <br>With Index</h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.indices-report.boomers')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Boomers.png')}}" alt=""></figure>
                                         <h4>Boomers</h4>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('user.indices-report.busters')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Busters.png')}}" alt=""></figure>
                                         <h4>Busters</h4>
                                     </a>
                                 </li>
                                
                                 <li>
-                                    <a href="{{route('user.index_vs_NAV')}}">
+                                    <a href="#">
                                         <figure><img src="{{asset('new-images/Index-vs-NAV.png')}}" alt=""></figure>
                                         <h4>Index vs NAV</h4>
                                     </a>

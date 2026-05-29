@@ -1,0 +1,271 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\User\RatioController;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
+class SnapshotController extends Controller
+{
+    function monthly_snapshot_new(Request $request)
+    {
+
+        $data = RatioController::loggedInUserData();
+        // dd($data);
+        if (!empty($request->date)) {
+            $to_date = date('Y-m-d', strtotime($request->date));
+        } else {
+            $to_date = date('Y-m-d', strtotime('-1 day'));
+        }
+
+
+        $data['browser_title'] = 'Snapshot';
+        $data['active_menu'] = 'dashboard';
+        $data['to_date'] = $to_date;
+        // dd($to_date);
+        $oneMonthBefore = Carbon::parse($to_date)->subMonth();
+        $from_date = $oneMonthBefore->toDateString();
+        $data['from_date'] = $from_date;
+        $days = strtotime($to_date) - strtotime($from_date);
+        // dd($days);
+        $days = (int)round($days / (60 * 60 * 24));
+        // dd($days);
+        // dd($from_date);
+        //Percentage Change by Category of Funds
+        // dd('CALL sp_snapshot_monthly_benchmark("'.$to_date.'")');
+        $data['monthly_benchmark'] = DB::select('CALL sp_snapshot_monthly_benchmark("' . $to_date . '")');
+        // dd($monthly_benchmark);
+        $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_INDICES","' . $to_date . '",' . $days . ')');
+        // dd($to_date."------".$days);
+        // dd($data['changes_indices']);
+        $data['array_bse'] = [];
+        $data['array_nse'] = [];
+        $data['array_global_it'] = [];
+        if (!empty($data['changes_indices'])) {
+            foreach ($data['changes_indices'] as $value) {
+                if ($value->index_type == 'BSE') {
+                    array_push($data['array_bse'], $value);
+                } elseif ($value->index_type == 'NSE') {
+                    array_push($data['array_nse'], $value);
+                } elseif ($value->index_type == 'GLOBAL') {
+                    array_push($data['array_global_it'], $value);
+                }
+            }
+        }
+
+
+        // Debug output to verify the results
+        // echo "<pre>";print_r($data['array_bse']);
+        // echo "<pre>";print_r($data['array_nse']);
+        // echo "<pre>";print_r($data['array_global_it']);
+        // die;
+        $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $to_date . '",' . $days . ')');
+        // dd($data['changes_currency']);
+        $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $to_date . '",' . $days . ')');
+        $data['best_schemes'] = DB::select('CALL sp_snapshot_monthly_best_fund("' . $from_date . '")');
+        // dd($data['best_schemes']);
+        // dd($data['changes_currency']);
+        $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+        // dd($disclaimerQuery->disclaimer);
+    
+        $data['disclaimer'] = $disclaimerQuery->disclaimer;
+        return view('web.ratio-reports.monthly_snapshot_new', $data);
+    }
+
+    public function getChangesFund(Request $request)
+    {
+        // dd($request->all());
+        $dataArr = $responseArr = [];
+        $message = __('message');
+        // $date = date("Y-m-d");
+        $date = Carbon::createFromFormat('Y-m-d', $request->date);
+        // dd($request->date);
+        $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
+
+        if ($request->type == 'weekly') {
+            $weekday = date('l', strtotime($date));
+            if ($weekday == 'Monday') {
+                // $start_date = date('Y-m-d', strtotime('-3 days'));
+                // $end_date = date('Y-m-d', strtotime('-9 days'));
+
+                $start_date = $date->subDays(3)->format('Y-m-d');
+                $end_date = $date->subDays(9)->format('Y-m-d');
+            }
+            if ($weekday == 'Tuesday') {
+                // $start_date = date('Y-m-d', strtotime('-4 days'));
+                // $end_date = date('Y-m-d', strtotime('-10 days'));
+
+                $start_date = $date->subDays(4)->format('Y-m-d');
+                $end_date = $date->subDays(10)->format('Y-m-d');
+            }
+            if ($weekday == 'Wednesday') {
+                // $start_date = date('Y-m-d', strtotime('-5 days'));
+                // $end_date = date('Y-m-d', strtotime('-11 days'));
+
+                $start_date = $date->subDays(5)->format('Y-m-d');
+                $end_date = $date->subDays(11)->format('Y-m-d');
+            }
+            if ($weekday == 'Thursday') {
+                // $start_date = date('Y-m-d', strtotime('-6 days'));
+                // $end_date = date('Y-m-d', strtotime('-12 days'));
+
+                $start_date = $date->subDays(6)->format('Y-m-d');
+                $end_date = $date->subDays(12)->format('Y-m-d');
+            }
+            if ($weekday == 'Friday') {
+                // $start_date = date('Y-m-d', strtotime('-0 days'));
+                // $end_date = date('Y-m-d', strtotime('-6 days'));
+
+                $start_date = $date->subDays(0)->format('Y-m-d');
+                $end_date = $date->subDays(6)->format('Y-m-d');
+            }
+            if ($weekday == 'Saturday') {
+                // $start_date = date('Y-m-d', strtotime('-1 days'));
+                // $end_date = date('Y-m-d', strtotime('-7 days'));
+
+                $start_date = $date->subDays(1)->format('Y-m-d');
+                $end_date = $date->subDays(7)->format('Y-m-d');
+            }
+            if ($weekday == 'Sunday') {
+                // $start_date = date('Y-m-d', strtotime('-2 days'));
+                // $end_date = date('Y-m-d', strtotime('-8 days'));
+
+                $start_date = $date->subDays(2)->format('Y-m-d');
+                $end_date = $date->subDays(8)->format('Y-m-d');
+            }
+            $days = 6;
+            $query = 'CALL sp_snapshot_fund_change_val("' . $start_date . '","' . $type_id . '","' . $days . '","weekly")';
+        } else {
+            // $start_date = date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
+            // $end_date = date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
+            $end_date = $date->format('Y-m-d');
+            $start_date = $date->subMonth(1)->format('Y-m-d');
+            // dd($end_date);
+            // $days = strtotime($start_date) - strtotime($end_date);
+            // $days = (int)round($days / (60 * 60 * 24))+1;
+            // $days = 30;
+            // dd(date('d', strtotime($end_date)));
+            $end_days = date('t', strtotime($end_date));
+            // dd($end_days);
+            if ($end_days == 31) {
+                // dd('31');
+                $days = 30;
+            } elseif ($end_days == 30) {
+                $days = 29;
+            } elseif ($end_days == 29) {
+                $days = 28;
+            } elseif ($end_days == 28) {
+                $days = 27;
+            }
+            //  dd($days.'-final');
+            $query = 'CALL sp_snapshot_fund_change_val("' . $end_date . '","' . $type_id . '","' . $days . '","monthly")';
+        }
+
+        // dd($start_date);
+        // dd($type_id);
+        // dd($days);
+        // $changes_fund = DB::select('CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'",'.$days.')');
+        // dd($changes_fund);
+        // dd($days);
+        // $query = 'CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'","'.$days.'","")';
+        // dd($query);
+        $changes_fund = DB::select($query);
+        // Print the SQL query
+        // echo $query;
+
+        if (count($changes_fund)) {
+            $responseArr['changes_fund'] = $changes_fund;
+            return $responseArr;
+        } else {
+            return [];
+        }
+    }
+
+    function weekly_snapshot_new(Request $request)
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'Snapshot';
+        $data['active_menu'] = 'dashboard';
+        if (!empty($request->date)) {
+            $date = date('Y-m-d', strtotime($request->date));
+        } else {
+            $date = date('Y-m-d', strtotime('-1 day'));
+        }
+        $daysToSubtract = [
+            'Monday' => ['start' => 3, 'end' => 9],
+            'Tuesday' => ['start' => 4, 'end' => 10],
+            'Wednesday' => ['start' => 5, 'end' => 11],
+            'Thursday' => ['start' => 6, 'end' => 12],
+            'Friday' => ['start' => 0, 'end' => 6],
+            'Saturday' => ['start' => 1, 'end' => 7],
+            'Sunday' => ['start' => 2, 'end' => 8],
+        ];
+
+        // Get the weekday of the provided date
+        $weekday = Carbon::parse($date)->format('l');
+        // dd($weekday);
+        // Get the number of days to subtract based on the weekday
+        if (isset($daysToSubtract[$weekday])) {
+            $startDays = $daysToSubtract[$weekday]['start'];
+
+            $endDays = $daysToSubtract[$weekday]['end'];
+            // dd()
+            $end_date = Carbon::parse($date)->subDays($startDays)->toDateString();
+            $start_date = Carbon::parse($date)->subDays($endDays)->toDateString();
+            // dd('Start: '.$start_date." End: ".$end_date);
+        } else {
+            // Handle case where the weekday is not found (optional)
+            $start_date = $end_date = null;
+        }
+        $data['start_date'] = $start_date;
+        $data['end_date'] = $end_date;
+        // dd('Start Date: '.$start_date." End date: ".$end_date);
+        $days = 6;
+        $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_INDICES","' . $end_date . '",' . $days . ')');
+
+        // dd($end_date."    ".$days);
+        // dd($data['changes_indices']);
+        $data['array_bse'] = [];
+        $data['array_nse'] = [];
+        $data['array_global_it'] = [];
+        if (!empty($data['changes_indices'])) {
+            foreach ($data['changes_indices'] as $key => $value) {
+                if ($value->index_type == "NSE") {
+                    array_push($data['array_nse'], $value);
+                }
+                if ($value->index_type == "BSE") {
+                    array_push($data['array_bse'], $value);
+                }
+                if ($value->index_type == "GLOBAL") {
+                    array_push($data['array_global_it'], $value);
+                }
+            }
+            // $data['array_bse'] = array_slice($data['changes_indices'], 0, 5);
+            // $data['array_nse'] = array_slice($data['changes_indices'], 5, 5);
+            // $data['array_global_it'] = array_slice($data['changes_indices'], 10, 5);
+        } else {
+            $data['array_bse'] = [];
+            $data['array_nse'] = [];
+            $data['array_global_it'] = [];
+        }
+        $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $end_date . '",' . $days . ')');
+        // dd($data['changes_currency']);
+        $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $end_date . '",' . $days . ')');
+        // dd($data['changes_commodity']);
+        $data['weekly_benchmark'] = DB::select('CALL sp_snapshot_weekly_benchmark("' . $end_date . '")');
+        // dd($data['weekly_benchmark']);
+        $data['weekly_best_funds'] = DB::select('CALL sp_snapshot_weekly_fund("' . $end_date . '")');
+        // dd($data['weekly_best_funds']);
+
+        $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+        // dd($disclaimerQuery->disclaimer);
+    
+        $data['disclaimer'] = $disclaimerQuery->disclaimer;
+        return view('web.ratio-reports.weekly_snapshot_new', $data);
+    }
+}

@@ -12,9 +12,11 @@
                 </ul>
             </div>
 
-            
+            <div class="perform_head">
+                <h2>Weekly snapshot</h2>
+            </div>
             <section class="monthly_snapshop_sec">
-            <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+            <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                 <div class="container">
                 <div class="wm_tab">
                     <ul>
@@ -31,7 +33,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form_group">
-                                <input type="date" class="form-control" name="date" id="dateInput" value="{{ date('Y-m-d', strtotime($end_date)) }}">
+                                <input type="text" placeholder="As on Date" class="datepicker" name="date" id="dateInput" value="{{ date('d-m-Y', strtotime($end_date)) }}">
                                 {{-- <button class="btn btn-success" type="submit">Search</button> --}}
                             </div>
                         </div>
@@ -52,11 +54,6 @@
                     </div>
                 </form>
                 </div>
-                @if(!empty($message))
-                <div class="alert alert-warning mt-3">
-                    {{ $message }}
-                </div>
-                @endif
                 <input type="hidden" value="weekly" name="type" id="type">
                 <div class="fund_section new_fund_section monthly_new">
                     <ul>
@@ -78,7 +75,7 @@
                     @for($i=1;$i<=3;$i++)
                     <div class="col-md-4">
                         <div class="graph_table green_bg">
-                            <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon1.png" alt="">@if($i==1){{' BSE Index'}}@elseif($i==2){{' NSE Index'}}@else{{ ' Global & Sectoral Index' }}@endif</h4>
+                            <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon1.png')}}" alt="">@if($i==1){{' BSE Index'}}@elseif($i==2){{' NSE Index'}}@else{{ ' Global & Sectoral Index' }}@endif</h4>
                             <table class="table bs_ns_gl datatable">
                                 <thead>
                                     <tr>
@@ -124,7 +121,7 @@
 
                     <div class="col-md-4">
                         <div class="graph_table sky_bg">
-                        <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon2.png" alt=""> Currency Changes</h4>
+                        <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon2.png')}}" alt=""> Currency Changes</h4>
                         <table class="table datatable">
                             <thead>
                                 <tr>
@@ -147,7 +144,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="graph_table yellow_bg">
-                        <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon3.png" alt=""> Commodity Changes</h4>
+                        <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon3.png')}}" alt=""> Commodity Changes</h4>
                         <table class="table datatable">
                             <thead>
                                 <tr>
@@ -170,7 +167,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="graph_table orange_bg">
-                        <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon4.png" alt=""> Percentage Change by Category of Funds(Returns)</h4>
+                        <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon4.png')}}" alt=""> Percentage Change by Category of Funds(Returns)</h4>
                         <div class="">
                         <table class="table datatable">
                             <thead>
@@ -199,7 +196,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="graph_table blue_bg">
-                        <h4><img src="https://myplexus.tech2dev.xyz//themes/frontend/assets/infosolz/images/icon5.png" alt=""> 10 Best Performing Schemes</h4>
+                        <h4><img src="{{asset('themes/frontend/assets/infosolz/images/icon5.png')}}" alt=""> 10 Best Performing Schemes</h4>
                         <div class="">
                         <table class="table datatable">
                             <thead>

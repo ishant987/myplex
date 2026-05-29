@@ -41,12 +41,21 @@ class MonthlyRatioCalculation extends Model
             $query->where('fund_name', '=', $fund_name);
         }
 
+        $end_date = isset($filterArr['end_date']) ? $filterArr['end_date'] : '';
+        if ($end_date != '') {
+            $query->where('end_date', '=', $end_date);
+
+            // $query->where('monthinfo', '=', date('m',strtotime($end_date)) );
+            // $query->where('yearinfo', '=', date('Y',strtotime($end_date)) );
+        }
+
         if ($orderBy == false && $order == false) {
             $orderBy = 'fund_name';
             $order = 'ASC';
         }
 
         $query->orderBy($orderBy, $order);
+        //$query->groupBy('fund_code');
 
         $lastQuery = $query->toSql();
         // echo $lastQuery;die;

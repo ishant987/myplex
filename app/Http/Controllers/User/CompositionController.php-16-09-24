@@ -1,0 +1,1001 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\BaseController;
+use App\Models\CorpusEntry;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\FundMaster;
+use App\Models\FundType;
+
+use Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Cache;
+use DB;
+use App\Lib\Core\Useful;
+use App\Models\FundComposition;
+
+class CompositionController extends Controller
+{
+    public function __construct()
+    {
+        $this->Useful = new Useful;
+    }
+
+    public function occurrence_report(Request $request)
+    {
+
+        $data = RatioController::loggedInUserData();
+
+        $months = [];
+        $years = [];
+        for ($i = 1; $i <= 12; $i++) {
+            // $months_array = $i .'=>'. date('F', mktime(0, 0, 0, $i, 10));
+            $months_array = $i;
+
+            array_push($months, $months_array);
+        }
+
+        $start_year = intval(date('Y')) - 5;
+
+        for ($i = intval(date('Y')); $i >= $start_year; $i--) {
+            $year_array = $i;
+            array_push($years, $year_array);
+        }
+
+        $data['months'] = $months;
+        $data['years'] = $years;
+
+        $data['mpx_fund_scrips'] = DB::table('scrips')->groupBy('actual_scrip')->get();
+
+        $data['industries'] = DB::table('fund_composition')->select('industry')->distinct()->get();
+
+        $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+        // dd($data['all_funds']);
+        $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+
+        // dd($request->all());
+
+        if (isset($request->search)) {
+
+            $data['getData'] = $request->all();
+
+            // dd($data['getData']);
+
+            $request->validate(
+                [
+                    'month'   => 'required',
+                    'year'   => 'required',
+                ],
+                [
+                    'month' . 'required' => 'Please Select Month for Searching',
+                    'year' . 'required' => 'Please Select Year for Searching',
+                ]
+            );
+
+            $fund_code_array = [];
+
+            if ($request->has('Category') && $request->Category == 'by_category') {
+
+                $request->validate(
+                    [
+                        'fund_type_id'   => 'required',
+                    ],
+                    [
+                        'fund_type_id' . 'required' => 'Please Select fund classification for Searching',
+                    ]
+                );
+
+                $data['fund_type_get_data'] = FundType::where('ft_id', $request->fund_type_id)->first();
+
+
+                $fund_code_array = FundMaster::where('status', 1)->where('fund_type_id', $request->fund_type_id)->pluck('fund_code')->toArray();
+            }
+
+            if ($request->has('Category') && $request->Category == 'by_fund') {
+
+                $request->validate([
+                    'fund_id' => 'required|array|min:2',  // Ensure 'fund_id' is required, an array, and has at least 2 elements
+                    'fund_id.*' => 'required',            // Each element inside 'fund_id' array must be required
+                ], [
+                    'fund_id.array' => 'Funds must be provided as an array.',   // Custom error message for 'array' rule
+                    'fund_id.min' => 'Please select at least :min funds.',       // Custom error message for 'min' rule
+                    'fund_id.*.required' => 'Please select a fund for searching.', // Custom error message for each fund_id element
+                ]);
+
+                $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+
+
+                $fund_id = [];
+
+                foreach ($fundMaterData as $funds) {
+
+                    array_push($fund_id, $funds->fund_id);
+                }
+
+
+                $fund_code_array = FundMaster::whereIn('fund_id', $request->fund_id)->pluck('fund_code')->toArray();
+
+                // dd($fund_code_array);
+
+                $data['fund_ids'] = $fund_id;
+            }
+
+            // $data['fund_id'] = $request->fund_id;
+
+            $month = $request->month;
+            $year = $request->year;
+
+            // Create a Carbon instance for the first day of the given month and year
+            $firstDayOfMonth = Carbon::createFromDate($year, $month, 1);
+
+            // Get the last day of the month
+            $lastDayOfMonth = $firstDayOfMonth->endOfMonth()->toDateString();
+
+            // $data['total_corpus_entry'] = $total_corpus_entry = DB::table('corpus_entry')
+            //     ->whereIn('fund_code', $fund_code_array)
+            //     ->where('entry_date', $lastDayOfMonth)
+            //     ->select(
+            //         DB::raw('SUM(corpus_entry/100) as total_corpus_entry')
+            //     )->first()->total_corpus_entry;
+
+            $query = DB::table('fund_composition')
+                ->whereIn('fund_code', $fund_code_array)
+                ->where('entry_date', $lastDayOfMonth)
+                ->where('category', 'Equity');
+
+
+            if (isset($request->scrip_industry) && $request->scrip_industry == 'scrip') {
+
+                $request->validate(
+                    [
+                        'fund_scrips'   => 'required',
+                    ],
+                    [
+                        'fund_scrips' . 'required' => 'Please Select scrip for Searching',
+                    ]
+                );
+
+                $query->where('scrip_name', $request->fund_scrips)
+                    ->select(
+                        'fund_code',
+                        'scrip_name',
+                        // DB::raw('SUM(calculated_amount/100) as amount'),
+                        // DB::raw('corpus_entry/100 as AUM'),
+                        // DB::raw('SUM(corpus_entry/100) as total_AUM'),
+                        DB::raw('SUM(content_per) as content_per')
+                    )->orderBy('content_per', 'desc')->groupBy('fund_code');
+            } elseif (isset($request->scrip_industry) && $request->scrip_industry == 'industry') {
+
+                $request->validate(
+                    [
+                        'industry'   => 'required',
+                    ],
+                    [
+                        'industry' . 'required' => 'Please Select industry for Searching',
+                    ]
+                );
+
+                $query->where('industry', $request->industry)
+                    ->select(
+                        'fund_code',
+                        'industry',
+                        // DB::raw('SUM(calculated_amount/100) as amount'),
+                        // DB::raw('corpus_entry/100 as AUM'),
+                        // DB::raw('SUM(corpus_entry/100) as total_AUM'),
+                        // DB::raw('(SUM(calculated_amount/100) / SUM(corpus_entry/100)) * 100 as content_per')
+                        DB::raw('SUM(content_per) as content_per')
+                    )->orderBy('content_per', 'desc')->groupBy('fund_code', 'industry');
+            }
+
+            $data['fund_composition'] = $query->get();
+
+            // dd($data['fund_composition'],$lastDayOfMonth);
+        }
+
+
+        // dd($data['fund_composition']);
+
+        $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+        // dd($disclaimerQuery->disclaimer);
+    
+        $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+        return view('web.composition_report.occurrence_report', $data);
+    }
+
+
+    // public function boomers(Request $request)
+    // {
+    //     $data = RatioController::loggedInUserData();
+    //     $data['browser_title'] = 'Boomers';
+    //     $data['active_menu'] = 'indices_report_list';
+
+    //     $months = [];
+    //     $years = [];
+    //     for ($i = 1; $i <= 12; $i++) {
+    //         // $months_array = $i .'=>'. date('F', mktime(0, 0, 0, $i, 10));
+    //         $months_array = $i;
+
+    //         array_push($months, $months_array);
+    //     }
+
+    //     $start_year = intval(date('Y')) - 5;
+
+    //     for ($i = intval(date('Y')); $i >= $start_year; $i--) {
+    //         $year_array = $i;
+    //         array_push($years, $year_array);
+    //     }
+
+    //     $data['months'] = $months;
+    //     $data['years'] = $years;
+
+
+    //     $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+    //     // dd($data['all_funds']);
+    //     $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+
+
+    //     $getdata = $request->all();
+
+    //     if (isset($getdata) && count($getdata) > 0) {
+
+    //         $data['month'] = $month = $getdata['month'];
+    //         $data['year'] = $year = $getdata['year'];
+    //         $data['month_second'] = $month_second = $getdata['month_second'];
+    //         $data['year_second'] = $year_second = $getdata['year_second'];
+    //         $data['limit'] = $limit = $getdata['limit'];
+
+    //         $firstDate = $this->getlastdate($month, $year);
+    //         $secondDate = $this->getlastdate($month_second, $year_second);
+
+    //         $fund_code_id_arra = [];
+
+
+    //         if ($request->has('Category') && $request->Category == 'by_category') {
+
+    //             $request->validate(
+    //                 [
+    //                     'fund_type_id'   => 'required',
+    //                     'month'   => 'required',
+    //                     'year'   => 'required',
+    //                     'month_second'   => 'required',
+    //                     'year_second'   => 'required',
+
+    //                 ],
+    //                 [
+    //                     'fund_type_id' . 'required' => 'Please Select Fund Type for Searching',
+    //                     'month' . 'required' => 'Please Select 1st period Month for Searching',
+    //                     'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+    //                     'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+    //                     'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+    //                 ]
+    //             );
+
+
+    //             $fund_code_id_arra = FundMaster::where('status', 1)->where('fund_type_id', $request->fund_type_id)->pluck('fund_code')->toArray();
+    //         }
+
+
+    //         if ($request->has('Category') && $request->Category == 'by_fund') {
+
+    //             $request->validate(
+    //                 [
+    //                     'fund_id'   => 'required',
+    //                     'month'   => 'required',
+    //                     'year'   => 'required',
+    //                     'month_second'   => 'required',
+    //                     'year_second'   => 'required',
+
+    //                 ],
+    //                 [
+    //                     'fund_id' . 'required' => 'Please Select Fund Type for Searching',
+    //                     'month' . 'required' => 'Please Select 1st period Month for Searching',
+    //                     'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+    //                     'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+    //                     'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+
+
+
+    //                 ]
+    //             );
+
+    //             $fund_code_id_arra = FundMaster::whereIn('fund_id', $request->fund_id)->pluck('fund_code')->toArray();
+    //         }
+            
+    //         $placeholders = implode(',', array_fill(0, count($fund_code_id_arra), '?'));
+
+    //         $query = 'WITH FirstData AS (
+    //                     SELECT 
+    //                         fund_code, 
+    //                         entry_date,
+    //                         scrip_name,
+    //                         content_per 
+    //                     FROM mpx_fund_composition 
+    //                     WHERE category = "Equity" 
+    //                     AND fund_code IN (' . $placeholders . ') 
+    //                     AND entry_date = ? 
+    //                 ),
+    //                 SecondData AS (
+    //                     SELECT 
+    //                         fund_code,
+    //                         entry_date,
+    //                         scrip_name,
+    //                         content_per
+    //                     FROM mpx_fund_composition
+    //                     WHERE category = "Equity"
+    //                     AND fund_code IN (' . $placeholders . ')
+    //                     AND entry_date = ?
+    //                 )
+    //                 SELECT 
+    //                     FirstData.entry_date AS f_entry_date,
+    //                     FirstData.fund_code AS f_fund_code,
+    //                     FirstData.scrip_name AS f_scrip_name,
+    //                     FirstData.content_per AS f_content_per,
+    //                     SecondData.entry_date AS s_entry_date,
+    //                     SecondData.fund_code AS s_fund_code,
+    //                     SecondData.scrip_name AS s_scrip_name,
+    //                     SecondData.content_per AS s_content_per
+    //                 FROM 
+    //                     FirstData
+    //                 JOIN 
+    //                     SecondData 
+    //                 ON 
+    //                     FirstData.fund_code = SecondData.fund_code' AND FirstData.;
+
+    //         $result_scrip_array = DB::select(DB::raw($query), array_merge($fund_code_id_arra, [$firstDate], $fund_code_id_arra, [$secondDate]));
+
+
+    //         dd($fund_code_id_arra, $result_scrip_array);
+
+    //         // $data['results_scrips'] = $result_scrip_array;
+
+    //         // $data['results_industry'] = $result_industry_array;
+    //     }
+
+
+    //     $data['request'] = $request;
+
+    //     return view('web.composition_report.boomers', $data);
+    // }
+
+    public function boomers(Request $request)
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'Boomers';
+        $data['active_menu'] = 'indices_report_list';
+
+        $months = [];
+        $years = [];
+        for ($i = 1; $i <= 12; $i++) {
+            // $months_array = $i .'=>'. date('F', mktime(0, 0, 0, $i, 10));
+            $months_array = $i;
+
+            array_push($months, $months_array);
+        }
+
+        $start_year = intval(date('Y')) - 5;
+
+        for ($i = intval(date('Y')); $i >= $start_year; $i--) {
+            $year_array = $i;
+            array_push($years, $year_array);
+        }
+
+        $data['months'] = $months;
+        $data['years'] = $years;
+
+
+        $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+        // dd($data['all_funds']);
+        $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+
+
+        $getdata = $request->all();
+
+        if (isset($getdata) && count($getdata) > 0) {
+
+            $data['month'] = $month = $getdata['month'];
+            $data['year'] = $year = $getdata['year'];
+            $data['month_second'] = $month_second = $getdata['month_second'];
+            $data['year_second'] = $year_second = $getdata['year_second'];
+            $data['limit'] = $limit = $getdata['limit'];
+
+            $startDate = $this->getlastdate($month, $year);
+            $endDate = $this->getlastdate($month_second, $year_second);
+        }
+
+
+
+
+
+        if ($request->has('Category') && $request->Category == 'by_category') {
+
+            $request->validate(
+                [
+                    'fund_type_id'   => 'required',
+                    'month'   => 'required',
+                    'year'   => 'required',
+                    'month_second'   => 'required',
+                    'year_second'   => 'required',
+
+                ],
+                [
+                    'fund_type_id' . 'required' => 'Please Select Fund Type for Searching',
+                    'month' . 'required' => 'Please Select 1st period Month for Searching',
+                    'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+                    'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+                    'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+
+
+
+                ]
+            );
+
+
+            $fund_code_id_arra = [];
+
+            $type_wise_fund = FundMaster::where('status', 1)->where('fund_type_id', $request->fund_type_id)->get();
+
+            foreach ($type_wise_fund as $val) {
+
+                // $fund_code_str = "".$val->fund_code."";
+                array_push($fund_code_id_arra, $val->fund_code);
+            }
+
+            $data['fund_type_get_data'] = FundType::where('ft_id', $request->fund_type_id)->first();
+
+            /*--------for scrips--------*/
+
+            $scrip_not_in = ['Cash','Corporate Debt','SOV'];
+
+            $fund_wise_scrip = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->whereNotIn('scrip_name',$scrip_not_in)->groupBy('scrip_name')->get();
+
+            $result_scrip_array = [];
+
+            $sum_amount_start_date = db::table('corpus_entry')->whereIn('fund_code',$fund_code_id_arra)->where('entry_date',$startDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            $sum_amount_end_date = db::table('corpus_entry')->whereIn('fund_code',$fund_code_id_arra)->where('entry_date',$endDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+            // dd($sum_amount_start_date->c_entry."   ".$sum_amount_end_date->c_entry);
+
+            // dd(floatval($sum_amount_end_date->c_entry)/100);
+
+            
+
+            foreach ($fund_wise_scrip as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                // dd($fund_wise_corpus_amount_entry_date);
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry !=0 )) {
+
+                    /*$fund_wise_corpus_amount_entry_date_val = floatval(number_format($fund_wise_corpus_amount_entry_date->c_entry,6));
+                    $sum_amount_start_date_val = floatval(number_format($sum_amount_start_date->c_entry,6));
+
+                    $fund_wise_corpus_amount_last_date_val = floatval(number_format($fund_wise_corpus_amount_last_date->c_entry,6));
+                    $sum_amount_end_date_val = floatval(number_format($sum_amount_end_date->c_entry,6));
+
+                 
+                    $start_date_growth_val = ($fund_wise_corpus_amount_last_date_val / ($sum_amount_start_date_val/100)) * 100;
+                    
+
+                    $end_date_growth_val = ($fund_wise_corpus_amount_last_date_val / ($sum_amount_end_date_val/100)) * 100;*/
+
+
+                    $data_scrip_array = array(
+
+                        'scrip_name' => $sc->scrip_name,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry/100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry/100)) * 100)
+
+                        // 'start_date_growth' => $start_date_growth_val,
+
+                        // 'end_date_growth' => $end_date_growth_val
+                    );
+
+                    array_push($result_scrip_array, $data_scrip_array);
+                }
+            }
+            // dd($result_scrip_array);
+
+
+            /*--------for industry--------*/
+
+            $fund_wise_industry = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->groupBy('industry')->get();
+
+            $result_industry_array = [];
+
+            // dd($fund_wise_industry);
+
+
+            foreach ($fund_wise_industry as $sc) {
+
+              $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry !=0 )) {
+
+                    $data_industry_array = array(
+                        'industry' => $sc->industry,
+
+                       'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry/100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry/100)) * 100)
+                    );
+
+                    array_push($result_industry_array, $data_industry_array);
+                }
+            }
+
+            // dd($result_industry_array);
+
+            $data['results_scrips'] = $result_scrip_array;
+
+            $data['results_industry'] = $result_industry_array;
+        }
+
+
+        if ($request->has('Category') && $request->Category == 'by_fund') {
+
+            $request->validate(
+                [
+                    'fund_id'   => 'required',
+                    'month'   => 'required',
+                    'year'   => 'required',
+                    'month_second'   => 'required',
+                    'year_second'   => 'required',
+
+                ],
+                [
+                    'fund_id' . 'required' => 'Please Select Fund Type for Searching',
+                    'month' . 'required' => 'Please Select 1st period Month for Searching',
+                    'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+                    'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+                    'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+
+
+
+                ]
+            );
+
+            $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+
+            $fund_code_id_arra = [];
+
+            $fund_id_arr = [];
+
+            $fund_name_array = [];
+
+            foreach ($fundMaterData as $funds) {
+
+                array_push($fund_name_array, $funds->fund_name);
+                array_push($fund_code_id_arra, $funds->fund_code);
+                array_push($fund_id_arr, $funds->fund_id);
+            }
+            $data['fund_id'] = $fund_id_arr;
+
+            $sum_amount_start_date = db::table('corpus_entry')->whereIn('fund_code',$fund_code_id_arra)->where('entry_date',$startDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            $sum_amount_end_date = db::table('corpus_entry')->whereIn('fund_code',$fund_code_id_arra)->where('entry_date',$endDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            /*--------for scrips--------*/
+
+            $fund_wise_scrip = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->groupBy('scrip_name')->get();
+
+            $result_scrip_array = [];
+
+            foreach ($fund_wise_scrip as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                // dd($fund_wise_corpus_amount_entry_date);
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry !=0 )) {
+
+                    $data_scrip_array = array(
+                        'scrip_name' => $sc->scrip_name,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry/100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry/100)) * 100)
+                    );
+
+                    array_push($result_scrip_array, $data_scrip_array);
+                }
+            }
+            // dd($result_scrip_array);
+
+
+            /*--------for industry--------*/
+
+            $fund_wise_industry = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->groupBy('industry')->get();
+
+            $result_industry_array = [];
+
+            foreach($fund_wise_industry as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry !=0 )) {
+
+                    $data_industry_array = array(
+                        'industry' => $sc->industry,
+
+                       'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry/100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry/100)) * 100)
+                    );
+
+                    array_push($result_industry_array, $data_industry_array);
+                }
+            }
+
+            $data['results_scrips'] = $result_scrip_array;
+
+            $data['results_industry'] = $result_industry_array;
+
+            $data['fund_names'] = implode(", ", $fund_name_array);
+        }
+
+        // dd($data);
+
+
+        $data['request'] = $request;
+
+        $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+    // dd($disclaimerQuery->disclaimer);
+
+    $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+
+        return view('web.composition_report.boomers', $data);
+    }
+
+    public function busters(Request $request)
+    {
+        $data = RatioController::loggedInUserData();
+        $data['browser_title'] = 'Busters';
+        $data['active_menu'] = 'indices_report_list';
+
+        $months = [];
+        $years = [];
+        for ($i = 1; $i <= 12; $i++) {
+            // $months_array = $i .'=>'. date('F', mktime(0, 0, 0, $i, 10));
+            $months_array = $i;
+
+            array_push($months, $months_array);
+        }
+
+        $start_year = intval(date('Y')) - 5;
+
+        for ($i = intval(date('Y')); $i >= $start_year; $i--) {
+            $year_array = $i;
+            array_push($years, $year_array);
+        }
+
+        $data['months'] = $months;
+        $data['years'] = $years;
+
+
+        $data['all_funds'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+        // dd($data['all_funds']);
+        $data['all_fund_types'] = FundType::where('active_passive', 'A')->get();
+
+
+        $getdata = $request->all();
+
+        if (isset($getdata) && count($getdata) > 0) {
+
+            $data['month'] = $month = $getdata['month'];
+            $data['year'] = $year = $getdata['year'];
+            $data['month_second'] = $month_second = $getdata['month_second'];
+            $data['year_second'] = $year_second = $getdata['year_second'];
+            $data['limit'] = $limit = $getdata['limit'];
+
+            $startDate = $this->getlastdate($month, $year);
+            $endDate = $this->getlastdate($month_second, $year_second);
+        }
+
+
+
+
+
+        if ($request->has('Category') && $request->Category == 'by_category') {
+
+            $request->validate(
+                [
+                    'fund_type_id'   => 'required',
+                    'month'   => 'required',
+                    'year'   => 'required',
+                    'month_second'   => 'required',
+                    'year_second'   => 'required',
+
+                ],
+                [
+                    'fund_type_id' . 'required' => 'Please Select Fund Type for Searching',
+                    'month' . 'required' => 'Please Select 1st period Month for Searching',
+                    'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+                    'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+                    'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+
+
+
+                ]
+            );
+
+
+            $fund_code_id_arra = [];
+
+            $type_wise_fund = FundMaster::where('status', 1)->where('fund_type_id', $request->fund_type_id)->get();
+
+            foreach ($type_wise_fund as $val) {
+
+                // $fund_code_str = "".$val->fund_code."";
+                array_push($fund_code_id_arra, $val->fund_code);
+            }
+
+            $data['fund_type_get_data'] = FundType::where('ft_id', $request->fund_type_id)->first();
+
+            /*--------for scrips--------*/
+            $scrip_not_in = ['Cash', 'Corporate Debt', 'SOV'];
+
+            $fund_wise_scrip = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->whereNotIn('scrip_name', $scrip_not_in)->groupBy('scrip_name')->get();
+
+            $result_scrip_array = [];
+
+            $sum_amount_start_date = db::table('corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('entry_date', $startDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            $sum_amount_end_date = db::table('corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('entry_date', $endDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+            // dd(floatval($sum_amount_end_date->c_entry)/100);
+
+            foreach ($fund_wise_scrip as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                // dd($fund_wise_corpus_amount_entry_date);
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry != 0)) {
+
+                    $data_scrip_array = array(
+                        'scrip_name' => $sc->scrip_name,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry / 100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry / 100)) * 100)
+                    );
+
+                    array_push($result_scrip_array, $data_scrip_array);
+                }
+            }
+            // dd($result_scrip_array);
+
+
+            /*--------for industry--------*/
+
+            $fund_wise_industry = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->groupBy('industry')->get();
+
+            $result_industry_array = [];
+
+
+
+            foreach ($fund_wise_industry as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry != 0)) {
+
+                    $data_industry_array = array(
+                        'industry' => $sc->industry,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry / 100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry / 100)) * 100)
+                    );
+
+                    array_push($result_industry_array, $data_industry_array);
+                }
+            }
+
+            $data['results_scrips'] = $result_scrip_array;
+
+            $data['results_industry'] = $result_industry_array;
+        }
+
+
+        if ($request->has('Category') && $request->Category == 'by_fund') {
+
+            $request->validate(
+                [
+                    'fund_id'   => 'required',
+                    'month'   => 'required',
+                    'year'   => 'required',
+                    'month_second'   => 'required',
+                    'year_second'   => 'required',
+
+                ],
+                [
+                    'fund_id' . 'required' => 'Please Select Fund Type for Searching',
+                    'month' . 'required' => 'Please Select 1st period Month for Searching',
+                    'year' . 'required' => 'Please Select 1st period Year for Searching',
+
+                    'month_second' . 'required' => 'Please Select 2nd period Month for Searching',
+                    'year_second' . 'required' => 'Please Select 2nd period Year for Searching',
+
+
+
+                ]
+            );
+
+            $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+
+            $fund_code_id_arra = [];
+
+            $fund_id_arr = [];
+
+            $fund_name_array = [];
+
+            foreach ($fundMaterData as $funds) {
+
+                array_push($fund_name_array, $funds->fund_name);
+                array_push($fund_code_id_arra, $funds->fund_code);
+                array_push($fund_id_arr, $funds->fund_id);
+            }
+            $data['fund_id'] = $fund_id_arr;
+
+            $sum_amount_start_date = db::table('corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('entry_date', $startDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            $sum_amount_end_date = db::table('corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('entry_date', $endDate)->selectRaw('SUM(corpus_entry) AS c_entry')->first();
+
+
+            /*--------for scrips--------*/
+
+            $scrip_not_in = ['Cash', 'Corporate Debt', 'SOV'];
+
+
+            $fund_wise_scrip = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->whereNotIn('scrip_name', $scrip_not_in)->groupBy('scrip_name')->get();
+
+            $result_scrip_array = [];
+
+            foreach ($fund_wise_scrip as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('scrip_name', $sc->scrip_name)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                // dd($fund_wise_corpus_amount_entry_date);
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry != 0)) {
+
+                    $data_scrip_array = array(
+                        'scrip_name' => $sc->scrip_name,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry / 100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry / 100)) * 100)
+                    );
+
+                    array_push($result_scrip_array, $data_scrip_array);
+                }
+            }
+            // dd($result_scrip_array);
+
+
+            /*--------for industry--------*/
+
+            $fund_wise_industry = DB::table('fund_composition')->whereIn('fund_code', $fund_code_id_arra)->groupBy('industry')->get();
+
+            $result_industry_array = [];
+
+            foreach ($fund_wise_industry as $sc) {
+
+                $fund_wise_corpus_amount_entry_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $startDate)->where('corpus_entry_date', $startDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                $fund_wise_corpus_amount_last_date = DB::table('fund_composition_corpus_entry')->whereIn('fund_code', $fund_code_id_arra)->where('composition_entry_date', $endDate)->where('corpus_entry_date', $endDate)->where('industry', $sc->industry)->selectRaw('SUM(calculated_amount) AS c_entry')->first();
+
+                if (isset($fund_wise_corpus_amount_entry_date) && isset($fund_wise_corpus_amount_last_date) && ($fund_wise_corpus_amount_entry_date->c_entry != 0) && ($fund_wise_corpus_amount_last_date->c_entry != 0)) {
+
+                    $data_industry_array = array(
+
+                        'industry' => $sc->industry,
+
+                        'start_date_growth' => (($fund_wise_corpus_amount_entry_date->c_entry / ($sum_amount_start_date->c_entry / 100)) * 100),
+
+                        'end_date_growth' => (($fund_wise_corpus_amount_last_date->c_entry / ($sum_amount_end_date->c_entry / 100)) * 100)
+                    );
+
+                    array_push($result_industry_array, $data_industry_array);
+                }
+            }
+
+            $data['results_scrips'] = $result_scrip_array;
+
+            $data['results_industry'] = $result_industry_array;
+
+            $data['fund_names'] = implode(", ", $fund_name_array);
+        }
+
+        // dd($data);
+
+
+        $data['request'] = $request;
+
+        $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+    // dd($disclaimerQuery->disclaimer);
+
+    $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+        return view('web.composition_report.busters', $data);
+    }
+
+
+
+    function getlastdate($month, $year)
+    {
+        $date = Carbon::create($year, $month, 1);
+
+        // Get the last day of the month
+        $lastDayOfMonth = $date->endOfMonth()->toDateString();
+
+        return  date('Y-m-d', strtotime($lastDayOfMonth));
+    }
+
+
+    function get_fund_by_scrips(Request $request)
+    {
+
+        $getdata = $request->all();
+
+        // dd($getdata);
+        $scrips_name = $getdata['scrips_name'];
+
+        $get_fund_code = DB::table('fund_scrips')->where('scrip_name', 'like', '%' . $scrips_name . '%')->first();
+
+        $get_fund_code_wise = FundMaster::where('status', 1)->where('fund_code', 'like', '%' . $get_fund_code->fund_code . '%')->first();
+
+        // dd($get_fund_code_wise);
+
+        $html = '';
+
+        if (isset($get_fund_code_wise)) {
+
+            $html .= '<option value="' . $get_fund_code_wise->fund_code . '">' . $get_fund_code_wise->fund_name . '</option>';
+        } else {
+
+            $html .= '<option>No funds found</option>';
+        }
+
+        echo $html;
+    }
+}

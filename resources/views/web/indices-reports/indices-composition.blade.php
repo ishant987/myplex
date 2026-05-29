@@ -1,9 +1,6 @@
 @extends('web.layout.infosolz_user_app')
 
 @section('content')
-    @php
-        $selectedIndexValue = is_array($indices_name ?? null) ? ($indices_name[0] ?? '') : ($indices_name ?? '');
-    @endphp
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -16,17 +13,20 @@
                 </div>
                 <div class="new_page">
                     <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Indices Composition</h2>
+                    </div>
 
                     <div class="light_green_bg">
-                        <form action="" id="indices-composition-form" novalidate>
+                        <form action="">
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form_group">
-                                        <select class="select2" name="indices" id="indices" data-placeholder="Select Indices">
+                                        <select class="select2" name="indices" data-placeholder="Select Indices">
                                             <option value="">Select Indices</option>
                                             @foreach ($indices as $index)
                                                 <option value="{{ $index->corelation }}"
-                                                    @if ($selectedIndexValue !== '' && $index->corelation == $selectedIndexValue) selected @endif>{{ $index->name }}
+                                                    @if (isset($indices_name) && $index->corelation == $indices_name) selected @endif>{{ $index->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -59,17 +59,14 @@
                             </div>
                         </form>
                     </div>
-                    @if (!empty($message))
-                        <div class="alert alert-warning mt-3">
-                            {{ $message }}
-                        </div>
-                    @endif
                     @if (isset($indices_composition))
                         <div class="fund_section new_fund_section">
                             <ul>
                                 <li>
                                     <p>Benchmark :</p>
-                                    <span>{{ $selectedIndexValue }}</span>
+                                    @isset($indices_name)
+                                        <span>{{ $indices_name }}</span>
+                                    @endisset
                                 </li>
                                 <li>
                                     <p>Indices Composition : </p>
@@ -132,53 +129,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() 
     {
-        var form = document.getElementById('indices-composition-form');
-        var indexSelect = document.getElementById('indices');
-        var monthSelect = document.getElementById('month');
-        var yearSelect = document.getElementById('year');
-
-        function openSelect2(selectElement) {
-            if (window.jQuery && $.fn.select2 && selectElement) {
-                $(selectElement).select2('open');
-            } else if (selectElement) {
-                selectElement.focus();
-            }
-        }
-
-        if (yearSelect && monthSelect) {
-            $(yearSelect).on('change select2:select', function() {
-                if (this.value && !monthSelect.value) {
-                    openSelect2(monthSelect);
-                }
-            });
-        }
-
-        if (form) {
-            form.addEventListener('submit', function(event) {
-                if (indexSelect && !indexSelect.value) {
-                    event.preventDefault();
-                    openSelect2(indexSelect);
-                    return;
-                }
-
-                if (yearSelect && !yearSelect.value) {
-                    event.preventDefault();
-                    openSelect2(yearSelect);
-                    return;
-                }
-
-                if (monthSelect && !monthSelect.value) {
-                    event.preventDefault();
-                    openSelect2(monthSelect);
-                }
-            });
-        }
-
         var exportButton = document.getElementById('exportPDF-indices-composition');
-
-        if (!exportButton) {
-            return;
-        }
 
         exportButton.addEventListener('click', function() {
             var { jsPDF } = window.jspdf;
@@ -202,7 +153,7 @@
                 doc.setTextColor(0, 0, 0);
 
                 // Add the benchmark name
-                var benchmarkName = "{{ $selectedIndexValue }}";
+                var benchmarkName = "{{ isset($indices_name) ? $indices_name : '' }}";
                 doc.text(`Benchmark: ${benchmarkName}`, 15, 50);
 
                 // Add the date (Month and Year)

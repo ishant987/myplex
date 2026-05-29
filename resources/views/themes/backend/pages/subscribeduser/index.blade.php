@@ -108,9 +108,6 @@
                   <th class="cc-w-150">{{ $sortbyArr['created_at'] }}</th>
                   <th>{{ $sortbyArr['created_by'] }}</th>
                   <th>{{ __('admin.added_user_txt') }}</th>
-                  <th>Package</th>
-                  <th>Price Paid</th>
-                  <th>Subscription End On</th>
                   <th class="cc-w-150">{{ $sortbyArr['updated_at'] }}</th>
                   <th class="cc-w-95">{{ $sortbyArr['updated_by'] }}</th>
                   <th>{{ __('admin.mdfy_user_txt') }}</th>
@@ -173,9 +170,6 @@
                     </select>
                   </td>
                   <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
                   <td>
                     <x-form.field.text id="fmd" name="fmd" value="{{ $fltrDataArr['updated_at'] ?? '' }}" class="period" />
                   </td>
@@ -191,7 +185,6 @@
                 </tr>
                 @if( count($dataListModel) > 0 )
                 @foreach( $dataListModel as $key => $record )
-                @php($latestPaidSubscription = $supportsPaidSubscriptionDetails ? $record->latestPaidSubscription : null)
                 <tr role="row" class="">
                   @if($roleRights['delete'])
                   <td class="sorting_{{$key}">
@@ -251,35 +244,6 @@
                     @break
                     @endswitch
                   </td>
-                  <td>
-                    @if($latestPaidSubscription)
-                    @if(Route::has('admin.subscriptions.show'))
-                    <a href="{{ route('admin.subscriptions.show', $latestPaidSubscription->id) }}">
-                      {{ ($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
-                    </a>
-                    @else
-                    {{ ($hasSubscriptionPlanTable ? optional($latestPaidSubscription->plan)->name : null) ?: ucfirst(str_replace('_', ' ', $latestPaidSubscription->subscription_type ?: '-')) }}
-                    @endif
-                    @else
-                    -
-                    @endif
-                  </td>
-                  <td>
-                    @if($latestPaidSubscription && $latestPaidSubscription->amount !== null)
-                    {{ $latestPaidSubscription->currency ?: 'INR' }} {{ number_format((float) $latestPaidSubscription->amount, 2) }}
-                    @else
-                    -
-                    @endif
-                  </td>
-                  <td>
-                    @if($latestPaidSubscription && $latestPaidSubscription->subscription_expiry_date)
-                    {{ \Carbon\Carbon::parse($latestPaidSubscription->subscription_expiry_date)->format('d M Y') }}
-                    @elseif($latestPaidSubscription && $latestPaidSubscription->ends_at)
-                    {{ optional($latestPaidSubscription->ends_at)->format('d M Y') }}
-                    @else
-                    -
-                    @endif
-                  </td>
                   <td>@if($record->updated_at){{ date($listDataAtrArr['mdfy_dt_frmt'], strtotime($record->updated_at)) }}@endif</td>
                   <td>@if($record->updated_by){{ $moduleAtrArr['cu_by_txt'][$record->updated_by] ?? $listDataAtrArr['unknown_txt'] }}@endif</td>
                   <td>
@@ -306,7 +270,7 @@
                 @endforeach
                 @else
                 <tr>
-                  <td colspan="19">{{ __('message.data_not_available') }}</td>
+                  <td colspan="16">{{ __('message.data_not_available') }}</td>
                 </tr>
                 @endif
               </tbody>

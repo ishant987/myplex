@@ -1,18 +1,11 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
 
-    @php
-        $selectedRanking = old('ranking', $request->ranking ?? 'range');
-        $selectedCategory = old('Category', $request->Category ?? 'by_category');
-        $isAsOnMode = $selectedRanking === 'as_on';
-        $isByFundMode = $selectedCategory === 'by_fund';
-    @endphp
-
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
                 <div class="new_page">
-                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <!-- {{-- <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a> --}} -->
                     <div class="head_brdcm">
                         <ul class="brdcmb">
                             <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
@@ -33,13 +26,11 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" name="ranking" value="range"
-                                                {{ old('ranking', $request->ranking ?? 'range') === 'range' ? 'checked' : '' }}>
+                                            <input type="radio" name="ranking" value="range" checked>
                                             Range
                                         </label>
                                         <label>
-                                            <input type="radio" name="ranking" value="as_on"
-                                                {{ old('ranking', $request->ranking ?? 'range') === 'as_on' ? 'checked' : '' }}>
+                                            <input type="radio" name="ranking" value="as_on">
                                             As on
                                         </label>
                                         @error('ranking')
@@ -48,37 +39,34 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="Start date" name="start_date"
-                                            {{ $isAsOnMode ? 'disabled' : '' }}
-                                            value="{{ $request->has('start_date') ? \Carbon\Carbon::parse($request->start_date)->format('Y-m-d') : old('start_date') }}">
+                                        <input type="text" class="datepicker" placeholder="Start date" name="start_date"
+                                            value="{{ $request->has('start_date') ? $request->start_date : old('start_date') }}">
                                         @error('start_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show" style="{{ $isAsOnMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show">
                                     <div class="form_group">
-                                        <input type="date" class="form-control" placeholder="End date" name="end_date"
-                                            {{ $isAsOnMode ? 'disabled' : '' }}
-                                            value="{{ $request->has('end_date') ? \Carbon\Carbon::parse($request->end_date)->format('Y-m-d') : old('end_date') }}">
+                                        <input type="text" class="datepicker" placeholder="End date" name="end_date"
+                                            value="{{ $request->has('end_date') ? $request->end_date : old('end_date') }}">
                                         @error('end_date')
                                             <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <input type="date" name="as_on_date" class="form-control" placeholder="date"
-                                            {{ $isAsOnMode ? '' : 'disabled' }}
-                                            value="{{ !empty($request->as_on_date) ? \Carbon\Carbon::parse($request->as_on_date)->format('Y-m-d') : '' }}">
+                                        <input type="text" name="as_on_date" class="datepicker" placeholder="date"
+                                            value="{{ $request->as_on_date }}">
                                     </div>
                                 </div>
-                                <div class="col-md-4 div_hide" style="{{ $isAsOnMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide">
                                     <div class="form_group">
-                                        <select name="as_on_time_frame" {{ $isAsOnMode ? '' : 'disabled' }}>
+                                        <select name="as_on_time_frame">
                                             <option value="1_month"
                                                 @if (isset($request) && $request->as_on_time_frame == '1_month') {{ 'selected' }} @endif>1 Month
                                             </option>
@@ -107,9 +95,9 @@
                                 <div class="col-md-4">
                                     <div class="form_group radio_btn">
                                         <label>
-                                            <input type="radio" id="type_Category" name="Category"
+                                            <input type="radio" id="type_Category" name="Category" checked
                                                 value="by_category"
-                                                @if (!isset($request) || empty($request->Category) || $request->Category == 'by_category') {{ 'Checked' }} @endif
+                                                @if (isset($request) && $request->Category == 'by_category') {{ 'Checked' }} @endif
                                                 onclick='get_fund_types(this.value)'>
                                             By Category
                                         </label>
@@ -122,10 +110,10 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-4 div_show_1" style="{{ $isByFundMode ? 'display:none;' : '' }}">
+                                <div class="col-md-4 div_show_1">
                                     <div class="form_group">
                                         <select name="fund_type_id" class="select2"
-                                            data-placeholder="Select Fund Classification" {{ $isByFundMode ? 'disabled' : '' }}>
+                                            data-placeholder="Select Fund Classification">
                                             <option value=""></option>
                                             @foreach ($all_fund_types as $fund_type)
                                                 <option value="{{ $fund_type->ft_id }}"
@@ -165,11 +153,11 @@
                                                             
                                                         </div> -->
 
-                                <div class="col-md-4 div_hide_1" style="{{ $isByFundMode ? '' : 'display:none;' }}">
+                                <div class="col-md-4 div_hide_1">
                                     <div class="form_group">
                                         <select name="fund_id[]" class="select2 multiple" multiple
                                             id="allocation_select_fund" onchange ='fund_multiple(this)'
-                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10" {{ $isByFundMode ? '' : 'disabled' }}>
+                                            data-placeholder="Select Fund" data-min="4" data-min="2" data-max="10">
                                             @foreach ($all_funds as $fund)
                                                 <option value="{{ $fund->fund_id }}"
                                                     @if ($fund->fund_id == old('fund_id', $request->fund_id)) selected
@@ -189,7 +177,7 @@
                                 <div class="col-md-4">
                                     <div class="form_group">
                                         <select name="report_category">
-
+                                            <option value="">Ratio</option>
                                             <optgroup label="Return Ratio">
                                                 <option value="returns"
                                                     @if (old('report_category', $request->report_category) == 'returns') selected @endif>
@@ -292,40 +280,26 @@
                         </form>
                     </div>
 
-                    @if (!empty($message))
-                        <div class="alert alert-warning mt-3">
-                            {{ $message }}
-                        </div>
-                    @endif
-
-                    @if (($report_data_ready ?? false) &&
-                            isset($request) &&
+                    @if (isset($request) &&
+                            isset($start_date) &&
+                            isset($end_date) &&
                             $request->Category != '' &&
-                            $request->report_category != '' &&
-                            (($request->Category === 'by_category' && !empty($request->fund_type_id)) ||
-                                ($request->Category === 'by_fund' && !empty($fund_names))))
+                            $request->report_category != '')
 
 
                         <div class="fund_section new_fund_section">
 
                             <ul>
 
-                                @if (($request->ranking ?? 'range') === 'as_on')
-                                    <li>
-                                        <p>As on date :</p>
-                                        <span>{{ !empty($request->as_on_date) ? date('d/m/Y', strtotime($request->as_on_date)) : '00/00/0000' }}</span>
-                                    </li>
-                                @else
-                                    <li>
-                                        <p>Start date :</p>
-                                        <span>{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}</span>
-                                    </li>
+                                <li>
+                                    <p>Start date :</p>
+                                    <span>{{ isset($start_date) ? date('d/m/Y', strtotime($start_date)) : '00/00/0000' }}</span>
+                                </li>
 
-                                    <li>
-                                        <p>End date :</p>
-                                        <span>{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}</span>
-                                    </li>
-                                @endif
+                                <li>
+                                    <p>End date :</p>
+                                    <span>{{ isset($end_date) ? date('d/m/Y', strtotime($end_date)) : '00/00/0000' }}</span>
+                                </li>
 
 
 
@@ -477,7 +451,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    @elseif (empty($message))
+                    @else
                         {!! printNoData() !!}
                     @endif
                 </div>
@@ -495,61 +469,33 @@
     </div>
 @endsection
 
-@push('scripts')
 <script>
-    function selectedFundCount() {
-        var selectedValues = $('#allocation_select_fund').val() || [];
-        return selectedValues.length;
-    }
-
-    function updateFundSelectionState() {
-        var category = $('input[name="Category"]:checked').val() || 'by_category';
-        var count = selectedFundCount();
-
-        if (category !== 'by_fund') {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
-        }
-
-        if (count >= 2 && count <= 10) {
-            $('#fund_msgg').html('');
-            $('#submit_btn').prop('disabled', false);
-            return;
-        }
-
-        $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
-        $('#submit_btn').prop('disabled', true);
-    }
-
-    function toggleRankingFields() {
-        var ranking = $('input[name="ranking"]:checked').val() || 'range';
-        var isAsOn = ranking === 'as_on';
-
-        $('.div_show').toggle(!isAsOn);
-        $('.div_hide').toggle(isAsOn);
-
-        $('input[name="start_date"], input[name="end_date"]').prop('disabled', isAsOn);
-        $('input[name="as_on_date"], select[name="as_on_time_frame"]').prop('disabled', !isAsOn);
-    }
-
-    function toggleCategoryFields() {
-        var category = $('input[name="Category"]:checked').val() || 'by_category';
-        var isByFund = category === 'by_fund';
-
-        $('.div_show_1').toggle(!isByFund);
-        $('.div_hide_1').toggle(isByFund);
-
-        $('select[name="fund_type_id"]').prop('disabled', isByFund);
-        $('select[name="fund_id[]"]').prop('disabled', !isByFund);
-    }
-
     function set_fund_select_val() {
-        updateFundSelectionState();
-    }
 
-    function fund_multiple(selectElement) {
-        updateFundSelectionState();
+        var thiss = $('#fund_Category').val();
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+
+        console.log(thiss + '  ' + count);
+
+        if (thiss == 'by_fund') {
+
+            if (count >= 2 && count <= 10) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+
+        } else {
+
+            $('#submit_btn').prop('disabled', false);
+        }
     }
 
 
@@ -605,27 +551,29 @@
 
 
     function get_fund_types(thiss) {
-        toggleCategoryFields();
-        updateFundSelectionState();
+
+        var count = $('#allocation_select_fund').select2('data').length;
+
+        if (thiss == 'by_category') {
+
+            $('#submit_btn').prop('disabled', false);
+        } else if (thiss == 'by_fund') {
+            if (count >= 2 && count <= 10) {
+                // console.log('enable');
+                $('#submit_btn').prop('disabled', false);
+            } else {
+                // console.log('disabled');
+                // alert('Funds selection limit minimum 4 and maximum 20');
+                $('#fund_msgg').html('<p>Selection limit minimum 2 and maximum 10 for <b>Funds</b></p>');
+                $('#submit_btn').prop('disabled', true);
+            }
+
+        }
     }
 
 
-    function initPerformanceRatiosPage() {
-        toggleRankingFields();
-        toggleCategoryFields();
-        updateFundSelectionState();
-
-        $('input[name="ranking"]').on('change', toggleRankingFields);
-        $('input[name="Category"]').on('change', function() {
-            get_fund_types(this.value);
-        });
-        $('#allocation_select_fund').on('change', updateFundSelectionState);
-
+    document.addEventListener('DOMContentLoaded', function() {
         var exportButton = document.getElementById('exportPDF');
-
-        if (!exportButton) {
-            return;
-        }
 
         exportButton.addEventListener('click', function() {
             var {
@@ -747,7 +695,7 @@
                         null
                     @endif ;
 
-                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name : '' }}";
+                var fundClassification = "{{ isset($fund_type_name) ? $fund_type_name[0] : '' }}";
 
                 var startX = 15;
                 var lineHeight = 10;
@@ -793,12 +741,5 @@
                 doc.save(fileName);
             };
         });
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPerformanceRatiosPage);
-    } else {
-        initPerformanceRatiosPage();
-    }
+    });
 </script>
-@endpush

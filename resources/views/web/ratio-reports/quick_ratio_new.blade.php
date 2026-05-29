@@ -1,20 +1,5 @@
 @extends('web.layout.infosolz_user_app')
 @section('content')
-    @php
-        $selectedQuickDate = now()->format('Y-m-d');
-        if (!empty($request->date)) {
-            foreach (['Y-m-d', 'd-m-Y', 'd/m/Y'] as $dateFormat) {
-                try {
-                    $selectedQuickDate = \Carbon\Carbon::createFromFormat($dateFormat, $request->date)->format('Y-m-d');
-                    break;
-                } catch (\Throwable $e) {
-                    // Try the next supported request format.
-                }
-            }
-        }
-        $selectedQuickType = $request->type ?? 'weekly';
-        $selectedQuickReport = $request->report_category ?? 'return';
-    @endphp
     <div class="inner_main">
         <div class="page_detail">
             <div class="inner_padding">
@@ -26,10 +11,12 @@
                 </ul>
             </div>
 
-         
+            <div class="perform_head">
+                        <h2>Quick Ratio</h2>
+            </div>
 
                 <section class="monthly_snapshop_sec">
-                <a href="{{ route('user.ratio_dashboard') }}" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
                     <div class="container">
                         <div class="wm_tab">
                             <ul>
@@ -49,8 +36,8 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form_group">
-                                            <input type="date" class="form-control" name="date"
-                                                id="dateInput" value="{{ $selectedQuickDate }}">
+                                            <input type="text" placeholder="As on Date" class="datepicker" name="date"
+                                                id="dateInput" value="@if(isset($request->date)) {{$request->date}} @endif">
 
                                         </div>
                                     </div>
@@ -59,9 +46,6 @@
                                             <select name="fund_type_id" class="select2"
                                             data-placeholder="Select Fund Classification">
                                                 <option value=""></option>
-                                                @if($all_fund_types->isEmpty())
-                                                    <option value="" disabled>No fund classifications available</option>
-                                                @endif
                                                 @foreach ($all_fund_types as $fund_type)
                                                     <option value="{{ $fund_type->ft_id }}"
                                                         @if ($fund_type->ft_id == old('fund_type_id', $request->fund_type_id)) selected @endif>
@@ -72,21 +56,19 @@
                                             @error('fund_type_id')
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
-                                            @if($all_fund_types->isEmpty())
-                                                <small class="text-danger d-block mt-2">Fund classifications are missing in the current database, so this list is empty.</small>
-                                            @endif
 
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form_group">
                                             <select id="report-category" name="report_category"
-                                            data-placeholder="Select Report">
-                                                <option value="return" @if($selectedQuickReport == 'return') selected @endif>Return %</option>
-                                                <option value="indices" @if($selectedQuickReport == 'indices') selected @endif>Indices</option>
-                                                <option value="return_less_index" @if($selectedQuickReport == 'return_less_index') selected @endif>Return Less Index</option>
-                                                @if($selectedQuickType == 'monthly')
-                                                <option value="corpus_change" @if($selectedQuickReport == 'corpus_change') selected @endif>Corpus Changes</option>
+                                            data-placeholder="Select">
+                                                <option value="">Select</option>
+                                                <option value="return" @if(isset($request->report_category) && $request->report_category == 'return') selected @endif>Return %</option>
+                                                <option value="indices" @if(isset($request->report_category) && $request->report_category == 'indices') selected @endif>Indices</option>
+                                                <option value="return_less_index" @if(isset($request->report_category) && $request->report_category == 'return_less_index') selected @endif>Return Less Index</option>
+                                                @if(isset($request->type) && $request->type == 'monthly')
+                                                <option value="corpus_change" @if(isset($request->report_category) && $request->report_category == 'corpus_change') selected @endif>Corpus Changes</option>
                                                 @endif
                                             </select>
                                             @error('report_category')
@@ -97,7 +79,13 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="bttn_grp">
-                                            <input type="hidden" name="type" id="type" value="{{ $selectedQuickType }}">
+                                            @php
+                                            $type = 'weekly';
+                                                if(isset($request->type) && ($request->type == 'monthly')){
+                                                    $type = 'monthly';
+                                                } 
+                                            @endphp
+                                            <input type="hidden" name="type" id="type" value="{{$type}}">
                                             <button class="perform-submit money_title_btn btn" type="submit">Search</button>
                                         </div>
                                     </div>
@@ -105,11 +93,6 @@
 
                             </form>
                         </div>
-                        @if(!empty($message))
-                        <div class="alert alert-warning mt-3">
-                            {{ $message }}
-                        </div>
-                        @endif
                         
 
                         @if(isset($request) && !empty($request->date) && !empty($request->fund_type_id))
@@ -385,7 +368,7 @@
 
                                     <!-- ======End Molthly====== -->
                                      
-                                    @if(isset($responseArr['snapshot_data']) && count($responseArr['snapshot_data']) === 0)
+                                    @if(!isset($responseArr['snapshot_data']))
                                     <div class="weekly-return-less-index">
                                             <table class="table  datatable">
                                                 <thead>
@@ -398,9 +381,13 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td colspan="7" class="text-center">No information is available for this search</td>
-                                                    </tr>
+                                                    @if(isset($responseArr['snapshot_data']))
+                                                        @foreach ($responseArr['snapshot_data'] as $quickRatio)
+                                                            <tr>
+                                                                <td colspan="7" class="text-center">No information is available for this search</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
                                                 </tbody>
                                             </table>
                                         </div>
@@ -430,16 +417,13 @@ function tabSelect(val) {
         $("#tab-weekly").addClass('active');
         $("#tab-monthly").removeClass('active');
         $('#report-category option[value="corpus_change"]').remove();
-        if ($('#report-category').val() === 'corpus_change') {
-            $('#report-category').val('return').trigger('change');
-        }
     } else {
         $("#tab-weekly").removeClass('active');
         $("#tab-monthly").addClass('active');
-
-        if ($('#report-category option[value="corpus_change"]').length === 0) {
-            $('#report-category').append('<option value="corpus_change">Corpus Changes</option>');
-        }
+        
+        $('#report-category').append(
+            '<option value="corpus_change" @if(isset($request->report_category) && $request->report_category == "corpus_change") selected @endif>Corpus Changes</option>'
+        );
     }
 }
 </Script>
@@ -721,3 +705,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </Script>
+
+
+

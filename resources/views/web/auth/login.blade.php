@@ -48,10 +48,10 @@
                     </div>
                 @endif
             
-                <form method="POST" action="{{ route('user.loginpost', [], false) }}" class="contact-wrapper">
+                <form method="POST" action="{{ route('user.loginpost') }}" class="contact-wrapper">
                     @csrf
                     <div class="form_group" data-floating-group>
-                        <label>User Name</label>
+                        <label>Email Id</label>
                         <input type="email" name="email" autocomplete="email" class="user_img" data-floating-input>
                         @if ($errors->has('email'))
                             <span class="text-danger">{{ $errors->first('email') }}</span>

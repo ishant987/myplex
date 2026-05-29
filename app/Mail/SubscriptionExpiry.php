@@ -26,6 +26,6 @@ class SubscriptionExpiry extends Mailable
     public function build()
     {
         return $this->subject('Your myplexus Subscription Expires in 3 Days')
-            ->view('emails.subscription_expiry');
+            ->view('emails.web.subscription_expiry');
     }
 }

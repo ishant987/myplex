@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\BaseController;
+use App\Models\CorpusEntry;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\FundMaster;
+use App\Models\FundType;
+
+use Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Cache;
+use DB;
+use App\Lib\Core\Useful;
+use App\Models\FundComposition;
+
+class CorrelationCornController extends Controller
+{
+  public function __construct()
+  {
+    $this->Useful = new Useful;
+  }
+
+  public function index(Request $request){
+
+    // dd("ok");
+
+
+
+    // UPDATE `mpx_indices_composition` AS `comp` INNER JOIN `mpx_indices_master` AS `master` ON `comp`.`indices_name`=`master`.`corelation` OR `comp`.`indices_name`=`master`.`corelation_old` SET `comp`.`correlation_new`=`master`.`corelation`
+
+
+    // UPDATE `mpx_indices_detail` AS `dtl` INNER JOIN `mpx_indices_master` AS `master` ON `dtl`.`name`=`master`.`corelation` OR `dtl`.`name`=`master`.`corelation_old` SET `dtl`.`correlation_new`=`master`.`corelation`
+
+
+    $indices_composition_records = DB::table('indices_composition')->whereNull('correlation_new')->get();
+
+    if(isset($indices_composition_records)){
+
+      foreach($indices_composition_records as $value){
+
+        // DB::table('indices_composition as comp')
+        // ->join('indices_master as master', function($join) {
+        //     $join->on('comp.indices_name', '=', 'master.corelation')
+        //          ->orOn('comp.indices_name', '=', 'master.corelation_old');
+        // })
+        // ->where('comp.ic_id',$value->ic_id)
+        // ->update(['comp.correlation_new' => DB::raw('master.corelation')]);
+
+        /*$composition_update = DB::statement(DB::raw("
+        UPDATE mpx_indices_composition AS comp
+        INNER JOIN mpx_indices_master AS master
+        ON comp.indices_name = master.corelation
+        OR comp.indices_name = master.corelation_old
+        SET comp.correlation_new = master.corelation
+        WHERE comp.ic_id = ?
+        "), [$value->ic_id]);*/
+
+        // $composition_update = DB::statement(DB::raw("
+        // UPDATE mpx_indices_composition AS comp
+        // INNER JOIN mpx_indices_master AS master
+        // ON comp.indices_name = master.corelation
+        // OR comp.indices_name = master.corelation_old
+        // SET comp.correlation_new = master.corelation
+        // WHERE comp.ic_id = $value->ic_id"));
+
+        // if($composition_update){
+        //   echo "ind_comp_id - ".$value->ic_id."<br>";
+        // }
+
+       $composition_update =  DB::update("UPDATE `mpx_indices_composition` AS `comp` INNER JOIN `mpx_indices_master` AS `master` ON `comp`.`indices_name`=`master`.`corelation` OR `comp`.`indices_name`=`master`.`corelation_old` SET `comp`.`correlation_new`=`master`.`corelation` WHERE `comp`.`ic_id` = $value->ic_id");
+
+        
+
+      }
+
+    }
+
+    
+
+
+    $indices_details_records = DB::table('indices_detail')->whereNull('correlation_new')->get();
+
+    if(isset($indices_details_records)){
+
+      foreach($indices_details_records as $value){
+
+        // DB::statement(DB::raw("
+        // UPDATE mpx_indices_detail AS dtl
+        // INNER JOIN mpx_indices_master AS master
+        // ON dtl.name = master.corelation
+        // OR dtl.name = master.corelation_old
+        // SET dtl.idcd_id = master.corelation
+        // WHERE dtl.idcd_id = $value->idcd_id"));
+    
+        
+        // echo"ind_detail_id - ".$value->idcd_id."<br>";
+
+        $details_update = DB::update("UPDATE `mpx_indices_detail` AS `dtl` INNER JOIN `mpx_indices_master` AS `master` ON `dtl`.`name`=`master`.`corelation` OR `dtl`.`name`=`master`.`corelation_old` SET `dtl`.`correlation_new`=`master`.`corelation` WHERE  `dtl`.`idcd_id` = $value->idcd_id");
+
+
+
+      }
+
+    }
+
+
+
+
+
+
+  }
+
+  
+}
