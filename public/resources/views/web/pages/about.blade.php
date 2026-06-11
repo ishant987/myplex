@@ -31,7 +31,7 @@
                         </section>
 
 
-                        <section class="abt_page_section pb-0 pb-md-5">
+                        <section class="abt_page_section pb-0 pb-md-5 chkr">
                             <div class="container">
                                 <div class="row">
 									<div class="col-lg-6 order-md-1 col-md-12 mb-md-3">

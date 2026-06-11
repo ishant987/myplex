@@ -1,0 +1,447 @@
+<?php
+
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Web\BaseController;
+use App\Models\CorpusEntry;
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\FundMaster;
+use App\Models\FundType;
+
+use Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Cache;
+use DB;
+use App\Lib\Core\Useful;
+use App\Models\FundComposition;
+
+class CompositionReportController extends Controller
+{
+  public function __construct()
+  {
+    $this->Useful = new Useful;
+  }
+
+  public function allocation_snapshot(Request $request)
+  {
+
+    $data['browser_title'] = 'Composition Allocation Snapshot';
+    $data['active_menu'] = 'composition_report_list';
+
+    $data = RatioController::loggedInUserData();
+
+    $getdata = $request->all();
+
+    if (isset($getdata) && count($getdata) > 0) {
+
+      $data['year'] = $getdata['year'];
+      $data['month'] = $getdata['month'];
+      $data['monthName'] = Carbon::create()->month($data['month'])->format('F');
+      // $data['limit'] = $getdata['limit'];
+      $data['Category'] = $getdata['Category'];
+      $lastDate = Carbon::create($data['year'], $data['month'])->endOfMonth()->toDateString();
+
+      $fund_snapshot = [];
+
+
+      if ($getdata['Category'] == 'by_fund' && count($getdata['fund_id']) > 0) {
+
+        $data['fund_details'] = [];
+        $fund_name_array = [];
+
+        foreach ($getdata['fund_id'] as $fund_id) {
+
+          $fund_details = FundMaster::where('fund_id', $fund_id)->first();
+
+          array_push($data['fund_details'], $fund_details);
+          array_push($fund_name_array, $fund_details->fund_name);
+
+
+          $query = "CALL composition_allocation_snapshot_new('" . $fund_details->fund_type_id . "','" . $fund_details->fund_code . "','" . $data['month'] . "','" . $data['year'] . "')";
+
+          array_push($fund_snapshot, DB::select($query)[0]);
+        }
+
+        $data['fund_names'] = implode(", ", $fund_name_array);
+      }
+      if ($getdata['Category'] == 'by_category') {
+
+        $data['fund_type_id'] = $getdata['fund_type'];
+
+        $fund_type = FundType::where('ft_id', $getdata['fund_type'])->first();
+        // dd($getdata['fund_type']);
+        $data['fund_type_name'] = $fund_type->name;
+
+        $query = "CALL sp_fund_category_composition_allocation('" . $data['month'] . "','" . $data['year'] . "','" . $getdata['fund_type'] . "')";
+
+        // dd(DB::select($query));
+        $db_q = DB::select($query);
+        // dd($db_q);
+        foreach ($db_q as $val) {
+          array_push($fund_snapshot, $val);
+        }
+
+        // array_push($fund_snapshot, DB::select($query));
+
+      }
+      $data['fund_snapshot'] = $fund_snapshot;
+
+      // dd($fund_snapshot);
+    }
+
+    $data['request'] = $request;
+
+    $data['fund_type'] = FundType::get();
+
+    $data['fund_master'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+
+    $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+    // dd($disclaimerQuery->disclaimer);
+
+    $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+    return view('web.composition_report.allocation_snapshot', $data);
+  }
+
+  public function scheme_portfolio(Request $request)
+
+  {
+
+    // dd('ok');
+
+    $user = Auth::user();
+    $userId = $user->u_id;
+
+    $data['browser_title'] = 'Scheme Portfolio';
+    $data['active_menu'] = 'composition_report_list';
+
+
+    $data['userdetails'] = $userdetails = User::where('u_id', $userId)->first();
+    $expiry_datetime = Carbon::parse($userdetails->subscription_expiry_date);
+    $data['expiry_date'] = $expiry_date = $expiry_datetime->toDateString();
+
+    $currentDateTime = Carbon::now();
+
+    $data['current_date'] = $current_date = $currentDateTime->toDateString();
+
+    $fiveDaysBeforeExpiryDate = $expiry_datetime->subDays(5);
+
+    $months = [];
+    $years = [];
+    for ($i = 1; $i <= 12; $i++) {
+
+      // $months_array = $i .'=>'. date('F', mktime(0, 0, 0, $i, 10));
+      $months_array = $i;
+      array_push($months, $months_array);
+    }
+
+    $start_year = intval(date('Y')) - 5;
+
+    for ($i = intval(date('Y')); $i >= $start_year; $i--) {
+
+      $year_array = $i;
+      array_push($years, $year_array);
+    }
+
+    $data['months'] = $months;
+    $data['years'] = $years;
+
+    // dd($data);
+
+    $getdata = $request->all();
+
+
+
+    if (isset($getdata) && count($getdata) > 0) {
+
+      $request->validate([
+        'month' => 'required',
+        'year' => 'required',
+        'fund_master' =>  'required'
+      ], [
+        'month.required' => 'Please select a month',
+        'year.required' => 'Please select a year',
+        'fund_master.required' => 'Please select a fund'
+      ]);
+
+      $data['year'] = $request->year;
+      $data['month'] = $request->month;
+      $data['fund_master'] = $request->fund_master;
+
+      $data['fund_details'] = FundMaster::where('fund_code', $data['fund_master'])->first(['fund_name']);
+
+      $lastDate = Carbon::createFromDate($request->year, $request->month, 1)->endOfMonth()->toDateString();
+
+      $data['total_corpus_entry'] = $total_corpus_entry = DB::table('corpus_entry')
+        ->where('fund_code', $data['fund_master'])
+        ->where('entry_date', $lastDate)
+        ->select(
+          DB::raw('COALESCE(SUM(corpus_entry) / 100, 1) as total_corpus_entry')
+        )->first()->total_corpus_entry;
+
+      $data['scrips'] = DB::table('view_corpus_with_allocation')
+        ->where('fund_code', $data['fund_master'])
+        ->where('corpus_entry_date', $lastDate)
+        ->where('composition_entry_date', $lastDate)
+        ->where('category', 'Equity')
+        ->select(
+          'scrip_name',
+          'industry',
+          'corpus_entry_date',
+          'composition_entry_date',
+          'category',
+          DB::raw('SUM(calculated_amount / 100) as amount'),
+          DB::raw($total_corpus_entry . ' as AUM'),
+          DB::raw('(SUM(calculated_amount / 100) / ' . $total_corpus_entry . ') * 100 as content_per')
+        )
+        ->orderBy('content_per', 'desc')
+        ->groupBy('scrip_name')
+        ->get();
+
+      // dd($data['scrips']);
+    }
+
+    $data['fiveDaysBeforeExpiry'] = $fiveDaysBeforeExpiry = $fiveDaysBeforeExpiryDate->toDateString();
+
+    $data['fund_type'] = FundType::get();
+
+    $data['fund_master'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+
+    // dd($data);
+
+    $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+    // dd($disclaimerQuery->disclaimer);
+
+    $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+
+    return view('web.composition_report.scheme_portfolio', $data);
+  }
+
+  public function top_script_rop_industry(Request $request)
+  {
+    $data = RatioController::loggedInUserData();
+    $getdata = $request->all();
+
+    if (isset($getdata) && count($getdata) > 0) {
+
+      $request->validate([
+        'year'  =>  'required',
+        'month' => 'required'
+      ], [
+        'year.required' => 'Please select year',
+        'month.required' => 'Please select month'
+      ]);
+
+      $data['year'] = $getdata['year'];
+      $data['month'] = $getdata['month'];
+      $data['monthName'] = Carbon::create()->month($data['month'])->format('F');
+      $data['Category'] = $getdata['Category'];
+      $data['lastDate'] = $lastDate = Carbon::create($data['year'], $data['month'])->endOfMonth()->toDateString();
+      $data['active_tab'] = $request->active_tab;
+      $limit = $request->input('limit', 10);
+
+      if ($getdata['Category'] == 'by_fund') {
+
+        $request->validate([
+          'fund_id' => 'required',
+        ], [
+          'fund_id.required' => 'Please select fund'
+        ]);
+
+        $fundMaterData = FundMaster::whereIn('fund_id', $request->fund_id)->get();
+        $fund_type_id = [];
+        $fund_code = [];
+        $fund_id = [];
+        $fund_name_array = [];
+
+        foreach ($fundMaterData as $funds) {
+          array_push($fund_id, $funds->fund_id);
+          array_push($fund_name_array, $funds->fund_name);
+          array_push($fund_type_id, $funds->fund_type_id);
+          array_push($fund_code, $funds->fund_code);
+        }
+
+        $data['fund_names'] = implode(", ", $fund_name_array);
+
+        $data['fund_details'] = FundMaster::whereIn('fund_id', $getdata['fund_id'])
+          ->select('fund_code')
+          ->orderBy('fund_name', 'asc')
+          ->pluck('fund_code')
+          ->toArray();
+      }
+
+      if ($getdata['Category'] == 'by_category') {
+
+        $request->validate([
+          'fund_type' => 'required',
+        ], [
+          'fund_type.required' => 'Please select fund type'
+        ]);
+
+        $data['fund_type_id'] = $getdata['fund_type'];
+        $fund_type = FundType::where('ft_id', $request->fund_type)->first();
+        $data['fund_type_name'] = $fund_type->name;
+
+        $data['fund_details'] = FundMaster::where('fund_type_id', $getdata['fund_type'])
+          ->select('fund_code')
+          ->orderBy('fund_name', 'asc')
+          ->pluck('fund_code')->toArray();
+      }
+
+      $total_corpus_entry = DB::table('corpus_entry')
+        ->whereIn('fund_code', $data['fund_details'])
+        ->where('entry_date', $lastDate)
+        ->select(
+          DB::raw('COALESCE(SUM(corpus_entry) / 100, 1) as total_corpus_entry')
+        )->first()->total_corpus_entry;
+
+      // dd($total_corpus_entry);
+
+      $data['top_scrips'] = DB::table('view_corpus_with_allocation')
+        ->whereIn('fund_code', $data['fund_details'])
+        ->where('corpus_entry_date', $lastDate)
+        ->where('composition_entry_date', $lastDate)
+        ->where('category', 'Equity')
+        ->select(
+          'scrip_name',
+          'industry',
+          'corpus_entry_date',
+          'composition_entry_date',
+          DB::raw('SUM(calculated_amount/100) as amount'),
+          DB::raw($total_corpus_entry . ' as AUM'),
+          DB::raw('(SUM(calculated_amount/100) / ' . $total_corpus_entry . ') * 100 as content_per')
+        )
+        ->orderBy('content_per', 'desc')
+        ->groupBy('scrip_name')
+        ->limit($limit)
+        ->get();
+
+      // dd($data['top_scrips']);
+
+      $data['top_industries'] = DB::table('view_corpus_with_allocation')
+        ->whereIn('fund_code', $data['fund_details'])
+        ->where('corpus_entry_date', $lastDate)
+        ->where('composition_entry_date', $lastDate)
+        ->where('category', 'Equity')
+        ->select(
+          'industry',
+          'category',
+          'fund_code',
+          DB::raw($total_corpus_entry . ' as AUM'),
+          DB::raw('SUM(content_per) as allocation'),
+          // DB::raw('SUM(content_per/100) as allocation'),
+          DB::raw('SUM(calculated_amount/100) as amount'),
+          DB::raw('(SUM(calculated_amount/100) / ' . $total_corpus_entry . ') * 100 as content_per')
+        )
+        ->orderBy('content_per', 'desc')
+        ->groupBy('industry')
+        ->limit($limit)
+        ->get();
+    }
+
+    // $data['total_scrips'] = $data['top_scrips']->count();
+    // $data['total_industries'] = $data['top_industries']->count();
+
+    $data['browser_title'] = 'Top Scrips Top Industries';
+    $data['active_menu'] = 'composition_report_list';
+
+    $data['fund_type'] = FundType::get();
+    $data['fund_master'] = FundMaster::where('status', 1)->orderBy('fund_name', 'asc')->get();
+    $data['request'] = $request;
+
+    $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
+
+    // dd($disclaimerQuery->disclaimer);
+
+    $data['disclaimer'] = $disclaimerQuery->disclaimer;
+
+    return view('web.composition_report.top_script_rop_industry', $data);
+  }
+
+  function get_funds(Request $request)
+  {
+
+    $getdata = $request->all();
+
+    $fund_type_id = $getdata['type_id'];
+
+    $html = '';
+
+    $funds = FundMaster::where('fund_type_id', $fund_type_id)->orderBy('fund_name', 'asc')->where('status', 1)->get();
+
+    // dd($funds);
+    if (isset($funds)) {
+
+      $html .= '<option>Select Fund</option>';
+      foreach ($funds as $val) {
+
+        $html .= '<option value="' . $val->fund_code . '">' . $val->fund_name . '</option>';
+      }
+    } else {
+      $html .= '<option>No Funds found</option>';
+    }
+
+    echo $html;
+  }
+
+  public function scrip_industry_details_fundwise(Request $request)
+  {
+    // dd($request->all());
+    $fund_code_array = json_decode($request->fundCodes, true);
+    $lastDayOfMonth = Carbon::parse($request->lastDate);
+    $result = '';
+
+    $total_corpus_entry = DB::table('corpus_entry')
+      ->whereIn('fund_code', $fund_code_array)
+      ->where('entry_date', $lastDayOfMonth)
+      ->select(
+        DB::raw('COALESCE(SUM(corpus_entry) / 100, 1) as total_corpus_entry')
+      )->first()->total_corpus_entry;
+
+    $query = DB::table('view_corpus_with_allocation')
+      ->leftJoin('fund_master', 'fund_master.fund_code', '=', 'view_corpus_with_allocation.fund_code')
+      ->whereIn('view_corpus_with_allocation.fund_code', $fund_code_array)
+      ->where('view_corpus_with_allocation.corpus_entry_date', $lastDayOfMonth)
+      ->where('view_corpus_with_allocation.composition_entry_date', $lastDayOfMonth)
+      ->where('view_corpus_with_allocation.category', 'Equity');
+
+    if (isset($request->using) && $request->using == 'scrip') {
+
+      $query->where('scrip_name', $request->parameter)
+        ->select(
+          'fund_master.fund_name',
+          'view_corpus_with_allocation.scrip_name',
+          DB::raw('SUM(mpx_view_corpus_with_allocation.calculated_amount/100) as amount'),
+          DB::raw('SUM(content_per) as allocation'),
+          // DB::raw('mpx_view_corpus_with_allocation.corpus_entry/100 as AUM'),
+          // DB::raw('SUM(mpx_view_corpus_with_allocation.corpus_entry/100) as total_AUM'),
+          DB::raw('(SUM(mpx_view_corpus_with_allocation.calculated_amount/100) / ' . $total_corpus_entry . ') * 100 as content_per')
+        )->orderBy('content_per', 'desc')->groupBy('view_corpus_with_allocation.fund_code');
+    } elseif (isset($request->using) && $request->using == 'industry') {
+
+      $query->where('industry', $request->parameter)
+        ->select(
+          'fund_master.fund_name',
+          'view_corpus_with_allocation.industry',
+          DB::raw('SUM(mpx_view_corpus_with_allocation.calculated_amount/100) as amount'),
+          DB::raw('SUM(content_per) as allocation'),
+          // DB::raw('mpx_view_corpus_with_allocation.corpus_entry/100 as AUM'),
+          // DB::raw('SUM(mpx_view_corpus_with_allocation.corpus_entry/100) as total_AUM'),
+          // DB::raw('(SUM(mpx_view_corpus_with_allocation.calculated_amount/100) / '.$total_corpus_entry.') * 100 as content_per')
+        )->orderBy('content_per', 'desc')->groupBy('view_corpus_with_allocation.fund_code');
+    }
+
+    $result = $query->get();
+
+    // dd($result);
+
+    return response()->json($result, 200);
+  }
+}

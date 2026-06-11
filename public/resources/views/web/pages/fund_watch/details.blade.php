@@ -1,4 +1,55 @@
 @extends('web.layout.app')
+<style>
+@media(min-width:767px){
+.table-responsive{
+    overflow-x:hidden !important;
+}}
+
+.bg-gry,.fund_details_table{
+	background: #eaf7d2 !important;
+}
+
+.perftab tbody td{
+    border:1px solid #00665e !important;
+    border-style:solid !important;
+}
+
+table.perftab thead  {
+    background:#00665e !important;
+    color:#fff !important;
+}
+table.perftab th{
+    border:1px solid #f7f9dd !important;
+}
+table.perftab>:not(caption)>*>*,
+table.perftab>:not(caption)>*,
+table.perftab>tbody>tr:nth-of-type(odd){
+    background-color:#eaf7d2;
+    box-shadow:none !important;
+}
+	.fca thead th {
+    background:#00665e !important;
+    color:#fff !important;
+    border:1px solid #000 !important;
+    
+}
+
+.fca,
+.fca td
+{
+    border:1px solid #000 !important;
+}
+	tbody img {
+    background:none !important;
+}
+	.grpad .pentatech_inner{
+    margin-top:0 !important;
+    padding-top:0 !important;
+}
+.dis{
+	text-align: center;
+}
+</style>
 @if (isset($dataArr['meta_title']))
     @section('page-title'){{ $dataArr['meta_title'] }}@stop
     @else
@@ -43,7 +94,7 @@
                                                    
                                                     <div class="fw-single-content pentatech_inner">
 														 <h5 class="text-start">Preamble</h5>
-                                                        
+                                                        	
                                                             {{ $fundWatch->preamble }}
                                                         
                                                     </div>
@@ -93,7 +144,7 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Start Date:</td>
-                                                                    <td class="text-start">9th August 2010</td>
+                                                                    <td class="text-start">{{$schemenamei}}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Fund Type:</td>
@@ -112,17 +163,25 @@
                                                     <div class="pentatech_inner fund_watch_2_table fund_details_table">
                                                         <table class="table">
                                                             <tbody>
+																
                                                                 <tr>
                                                                     <td>Fund Manager:</td>
-                                                                    <td class="text-start"></td>
+                                                                    <td class="text-start">{{ $fundMaster->fund_manager }}</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Schemes Manageed:</td>
-                                                                    <td class="text-start"></td>
+                                                                    <td>Total Schemes:</td>
+                                                                    <td class="text-start">
+																		{{ $nfm}}
+																	</td>
+                                                                </tr>
+																<tr>
+                                                                    <td>Schemes Managed:</td>
+                                                                    <td class="text-start">
+																	{{ $snm }}....</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Total Asset Size:</td>
-                                                                    <td class="text-start"></td>
+                                                                    <td class="text-start"> {{ $crore }} Crores </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -192,7 +251,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
-                                                        <h5>Lumpsum (Amount Invested } Rs. 1,00.000/-)</h5>
+                                                        <h5>Lumpsum (Amount Invested Rs. 1,00,000/-)</h5>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">
@@ -207,7 +266,7 @@
                                                                         <div class="row">
                                                                             <div class="col-sm-12 ">
                                                                                 <table 
-                                                                                    class="table table-striped no-footer"
+                                                                                    class="table table-striped no-footer perftab"
                                                                                     style="width: 100%;">
                                                                                     <thead>
                                                                                         <tr>
@@ -242,7 +301,7 @@
                                                                             <div class="col-sm-12 col-md-7"></div>
                                                                         </div>
                                                                     </div>
-                                                                    <p>* % One (AGR) 1 Year and Annual</p>
+                                                                    <p>* <= 1 year - absolute returns; for > 1 year- returns using CAGR</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -250,13 +309,13 @@
                                                 
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
-                                                        <h5>SIP (Amount Invested } Rs. 1,00.000/-)</h5>
+                                                        <h5>SIP (Amount Invested Rs 10,000 per month)</h5>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive">
-                                                                    <table  class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped perftab" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Time Frame</th>
@@ -268,25 +327,26 @@
 
                                                                         </tbody>
                                                                     </table>
-                                                                    <p>* % One (AGR) 1 Year and Annual</p>
+                                                                    <p>* <= 1 year - absolute returns; for > 1 year- returns using CAGR</p>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+											{{ $fundWatch->performance_parameter_bottom }}
                                             </div>
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
-                                                        <h5>Return (continuous)</h5>
+                                                        <h5>Return Stack (Continuous)</h5>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive ">
-                                                                    <table  class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped perftab" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Return</th>
@@ -308,26 +368,26 @@
                                                 </div>
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
-                                                        <h5>Return Stack (continuous)</h5>
+                                                        <h5>Return Stack (Discontinuous)</h5>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive">
-                                                                    <table  class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped perftab" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="green_bg">Return</th>
                                                                                 <th class="dark_bg">6 M</th>
                                                                                 <th class="dark_bg">1 Y</th>
                                                                                 <th class="dark_bg">2 Y</th>
-                                                                                <th class="dark_bg">3 Y</th>
+                                                                                <!-- <th class="dark_bg">3 Y</th>
                                                                                 <th class="dark_bg">4 Y</th>
-                                                                                <th class="dark_bg">5 Y</th>
+                                                                                <th class="dark_bg">5 Y</th> -->
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody>
-                                                                            <tr>
+                                                                        <tbody class="retunr_discontinus_table">
+                                                                            <!--<tr>
                                                                                 <td data-label="Return">Benchmark</td>
                                                                                 <td data-label="6M">10/-</td>
                                                                                 <td data-label="1Y">10/-</td>
@@ -353,7 +413,7 @@
                                                                                 <td data-label="3Y">10/-</td>
                                                                                 <td data-label="4Y">10/-</td>
                                                                                 <td data-label="5Y">10/-</td>
-                                                                            </tr>
+                                                                            </tr> -->
 
                                                                         </tbody>
                                                                     </table>
@@ -364,12 +424,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="px-3">
-                                                        <p>A scheme that has been over a decade in existence. In the initial period, there were
-                                                            enormous challenges that nearly threatened the existence of the scheme and perhaps
-                                                            the fund house too. Currently occupying the Large and midcap category and with a
-                                                            fund manager who has been in charge for all of its life brings a certain comfort to
-                                                            the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in
-                                                            returns, recognition and asset growth since 2018.</p>
+                                                        <p>{{ $fundWatch->index_rank_bottom }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -377,7 +432,7 @@
                                     </div>
                                 <div class="row mb-5">
                                     <div class="co-md-12">
-                                        <div class="pentatech_inner_wrapper">
+                                        <div class="pentatech_inner_wrapper grpad">
                                             <div class="row">
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title m-3">
@@ -389,14 +444,14 @@
                                                 </div>
                                                 <div class="col-md-12 col-lg-6">
                                                     <div class="pentatech_filter_title m-3">
-                                                        <h5>Return Less Index Rank</h5>
+                                                        <h5>Fund Rank</h5>
                                                     </div>
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer">
                                                                 <div class="table-responsive ">
                                                                     <table 
-                                                                        class="table table-striped no-footer"
+                                                                        class="table table-striped no-footer perftab"
                                                                         style="width: 100%;">
                                                                         <thead>
                                                                             <tr>
@@ -416,6 +471,16 @@
                                                                                     colspan="1"
                                                                                     aria-label="Percentage %: activate to sort column ascending"
                                                                                     style="width: 244px;">Active funds</th>
+																				<th class="dark_bg sorting" tabindex="0"
+                                                                                    aria-controls="example" rowspan="1"
+                                                                                    colspan="1"
+                                                                                    aria-label="Percentage %: activate to sort column ascending"
+                                                                                    style="width: 156px;">Category Decile</th>
+																				<th class="dark_bg sorting" tabindex="0"
+                                                                                    aria-controls="example" rowspan="1"
+                                                                                    colspan="1"
+                                                                                    aria-label="Percentage %: activate to sort column ascending"
+                                                                                    style="width: 156px;">Category Quartile</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody class="return_less_rank_table">
@@ -428,12 +493,7 @@
                                                 </div>
                                                 <div class="col-md-12 ">
                                                     <div class="px-3">
-                                                        <p>A scheme that has been over a decade in existence. In the initial period, there were
-                                                            enormous challenges that nearly threatened the existence of the scheme and perhaps
-                                                            the fund house too. Currently occupying the Large and midcap category and with a
-                                                            fund manager who has been in charge for all of its life brings a certain comfort to
-                                                            the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in
-                                                            returns, recognition and asset growth since 2018.</p>
+                                                        <p>{{ $fundWatch->rank_side }}</p>
                                                     </div>
 
                                                 </div>
@@ -443,12 +503,12 @@
                                 </div>
                             </div>
                         </section>
-                        <section class="parametaer_cta_section">
+                        <!-- <section class="parametaer_cta_section">
                             <div class="container">
                                 <div class="row align-items-center">
                                     <div class="col-md-12 col-lg-6 mb-md-2">
                                         <div class="cta_parameter_graph">
-                                            <!--<img src="{{asset('themes/frontend/assets/v1/img/fund-watch-graph.jpg')}}" class="img-fluid"> -->
+                                            <<img src="{{asset('themes/frontend/assets/v1/img/fund-watch-graph.jpg')}}" class="img-fluid"> 
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-lg-6">
@@ -462,13 +522,13 @@
                                     </div>
                                 </div>
                             </div>
-                        </section>
+                        </section>-->
                         <section class="pentatech_section">
                             <div class="container">
                                 <div class="row mb-5">
                                     <div class="co-md-12">
                                         <div class="pentatech_inner_wrapper fund_watch_parameter_wrapper">
-                                            <h2>Performance Parameter</h2>
+                                            <h2>Ratio Highlights</h2>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="pentatech_filter_title fund_watch_title m-3">
@@ -478,7 +538,7 @@
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
                                                                 <div class="table-responsive ">
-                                                                    <table  class="table table-striped" style="width:100%">
+                                                                    <table  class="table table-striped perftab" style="width:100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th class="dark_bg">Ratios</th>
@@ -497,12 +557,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="px-3">
-                                                        <p>A scheme that has been over a decade in existence. In the initial period, there were
-                                                            enormous challenges that nearly threatened the existence of the scheme and perhaps
-                                                            the fund house too. Currently occupying the Large and midcap category and with a
-                                                            fund manager who has been in charge for all of its life brings a certain comfort to
-                                                            the investors, Mirae Asset Emerging Bluechip fund has occupied pole position in
-                                                            returns, recognition and asset growth since 2018.</p>
+                                                        <p>{{ $fundWatch->risk_adjust_bottom }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -515,35 +570,49 @@
                                             <h2>Fund Composition Analysis</h2>
                                             <div class="col-md-12">
                                                 <div class="px-3">
-                                                    <p>{{ $fundWatch->composition_analysis_top }}</p>
+                                                    <div class="table-responsive">
+													<table class="table table-striped dataTable no-footer fca" role="grid" style="width: 100%;">
+															<thead class="">
+																<tr>
+																	<th class="sorting sorting_asc"> {{ $dayn }}</th>
+																	<th class="sorting sorting_asc"> {{ $day1n }}</th>
+																	<th class="sorting sorting_asc"> {{ $day2n }}</th>
+																	<th class="sorting sorting_asc"> {{ $day3n }}</th>
+																	<th class="sorting sorting_asc"> {{ $day4n }}</th>
+                                                                    <!-- <th class="sorting sorting_asc"> Content % </th>-->
+																</tr>
+															</thead>
+																<tbody>
+																	
+																	
+																@if(!empty($fund_scrips) || !empty($fund_scrips1) || !empty($fund_scrips2) || !empty($fund_scrip3s) || !empty($fund_scrips4))
+																	@for ($i = 0; $i<10; $i++)
+																	<tr>
+																		
+																		<td>{{ $fund_scrips[$i]->scrip_name }}<br>{{ $fund_scrips[$i]->qty }}</td>
+																		<td>{{ $fund_scrips1[$i]->scrip_name }}<br>{{ $fund_scrips1[$i]->qty }}</td>
+																		<td>{{ $fund_scrips2[$i]->scrip_name }}<br>{{ $fund_scrips2[$i]->qty }}</td>
+																		<td>{{ $fund_scrips3[$i]->scrip_name }}<br>{{ $fund_scrips3[$i]->qty }}</td>
+																		<td>{{ $fund_scrips4[$i]->scrip_name }}<br>{{ $fund_scrips4[$i]->qty }}</td>
+																	</tr>
+																	@endfor
+																@endif
+																</tbody>
+															</table>
+													</div>
                                                 </div>
+										<p>{{ $fundWatch->composition_analysis_top }}</p>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="px-3">
-                                                        <div class="">
-                                                            <div class="datatable_ll main_trer performance_parameter_table">
-                                                                <div class="table-responsive comp_html">
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="px-3">
-                                                        <p>{{ $fundWatch->composition_analysis_top }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-5">
                                     <div class="co-md-12">
                                         <div class="pentatech_inner_wrapper fund_watch_parameter_wrapper">
+											<h2>Portfolio Breakup</h2>
                                             <div class="pentatech_filter_title fund_watch_title m-3">
-                                                <h5>Portfolio Breakup</h5>
+                                                
                                             </div>
 
                                             <div class="row">
@@ -551,21 +620,33 @@
                                                     <div class="px-3">
                                                         <div class="">
                                                             <div class="datatable_ll main_trer performance_parameter_table">
-                                                                <div class="table-responsive ">
-                                                                    <table  class="table table-striped" style="width:100%">
-                                                                        <thead>
+                                                                <div class="table-responsive">
+                                                                    <table id="example" class="table perftab table-striped dataTable no-footer" role="grid" style="width: 100%;">
+                                                                        <thead class="">
                                                                             <tr>
-                                                                                <th class="dark_bg">Equity</th>
-                                                                                <th class="dark_bg">Debt</th>
-                                                                                <th class="dark_bg">SOV</th>
-                                                                                <th class="dark_bg">Cash</th>
-                                                                                <th class="dark_bg">Other Cuurency</th>
+                                                                                <th colspan="2" rowspan="1" style="background-color: rgb(34, 34, 34) !important;"></th>
+                                                                                <th colspan="2" rowspan="1" style="background-color: rgb(34, 34, 34) !important;"> Debt </th>
+                                                                                <th colspan="4" rowspan="1" style="background-color: rgb(34, 34, 34) !important;"> Equity </th>
+                                                                                <th colspan="1" rowspan="1" style="background-color: rgb(34, 34, 34) !important;"></th>
+                                                                                <th colspan="1" rowspan="1" style="background-color: rgb(34, 34, 34) !important;"></th>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Name of the Fund : activate to sort column descending" width="20%" style="text-align: left; width: 257px;" aria-sort="ascending"> Name of the Fund</th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Cash% : activate to sort column ascending" width="9%" style="text-align: left; width: 100px;"> Cash% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Sov% : activate to sort column ascending" width="9%" style="text-align: left; width: 100px;"> Sov% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Corp Debt% : activate to sort column ascending" style="text-align: left; width: 102px;"> Corp <br>Debt% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Small Cap% : activate to sort column ascending" style="text-align: left; width: 93px;"> Small <br>Cap% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Mid Cap% : activate to sort column ascending" style="text-align: left; width: 93px;"> Mid <br>Cap% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Large Cap% : activate to sort column ascending" style="text-align: left; width: 93px;"> Large<br> Cap% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Very Large Cap&amp;nbsp;% : activate to sort column ascending" style="text-align: left; width: 103px;"> Very Large<br> Cap&nbsp;% </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Others : activate to sort column ascending" width="9%" style="text-align: left; width: 100px;"> Others </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label=" Wt&amp;nbsp;PE : activate to sort column ascending" width="9%" style="text-align: left; width: 100px;"> Wt&nbsp;PE </th>
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody class="portfolio_break_up">
-                                                                           
-                                                                        </tbody>
-                                                                    </table>
+                                                                            <tbody class="portfolio_break_up">
+                                                                            
+                                                                            </tbody>
+                                                                        </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -575,17 +656,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mb-5">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="fund_watch_feedback mb-4">
-                                            <h5>Myplexus.com Feedback</h5>
+                                            <h5>myplexus.com Feedback</h5>
                                             <p>{{ $fundWatch->feedback }}</p>
                                         </div>
-                                        <p><b>Disclaimer:</b> The entire report is based on independent utilization of statistical tools for
-                                            evaluating performance in mutual funds. myplexus.com and its personnel have taken every precaution
-                                            to ensure the authenticity of data. Every precaution has been taken to ensure the statistical
-                                            outputs are correct. However, myplexus.com or any of its personnel cannot be held responsible for
-                                            outcome of actions taken on the basis of its report on this fund or any other</p>
+                                        <p class="dis"><i><b>Disclaimer:</b> {{ $fundWatch->disclaimer }}</i></p>
                                     </div>
                                 </div>
                             </div>
@@ -619,15 +696,29 @@
                             getLumSum();
                             getRiskAdjustedAlpha();
                             getReturnContinus();
+							getReturndisContinus();
                             getPortfolioBreakUp();
 
                             function drawVisualization() {
                                 // Some raw data (not necessarily accurate)\
                                 let aaum_data = $('#aaum_values').val();
+								//console.log(aaum_data);
                                 var data = google.visualization.arrayToDataTable(JSON.parse(aaum_data));
-
+								
+								
+								var minYWithOffset = JSON.parse(aaum_data)[1][1] - (0.2 * JSON.parse(aaum_data)[1][1]);
+								var maxYWithOffset = JSON.parse(aaum_data)[1][1] + (0.2 * JSON.parse(aaum_data)[1][1]);
+								
                                 var options = {
                                     title: "{{ $fundMaster->fund_name }}",
+									chartArea: { backgroundColor: '#eaf7d2' }, 
+									backgroundColor: '#eaf7d2',
+									vAxis: {
+                                         format: "0.##"+"' Cr'",
+										baseline: minYWithOffset,
+										topline:maxYWithOffset
+                                     },
+									legend: {position: 'bottom'},
                                     // vAxis: {
                                     //     title: 'Cups'
                                     // },
@@ -655,9 +746,12 @@
 
                                 var options = {
                                     title: "{{ $fundMaster->fund_name }}",
-                                    // vAxis: {
-                                    //     title: 'Cups'
-                                    // },
+                                     vAxis: {
+                                         format: "0.##"+"'%'",
+                                     },
+									chartArea: { backgroundColor: '#eaf7d2' }, 
+									backgroundColor: '#eaf7d2',
+									legend: {position: 'bottom'},
                                     // hAxis: {
                                     //     title: 'Month'
                                     // },
@@ -705,13 +799,40 @@
                                     })
                             }
 
-                            function getPortfolioBreakUp() {
+                             /* function getPortfolioBreakUp() {
                                 $('.portfolio_break_up').html(loadingImage);
                                 axios.get('/fund-watch/fund-portfolio-break-up/' + fund_code)
                                     .then(res => {
                                         if (res.data.status == 'success') {
                                             $('.portfolio_break_up').html(res.data.html);
                                         }
+                                    })
+                            } */
+
+                            function getPortfolioBreakUp() {
+                                $('.portfolio_break_up').html(loadingImage);
+                                axios.get('https://www.myplexus.com/api/v1/fund-composition-snapshot-fund-watch/' + fund_code+'/'+fund_type)
+                                    .then(res => {
+                                        //console.log(res.data.success);
+                                        if (res.data.success == true) {
+                                            let html = "";
+                                           html += `<tr role="row">`;
+                                            html += `<td data-label="Name of the Fund" class="sorting_1">${res.data.data.composition_snapshot_fundwatch[0].fund_name}</td>`;
+                                            html += `<td data-label="Cash %">${res.data.data.composition_snapshot_fundwatch[0].cash}</td>`;
+                                            html += `<td data-label="Sov %">${res.data.data.composition_snapshot_fundwatch[0].sov}</td>`;
+                                            html += `<td data-label="Corp Debt %">${res.data.data.composition_snapshot_fundwatch[0].debt}</td>`;
+                                            html += `<td data-label="Small Cap %">${res.data.data.composition_snapshot_fundwatch[0].eq_small}</td>`;
+                                            html += `<td data-label="Mid Cap %">${res.data.data.composition_snapshot_fundwatch[0].eq_mid}</td>`;
+                                            html += `<td data-label="Large Cap %">${res.data.data.composition_snapshot_fundwatch[0].eq_large}</td>`;
+                                            html += `<td data-label="Very Large Cap %">${res.data.data.composition_snapshot_fundwatch[0].eq_very_large}</td>`;
+                                            html += `<td data-label="Others value">${res.data.data.composition_snapshot_fundwatch[0].others_val}</td>`;
+                                            html += `<td data-label="Wt . PE">${res.data.data.composition_snapshot_fundwatch[0].wt_pe}</td>`;
+                                            html += `</tr>`;
+											
+											//console.log(html);
+
+                                            $('.portfolio_break_up').html(html);
+                                        } 
                                     })
                             }
 
@@ -724,11 +845,21 @@
                                         }
                                     })
                             }
+							function getReturndisContinus() {
+                                $('.retunr_discontinus_table').html(loadingImage);
+                                axios.get('/fund-watch/fund-return-discontinus/' + fund_code)
+                                    .then(res => {
+                                        if (res.data.status == 'success') {
+                                            $('.retunr_discontinus_table').html(res.data.html);
+                                        }
+                                    })
+                            }
 
                             function getReturnLessRank() {
                                 $('.return_less_rank_table').html(loadingImage);
                                 axios.get('/fund-watch/fund-return-less-rank/' + fund_code + '/' + fund_type + '/' + indices_name)
                                     .then(res => {
+										console.log(fund_type + indices_name);
                                         if (res.data.status == 'success') {
                                             $('.return_less_rank_table').html(res.data.html);
                                         }
@@ -749,13 +880,14 @@
                                             } else {
                                                 sip_return = parseFloat(sip_return).toFixed(2);
                                             }
+											console.log(sip_return);
                                             sipDataArr[keyDur].sip_return = sip_return
                                         }
                                         let SIPHTML = '';
                                         $.each(sipDataArr, function(key, val) {
                                             SIPHTML += '<tr>';
                                             SIPHTML += '<td data-label="Time Frame">' + key + '</td>';
-                                            SIPHTML += '<td data-label="Amount">' + val.CURRENTVALUE + '</td>';
+                                            SIPHTML += '<td data-label="Amount">' + parseFloat(val.CURRENTVALUE).toFixed(0) + '</td>';
                                             SIPHTML += '<td data-label="Percentage %"> ' + val.sip_return + '%</td>';
                                             SIPHTML += '</tr>';
                                         });
@@ -764,7 +896,7 @@
                                     })
                                     .catch(error => {
                                         //var message = error.response.data.message || error.message
-                                        console.log(error);
+                                        //console.log(error);
                                     })
                                     .finally(() => {
                                         // that.process = false

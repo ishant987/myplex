@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4 class="f-b">{{ $dataArr['title'] }}</h4>
+                    <h4 class="f-b">Aniruddha Naha</h4>
                   
                 </div>
             </div>

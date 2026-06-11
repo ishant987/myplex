@@ -186,6 +186,34 @@
 		
 		//console.log('Value 1: '+ratio_value1+'Value 2: '+ratio_value2);
 		
+		if( $('#ratio_frm_date').val() == "" || $('#ratio_to_date').val() == "" )
+		{
+			if( $('.rset').hasClass('active') )
+			{
+				const active_text = ($('a.rset.active').text());
+
+				let api_url = 'https://www.myplexus.com/api/v1/get-dates';
+
+				const result_dates = await $.ajax({
+					url: api_url,
+					type: 'GET',
+					data: {					
+						value1: ratio_value1,
+						duration: active_text					
+					}
+				});
+				
+				if( result_dates.success )
+				{
+					ratio_to_date = result_dates.data.end_date;
+					ratio_from_date = result_dates.data.start_date;
+					
+				}
+				
+				//console.log(result_dates);
+			}			
+		}
+		
 		if(ratio_value1 != "" && (ratio_value2 != "" || ratio_value3 != "" || ratio_value4 != "" || ratio_value5 != "") && ratio_compare_type != "" && ratio_from_date != "" && ratio_to_date != "")
 		{
 			let ratio_url = 'https://www.myplexus.com/api/v1/compare-ratios';
@@ -467,14 +495,14 @@ function showChart(container_id, label_data, drill_data)
 							borderWidth: 0,
 							dataLabels: {
 								enabled: true,
-								format: '{point.y:.1f}%'
+								format: '{point.y:.2f}%'
 							}
 						}
 					},
 
 					tooltip: {
 						headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-						pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+						pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.3f}%</b> of total<br/>'
 					},		
 		
 						series: [

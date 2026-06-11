@@ -486,7 +486,7 @@ class SharpeAPIController extends BaseController
             $data['volatility'] = is_nan($volatility) ? 0 : $volatility;
             if($volatility != 0 || !is_nan($volatility))
             {
-                $sharpe = $average_of_fund_return_daily_risk_free/$volatility;
+                $sharpe = ($average_of_fund_return_daily_risk_free/$volatility) * sqrt(252);
             }
             else
             {
@@ -964,7 +964,7 @@ class SharpeAPIController extends BaseController
             $data['volatility'] = is_nan($volatility) ? 0 : $volatility;
             if($volatility != 0 || !is_nan($volatility))
             {
-                $sharpe = $average_of_fund_return_daily_risk_free/$volatility;
+                $sharpe = ($average_of_fund_return_daily_risk_free/$volatility) * sqrt(252);
             }
             else
             {

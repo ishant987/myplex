@@ -31,7 +31,7 @@
                             </div>
                         </section>
                         <section class="pentatech_section money_seriously_section fund_watch_setion_home nfo_monitor_home_section section">
-                            <div class="container">
+                           {{-- <div class="container">
                                 @if (count($WatchDataListModel) == 0)
                                     <p>{{ __('message.data_not_available') }}</p>
                                 @else
@@ -66,36 +66,66 @@
                                         </div>
                                     @endforeach
                                 @endif
-                            </div>
+                            </div> --}}
                             <div class="blog-wrapper fund-watch-listing fw-single-page">
                                 <div class="container">
                                     <div class="blog-inner-wrapper">
                                         <div class="row">
                                             <div class="col-lg-9 col-md-12 col-sm-12 fw-single-block">
-                                                <h3>NIPPON INDIA SMALLCAP INDEX 250 FUND</h3>
-                                                <div class="fw-single-content">
-                                                    <p>Investing in the equity market is a lot like the voyage of discovery that Alice undertook. With patience and discipline it could be the wondrous garden that Alice saw but one has to pass through the door no bigger than a rat hole to really make it work. But the real decision making comes in if we have to choose where to put in the money. </p>
-                                                </div>
-                                                <div class="fw-pdf-donwload">
-                                                    <a class="money_title_btn" href="https://www.myplexus.com/storage/pdf/20210605Formatted Nippon India Smallcap Index 250 Fund.pdf" target="_blank">Download PDF</a>
-                                                </div>
-                                                <div class="fw-single-file">
-                                                    <embed src="https://www.myplexus.com/storage/pdf/20210605Formatted Nippon India Smallcap Index 250 Fund.pdf" width="100%" height="375" type="application/pdf">
-                                                </div>
+												@if(isset($createdAt))
+																								
+													@foreach($createdAt as $filterDate)
+														<div class="card mb-3">
+															<div class="card-body">
+                                                                <img src="https://myplexus.com/themes/frontend/assets/v1/img/nippon.jpg" alt="" class="card_img">
+																<h3 class="m-2">{{$filterDate->title}}</h3>
+																	<p class="card-title m-2">{{$filterDate->description}}</p>
+																
+																<a class="btn btn-success m-2" href="{{ route('web.fundwatch.index',base64_encode($filterDate->fund_code))}}" target="_blank">View more</a>
+															</div>
+														</div>
+													@endforeach
+													 
+												@else
+												 @for($i=0; $i<count($fundWatchTitle); $i++)
+																@php
+																	$sid =base64_encode($fundWatchData[$i]->fund_code);
+																@endphp
+														@if($sid!="")
+															<div class="card mb-3">
+																<div class="card-body">
+                                                                <img src="https://myplexus.com/themes/frontend/assets/v1/img/nippon.jpg" alt="" class="card_img">
+																	<h3 class="m-2">{{$fundWatchTitle[$i]->title}}</h3>
+																	<p class="card-title m-2">{{$fundWatchDescription[$i]->description}}</p>
+																	<a class="btn btn-success m-2" href="{{ route('web.fundwatch.index', $sid)}}" target="_blank">View more</a>
+																</div>
+															</div>
+														@endif
+													@endfor
+												
+												@endif
+                                                
+
                                             </div>
                                             <div class="col-lg-3 col-md-12 col-sm-12 blog-main-sidebar fw-sidebar">
                                                 <div class="blog-sidebar-links blog-sidebar-block bg-gry br-5 box-shadow">
                                                     <h6>Recent Fund Watch</h6>
                                                         <ul class="reset">
-                                                            <li>
-                                                                <a href="https://www.myplexus.com/fund-watch/5" class="active">NIPPON INDIA SMALLCAP INDEX 250 FUND</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="https://www.myplexus.com/fund-watch/4">NIPPON INDIA 150 MIDCAP INDEX FUND</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="https://www.myplexus.com/fund-watch/3">MIRAE ASSET EMERGING BLUECHIP FUND</a>
-                                                            </li>
+																														
+															 @foreach($fundWatchData as $fwdata)
+															@php
+                           										$sid =base64_encode($fwdata->fund_code);
+                         									@endphp
+															@if($sid!="")
+																<li>
+																	
+																	
+																	<a href="{{ route('web.fundwatch.index', $sid )}}" target="_blank" style="color: #1b103a"> {{$fwdata->title}} </a>
+																	
+																</li>
+															@endif
+															@endforeach                                                   
+                                                           
                                                         </ul>
                                                 </div>
                             
@@ -103,10 +133,10 @@
                                                     <h6>Archives</h6>
                                                         <ul class="reset">
                                                             <li>
-                                                                <a href="https://www.myplexus.com/fund-watch-list/2021">2021 <span>(2)</span></a>
+                                                                <a href="https://www.new.myplexus.com/fund-watch-list/2021">2021 <span>(2)</span></a>
                                                             </li>
                                                             <li>
-                                                                <a href="https://www.myplexus.com/fund-watch-list/2020">2020 <span>(3)</span></a>
+                                                                <a href="https://www.new.myplexus.com/fund-watch-list/2023">2023 <span>(1)</span></a>
                                                             </li>
                                                         </ul>
                                                 </div>

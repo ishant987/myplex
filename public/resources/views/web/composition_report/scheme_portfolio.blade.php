@@ -1,0 +1,172 @@
+@extends('web.layout.infosolz_user_app')
+@section('content')
+
+    <div class="inner_main">
+        <div class="page_detail">
+            <div class="inner_padding">
+                <div class="head_brdcm">
+                    <ul class="brdcmb">
+                        <li><a href="{{ route('user.auth-dashboard') }}">dashboard</a></li>
+                        <li><a href="{{ route('user.composition_report') }}">composition report</a></li>
+                        <li>Scheme Portfolio</li>
+                    </ul>
+                </div>
+                <div class="new_page">
+                    <a href="#" class="back_btn"><i class="fa-solid fa-arrow-left"></i></a>
+                    <div class="perform_head">
+                        <h2>Scheme Portfolio</h2>
+                    </div>
+
+                    <div class="light_green_bg">
+                        <form action="">
+                            <div class="row">
+
+                                {{-- <div class="col-md-6">
+                                    <div class="form_group">
+                                        <select name="fund_type" id="fund_type" required onchange="get_funds(this.value)" class="select2">
+                                            <option value="">Select Fund Classification</option>
+                                            @if (isset($fund_type))
+                                                @foreach ($fund_type as $val)
+                                                    <option value="{{ $val->ft_id }}"
+                                                        {{ isset($fund_type_get) && $fund_type_get == $val->ft_id ? 'selected' : '' }}>
+                                                        {{ $val->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-md-6">
+                                    <div class="form_group">
+                                        <select name="fund_master" id="fund_master" class="select2">
+                                            <option>Select Any Funds</option>
+                                            @if (isset($fund_master))
+                                                @foreach ($fund_master as $val)
+                                                    <option value="{{ $val->fund_code }}"
+                                                        {{ request()->get('fund_master') == $val->fund_code ? 'selected' : '' }}>
+                                                        {{ $val->fund_name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form_group">
+                                        <select name="month" id="month" required>
+                                            <option value="">select month</option>
+                                            @foreach ($months as $m)
+                                                <option value="{{ $m }}"
+                                                    {{ isset($month) && $month == $m ? 'selected' : '' }}>
+                                                    {{ date('F', mktime(0, 0, 0, $m, 10)) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form_group">
+                                        <select name="year" id="year" required>
+                                            <option value="">select year</option>
+                                            @foreach ($years as $y)
+                                                <option
+                                                    value="{{ $y }}"{{ isset($year) && $year == $y ? 'selected' : '' }}>
+                                                    {{ $y }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="bttn_grp">
+                                        <button type="submit" name="search" value="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    @if (isset($scrips) && count($scrips) > 0)
+                        <div class="fund_section new_fund_section">
+                            <ul>
+                                <li>
+                                    <p>AUM of fund(Rs.In Crores):</p>
+                                    <span>{{ isset($total_corpus_entry) ? $total_corpus_entry : '' }}</span>
+                                </li>
+
+                                <li>
+                                    <p>name of Fund :</p>
+                                    <span>{{ isset($fund_details) ? $fund_details->fund_name : '' }}</span>
+                                </li>
+                                <li>
+                                    <p>Top scrips :</p>
+                                    <span>For the month of
+                                        {{ isset($month) ? date('F', mktime(0, 0, 0, $month, 10)) : '' }},{{ isset($year) ? $year : '' }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="graph_table">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Name of the Scrip</th>
+                                        <th>industry</th>
+                                        <th>category</th>
+                                        <th class="text_center">content (%)</th>
+                                        <th class="text_center">Amount(Rs.In Crores)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($scrips as $val)
+                                        <tr>
+                                            <td class="text_left">{{ isset($val->scrip_name) ? $val->scrip_name : '' }}
+                                            </td>
+                                            <td class="text_left">{{ isset($val->industry) ? $val->industry : '' }}</td>
+                                            <td class="text_left">{{ isset($val->category) ? $val->category : '' }}</td>
+                                            <td class="text_right">
+                                                {{ isset($val->content_per) ? printValue($val->content_per) : '' }}
+                                            </td>
+
+                                            <td class="text_right">
+                                                {{ isset($val->amount) ? printValue($val->amount) : '' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    @else
+                        {!! printNoData() !!}
+                    @endif
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+@endsection
+
+<script>
+    function get_funds(thiss) {
+
+        var fund_type_id = thiss;
+
+        var url = "{{ route('user.get_funds') }}";
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {
+                'type_id': fund_type_id
+            },
+            success: function(response) {
+
+                $('#fund_master').html(response);
+
+            }
+        });
+
+    }
+</script>

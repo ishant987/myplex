@@ -3,19 +3,35 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Web\BaseController as BaseController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Models\FundType;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use DB;
 use PDF;
 
 
 class PDFDataController extends BaseController
 {
+    protected function resolveBranding(): array
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        return $user ? $user->whiteLabelBranding() : [
+            'is_white_label' => false,
+            'company_name' => null,
+            'pdf_logo_path' => null,
+            'has_custom_logo' => false,
+        ];
+    }
+
     public function compositionSnapshotPDF($type_id)
     {
         $dataArr = $responseArr = [];
+        $branding = $this->resolveBranding();
         $message = __('message');
         $dataArr['type_data'] = FundType::select(['name','ft_id'])->where('ft_id', $type_id)->first();
 
@@ -25,7 +41,7 @@ class PDFDataController extends BaseController
             $dataArr['composition_data'] = json_decode(json_encode($dataArr['composition_data']), true);
             //dd($dataArr);
             //return view('pdf.composition-snapshot', compact('dataArr'));
-            $pdf = PDF::loadView('pdf.composition-snapshot', compact('dataArr'));
+            $pdf = PDF::loadView('pdf.composition-snapshot', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');
@@ -33,6 +49,7 @@ class PDFDataController extends BaseController
     public function monthlyRankingPDF(Request $request, $type_id)
     {
         $dataArr = $responseArr = $dataArrRatios = [];
+        $branding = $this->resolveBranding();
         $dataArr['type_data'] = FundType::select(['name','ft_id'])->where('ft_id', $type_id)->first();
         $dataArr['type_data'] = json_decode(json_encode($dataArr['type_data']), true);
 
@@ -44,7 +61,7 @@ class PDFDataController extends BaseController
             $dataArr['monthly_ranking_data'] = $dataArrRatios['data']['monthly_ranking'];
             $dataArr['month'] = date('F', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
             $dataArr['year'] = date('Y', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
-            $pdf = PDF::loadView('pdf.monthly-ranking', compact('dataArr'));
+            $pdf = PDF::loadView('pdf.monthly-ranking', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');
@@ -52,6 +69,7 @@ class PDFDataController extends BaseController
     public function performanceSnapshotPDF(Request $request)
     {
         $dataArr = $responseArr = $dataArrRatios = [];
+        $branding = $this->resolveBranding();
         $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
 
         $type = (isset($request->type) && $request->type) ? $request->type : '';
@@ -73,7 +91,7 @@ class PDFDataController extends BaseController
             // $dataArr['month'] = date('F', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
             // $dataArr['year'] = date('Y', strtotime($dataArr['monthly_ranking_data'][0]['end_date']));
             //dd($dataArr);
-            $pdf = PDF::loadView('pdf.performance-snapshot', compact('dataArr'));
+            $pdf = PDF::loadView('pdf.performance-snapshot', compact('dataArr', 'branding'));
             return $pdf->stream();
         }
         return abort(404, 'data not found.');

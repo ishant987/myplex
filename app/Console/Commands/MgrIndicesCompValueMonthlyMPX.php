@@ -97,6 +97,7 @@ class MgrIndicesCompValueMonthlyMPX extends Command
                             /*Insert code here*/
                             $store->entry_date = $record->EntryDate;
                             $store->indices_name = $record->IndicesName;
+                            $store->correlation_new = $record->IndicesName;
                             $store->scrip_name = $record->ScripName;
                             $store->type = $record->Type;
                             $store->industry = $record->Industry;

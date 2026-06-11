@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Request;
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('commonconstants.admin_prefix'))->group(function () {
+Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('commonconstants.admin_prefix'))->group(function () 
+{
     Route::get('error/{error_code?}', ['uses' => 'BaseController@error', 'as' => 'error']);
 
     Route::get('/', 'AuthController@showLoginForm')->name('login');
@@ -36,8 +37,21 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
             Route::get('/','HomeLatestController@index')->name('latest.index');
             Route::post('/create','HomeLatestController@create')->name('latest.create');
         });
+        Route::get('/calculatorlogin/list', 'CalculatorloginController@index')->name('calculatorlogin.list');
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+        if (config('features.subscription_enabled')) {
+            Route::get('/subscriptions', 'SubscriptionController@index')->name('subscriptions.index');
+            Route::get('/subscriptions/{subscription}', 'SubscriptionController@show')->name('subscriptions.show');
+            // Route::get('/secure-panel', 'SecurePanelController@login')->name('secure-panel.login');
+            // Route::post('/secure-panel', 'SecurePanelController@authenticate')->name('secure-panel.authenticate');
+            //Route::middleware(['secure.admin'])->prefix('secure-panel')->name('secure-panel.')->group(function () {
+            //     Route::get('/users', 'SecurePanelController@users')->name('users.index');
+            //     Route::get('/users/{user}', 'SecurePanelController@show')->name('users.show');
+            //     Route::get('/users/{user}/edit', 'SecurePanelController@edit')->name('users.edit');
+            //     Route::post('/users/{user}', 'SecurePanelController@update')->name('users.update');
+            //});
+        }
 
         Route::get('/profile', 'AdminController@editprofile')->name('profile');
         Route::post('/profile/{id}', 'AdminController@update')->name('profile.update');
@@ -513,6 +527,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
 	 Route::get('return-calculator', 'PageController@returnCalculationData')->name('return.calculator');
 	
 	 Route::get('volatility-calculator', 'PageController@volatilityCalculationData')->name('volatility.calculator');
+
+     //Route::get('performance-synopsis', 'PageController@performanceSynopsisData')->name('performance.synopsis');
 	
     Route::get('monthly-ranking', 'PageController@monthlyRankingData')->name('monthly.ranking');
     Route::get('monthly-ranking-pdf/{type_id}', 'PDFDataController@monthlyRankingPDF')->name('monthly.ranking.pdf');
@@ -527,6 +543,7 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::any('risk_evaluation', 'CalculatorController@RiskCalculator')->name('calculators.risk');
 
     Route::get('calculator-login/{provider}', 'PageController@redirectCalculator')->name('calculators.social.login');
+    // Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
     Route::any('calculator-login/{provider}/callback', 'PageController@callbackCalculator')->name('calculators.social.login.callback');
 
     Route::get('contact', 'EnquiryController@contactData')->name('contact');
@@ -556,15 +573,28 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('pentatec-filter', 'PageController@pentatecData')->name('pentatec');
 
     Route::get('fund-watch-list/{year?}', 'FundWatchController@index')->name('fundwatch.list');
+
     Route::get('fund-watch', 'FundWatchController@index')->name('fundwatch');
+    Route::get('new-fundwatch/{fund_code}', 'NewfundwatchController@index')->name('new_fundwatch');
+    Route::get('new-fundwatch-list', 'NewfundwatchController@list')->name('new-fundwatch-list');
+    Route::get('return-less-index-link/{fund_code}/{fund_type_id}', 'NewfundwatchController@getReturnlessIndexRank')->name('return-less-index-link');
+    Route::get('get-quartile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getQuartile')->name('get-quartile');
+    Route::get('get-decile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getDecile')->name('get-decile');
+    Route::get('get-rank-quartile-decile/{fund_code}/{fund_type_id}', 'NewfundwatchController@getRankQuartileDecile')->name('get-rank-quartile-decile');
+    Route::get('demo-new-fundwatch/{fund_code}', 'NewfundwatchController@demoindex')->name('demo_new_fundwatch');
+
+	
+	
+	
     Route::get('fund-watch-new/{fund_code}', 'FundWatchController@newIndex')->name('fundwatch.index');
-	Route::get('fund-watch/fund-compositon/{fund_code}', 'FundWatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
-	Route::get('fund-watch/fund-lumsum/{fund_code}', 'FundWatchController@getLumnsubData')->name('fundwatch.getLumnsubData');
-	Route::get('fund-watch/fund-risk-alpha/{fund_code}', 'FundWatchController@getRiskAplha')->name('fundwatch.getRiskAplha');
-	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'FundWatchController@breakUP')->name('fundwatch.breakUP');
-	Route::get('fund-watch/fund-return-continus/{fund_code}', 'FundWatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
-	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'FundWatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
-	Route::get('fund-watch/fund-sip/{fund_code}', 'FundWatchController@getSIPData')->name('fundwatch.getSIPData');
+	Route::get('fund-watch/fund-compositon/{fund_code}', 'NewfundwatchController@fundCompAnalysis')->name('fundwatch.fundCompAnalysis');
+	Route::get('fund-watch/fund-lumsum/{fund_code}', 'NewfundwatchController@getLumnsubData')->name('fundwatch.getLumnsubData');
+	Route::get('fund-watch/fund-risk-alpha/{fund_code}', 'NewfundwatchController@getRiskAplha')->name('fundwatch.getRiskAplha');
+	Route::get('fund-watch/fund-portfolio-break-up/{fund_code}', 'NewfundwatchController@breakUP')->name('fundwatch.breakUP');
+	Route::get('fund-watch/fund-return-continus/{fund_code}', 'NewfundwatchController@getReturnContinous')->name('fundwatch.getReturnContinous');
+	Route::get('fund-watch/fund-return-discontinus/{fund_code}', 'NewfundwatchController@getReturndisContinous')->name('fundwatch.getReturndisContinous');
+	    Route::get('fund-watch/fund-return-less-rank/{fund_code}/{type}/{indices_name}', 'NewfundwatchController@getreturnLessRank')->name('fundwatch.getreturnLessRank');
+	Route::get('fund-watch/fund-sip/{fund_code}', 'NewfundwatchController@getSIPData')->name('fundwatch.getSIPData');
 	
 
 
@@ -595,6 +625,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     #== END:Manage by AuthController only ==#
 
     Route::get('ask-question', 'AskExpertController@askQuestionData')->name('ask-question');
+
+    Route::get('cron-update-monthly-ranking', 'CronController@update_monthly_ranking')->name('cron-update-monthly-ranking');
     #==Auth dependent pages ==#
     Route::group(['middleware' => ['auth']], function () {
         Route::get('myaccount', 'UserController@myAccountData')->name('myaccount');
@@ -612,12 +644,130 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
         Route::post('draft-answer/{aeqa_id}', 'AskExpertController@draftAnswerSave')->name('draft-answer.save');
     });
 
+    if (config('features.subscription_enabled')) {
+        Route::get('/subscription', 'SubscriptionController@index')->name('subscription.index');
+        Route::middleware(['auth'])->group(function () {
+            Route::post('/subscription/checkout', 'SubscriptionController@checkout')->name('subscription.checkout');
+            Route::post('/subscription/verify-payment', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+            Route::post('/subscription/cancel', 'SubscriptionController@cancel')->name('subscription.cancel');
+        });
+        Route::post('/razorpay/webhook', 'RazorpayWebhookController@handle')->name('razorpay.webhook');
+
+        // Backward-compatible aliases for any stale route() usage without the `web.` prefix.
+        Route::get('/subscription-legacy', 'SubscriptionController@index')->name('subscription.index');
+        Route::middleware(['auth'])->group(function () {
+            Route::post('/subscription/checkout-legacy', 'SubscriptionController@checkout')->name('subscription.checkout');
+            Route::post('/subscription/verify-payment-legacy', 'SubscriptionController@verifyPayment')->name('subscription.verify');
+            Route::post('/subscription/cancel-legacy', 'SubscriptionController@cancel')->name('subscription.cancel');
+        });
+    }
+
     Route::get('money_seriously','BlogController@getBlogs')->name('get-blogs');
     Route::get('money_seriously/{unique_url}','BlogController@getBlogDetails')->name('get-blogs-detail');
     Route::post('money_seriously','BlogController@postBlogDetails')->name('post-blogs-detail');
 	
-	#==Infosolz ==#
 
-    Route::get('calculator-dashbord','CalculatordashbordController@index')->name('calculator-dashbord');
+    Route::any('calctest', 'PageController@calculatorsPageDatas');
+
+
+    #==Infosolz ==#
+
+    Route::get('report-dashboard','CalculatordashbordController@index')->name('report-dashboard');
+    Route::get('report-beta','CalculatordashbordController@beta_calculator')->name('report-beta');
+    Route::get('get-indices-name','CalculatordashbordController@get_indices_name')->name('get-indices-name');
+    Route::get('report-volatility','VolatilityController@volatility_calculator')->name('report-volatility');
+    Route::get('report-jensens-alpla','JensonsalphaController@jensonsalpha_calculator')->name('report-jensens-alpla');
+    Route::get('report-sharpe','SharpeController@sharpe_calculator')->name('report-sharpe');
+    Route::get('report-treynor','TreynorController@treynor_calculator')->name('report-treynor');
+    Route::get('report-tracking-error','TrackingerrorController@tracking_error_calculator')->name('report-tracking-error');
+    Route::get('report-information-ratio','InformationratioController@information_ratio_calculator')->name('report-information-ratio');
+    Route::get('report-r-squere','rsquereController@r_squere_calculator')->name('report-r-squere');
+    Route::get('report-skewness','SkewnessController@skewness_calculator')->name('report-skewness');
+    Route::get('report-kurtosis','KurtosisController@kurtosis_calculator')->name('report-kurtosis');
+    Route::get('report-rolling-return','RollingreturnController@rolling_return_calculator')->name('report-rolling-return');
+    Route::get('report-cagr','CagrController@cagr_calculator')->name('report-cagr');
+    Route::get('report-sip-return','SipreturnController@sipreturn_calculator')->name('report-sip-return');
+    Route::get('report-sortino','SortinoController@sortino_calculator')->name('report-sortino');
+
+    Route::get('test-report-beta','BetaController@beta_calculator')->name('test-report-beta');
+
+
     
+});
+//Auth::routes();
+Route::namespace('App\Http\Controllers\User')->name('user.')->group(function ()
+{
+    Route::get('/user-login', function () 
+    {
+        $cal = Request::get('cal');
+        //return view('web.auth.login');
+     
+        if (!$cal) 
+        {
+            
+            $cal = '';
+        }
+        return view('web.auth.login', ['cal' => $cal]);
+    })->name('user_login');
+
+    // Auth::routes();
+
+    // Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::post('post-login', 'LoginController@postLogin')->name('loginpost');
+
+    Route::get('login/google', 'LoginController@redirectToGoogle')->name('login.google');
+    Route::get('login/google/callback', 'LoginController@handleGoogleCallback');
+    Route::get('login/facebook', 'LoginController@redirectToFacebook')->name('login.facebook');
+    Route::get('login/facebook/callback', 'LoginController@handleFacebookCallback');
+  
+
+    //========================================Start Registration ======================================//
+
+    Route::get('registration', 'RegistrationController@index')->name('registration');
+    Route::post('registration-store', 'RegistrationController@store')->name('registration-store');
+    Route::get('verify-email/{id}', 'RegistrationController@verify')->name('verify-email');
+    Route::post('check-email-unique', 'RegistrationController@checkEmailUnique')->name('check-email-unique');
+
+    //======================================== End Registration ======================================//
+
+    //======================================== Start Dashboard ======================================//
+    // Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'nocache'])->group(function () {
+        Route::get('logout', 'LoginController@logout')->name('logout');
+        Route::middleware(['subscription'])->group(function () {
+            Route::get('dashboard', 'RatioController@dashboard')->name('ratio_dashboard');
+            Route::get('auth-dashboard', function () {
+                return redirect()->route('user.ratio_dashboard');
+            })->name('auth-dashboard');
+            Route::get('notifications', 'RatioController@notifications')->name('notifications');
+            Route::get('user-ratio-analysis', 'RatioController@ratio_analysis')->name('ratio_analysis');
+            Route::get('user-composition-report', 'RatioController@composition_report')->name('composition_report');
+            Route::get('user-indies-report', 'RatioController@indies_report')->name('indies_report');
+			Route::get('auth-dashboard', function () {
+                return redirect()->route('user.index_dashboard');
+            })->name('auth-dashboard');
+            Route::get('user-indices-report', 'RatioController@indies_report')->name('indices_report');
+            Route::get('user-model-portfolio', 'RatioController@model_portfolio')->name('model_portfolio');
+            Route::get('user-filters', 'RatioController@filters')->name('filters');
+            Route::get('user-predictive', 'RatioController@predictive')->name('predictive');
+            Route::get('quick-ratio', 'RatioController@quick_ratio')->name('quick_ratio');
+            Route::get('performance-ratios', 'RatioController@stats')->name('performance_ratios');
+            Route::get('user-monthly-snapshot', 'RatioController@monthly_snapshot')->name('monthly_snapshot');
+            Route::get('user-weekly-snapshot', 'RatioController@weekly_snapshot')->name('weekly_snapshot');
+            Route::get('user-monthly-snapshot-new', 'RatioController@monthly_snapshot')->name('monthly_snapshot_new');
+            Route::get('user-weekly-snapshot-new', 'RatioController@weekly_snapshot')->name('weekly_snapshot_new');
+            Route::get('user-fund-factsheet', 'RatioController@fund_factsheet')->name('fund_factsheet');
+            Route::get('user-stats', 'RatioController@stats')->name('stats');
+            Route::get('user-quartile-decile', 'RatioController@quartile_decile')->name('quartile_decile');
+            Route::get('user-comparative', 'RatioController@comparative')->name('comparative');
+            Route::get('user-r-square-comparison', 'RatioController@comparative')->name('r_square_comparison');
+        });
+        Route::get('user-subscription-lock', 'RatioController@subscription_lock')->name('subscription_lock');
+        //======================================== End Dashboard ======================================//
+        //======================================== Subscription Start ======================================//
+        Route::any('user/subscription', 'SubscriptionController@dashboard')->name('subscription');
+    });
+      //======================================== End Subscription ======================================//
+
 });

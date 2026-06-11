@@ -138,7 +138,6 @@ class CompositionController extends Controller
 
             // $data['total_corpus_entry'] = $total_corpus_entry = DB::table('corpus_entry')
             //     ->whereIn('fund_code', $fund_code_array)
-            //     ->where('entry_date', $lastDayOfMonth)
             //     ->select(
             //         DB::raw('SUM(corpus_entry/100) as total_corpus_entry')
             //     )->first()->total_corpus_entry;
@@ -146,7 +145,11 @@ class CompositionController extends Controller
             $query = DB::table('fund_composition')
                 ->whereIn('fund_code', $fund_code_array)
                 ->where('entry_date', $lastDayOfMonth)
-                ->where('category', 'Equity');
+                ->when(isset($request->fund_scrips), function($q) use ($request) {
+                    $cat = DB::table('fund_composition')->where('scrip_name', $request->fund_scrips)->value('category');
+                    return $q->where('category', $cat ?? 'Equity');
+                });
+                
 
 
             if (isset($request->scrip_industry) && $request->scrip_industry == 'scrip') {

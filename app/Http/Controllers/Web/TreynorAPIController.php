@@ -636,7 +636,7 @@ class TreynorAPIController extends BaseController
             }
             if($beta != 0)
             {
-                $treynor = $average_of_fund_return_daily_risk_free/$beta;
+                $treynor = ($average_of_fund_return_daily_risk_free/$beta) * sqrt(252);
             }
             else
             {
@@ -1263,7 +1263,7 @@ class TreynorAPIController extends BaseController
             }
             if($beta != 0)
             {
-                $treynor = $average_of_fund_return_daily_risk_free/$beta;
+                $treynor = ($average_of_fund_return_daily_risk_free/$beta) * sqrt(252);
             }
             else
             {

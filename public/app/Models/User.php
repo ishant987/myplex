@@ -16,6 +16,10 @@ use App\Lib\Core\MailPS;
 use App\Models\UserGroupModel;
 use App\Models\UserGroupRelModel;
 use App\Models\AdminModel;
+use App\Models\Subscription;
+use App\Models\PaymentTransaction;
+use App\Models\UserSensitiveDetail;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -57,10 +61,27 @@ class User extends Authenticatable implements MustVerifyEmail
         'created_id',
         'updated_by',
         'updated_id',
+        'contact_person',
+        'city',
+        'state',
+        'gst',
+        'arn',
+        'pan',
+        'subscription_expiry_date',
+        'trial_ends_at',
+        'session_token',
+        'is_session_active',
+        'subscription_status',
     ];
 
     protected $guarded = [
         'u_id',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
+        'is_session_active' => 'boolean',
     ];
 
 
@@ -114,6 +135,73 @@ class User extends Authenticatable implements MustVerifyEmail
     public function groups()
     {
         return $this->belongsToMany(UserGroupModel::class, 'user_group_rel', 'u_id', 'u_g_id');
+    }
+
+    public function razorpaySubscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id', 'u_id');
+    }
+
+    public function paymentTransactions()
+    {
+        return $this->hasMany(PaymentTransaction::class, 'user_id', 'u_id');
+    }
+
+    public function sensitiveDetails()
+    {
+        return $this->hasOne(UserSensitiveDetail::class, 'user_id', 'u_id');
+    }
+
+    public function activeSubscription()
+    {
+        return $this->razorpaySubscriptions()
+            ->whereIn('status', ['a', 'active'])
+            ->latest('id');
+    }
+
+    public function hasActiveSubscription(): bool
+    {
+        $activeSubscription = $this->activeSubscription()->first();
+
+        if ($activeSubscription && $activeSubscription->isActive()) {
+            return true;
+        }
+
+        if ($this->subscription_status !== 'active' || empty($this->subscription_expiry_date)) {
+            return false;
+        }
+
+        return Carbon::parse($this->subscription_expiry_date)->isFuture();
+    }
+
+    public function isOnTrial(): bool
+    {
+        return $this->subscription_status === 'trial'
+            && !empty($this->trial_ends_at)
+            && Carbon::parse($this->trial_ends_at)->isFuture();
+    }
+
+    public function hasValidAccess(): bool
+    {
+        return $this->hasActiveSubscription() || $this->isOnTrial();
+    }
+
+    public function accessExpiresAt(): ?Carbon
+    {
+        if (!empty($this->subscription_expiry_date)) {
+            return Carbon::parse($this->subscription_expiry_date);
+        }
+
+        $activeSubscription = $this->activeSubscription()->first();
+        if ($activeSubscription?->ends_at) {
+            return Carbon::parse($activeSubscription->ends_at);
+        }
+
+        if (!empty($this->trial_ends_at)) {
+            return Carbon::parse($this->trial_ends_at);
+        }
+
+        return null;
     }
 
     public static function usersListByGroup($usrGrpId, $fields = false)

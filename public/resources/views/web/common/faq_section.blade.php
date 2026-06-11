@@ -14,8 +14,8 @@
     </div>
 	<div class="row mt-2">
 									<div class="col-md-12 text-center">
-										<a href="/faq" class="money_title_btn">View All FAQ</a>
-										
+										<a href="/faq" class="money_title_btn mb-2">View All FAQ</a>
+										<a href="https://www.quora.com/profile/Prasunjit-Mukherjee?q=prasunjit%20mukherjee" class="money_title_btn" target="_blank"><i class="fa fa-quora"></i>&nbsp;Discover More</a>
 									</div>
 								</div>
 </div>

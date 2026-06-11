@@ -52,7 +52,7 @@
                     <nav class="navbar navbar-expand-lg p-0">
 
                         <a class="navbar-brand" href="{{url('/')}}">
-                            <img src="{{asset('themes/frontend/assets/v1/img/logo-white-backup.png')}}" />
+                            <img src="{{asset('themes/frontend/assets/v1/img/Logo_v2-03.png')}}" />
                         </a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="ph-list-light"></i>
@@ -92,6 +92,19 @@
                                         <li><a class="dropdown-item" href="/mutual-fund-dictionary">Mutual Fund Dictionary</a></li>
                                     </ul>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Calculator
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="/calctest?cal=sip">SIP Planner</a></li>
+                                        <li><a class="dropdown-item" href="/calctest?cal=lump">Lumpsum Planner</a></li>
+                                        <li><a class="dropdown-item" href="/calctest?cal=retire">Retirement Planner</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('web.calculators') }}?tab=risk-tol-eval">Risk Tolerance Evaluator</a></li>
+                                        <li><a class="dropdown-item" href="/calctest?cal=inflation">Inflation Calculator</a></li>
+										 <li><a class="dropdown-item" href="/calctest?cal=pills-goal1">Goal Planner</a></li>
+                                    </ul>
+                                </li>
                                 <!-----<a class="nav-link" href="/fund-watch">Fund Watch</a>------>
                                 <a class="nav-link" href="https://blog.myplexus.com">Money Seriously</a>
 								
@@ -104,7 +117,7 @@
                                         <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
                                     </ul>
                                 </li>
-                                <a class="cta_header_link" href="/ask-an-expert">Ask Experts</a>
+                                <a class="cta_header_link" href="#askExpert">Ask Experts</a>
                             </div>
                         </div>
                     </nav>

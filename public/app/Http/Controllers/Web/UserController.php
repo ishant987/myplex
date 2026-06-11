@@ -26,6 +26,7 @@ class UserController extends BaseController
     public function __construct()
     {
         $this->defDataArr = self::getDefData();
+        $this->page_path =env('PAGE_PATHS','web.pages');
     }
 
     /**
@@ -38,7 +39,8 @@ class UserController extends BaseController
         return Auth::guard('web');
     }
 
-    public function myAccountData(Request $request)
+    /* Changed by Saumen Laha */
+    /* public function myAccountData(Request $request)
     {
         $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 36);
         if (!empty($dataArr)) {
@@ -56,6 +58,28 @@ class UserController extends BaseController
             $defDataArr = array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']));
 
             return view('themes.frontend.pages.myaccount', compact('dataArr', 'defDataArr'));
+        }
+        return abort(404);
+    } */
+
+    public function myAccountData(Request $request)
+    {
+        $dataArr = PageModel::getData(self::getClassIdBymodel('PageModel'), '', 54);
+        if (!empty($dataArr)) {
+            $dataArr['full_url'] = $request->fullUrl();
+
+            $meta_title = $dataArr['meta_title'];
+            $dataArr['meta_title'] = $meta_title != '' ? strip_tags($meta_title) : strip_tags($dataArr['title']);
+            $meta_descp = $dataArr['meta_descp'];
+            $dataArr['meta_descp'] = $meta_descp != '' ? strip_tags($meta_descp) : strip_tags($dataArr['descp']);
+
+            $commonconstants = Config('commonconstants');
+
+            $userId = self::getLoggedInUserId();
+
+            $defDataArr = array("media_folder" => Core::getUploadedURL($commonconstants['media_dir_name']));
+
+            return view($this->page_path.'.performance-synopsis', compact('dataArr', 'defDataArr'));
         }
         return abort(404);
     }

@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group([
   'prefix' => 'v1'
-], function () {
+], function () {    
     Route::get('fund-houses', [FrontDataController::class, 'getFundHouses']);
     Route::get('indices', [FrontDataController::class, 'getIndices']);
     Route::get('currencies', [FrontDataController::class, 'getCurrencies']);	
@@ -46,6 +46,7 @@ Route::group([
     Route::get('fund-return-scheme', [FrontDataController::class, 'fundReturnScheme']);
     Route::get('fund-return-benchmark', [FrontDataController::class, 'fundReturnBenchmark']);
     Route::get('fund-performance-compare-category', [FrontDataController::class, 'fundPerformanceCompareToCategory']);
+	Route::get('fund-performance-compare-category-dis', [FrontDataController::class, 'fundPerformanceCompareToCategorydis']);
     Route::get('fund-performance-scheme-sip', [FrontDataController::class, 'fundPerformanceSchemeSIP']);
     Route::get('fund-performance-benchmark-sip', [FrontDataController::class, 'fundPerformanceBenchmarkSIP']);
     Route::get('fund-details', [FrontDataController::class, 'fundDetails']);
@@ -53,6 +54,8 @@ Route::group([
     Route::get('fund-performance-benchmark-high-low', [FrontDataController::class, 'fundPerformanceBenchmarkHighLow']);
     Route::get('fund-performance-scheme-high-low', [FrontDataController::class, 'fundPerformanceSchemeHighLow']);
     Route::get('fund-performance-jensenalpha-beta-volatility', [FrontDataController::class, 'fundPerformanceJensenalphaBetaVolatility']);
+    Route::get('fund-performance-jensenalpha-beta-volatility-oneandtwoyear', [FrontDataController::class, 'fundPerformanceJensenalphaBetaVolatilityoneYeartwoYear']);
+    Route::get('fund-performance-jensenalpha-beta-volatility-new', [FrontDataController::class, 'fundPerformanceJensenalphaBetaVolatilityNew']);
     Route::get('fund-performance-aaum', [FrontDataController::class, 'getFundPerformanceAAUM']);
     Route::get('fund-portfolio-details', [FrontDataController::class, 'getFundPortfolioDetails']);
     Route::get('fund-portfolio-top-scripts', [FrontDataController::class, 'getFundPortfolioTopScripts']);
@@ -67,6 +70,9 @@ Route::group([
     Route::post('send-retirement-calculator-email', [FrontDataController::class, 'sendRetirementCalulatorEmail']);
     Route::post('sip-performance-calculator', [FrontDataController::class, 'sipPerformanceCalculator']);
     Route::post('send-sip-calculator-email', [FrontDataController::class, 'sipCalculatorEmail']);
+	  Route::get('performance-synopsis', [FrontDataController::class, 'getPerformanceSynopsis']);
+    Route::get('fund-composition-snapshot-fund-watch/{fund_code}', [FrontDataController::class, 'getFundCompositionSnapshotFundWatch']);
+    Route::get('last-published-aaum-date', [FrontDataController::class,'getLastAAUmDate']);
 });
 Route::group([
   'prefix' => 'v2'

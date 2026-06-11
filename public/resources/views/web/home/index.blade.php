@@ -20,6 +20,7 @@
 @section('cur-url'){{ $dataArr['full_url'] }}@stop
 @endif
 @section('content')
+
 <section class="new_hero_section">
     <div class="container-fluid">
         <div class="row">
@@ -34,7 +35,7 @@
             <div class="col-md-12 col-lg-9 px-0">
                 <div class="hero_banner_right_slider">
                     <div class="single_slider_for">
-                        <img src="{{ asset('themes/frontend/assets/v1/img/banner1.jpg') }}" class="img-fluid" />
+                        <img src="{{ asset('themes/frontend/assets/v1/img/home1.jpeg') }}" class="img-fluid" />
                         <div class="slider_caption">
                             <h2 class="animate__animated animate__fadeInUp">Invest in the freedom to choose</h2>
                             <p class="animate__animated animate__fadeInUp">Wealth is not just about money. It's about
@@ -602,9 +603,9 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="Planner-tab" data-bs-toggle="tab" data-bs-target="#Planner" type="button" role="tab" aria-controls="Planner" aria-selected="true">Planner</button>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <!-- <li class="nav-item" role="presentation">
                         <button class="nav-link" id="Performance-tab" data-bs-toggle="tab" data-bs-target="#Performance" type="button" role="tab" aria-controls="Performance" aria-selected="false">Performance</button>
-                    </li>
+                    </li> -->
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="Planner" role="tabpanel" aria-labelledby="Planner-tab">
@@ -614,9 +615,9 @@
                                     <div class="single_calculator">
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="500">
-                                            <a href="{{ route('web.calculators') }}?tab=inf-calc">
-                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon1.png') }}" />
-                                                <h4>Inflation Calculator</h4>
+                                            <a href="https://myplexus.com/calctest?cal=sip">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/lumpsum.png') }}" />
+                                                <h4>SIP Planner</h4>
                                             </a>
                                         </div>
                                     </div>
@@ -624,46 +625,56 @@
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <span class="right_circle d-none d-sm-block"></span>
                                         <div data-aos="zoom-in" data-aos-duration="1000">
-                                            <a href="{{ route('web.calculators') }}?tab=retire-calc">
-                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon2.png') }}" />
-                                                <h4>Retirement Calculator</h4>
+                                            <a href="https://myplexus.com/calctest?cal=lump">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/sip.png') }}" />
+                                                <h4>Lumpsum Fund Planner</h4>
                                             </a>
                                         </div>
                                     </div>
-                                   <!-- <div class="single_calculator have_before">
-                                        <span class="left_circle d-none d-sm-block"></span>
-                                        <span class="right_circle d-none d-sm-block"></span>
-                                        <div data-aos="zoom-in" data-aos-duration="1500">
-                                            <a href="{{ route('web.calculators') }}?tab=pills-weekly1">
-                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon3.png') }}" />
-                                                <h4>Other Objectives*</h4>
-                                            </a>
-                                        </div>
-                                    </div> -->
                                     <div class="single_calculator have_before">
                                         <span class="left_circle d-none d-sm-block"></span>
                                         <span class="right_circle d-none d-sm-block"></span>
-                                        <div data-aos="zoom-in" data-aos-duration="2000">
-                                            <a href="{{ route('web.calculators') }}?tab=risk-tol-eval">
-                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon4.png') }}" />
-                                                <h4>Risk Appetite Evaluator</h4>
+                                        <div data-aos="zoom-in" data-aos-duration="1000">
+                                            <a href="https://myplexus.com/calctest?cal=retire">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon2.png') }}" />
+                                                <h4>Retirement Planner</h4>
                                             </a>
                                         </div>
                                     </div>
-                                    <!-- <div class="single_calculator have_before">
+                                    <div class="single_calculator have_before">
                                         <span class="left_circle d-none d-sm-block"></span>
-                                        <div data-aos="zoom-in" data-aos-duration="2000">
-                                            <a href="#">
-                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon6.png') }}" />
-                                                <h4>Future Value</h4>
+                                        <span class="right_circle d-none d-sm-block"></span>
+                                        <div data-aos="zoom-in" data-aos-duration="1000">
+                                            <a href="{{ route('web.calculators') }}?tab=risk-tol-eval">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon4.png') }}" />
+                                                <h4>Risk Tolerance Evaluator</h4>
                                             </a>
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    <div class="single_calculator have_before">
+                                        <span class="left_circle d-none d-sm-block"></span>
+										<span class="right_circle d-none d-sm-block"></span>
+                                        <div data-aos="zoom-in" data-aos-duration="1000">
+                                            <a href="https://myplexus.com/calctest?cal=inflation">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon1.png') }}" />
+                                                <h4>Inflation Calculator</h4>
+                                            </a>
+                                        </div>
+                                    </div>
+									<div class="single_calculator have_before">
+                                        <span class="left_circle d-none d-sm-block"></span>
+                                        <div data-aos="zoom-in" data-aos-duration="500">
+                                            <a href="https://myplexus.com/calctest?cal=pills-goal1">
+                                                <img src="{{ asset('themes/frontend/assets/v1/img/calculator-icon2.png') }}" />
+                                                <h4>Goal Planner</h4>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="Performance" role="tabpanel" aria-labelledby="Performance-tab">
+                    <!-- <div class="tab-pane fade" id="Performance" role="tabpanel" aria-labelledby="Performance-tab">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="calculator_inner d-md-flex d-block align-items-center-between justify-content-center w-100">
@@ -688,7 +699,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -709,18 +720,21 @@
         </div>
         <div class="row align-items-center">
 			@if(count($fndWtchMdl) > 0)
-				<div class="col-md-6 mb-4" data-aos="fade-up" data-aos-duration="500">
+            @php $i =1; @endphp
+            @if($i <= 2)
+                @foreach($fndWtchMdl as $newfndWtchMdl)
+				<div class="col-md-6 mb-4" data-aos="fade-up" data-aos-duration="{{500*$i}}">
 					<div class="money_left_sec">
 						<div class="fund_watch_home_sec_single_img">
-							<img src="{{ asset('themes/frontend/assets/v1/img/nippon.jpg') }}" />
+                        <img src="{{ env('ADMIN_SITE') }}/assets/images/{{ $fndWtchMdl[0]->logo }}" />
 						</div>
 					</div>
 					<div class="money_right_section">
 						@php
-                           $fid =base64_encode($fndWtchMdl[0]->fund_code);
+                           $fid =base64_encode($newfndWtchMdl->fundDetails->fund_code);
 							
                          @endphp
-						<h4><a href="{{ route('web.fundwatch.index', $fid )}}" target="_blank">{{ $fndWtchMdl[0]->title }}</a></h4>
+						<h4><a href="{{ url('new-fundwatch') }}/{{$fid}}" target="_blank">{{ $newfndWtchMdl->fundDetails->fund_name }}</a></h4>
 						<!--<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
 							the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley
 							of type and scrambled it to make a type specimen book.</p>
@@ -728,24 +742,35 @@
 
 					</div>
 				</div>
+                @endforeach
+            @endif    
+                <?php /* ?>
 				<div class="col-md-6 mb-4" data-aos="fade-up" data-aos-duration="1000">
 					<div class="money_left_sec">
 						<div class="fund_watch_home_sec_single_img">
-							<img src="{{ asset('themes/frontend/assets/v1/img/nippon.jpg') }}" />
+                        <img src="{{ env('ADMIN_SITE') }}/assets/images/{{ $fndWtchMdl[1]->logo }}" />
 						</div>
 					</div>
 					<div class="money_right_section">
 						@php
-                           $sid =base64_encode($fndWtchMdl[1]->fund_code);
+                           $sid =base64_encode($fndWtchMdl[1]->fundDetails->fund_code);
                          @endphp
-						<h4><a href="{{ route('web.fundwatch.index', $sid )}}" target="_blank">{{ $fndWtchMdl[1]->title }}</a></h4>
+						<h4><a href="{{ url('new-fundwatch') }}/{{$sid}}" target="_blank">{{ $fndWtchMdl[1]->fundDetails->fund_name }}</a></h4>
 						<!--<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
 							the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley
 							of type and scrambled it to make a type specimen book.</p>
 						<a href="#">View More Details</a>-->
 					</div>
 				</div>
+                <?php */ ?>
+            @else
+            <p style="color: white; font-weight:bold;">No Data Found</p>
 			@endif
+			<div class="col-md-12 text-center">
+            @if(count($fndWtchMdl) > 0)
+                <a href="{{ url('new-fundwatch-list') }}" class="money_title_btn type2">View More</a>
+            @endif
+            </div>
         </div>
         <!-- <div class="row mt-4" data-aos="fade-up" data-aos-duration="500">
             <div class="col-md-12 text-center">
@@ -835,8 +860,8 @@
     </div>
 </section> -->
 
-<section class="fund_expert_section section">
-    <!-- <img class="fund_expert_man" src="{{ asset('themes/frontend/assets/v1/img/fund_expert.png') }}" data-aos="fade-up" data-aos-duration="500" /> -->
+<!-- <section class="fund_expert_section section">
+  
     <div class="container">
         <div class="row align-items-center meet_fund_expert">
             <div class="col-md-4">
@@ -848,15 +873,200 @@
                     <h2>Meet The Fund Man</h2>
                     <h4>Vihang Naik</h4>
                     <p>Fund Manager - Equity Investments<br>L&T Investment Management Limited</p>
-                    <p>Vihang is the consummate fund professional in youthful garb. In every conversation and
-                        discussion, he brings in a perspective that really gets the participants to think and
-                        participate. Armed with CFA and BMS qualifications, and with the support ...</p>
+                    
                 </div>
 				</a>
             </div>
         </div>
     </div>
+</section> -->
+
+<!-- .container -->
 </section>
+    <!-- <section class="compare_section section">
+        <div class="container">
+            <div class="row">
+                <div class="single-features-style1-box mb-4">
+                    <div class="col-md-12 aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="calculator_title text-center">
+                            <h4>Experts Interviews</h4>					
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center expt-row">		
+                
+                <div class="col-fund mb-4">
+                    <div class="money_left_sec aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{ asset('themes/frontend/assets/v1/img/vihangNaik.jpg') }}" class="img-fluid">
+                    </div>
+                    <div class="money_right_section expertHeight aos-init" data-aos="fade-up" data-aos-duration="1000">	
+                        <a href="/fund-man-details"><h4>Vihang Naik</h4></a>				
+                        <p>
+                            Chief Investment Officer <br>
+                            Baroda Asset Management India Limited
+                        </p>
+                    
+                    </div>
+                </div> 		
+                <div class="col-fund mb-4">
+                    <div class="money_left_sec aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{ asset('themes/frontend/assets/v1/img/aniruddhaNaha.jpg') }}" class="img-fluid">
+                    </div>
+                    <div class="money_right_section expertHeight aos-init" data-aos="fade-up" data-aos-duration="1000">	
+                        <a href="/fund-man-details/aniruddha-naha"><h4>Aniruddha Naha</h4></a>				
+                        <p>
+                            Director & Senior Fund Manager <br>
+                            PGIM Investments
+                        </p>
+                    
+                    </div>
+                </div>   
+                            
+                <div class="col-fund mb-4">
+                    <div class="money_left_sec aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{ asset('themes/frontend/assets/v1/img/sanjayChawla.jpg') }}" class="img-fluid">
+                    </div>
+                    <div class="money_right_section expertHeight aos-init" data-aos="fade-up" data-aos-duration="1000">	
+                        <a href="/fund-man-details/sanjay-chawla"><h4>Sanjay Chawla</h4></a>				
+                        <p>
+                            Chief Investment Officer <br>
+                            Baroda Asset Management India Limited
+                        </p>
+                    
+                    </div>
+                </div> 
+                            
+                <div class="col-fund mb-4">
+                    <div class="money_left_sec aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{ asset('themes/frontend/assets/v1/img/shridattaBhandwaldar.jpg') }}" class="img-fluid">
+                    </div>
+                    <div class="money_right_section expertHeight aos-init" data-aos="fade-up" data-aos-duration="1000">	
+                        <a href="https://www.myplexus.com/meet-the-fund-man/shridatta-bhandwaldar"><h4>Shridatta Bhandwaldar</h4></a>				
+                        <p>
+                            Head Equities <br>
+                            Canara Robeco Mutual Fund
+                        </p>
+                    
+                    </div>
+                </div> 
+                <div class="col-fund mb-4">
+                    <div class="money_left_sec aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <img src="{{ asset('themes/frontend/assets/v1/img/shreyasDevalkar.jpg') }}" class="img-fluid">
+                    </div>
+                    <div class="money_right_section expertHeight aos-init" data-aos="fade-up" data-aos-duration="1000">	
+                        <a href="/fund-man-details/shreyas-devalkar"><h4>Shreyas Devalkar</h4></a>				
+                        <p>
+                            Fund Manager <br>
+                            Axis Mutual Fund
+                        </p>
+                    
+                    </div>
+                </div> 
+                
+                
+            </div>
+       
+        </div>
+    </section> -->
+    <section class="compare_section section">
+        <div class="container">
+            <div class="row">
+                <div class="single-features-style1-box mb-4">
+                    <div class="col-md-12 aos-init" data-aos="fade-up" data-aos-duration="1000">
+                        <div class="calculator_title text-center">
+                            <h4>Experts Interviews</h4>					
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="2000">
+                    <div class="MultiCarousel-inner">
+                        <div class="item">
+                            <div class="pad15">
+                                <div class="money_left_sec car-img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/vihangNaik.jpg') }}" class="img-fluid">
+                                </div>
+                                <div class="money_right_section expertHeight">	
+                                    <a href="/fund-man-details"><h4>Vihang Naik</h4></a>				
+                                    <p>
+                                        Chief Investment Officer <br>
+                                        Baroda Asset Management India Limited
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="pad15">
+                                <div class="money_left_sec car-img" >
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/aniruddhaNaha.jpg') }}" class="img-fluid">
+                                </div>
+                                <div class="money_right_section expertHeight ">	
+                                    <a href="/fund-man-details/aniruddha-naha"><h4>Aniruddha Naha</h4></a>				
+                                    <p>
+                                        Director & Senior Fund Manager <br>
+                                        PGIM Investments
+                                    </p>
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="pad15">
+                                <div class="money_left_sec car-img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/sanjayChawla.jpg') }}" class="img-fluid">
+                                </div>
+                                <div class="money_right_section expertHeight">	
+                                    <a href="/fund-man-details/sanjay-chawla"><h4>Sanjay Chawla</h4></a>				
+                                    <p>
+                                        Chief Investment Officer <br>
+                                        Baroda Asset Management India Limited
+                                    </p>
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="pad15">
+                                <div class="money_left_sec car-img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/shridattaBhandwaldar.jpg') }}" class="img-fluid">
+                                </div>
+                                <div class="money_right_section expertHeight">	
+                                    <a href="/fund-man-details/shridatta-bhandwaldar"><h4>Shridatta Bhandwaldar</h4></a>				
+                                    <p>
+                                        Head Equities <br>
+                                        Canara Robeco Mutual Fund
+                                    </p>
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="pad15">
+                                <div class="money_left_sec car-img">
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/shreyasDevalkar.jpg') }}" class="img-fluid">
+                                </div>
+                                <div class="money_right_section expertHeight aos-init">	
+                                    <a href="/fund-man-details/shreyas-devalkar"><h4>Shreyas Devalkar</h4></a>				
+                                    <p>
+                                        Fund Manager <br>
+                                        Axis Mutual Fund
+                                    </p>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousal_btn leftLst"><</button>
+                    <button class="carousal_btn rightLst">></button>
+                </div>
+            </div>
+        
+        </div>
+    </section>
 
 <section class="testimonial_section_home section">
     <div class="container">
@@ -869,7 +1079,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-10 offset-md-1">
+            <div class="col-md-12">
                 <div class="testimonial_inner">
                     <div class="testimonial_slider">
                         <div class="single_testimonila_slide">
@@ -956,7 +1166,8 @@
                     <h4 data-aos="fade-up" data-aos-duration="500">Are you a financial Advisor
                     </h4>
                     <p data-aos="fade-up" data-aos-duration="1000">We provide a range of services for financial advisers, including access to our fund research, performance data and analytical tools that will help you make the best investment decisions for your clients.</p>
-                    <a data-aos="fade-up" data-aos-duration="1500" href="#" class="money_title_btn  type2 ms-0">Discover</a>
+                    <a data-aos="fade-up" data-aos-duration="1500" href="{{ route('user.user_login') }}" class="money_title_btn  type2 ms-0">Login</a>
+                    <a data-aos="fade-up" data-aos-duration="1500" href="{{ route('user.registration') }}" class="money_title_btn  type2 ms-0">Register</a>
                 </div>
             </div>
             <div class="col-md-1"></div>
@@ -997,7 +1208,7 @@
         </div>
     </div>
 </section>
-<section class="patshala-sec">
+<section class="patshala-sec" id="askExpert">
     <div class="container-fluid">
         <div class="row">
             <h3 data-aos="fade-up" data-aos-duration="500" class="aos-init aos-animate">Ask An Expert</h3>
@@ -1061,6 +1272,13 @@
                 </div>
             </div>
            
+        </div>
+        <div class="row">
+            <div class="col-md-12 mt-3 text-center">		
+                <button type="button" class="money_title_btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Ask Your Query Here
+                </button>
+			</div>
         </div>
     </div>
 </section>
@@ -1197,8 +1415,11 @@
                     <h2>Performance Synopsis</h2>
                     <p>You can access performance data for all of our funds on our website. In addition,
                         we also offer a range of analytical tools that can help you evaluate a fund's performance and choose the right one for your clients.</p>
-                    <a href="#" class="money_title_btn type2 me-3 ms-0">Login</a>
-                    <a href="#" class="money_title_btn type2">Register</a>
+                    <!-- <a href="{{ route('web.login') }}" class="money_title_btn type2 me-3 ms-0">Login</a> -->
+                    <!-- <a href="{{ route('web.investor-signup') }}" class="money_title_btn type2">Register</a> -->
+                    {{-- <a href="{{ route('user.user_login') }}" class="money_title_btn type2 me-3 ms-0">Login</a> --}}
+                    {{-- <a href="{{ route('user.registration') }}" class="money_title_btn type2">Register</a> --}}
+                    <a href="#" class="money_title_btn type2 me-3 ms-0">Discover</a>
                 </div>
             </div>
         </div>
@@ -1226,6 +1447,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="as_seen_slider_inner text-center">
+                    
                     <h4>As Seen On</h4>
                     <div class="as_seen_slider">
                         <div class="single_slider_seen">
@@ -1259,30 +1481,68 @@
     <div class="container">
         <div class="row justify-content-center align-items-center press-header">
             <div class="col press-lft">
-                                <h3>In The News</h3>
-                            </div>
-            <div class="col press-rgt">
-                <a href="/in-the-news">View All</a>
+                <h3>In The News</h3>
             </div>
+            
         </div>
         <div class="row news-blocks">
-                        <div class="col-lg-4 col-md-md-4 col-sm-12">
+            <div class="col-lg-4 col-md-md-4 col-sm-12">
                 <div class="news-inner-block">
-                                        <a href="https://utiswatantra.utimf.com/video/how-mfs-can-help-students-working-professionals-to-achieve-financial-goals/" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652244031-et-now-1.jpg" class="img-fluid" alt="How MFs can help students &amp; working professionals to achieve financial goals" title="How MFs can help students &amp; working professionals to achieve financial goals">                                                                        <span>How MFs can help students &amp; working professionals to achieve financial goals</span></a>
-                                    </div>
+                    <a href="https://utiswatantra.utimf.com/video/how-mfs-can-help-students-working-professionals-to-achieve-financial-goals/" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652244031-et-now-1.jpg" class="img-fluid" alt="How MFs can help students &amp; working professionals to achieve financial goals" title="How MFs can help students &amp; working professionals to achieve financial goals">                                                                        <span>How MFs can help students &amp; working professionals to achieve financial goals</span></a>
+                </div>
             </div>
-                        <div class="col-lg-4 col-md-md-4 col-sm-12">
+            <div class="col-lg-4 col-md-md-4 col-sm-12">
                 <div class="news-inner-block">
-                                        <a href="https://www.youtube.com/watch?v=TxcGBzLRriI" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652244003-you-tube-1.jpg" class="img-fluid" alt="Thoughts on the pathway for #FinancialFreedom" title="Thoughts on the pathway for #FinancialFreedom">                                                                        <span>Thoughts on the pathway for #FinancialFreedom</span></a>
-                                    </div>
+                    <a href="https://www.youtube.com/watch?v=TxcGBzLRriI" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652244003-you-tube-1.jpg" class="img-fluid" alt="Thoughts on the pathway for #FinancialFreedom" title="Thoughts on the pathway for #FinancialFreedom">                                                                        <span>Thoughts on the pathway for #FinancialFreedom</span></a>
+                </div>
             </div>
-                        <div class="col-lg-4 col-md-md-4 col-sm-12">
+            <div class="col-lg-4 col-md-md-4 col-sm-12">
                 <div class="news-inner-block">
-                                        <a href="https://www.businesstoday.in/moneytoday/mutual-fund/rushing-to-lose/story/7205.html" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652243948-bs-1.jpg" class="img-fluid" alt="How can the well researched picks you found attractive?" title="How can the well researched picks you found attractive?">                                                                        <span>How can the well researched picks you found attractive?</span></a>
-                                    </div>
+                    <a href="https://www.businesstoday.in/moneytoday/mutual-fund/rushing-to-lose/story/7205.html" target="_blank"><img src="https://www.myplexus.com/storage/news/nws-1652243948-bs-1.jpg" class="img-fluid" alt="How can the well researched picks you found attractive?" title="How can the well researched picks you found attractive?">                                                                        <span>How can the well researched picks you found attractive?</span></a>
+                </div>
             </div>
-                    </div>
+        </div>
+        <div class="row justify-content-center align-items-center press-header">
+            <div class="col-md-12 mt-3 text-center">
+				<a href="/in-the-news" class="money_title_btn">View All</a>
+			</div>
+        </div>
     </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ask Your Query</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="#">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" class="form-control" name="name" id="name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" name="email" id="email">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone No.:</label>
+                <input type="number" pattern="[0-9]{10}" class="form-control" name="phone" id="phone">
+            </div>
+            <div class="form-group">
+                <label for="query">Your Query:</label>
+                <input type="text" class="form-control" name="query" id="name">
+            </div>
+            
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <button type="submit" class="btn money_title_btn">Submit</button>
+      </div>
+    </div>
+  </div>
 </div>
 @stop
 
@@ -1368,5 +1628,113 @@
 }
 		
 		
+</script>
+<script>
+$(document).ready(function () {
+    var itemsMainDiv = ('.MultiCarousel');
+    var itemsDiv = ('.MultiCarousel-inner');
+    var itemWidth = "";
+
+    $('.leftLst, .rightLst').click(function () {
+        var condition = $(this).hasClass("leftLst");
+        if (condition)
+            click(0, this);
+        else
+            click(1, this)
+    });
+
+    ResCarouselSize();
+
+
+
+
+    $(window).resize(function () {
+        ResCarouselSize();
+    });
+
+    //this function define the size of the items
+    function ResCarouselSize() {
+        var incno = 0;
+        var dataItems = ("data-items");
+        var itemClass = ('.item');
+        var id = 0;
+        var btnParentSb = '';
+        var itemsSplit = '';
+        var sampwidth = $(itemsMainDiv).width();
+        var bodyWidth = $('body').width();
+        $(itemsDiv).each(function () {
+            id = id + 1;
+            var itemNumbers = $(this).find(itemClass).length;
+            btnParentSb = $(this).parent().attr(dataItems);
+            itemsSplit = btnParentSb.split(',');
+            $(this).parent().attr("id", "MultiCarousel" + id);
+
+
+            if (bodyWidth >= 1200) {
+                incno = itemsSplit[1];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 992) {
+                incno = itemsSplit[1];
+                itemWidth = sampwidth / incno;
+            }
+            else if (bodyWidth >= 768) {
+                incno = itemsSplit[0];
+                itemWidth = sampwidth / incno;
+            }
+            else {
+                incno = itemsSplit[0];
+                itemWidth = sampwidth / incno;
+            }
+            $(this).css({ 'transform': 'translateX(0px)', 'width': itemWidth * itemNumbers });
+            $(this).find(itemClass).each(function () {
+                $(this).outerWidth(itemWidth);
+            });
+
+            $(".leftLst").addClass("over");
+            $(".rightLst").removeClass("over");
+
+        });
+    }
+
+
+    //this function used to move the items
+    function ResCarousel(e, el, s) {
+        var leftBtn = ('.leftLst');
+        var rightBtn = ('.rightLst');
+        var translateXval = '';
+        var divStyle = $(el + ' ' + itemsDiv).css('transform');
+        var values = divStyle.match(/-?[\d\.]+/g);
+        var xds = Math.abs(values[4]);
+        if (e == 0) {
+            translateXval = parseInt(xds) - parseInt(itemWidth * s);
+            $(el + ' ' + rightBtn).removeClass("over");
+
+            if (translateXval <= itemWidth / 2) {
+                translateXval = 0;
+                $(el + ' ' + leftBtn).addClass("over");
+            }
+        }
+        else if (e == 1) {
+            var itemsCondition = $(el).find(itemsDiv).width() - $(el).width();
+            translateXval = parseInt(xds) + parseInt(itemWidth * s);
+            $(el + ' ' + leftBtn).removeClass("over");
+
+            if (translateXval >= itemsCondition - itemWidth / 2) {
+                translateXval = itemsCondition;
+                $(el + ' ' + rightBtn).addClass("over");
+            }
+        }
+        $(el + ' ' + itemsDiv).css('transform', 'translateX(' + -translateXval + 'px)');
+    }
+
+    //It is used to get some elements from btn
+    function click(ell, ee) {
+        var Parent = "#" + $(ee).parent().attr("id");
+        var slide = $(Parent).attr("data-slide");
+        ResCarousel(ell, Parent, slide);
+    }
+
+});
 </script>
 @endpush

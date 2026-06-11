@@ -170,3 +170,77 @@ input, select, textarea {
 </div>
 @endif
 @stop
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  var monthlyTab1 = document.getElementById('pills-monthly-tab1');
+	 var weeklyTab1 = document.getElementById('pills-weekly-tab1');
+	var pillmonthlythree=document.getElementById('pills-monthly-tab3');
+	var pillmonthlytwo=document.getElementById('pills-monthly-tab2');
+	var pillmonthlyg=document.getElementById('pills-monthly-tab6');
+	//var pillmonthlyg1=document.getElementById('pills-weekly7');
+	
+	
+		
+
+  if (monthlyTab1) {
+    monthlyTab1.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'https://myplexus.com/calctest?cal=sip';
+    });
+  }
+	
+	  if (weeklyTab1) {
+    weeklyTab1.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'https://myplexus.com/calctest?cal=lump';
+    });
+  }
+	
+	 //if (pillmonthlythree) {
+    //pillmonthlythree.addEventListener('click', function(e) {
+     // e.preventDefault();
+     // window.location.href = 'https://new.myplexus.com/calctest?cal=retire';
+    //});
+  //}
+	
+	 if (pillmonthlytwo) {
+    pillmonthlytwo.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'https://myplexus.com/calctest?cal=inflation';
+    });
+  }
+	if (pillmonthlyg) {
+    pillmonthlyg.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'https://myplexus.com/calctest?cal=pills-goal1';
+    });
+  }
+	
+	
+	  var urlParams = new URLSearchParams(window.location.search);
+
+            // Get a specific parameter by name
+            var cal = urlParams.get('cal');
+
+            if (cal === "risk") {
+                var tabButtons = document.querySelectorAll('.tab_snap_shot button');
+                tabButtons.forEach(function(button) {
+                    button.classList.remove('active');
+                });
+
+                var riskTab = document.getElementById('pills-monthly-tab4');
+                riskTab.classList.add('active');
+
+                var tabPanes = document.querySelectorAll('.tab-pane');
+                tabPanes.forEach(function(pane) {
+                    pane.classList.remove('active', 'show');
+                });
+
+                var riskPane = document.getElementById('risk-tol-eval');
+                riskPane.classList.add('active', 'show');
+            }
+	
+	
+});</script>
