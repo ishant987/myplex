@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\AdminModel;
 use App\Models\MediaModel;
@@ -95,6 +96,13 @@ class NfoOffer extends Model
         return $this->hasOne(IndicesMaster::class, 'idc_id', 'idc_id');
     }
 
+    protected static function yearSql(string $column): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y', {$column})"
+            : "DATE_FORMAT({$column}, '%Y')";
+    }
+
     public static function list($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false)
     {
         if ($fields == false) {
@@ -179,17 +187,12 @@ class NfoOffer extends Model
 
     public static function archiveGroupList()
     {
-        $commonconstants = Config('commonconstants');
+        $yearExpr = static::yearSql('post_date');
 
-      //  \DB::enableQueryLog(); // Enable query log
-		
-		/*NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->where(['status' => $commonconstants['status_val'][1], 'type' => $commonconstants['nfo_monitor_type']['value'][2]])->groupByRaw('year')->orderByRaw('year DESC')->get();*/
-		
-        return NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->groupByRaw('year')->orderByRaw('year DESC')->get();
-		
-      //   dd(\DB::getQueryLog()); // Show results of log
-
-        // return $dataObj;
+        return NfoOffer::selectRaw("{$yearExpr} AS year, COUNT(no_id) AS tot")
+            ->groupByRaw($yearExpr)
+            ->orderByRaw('year DESC')
+            ->get();
     }
 
     public static function frontList($filterArr = false, $fields = false, $orderBy = false, $order = false, $orderType=null, $perPage = false)
@@ -209,11 +212,9 @@ class NfoOffer extends Model
             $query->where('fund_name', '=', $fund_name);
         }
         
-          $year = isset($filterArr['year']) ? $filterArr['year'] : null;
-		//dd($year);
-		$year = Date('Y');
-        if($year != null){
-            $query->whereRaw('DATE_FORMAT(fund_closing, "%Y") ='.$year);
+        $year = isset($filterArr['year']) ? $filterArr['year'] : Date('Y');
+        if ($year != null) {
+            $query->whereRaw(static::yearSql('fund_closing') . ' = ?', [$year]);
         }
 
         if ($orderBy == false && $order == false) {
@@ -278,8 +279,8 @@ public static function frontListArchieve($filterArr = false, $fields = false, $o
 		
 		
 		
-        if($year != null){
-            $query->whereRaw('DATE_FORMAT(post_date, "%Y") ='.$year);
+        if ($year != null) {
+            $query->whereRaw(static::yearSql('post_date') . ' = ?', [$year]);
         }
 
         if ($orderBy == false && $order == false) {
@@ -316,18 +317,14 @@ public static function frontListArchieve($filterArr = false, $fields = false, $o
         return $dtListArr;
     }
 
-	public static function archiveGroupListYearWise($year=null)
+    public static function archiveGroupListYearWise($year=null)
     {
-        $commonconstants = Config('commonconstants');
+        $yearExpr = static::yearSql('post_date');
 
-      //  \DB::enableQueryLog(); // Enable query log
-		
-		/*NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->where(['status' => $commonconstants['status_val'][1], 'type' => $commonconstants['nfo_monitor_type']['value'][2]])->groupByRaw('year')->orderByRaw('year DESC')->get();*/
-		
-        return NfoOffer::selectRaw('DATE_FORMAT(post_date, "%Y") AS year, COUNT(no_id) AS tot')->whereRaw('DATE_FORMAT(post_date, "%Y") ='.$year)->groupByRaw('year')->orderByRaw('year DESC')->get();
-		
-      //   dd(\DB::getQueryLog()); // Show results of log
-
-        // return $dataObj;
+        return NfoOffer::selectRaw("{$yearExpr} AS year, COUNT(no_id) AS tot")
+            ->whereRaw($yearExpr . ' = ?', [$year])
+            ->groupByRaw($yearExpr)
+            ->orderByRaw('year DESC')
+            ->get();
     }
 }

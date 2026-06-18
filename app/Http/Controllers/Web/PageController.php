@@ -64,6 +64,813 @@ class PageController extends BaseController
         $this->BlogImagePath = url('/') . '/' . Config('commonconstants.blog_dir_name_front_end');
     }
 
+    private function usingSqlite(): bool
+    {
+        return DB::getDriverName() === 'sqlite';
+    }
+
+    private function latestPublishedFundChange(string $fundCode): float
+    {
+        $latest = FundDetail::where('fund_code', $fundCode)
+            ->where('publish', 'y')
+            ->orderBy('entry_date', 'desc')
+            ->first();
+
+        if (!$latest) {
+            return 0.0;
+        }
+
+        $previous = FundDetail::where('fund_code', $fundCode)
+            ->where('publish', 'y')
+            ->where('entry_date', '<', $latest->entry_date)
+            ->orderBy('entry_date', 'desc')
+            ->first();
+
+        if (!$previous || (float) $previous->closing_nav == 0.0) {
+            return 0.0;
+        }
+
+        return round((((float) $latest->closing_nav - (float) $previous->closing_nav) / (float) $previous->closing_nav) * 100, 2);
+    }
+
+    private function buildFundChangesByType(int $typeId): array
+    {
+        $rows = [];
+
+        foreach (FundMaster::where('fund_type_id', $typeId)->where('status', 1)->orderBy('fund_name')->get() as $fund) {
+            $rows[] = (object) [
+                'fund_name' => $fund->fund_name,
+                'change_value' => $this->latestPublishedFundChange($fund->fund_code),
+            ];
+        }
+
+        usort($rows, fn ($left, $right) => $right->change_value <=> $left->change_value);
+
+        return $rows;
+    }
+
+    private function buildFundTypeBenchmarks(): array
+    {
+        $rows = [];
+
+        foreach (FundType::select('ft_id', 'name')->orderBy('ft_id')->get() as $fundType) {
+            $fundCodes = FundMaster::where('fund_type_id', $fundType->ft_id)
+                ->where('status', 1)
+                ->pluck('fund_code')
+                ->all();
+
+            $changes = [];
+            foreach ($fundCodes as $fundCode) {
+                $changes[] = $this->latestPublishedFundChange($fundCode);
+            }
+
+            if (!$changes) {
+                $changes = [0.0];
+            }
+
+            sort($changes);
+            $count = count($changes);
+            $avg = round(array_sum($changes) / $count, 2);
+            $median = $count % 2 === 1
+                ? (float) $changes[(int) floor(($count - 1) / 2)]
+                : round(((float) $changes[$count / 2 - 1] + (float) $changes[$count / 2]) / 2, 2);
+
+            $rows[] = (object) [
+                'FundTypeID' => $fundType->ft_id,
+                'FUNDTYPE' => $fundType->name,
+                'CHANGEVALUE' => $avg,
+                'MEDIANVAL' => $median,
+                'CHANGEVALUE_NEW' => $avg,
+                'MEDIANVAL_NEW' => $median,
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function buildBestFundsRows(): array
+    {
+        $typeNames = FundType::pluck('name', 'ft_id')->all();
+        $rows = [];
+
+        foreach (FundMaster::where('status', 1)->orderBy('fund_name')->get() as $fund) {
+            $change = $this->latestPublishedFundChange($fund->fund_code);
+            $rows[] = (object) [
+                'fund_name' => $fund->fund_name,
+                'name' => $typeNames[$fund->fund_type_id] ?? '',
+                'weekly_change' => $change,
+                'monthly_change' => $change,
+            ];
+        }
+
+        usort($rows, fn ($left, $right) => $right->weekly_change <=> $left->weekly_change);
+
+        return array_slice($rows, 0, 10);
+    }
+
+    private function buildIndexRows(string $date): array
+    {
+        $asOf = Carbon::parse($date)->toDateString();
+        $typeMap = [
+            'NIFTY 100' => 'NSE',
+            'CRISIL Short Term Bond' => 'BSE',
+            'NIFTY 500' => 'GLOBAL',
+        ];
+        $rows = [];
+
+        foreach (IndicesMaster::select('name', 'corelation')->where('status', 1)->orderBy('name')->get() as $index) {
+            $current = IndicesDetail::where('name', $index->corelation)
+                ->where('entry_date', '<=', $asOf)
+                ->orderBy('entry_date', 'desc')
+                ->first();
+
+            if (!$current) {
+                continue;
+            }
+
+            $previous = IndicesDetail::where('name', $index->corelation)
+                ->where('entry_date', '<', $current->entry_date)
+                ->orderBy('entry_date', 'desc')
+                ->first();
+
+            $change = 0.0;
+            if ($previous && (float) $previous->closing_value != 0.0) {
+                $change = round((((float) $current->closing_value - (float) $previous->closing_value) / (float) $previous->closing_value) * 100, 2);
+            }
+
+            $rows[] = (object) [
+                'name' => $index->name,
+                'cur_value' => (float) $current->closing_value,
+                'PER_CHANGE' => $change,
+                'index_type' => $typeMap[$index->name] ?? 'GLOBAL',
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function buildStaticCurrencyRows(): array
+    {
+        return [
+            (object) ['name' => 'USD/INR', 'cur_value' => 83.14, 'PER_CHANGE' => 0.12],
+            (object) ['name' => 'EUR/INR', 'cur_value' => 90.02, 'PER_CHANGE' => 0.08],
+            (object) ['name' => 'GBP/INR', 'cur_value' => 105.34, 'PER_CHANGE' => -0.04],
+        ];
+    }
+
+    private function buildStaticCommodityRows(): array
+    {
+        return [
+            (object) ['name' => 'Gold', 'cur_value' => 72345.12, 'PER_CHANGE' => 0.23],
+            (object) ['name' => 'Silver', 'cur_value' => 85230.55, 'PER_CHANGE' => -0.15],
+        ];
+    }
+
+    private function normalizeMarketTimeFrame(string $timeFrame): string
+    {
+        $timeFrame = strtolower(trim($timeFrame));
+
+        return match ($timeFrame) {
+            '1d', '1_day', '1day' => '1D',
+            '1w', '1_week', '1week' => '1W',
+            '1m', '1_month', '1month' => '1M',
+            '3m', '3_months', '3months' => '3M',
+            '1y', '1_year', '1year' => '1Y',
+            '5y', '5_year', '5years' => '5Y',
+            'all', 'max', 'full' => 'ALL',
+            'ytd' => 'YTD',
+            default => '1M',
+        };
+    }
+
+    private function resolveMarketOverviewWindow(Request $request): array
+    {
+        $endDate = $request->filled('as_on_date')
+            ? Carbon::parse($request->input('as_on_date'))->toDateString()
+            : (FundDetail::where('publish', 'y')->max('entry_date') ?: Carbon::now()->toDateString());
+
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            return [
+                Carbon::parse($request->input('start_date'))->toDateString(),
+                Carbon::parse($request->input('end_date'))->toDateString(),
+                'range',
+            ];
+        }
+
+        $timeFrame = $this->normalizeMarketTimeFrame(
+            (string) $request->input('time_frame', $request->input('as_on_time_frame', '1M'))
+        );
+
+        if ($timeFrame === 'ALL') {
+            $startDate = FundDetail::where('publish', 'y')->min('entry_date') ?: $endDate;
+
+            return [$startDate, $endDate, $timeFrame];
+        }
+
+        $startDate = Carbon::parse($endDate);
+        match ($timeFrame) {
+            '1D' => $startDate->subDay(),
+            '1W' => $startDate->subWeek(),
+            '1M' => $startDate->subMonthNoOverflow(),
+            '3M' => $startDate->subMonthsNoOverflow(3),
+            '1Y' => $startDate->subYearNoOverflow(),
+            '5Y' => $startDate->subYearsNoOverflow(5),
+            'YTD' => $startDate->startOfYear(),
+            default => $startDate->subMonthNoOverflow(),
+        };
+
+        return [$startDate->toDateString(), $endDate, $timeFrame];
+    }
+
+    private function buildMarketHistorySeries(string $fundCode, string $startDate, string $endDate): array
+    {
+        $history = FundDetail::where('fund_code', $fundCode)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate)
+            ->orderBy('entry_date', 'asc')
+            ->get();
+
+        $windowHistory = $history->filter(function ($row) use ($startDate, $endDate) {
+            return $row->entry_date >= $startDate && $row->entry_date <= $endDate;
+        })->values();
+
+        if ($windowHistory->count() >= 2) {
+            $history = $windowHistory;
+        }
+
+        $series = [];
+        $previousNav = null;
+
+        foreach ($history as $row) {
+            $nav = (float) ($row->closing_nav ?? 0);
+            $changeAmount = 0.0;
+            $changePercent = 0.0;
+
+            if ($previousNav !== null && $previousNav != 0.0) {
+                $changeAmount = round($nav - $previousNav, 2);
+                $changePercent = round((($nav - $previousNav) / $previousNav) * 100, 2);
+            }
+
+            $series[] = [
+                'entry_date' => $row->entry_date,
+                'nav' => round($nav, 2),
+                'change_amount' => $changeAmount,
+                'change_percent' => $changePercent,
+            ];
+
+            $previousNav = $nav;
+        }
+
+        return $series;
+    }
+
+    private function buildMarketOverviewItems($fundMasters, string $startDate, string $endDate): array
+    {
+        $fundCodes = $fundMasters->pluck('fund_code')->all();
+
+        $detailGroups = FundDetail::whereIn('fund_code', $fundCodes)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate)
+            ->orderBy('entry_date')
+            ->get()
+            ->groupBy('fund_code');
+
+        $corpusGroups = CorpusEntry::whereIn('fund_code', $fundCodes)
+            ->where('publish', 'y')
+            ->where('entry_date', '<=', $endDate)
+            ->orderBy('entry_date')
+            ->get()
+            ->groupBy('fund_code');
+
+        $items = [];
+
+        foreach ($fundMasters as $fund) {
+            $history = $detailGroups->get($fund->fund_code, collect())->values();
+            $windowHistory = $history->filter(function ($row) use ($startDate, $endDate) {
+                return $row->entry_date >= $startDate && $row->entry_date <= $endDate;
+            })->values();
+
+            if ($windowHistory->count() >= 2) {
+                $history = $windowHistory;
+            }
+
+            $historyCount = $history->count();
+            $latestDetail = $historyCount > 0 ? $history[$historyCount - 1] : null;
+            $previousDetail = $historyCount > 1 ? $history[$historyCount - 2] : null;
+
+            $currentNav = $latestDetail ? (float) $latestDetail->closing_nav : 0.0;
+            $previousNav = $previousDetail ? (float) $previousDetail->closing_nav : 0.0;
+
+            $changeAmount = 0.0;
+            $changePercent = 0.0;
+
+            if ($previousDetail && $previousNav != 0.0) {
+                $changeAmount = round($currentNav - $previousNav, 2);
+                $changePercent = round((($currentNav - $previousNav) / $previousNav) * 100, 2);
+            }
+
+            $corpusHistory = $corpusGroups->get($fund->fund_code, collect())->values();
+            $latestCorpus = $corpusHistory->count() > 0 ? $corpusHistory[$corpusHistory->count() - 1] : null;
+            $corpusValue = $latestCorpus ? (float) $latestCorpus->corpus_entry : 0.0;
+
+            $fundTypeName = $fund->relationLoaded('fundtype') && $fund->fundtype ? $fund->fundtype->name : '';
+            if ($fundTypeName === '' && isset($fund->fund_type_id)) {
+                $fundTypeName = optional(FundType::find($fund->fund_type_id))->name ?? '';
+            }
+
+            $classification = trim((string) ($fund->classification ?: $fundTypeName));
+            if ($classification === '') {
+                $classification = 'Unclassified';
+            }
+
+            $benchmark = trim((string) ($fund->indices_name ?: ''));
+            $sizeMetric = $corpusValue > 0 ? $corpusValue : $currentNav;
+            $historySeries = [];
+            $previousSeriesNav = null;
+
+            foreach ($history as $historyRow) {
+                $seriesNav = (float) ($historyRow->closing_nav ?? 0);
+                $seriesChangeAmount = 0.0;
+                $seriesChangePercent = 0.0;
+
+                if ($previousSeriesNav !== null && $previousSeriesNav != 0.0) {
+                    $seriesChangeAmount = round($seriesNav - $previousSeriesNav, 2);
+                    $seriesChangePercent = round((($seriesNav - $previousSeriesNav) / $previousSeriesNav) * 100, 2);
+                }
+
+                $historySeries[] = [
+                    'entry_date' => $historyRow->entry_date,
+                    'nav' => round($seriesNav, 2),
+                    'change_amount' => $seriesChangeAmount,
+                    'change_percent' => $seriesChangePercent,
+                ];
+
+                $previousSeriesNav = $seriesNav;
+            }
+
+            $items[] = [
+                'fund_id' => $fund->fund_id,
+                'fund_code' => $fund->fund_code,
+                'fund_name' => $fund->fund_name,
+                'fund_type_id' => $fund->fund_type_id,
+                'fund_type_name' => $fundTypeName !== '' ? $fundTypeName : 'Unclassified',
+                'classification' => $classification,
+                'benchmark' => $benchmark !== '' ? $benchmark : 'N/A',
+                'fund_manager' => $fund->fund_manager ?: 'N/A',
+                'fund_house' => $fund->fund_house ?: 'N/A',
+                'nav' => round($currentNav, 2),
+                'change_amount' => $changeAmount,
+                'change_percent' => $changePercent,
+                'corpus' => round($corpusValue, 2),
+                'size_metric' => round($sizeMetric, 2),
+                'last_updated_at' => $latestDetail ? $latestDetail->entry_date : $endDate,
+                'tile_height' => 170,
+                'accent_color' => '#94a3b8',
+                'heat_class' => 'flat',
+                'history' => $historySeries,
+            ];
+        }
+
+        if (!empty($items)) {
+            $maxSizeMetric = collect($items)->max('size_metric') ?: 1;
+
+            foreach ($items as $index => $item) {
+                $normalized = $maxSizeMetric > 0 ? min($item['size_metric'] / $maxSizeMetric, 1) : 0;
+                $tileHeight = 160 + (int) round(70 * max($normalized, 0.15));
+                $absChange = abs($item['change_percent']);
+                $opacity = min(0.14 + ($absChange / 10) * 0.26, 0.4);
+
+                if ($item['change_percent'] > 0) {
+                    $accent = 'rgba(34, 197, 94, ' . $opacity . ')';
+                    $heatClass = 'positive';
+                } elseif ($item['change_percent'] < 0) {
+                    $accent = 'rgba(239, 68, 68, ' . $opacity . ')';
+                    $heatClass = 'negative';
+                } else {
+                    $accent = 'rgba(100, 116, 139, 0.12)';
+                    $heatClass = 'flat';
+                }
+
+                $items[$index]['tile_height'] = $tileHeight;
+                $items[$index]['accent_color'] = $accent;
+                $items[$index]['heat_class'] = $heatClass;
+            }
+        }
+
+        return $items;
+    }
+
+    public function marketOverviewData(Request $request)
+    {
+        $dataArr = [
+            'title' => 'Market Overview',
+            'meta_title' => 'Market Overview',
+            'meta_descp' => 'Database-driven fund heatmap using the local MyPlex fund tables.',
+            'full_url' => $request->fullUrl(),
+        ];
+
+        $defDataArr = $this->defDataArr;
+
+        $fundTypes = FundType::orderBy('name', 'asc')->get();
+        $selectedFundTypeId = $request->input('fund_type_id');
+        $selectedClassification = trim((string) $request->input('classification', ''));
+        $selectedBenchmark = trim((string) $request->input('benchmark', ''));
+        $selectedManager = trim((string) $request->input('fund_manager', ''));
+        $searchQuery = trim((string) $request->input('q', ''));
+        $sort = trim((string) $request->input('sort', 'change_desc'));
+
+        $query = FundMaster::with('fundtype')->where('status', 1);
+
+        if ($selectedFundTypeId) {
+            $query->where('fund_type_id', $selectedFundTypeId);
+        }
+
+        if ($selectedClassification !== '') {
+            $query->where('classification', 'like', '%' . $selectedClassification . '%');
+        }
+
+        if ($selectedBenchmark !== '') {
+            $query->where('indices_name', 'like', '%' . $selectedBenchmark . '%');
+        }
+
+        if ($selectedManager !== '') {
+            $query->where('fund_manager', 'like', '%' . $selectedManager . '%');
+        }
+
+        if ($searchQuery !== '') {
+            $query->where(function ($subQuery) use ($searchQuery) {
+                $subQuery->where('fund_name', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('fund_code', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('classification', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('indices_name', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('fund_manager', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        [$startDate, $endDate, $timeFrame] = $this->resolveMarketOverviewWindow($request);
+        $allFundMasters = FundMaster::with('fundtype')->where('status', 1)->orderBy('fund_name', 'asc')->get();
+        $allItemsCollection = collect($this->buildMarketOverviewItems($allFundMasters, $startDate, $endDate));
+        $fundMasters = $query->orderBy('fund_name', 'asc')->get();
+        $items = $this->buildMarketOverviewItems($fundMasters, $startDate, $endDate);
+
+        $itemsCollection = collect($items);
+        $summary = [
+            'total_funds' => $itemsCollection->count(),
+            'positive_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] > 0)->count(),
+            'negative_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] < 0)->count(),
+            'flat_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] == 0)->count(),
+            'average_change_percent' => $itemsCollection->count() > 0 ? round($itemsCollection->avg('change_percent'), 2) : 0.0,
+            'last_updated_at' => $endDate,
+        ];
+
+        $topGainers = $itemsCollection->sortByDesc('change_percent')->take(5)->values()->all();
+        $topLosers = $itemsCollection->sortBy('change_percent')->take(5)->values()->all();
+
+        $classificationCatalog = $allItemsCollection->groupBy('classification')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'top_fund' => $group->sortByDesc('change_percent')->first(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        $fundTypeGroups = $itemsCollection->groupBy('fund_type_name')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'total_corpus' => round($group->sum('corpus'), 2),
+                'top_fund' => $group->sortByDesc('change_percent')->first(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        $classificationGroups = $itemsCollection->groupBy('classification')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'total_corpus' => round($group->sum('corpus'), 2),
+                'top_fund' => $group->sortByDesc('change_percent')->first(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        switch ($sort) {
+            case 'name_asc':
+                $items = $itemsCollection->sortBy('fund_name')->values()->all();
+                break;
+            case 'name_desc':
+                $items = $itemsCollection->sortByDesc('fund_name')->values()->all();
+                break;
+            case 'corpus_desc':
+                $items = $itemsCollection->sortByDesc('corpus')->values()->all();
+                break;
+            case 'corpus_asc':
+                $items = $itemsCollection->sortBy('corpus')->values()->all();
+                break;
+            case 'negative_first':
+                $items = $itemsCollection->sortBy('change_percent')->values()->all();
+                break;
+            case 'positive_first':
+            case 'change_desc':
+            default:
+                $items = $itemsCollection->sortByDesc('change_percent')->values()->all();
+                break;
+        }
+
+        $classificationOptions = FundMaster::where('status', 1)
+            ->whereNotNull('classification')
+            ->where('classification', '!=', '')
+            ->distinct()
+            ->orderBy('classification', 'asc')
+            ->pluck('classification')
+            ->filter()
+            ->values()
+            ->all();
+
+        $benchmarkOptions = FundMaster::where('status', 1)
+            ->whereNotNull('indices_name')
+            ->where('indices_name', '!=', '')
+            ->distinct()
+            ->orderBy('indices_name', 'asc')
+            ->pluck('indices_name')
+            ->filter()
+            ->values()
+            ->all();
+
+        $managerOptions = FundMaster::where('status', 1)
+            ->whereNotNull('fund_manager')
+            ->where('fund_manager', '!=', '')
+            ->distinct()
+            ->orderBy('fund_manager', 'asc')
+            ->pluck('fund_manager')
+            ->filter()
+            ->values()
+            ->all();
+
+        $dataArr['request'] = $request;
+        $dataArr['fund_types'] = $fundTypes;
+        $dataArr['summary'] = $summary;
+        $dataArr['top_gainers'] = $topGainers;
+        $dataArr['top_losers'] = $topLosers;
+        $dataArr['classification_groups'] = $classificationGroups;
+        $dataArr['items'] = $items;
+        $dataArr['classification_options'] = $classificationOptions;
+        $dataArr['benchmark_options'] = $benchmarkOptions;
+        $dataArr['manager_options'] = $managerOptions;
+        $dataArr['time_frame'] = $timeFrame;
+        $dataArr['start_date'] = $startDate;
+        $dataArr['end_date'] = $endDate;
+        $dataArr['sort'] = $sort;
+        $dataArr['disclaimer'] = DB::table('fund_watch_disclaimer')->where('status', 1)->value('disclaimer')
+            ?: 'Market overview values are derived from the local fund tables.';
+
+        return view($this->page_path . '.market-overview', compact('defDataArr', 'dataArr'));
+    }
+
+    public function marketHeatmapData(Request $request)
+    {
+        $dataArr = [
+            'title' => 'Market Heatmap',
+            'meta_title' => 'Market Heatmap',
+            'meta_descp' => 'Dark market wall with chart and live heatmap tiles from the local MyPlex fund tables.',
+            'full_url' => $request->fullUrl(),
+        ];
+
+        $defDataArr = $this->defDataArr;
+
+        $fundTypes = FundType::orderBy('name', 'asc')->get();
+        $selectedFundTypeId = $request->input('fund_type_id');
+        $selectedClassification = trim((string) $request->input('classification', ''));
+        $selectedBenchmark = trim((string) $request->input('benchmark', ''));
+        $selectedManager = trim((string) $request->input('fund_manager', ''));
+        $searchQuery = trim((string) $request->input('q', ''));
+        $sort = trim((string) $request->input('sort', 'change_desc'));
+        $selectedFundCode = trim((string) $request->input('fund_code', ''));
+
+        $query = FundMaster::with('fundtype')->where('status', 1);
+
+        if ($selectedFundTypeId) {
+            $query->where('fund_type_id', $selectedFundTypeId);
+        }
+
+        if ($selectedClassification !== '') {
+            $query->where('classification', 'like', '%' . $selectedClassification . '%');
+        }
+
+        if ($selectedBenchmark !== '') {
+            $query->where('indices_name', 'like', '%' . $selectedBenchmark . '%');
+        }
+
+        if ($selectedManager !== '') {
+            $query->where('fund_manager', 'like', '%' . $selectedManager . '%');
+        }
+
+        if ($searchQuery !== '') {
+            $query->where(function ($subQuery) use ($searchQuery) {
+                $subQuery->where('fund_name', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('fund_code', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('classification', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('indices_name', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('fund_manager', 'like', '%' . $searchQuery . '%');
+            });
+        }
+
+        [$startDate, $endDate, $timeFrame] = $this->resolveMarketOverviewWindow($request);
+        $allFundMasters = FundMaster::with('fundtype')->where('status', 1)->orderBy('fund_name', 'asc')->get();
+        $fundMasters = $query->orderBy('fund_name', 'asc')->get();
+        $items = $this->buildMarketOverviewItems($fundMasters, $startDate, $endDate);
+
+        $itemsCollection = collect($items);
+        $summary = [
+            'total_funds' => $itemsCollection->count(),
+            'positive_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] > 0)->count(),
+            'negative_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] < 0)->count(),
+            'flat_count' => $itemsCollection->filter(fn ($item) => $item['change_percent'] == 0)->count(),
+            'average_change_percent' => $itemsCollection->count() > 0 ? round($itemsCollection->avg('change_percent'), 2) : 0.0,
+            'last_updated_at' => $endDate,
+        ];
+
+        $topGainers = $itemsCollection->sortByDesc('change_percent')->take(5)->values()->all();
+        $topLosers = $itemsCollection->sortBy('change_percent')->take(5)->values()->all();
+
+        $classificationCatalog = collect($this->buildMarketOverviewItems($allFundMasters, $startDate, $endDate))
+            ->groupBy('classification')
+            ->map(function ($group, $name) {
+                return [
+                    'name' => $name,
+                    'count' => $group->count(),
+                    'average_change_percent' => round($group->avg('change_percent'), 2),
+                    'top_fund' => $group->sortByDesc('change_percent')->first(),
+                ];
+            })->sortByDesc('count')->values()->all();
+
+        $fundTypeGroups = $itemsCollection->groupBy('fund_type_name')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'total_corpus' => round($group->sum('corpus'), 2),
+                'top_fund' => $group->sortByDesc('change_percent')->first(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        $classificationGroups = $itemsCollection->groupBy('fund_type_name')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'total_corpus' => round($group->sum('corpus'), 2),
+                'top_fund' => $group->sortByDesc('change_percent')->first(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        switch ($sort) {
+            case 'name_asc':
+                $items = $itemsCollection->sortBy('fund_name')->values()->all();
+                break;
+            case 'name_desc':
+                $items = $itemsCollection->sortByDesc('fund_name')->values()->all();
+                break;
+            case 'corpus_desc':
+                $items = $itemsCollection->sortByDesc('corpus')->values()->all();
+                break;
+            case 'corpus_asc':
+                $items = $itemsCollection->sortBy('corpus')->values()->all();
+                break;
+            case 'negative_first':
+                $items = $itemsCollection->sortBy('change_percent')->values()->all();
+                break;
+            case 'positive_first':
+            case 'change_desc':
+            default:
+                $items = $itemsCollection->sortByDesc('change_percent')->values()->all();
+                break;
+        }
+
+        $maxSizeMetric = max((float) collect($items)->max('size_metric'), 1.0);
+        $items = collect($items)->values()->map(function ($item) use ($maxSizeMetric) {
+            $normalized = max(0.2, min((float) ($item['size_metric'] ?? 0) / $maxSizeMetric, 1.0));
+            $span = (int) max(1, min(5, round($normalized * 5)));
+            $rowSpan = (int) max(1, min(3, ceil($span / 2)));
+            $absChange = abs((float) ($item['change_percent'] ?? 0));
+            $opacity = min(0.14 + ($absChange / 10) * 0.26, 0.4);
+
+            if (($item['change_percent'] ?? 0) > 0) {
+                $accent = 'rgba(34, 197, 94, ' . $opacity . ')';
+                $heatClass = 'positive';
+            } elseif (($item['change_percent'] ?? 0) < 0) {
+                $accent = 'rgba(239, 68, 68, ' . $opacity . ')';
+                $heatClass = 'negative';
+            } else {
+                $accent = 'rgba(100, 116, 139, 0.12)';
+                $heatClass = 'flat';
+            }
+
+            $item['tile_span'] = $span;
+            $item['tile_row_span'] = $rowSpan;
+            $item['tile_size_label'] = $span >= 5 ? 'XL' : ($span === 4 ? 'L' : ($span === 3 ? 'M' : 'S'));
+            $item['accent_color'] = $accent;
+            $item['heat_class'] = $heatClass;
+
+            return $item;
+        })->all();
+
+        $itemsCollection = collect($items);
+
+        $featuredFunds = $itemsCollection->sortByDesc('size_metric')->take(6)->values()->map(function ($item) use ($startDate, $endDate) {
+            if (empty($item['history'])) {
+                $item['history'] = $this->buildMarketHistorySeries($item['fund_code'], $startDate, $endDate);
+            }
+
+            return $item;
+        })->all();
+
+        $selectedFund = null;
+        foreach ($featuredFunds as $featuredFund) {
+            if ($selectedFundCode !== '' && $featuredFund['fund_code'] === $selectedFundCode) {
+                $selectedFund = $featuredFund;
+                break;
+            }
+        }
+
+        if ($selectedFund === null) {
+            $selectedFund = $featuredFunds[0] ?? ($items[0] ?? null);
+        }
+
+        if ($selectedFund && empty($selectedFund['history'])) {
+            $selectedFund['history'] = $this->buildMarketHistorySeries($selectedFund['fund_code'], $startDate, $endDate);
+        }
+
+        $heatmapGroups = collect($items)->groupBy('classification')->map(function ($group, $name) {
+            return [
+                'name' => $name,
+                'count' => $group->count(),
+                'average_change_percent' => round($group->avg('change_percent'), 2),
+                'items' => $group->sortByDesc('size_metric')->values()->all(),
+            ];
+        })->sortByDesc('count')->values()->all();
+
+        $timeFrames = [
+            ['value' => '1D', 'label' => '1D'],
+            ['value' => '1M', 'label' => '1M'],
+            ['value' => '3M', 'label' => '3M'],
+            ['value' => '1Y', 'label' => '1Y'],
+            ['value' => '5Y', 'label' => '5Y'],
+            ['value' => 'ALL', 'label' => 'All'],
+        ];
+
+        $dataArr['request'] = $request;
+        $dataArr['fund_types'] = $fundTypes;
+        $dataArr['summary'] = $summary;
+        $dataArr['top_gainers'] = $topGainers;
+        $dataArr['top_losers'] = $topLosers;
+        $dataArr['classification_groups'] = $classificationGroups;
+        $dataArr['fund_type_groups'] = $fundTypeGroups;
+        $dataArr['items'] = $items;
+        $dataArr['featured_funds'] = $featuredFunds;
+        $dataArr['selected_fund'] = $selectedFund;
+        $dataArr['heatmap_groups'] = $heatmapGroups;
+        $dataArr['classification_catalog'] = $classificationCatalog;
+        $dataArr['selected_classification'] = $selectedClassification;
+        $dataArr['classification_options'] = FundMaster::where('status', 1)
+            ->whereNotNull('classification')
+            ->where('classification', '!=', '')
+            ->distinct()
+            ->orderBy('classification', 'asc')
+            ->pluck('classification')
+            ->filter()
+            ->values()
+            ->all();
+        $dataArr['benchmark_options'] = FundMaster::where('status', 1)
+            ->whereNotNull('indices_name')
+            ->where('indices_name', '!=', '')
+            ->distinct()
+            ->orderBy('indices_name', 'asc')
+            ->pluck('indices_name')
+            ->filter()
+            ->values()
+            ->all();
+        $dataArr['manager_options'] = FundMaster::where('status', 1)
+            ->whereNotNull('fund_manager')
+            ->where('fund_manager', '!=', '')
+            ->distinct()
+            ->orderBy('fund_manager', 'asc')
+            ->pluck('fund_manager')
+            ->filter()
+            ->values()
+            ->all();
+        $dataArr['time_frame'] = $timeFrame;
+        $dataArr['start_date'] = $startDate;
+        $dataArr['end_date'] = $endDate;
+        $dataArr['sort'] = $sort;
+        $dataArr['time_frames'] = $timeFrames;
+        $dataArr['disclaimer'] = DB::table('fund_watch_disclaimer')->where('status', 1)->value('disclaimer')
+            ?: 'Market overview values are derived from the local fund tables.';
+
+        return view($this->page_path . '.stock-heatmap', compact('defDataArr', 'dataArr'));
+    }
+
     // public function getNewsApi()
     // {
     //     $incoming = @file_get_contents('https://www.moneycontrol.com/rss/latestnews.xml');
@@ -1219,43 +2026,41 @@ class PageController extends BaseController
 
             $days = 6;
 
-            $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity_updated_new("GET_INDICES","' . $to_date . '",' . $days . ')');
-            // dd($to_date."------".$days);
-            // dd($data['changes_indices']);
+            if ($this->usingSqlite()) {
+                $data['changes_indices'] = $this->buildIndexRows($to_date);
+                $data['changes_currency'] = [
+                    (object) ['name' => 'USD/INR', 'cur_value' => 83.14, 'PER_CHANGE' => 0.12],
+                    (object) ['name' => 'EUR/INR', 'cur_value' => 90.02, 'PER_CHANGE' => 0.08],
+                    (object) ['name' => 'GBP/INR', 'cur_value' => 105.34, 'PER_CHANGE' => -0.04],
+                ];
+                $data['changes_commodity'] = [
+                    (object) ['name' => 'Gold', 'cur_value' => 72345.12, 'PER_CHANGE' => 0.23],
+                    (object) ['name' => 'Silver', 'cur_value' => 85230.55, 'PER_CHANGE' => -0.15],
+                ];
+                $data['weekly_benchmark'] = $this->buildFundTypeBenchmarks();
+                $data['best_schemes'] = $this->buildBestFundsRows();
+            } else {
+                $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity_updated_new("GET_INDICES","' . $to_date . '",' . $days . ')');
+                $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $to_date . '",' . $days . ')');
+                $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $to_date . '",' . $days . ')');
+                $data['weekly_benchmark'] = DB::select('CALL sp_snapshot_weekly_benchmark("' . $to_date . '")');
+                $data['best_schemes'] = DB::select('CALL sp_snapshot_weekly_fund("' . $to_date . '")');
+            }
 
             $data['array_bse'] = [];
             $data['array_nse'] = [];
             $data['array_global_it'] = [];
-            if (!empty($data['changes_indices'])) {
-                foreach ($data['changes_indices'] as $value) {
-                    if ($value->index_type == "NSE") {
-                        if (!in_array($value, $data['array_nse'])) {
-                            array_push($data['array_nse'], $value);
-                        }
-                    }
-                    if ($value->index_type == "BSE") {
-                        if (!in_array($value, $data['array_bse'])) {
-
-                            array_push($data['array_bse'], $value);
-                        }
-                    }
-                    if ($value->index_type == "GLOBAL") {
-                        if (!in_array($value, $data['array_global_it'])) {
-
-                            array_push($data['array_global_it'], $value);
-                        }
-                    }
+            foreach ($data['changes_indices'] as $value) {
+                if ($value->index_type == "NSE") {
+                    $data['array_nse'][] = $value;
                 }
-            } else {
-                $data['array_bse'] = [];
-                $data['array_nse'] = [];
-                $data['array_global_it'] = [];
+                if ($value->index_type == "BSE") {
+                    $data['array_bse'][] = $value;
+                }
+                if ($value->index_type == "GLOBAL") {
+                    $data['array_global_it'][] = $value;
+                }
             }
-
-            $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $to_date . '",' . $days . ')');
-            $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $to_date . '",' . $days . ')');
-            $data['weekly_benchmark'] = DB::select('CALL sp_snapshot_weekly_benchmark("' . $to_date . '")');
-            $data['best_schemes'] = DB::select('CALL sp_snapshot_weekly_fund("' . $to_date . '")');
             //dd($previous_week_end); die;
 
             return view($this->page_path . '.weekly-snapshot', compact('defDataArr', 'dataArr', 'data', 'from_date', 'to_date'));
@@ -1306,123 +2111,93 @@ class PageController extends BaseController
             $days = strtotime($to_date) - strtotime($from_date);
             $days = (int)round($days / (60 * 60 * 24));
 
-            $data['monthly_benchmark'] = $monthly_benchmark = DB::select('CALL sp_snapshot_monthly_benchmark_new("' . $to_date . '")');
+            if ($this->usingSqlite()) {
+                $data['monthly_benchmark'] = $monthly_benchmark = $this->buildFundTypeBenchmarks();
+                $data['changes_indices'] = $this->buildIndexRows($to_date);
+                $data['changes_currency'] = [
+                    (object) ['name' => 'USD/INR', 'cur_value' => 83.14, 'PER_CHANGE' => 0.12],
+                    (object) ['name' => 'EUR/INR', 'cur_value' => 90.02, 'PER_CHANGE' => 0.08],
+                    (object) ['name' => 'GBP/INR', 'cur_value' => 105.34, 'PER_CHANGE' => -0.04],
+                ];
+                $data['changes_commodity'] = [
+                    (object) ['name' => 'Gold', 'cur_value' => 72345.12, 'PER_CHANGE' => 0.23],
+                    (object) ['name' => 'Silver', 'cur_value' => 85230.55, 'PER_CHANGE' => -0.15],
+                ];
+                $data['best_schemes'] = $this->buildBestFundsRows();
+            } else {
+                $data['monthly_benchmark'] = $monthly_benchmark = DB::select('CALL sp_snapshot_monthly_benchmark_new("' . $to_date . '")');
 
-            // dd($monthly_benchmark);
-            //===============================================================
-            foreach ($monthly_benchmark as $key => $monthly_benchmark_val) {
-                // dd($monthly_benchmark_val->FundTypeID);
-                $fundCategoryChangeReturn = 0;
-                $type_id = $monthly_benchmark_val->FundTypeID;
-                $date = Carbon::createFromFormat('Y-m-d', $to_date);
-                $end_date = $date->format('Y-m-d');
-                $start_date = $date->subMonth(1)->format('Y-m-d');
-                $end_days = date('t', strtotime($end_date));
-                if ($end_days == 31) {
-                    // dd('31');
-                    $days = 30;
-                } elseif ($end_days == 30) {
-                    $days = 29;
-                } elseif ($end_days == 29) {
-                    $days = 28;
-                } elseif ($end_days == 28) {
-                    $days = 27;
-                }
-                $query = 'CALL sp_snapshot_fund_change_val("' . $end_date . '","' . $type_id . '","' . $days . '","monthly")';
-
-                $changes_fund = DB::select($query);
-
-                if (count($changes_fund)) {
-                    // $responseArr['changes_fund'] = $changes_fund;
-                    // return $responseArr;
-
-
-                    // dd($changes_fund);
-
-                    $changeValues = array_map(function ($item) {
-                        return printValue($item->change_value);
-                    }, $changes_fund);
-
-                    // dd($changeValues);
-
-                    $arr = array_filter($changeValues, 'is_numeric');
-
-                    // Sort the array
-                    sort($arr);
-
-
-                    // Count the number of elements in the array
-                    $count = count($arr);
-                    if ($count === 0) {
-                        $return = 0; // Return null if the array is empty
+                foreach ($monthly_benchmark as $key => $monthly_benchmark_val) {
+                    $fundCategoryChangeReturn = 0;
+                    $type_id = $monthly_benchmark_val->FundTypeID;
+                    $date = Carbon::createFromFormat('Y-m-d', $to_date);
+                    $end_date = $date->format('Y-m-d');
+                    $start_date = $date->subMonth(1)->format('Y-m-d');
+                    $end_days = date('t', strtotime($end_date));
+                    if ($end_days == 31) {
+                        $days = 30;
+                    } elseif ($end_days == 30) {
+                        $days = 29;
+                    } elseif ($end_days == 29) {
+                        $days = 28;
+                    } elseif ($end_days == 28) {
+                        $days = 27;
                     }
+                    $query = 'CALL sp_snapshot_fund_change_val("' . $end_date . '","' . $type_id . '","' . $days . '","monthly")';
 
-                    if ($count > 0) {
-                        $changeValuesSum = array_sum($arr);
-                        $fundCategoryChangeReturn = $changeValuesSum / $count;
-                    }
+                    $changes_fund = DB::select($query);
 
+                    if (count($changes_fund)) {
+                        $changeValues = array_map(function ($item) {
+                            return printValue($item->change_value);
+                        }, $changes_fund);
 
-                    // Calculate the median
-                    $middleIndex = floor(($count - 1) / 2);
+                        $arr = array_filter($changeValues, 'is_numeric');
+                        sort($arr);
 
-                    // If the count is odd, return the middle element
-                    if ($count % 2) {
-                        $return = $arr[$middleIndex];
+                        $count = count($arr);
+                        $return = 0;
+
+                        if ($count > 0) {
+                            $changeValuesSum = array_sum($arr);
+                            $fundCategoryChangeReturn = $changeValuesSum / $count;
+                        }
+
+                        $middleIndex = floor(($count - 1) / 2);
+                        if ($count % 2) {
+                            $return = $arr[$middleIndex];
+                        } else {
+                            $return = ($arr[$middleIndex] + $arr[$middleIndex + 1]) / 2;
+                        }
+
+                        $monthly_benchmark[$key]->MEDIANVAL_NEW = $return;
+                        $monthly_benchmark[$key]->CHANGEVALUE_NEW = $fundCategoryChangeReturn;
                     } else {
-                        // If even, return the average of the two middle elements
-                        $return = ($arr[$middleIndex] + $arr[$middleIndex + 1]) / 2;
+                        $monthly_benchmark[$key]->MEDIANVAL_NEW = 0;
+                        $monthly_benchmark[$key]->CHANGEVALUE_NEW = 0;
                     }
-
-                    $monthly_benchmark[$key]->MEDIANVAL_NEW = $return;
-                    $monthly_benchmark[$key]->CHANGEVALUE_NEW = $fundCategoryChangeReturn;
-                } else {
-                    $monthly_benchmark[$key]->MEDIANVAL_NEW = 0;
-                    $monthly_benchmark[$key]->CHANGEVALUE_NEW = 0;
                 }
+
+                $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity_updated_new("GET_INDICES","' . $to_date . '",' . $days . ')');
+                $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $to_date . '",' . $days . ')');
+                $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $to_date . '",' . $days . ')');
+                $data['best_schemes'] = DB::select('CALL sp_snapshot_monthly_best_fund_new("' . $from_date . '","' . $to_date . '")');
             }
-            // dd($monthly_benchmark);
-
-            //=========================================================
-
-
-
-            $data['changes_indices'] = DB::select('CALL sp_snapshot_indices_currency_commodity_updated_new("GET_INDICES","' . $to_date . '",' . $days . ')');
-            // dd($to_date."------".$days);
-            // dd($data['changes_indices']);
 
             $data['array_bse'] = [];
             $data['array_nse'] = [];
             $data['array_global_it'] = [];
-            if (!empty($data['changes_indices'])) {
-                foreach ($data['changes_indices'] as $value) {
-                    if ($value->index_type == "NSE") {
-                        if (!in_array($value, $data['array_nse'])) {
-                            array_push($data['array_nse'], $value);
-                        }
-                    }
-                    if ($value->index_type == "BSE") {
-                        if (!in_array($value, $data['array_bse'])) {
-
-                            array_push($data['array_bse'], $value);
-                        }
-                    }
-                    if ($value->index_type == "GLOBAL") {
-                        if (!in_array($value, $data['array_global_it'])) {
-
-                            array_push($data['array_global_it'], $value);
-                        }
-                    }
+            foreach ($data['changes_indices'] as $value) {
+                if ($value->index_type == "NSE") {
+                    $data['array_nse'][] = $value;
                 }
-            } else {
-                $data['array_bse'] = [];
-                $data['array_nse'] = [];
-                $data['array_global_it'] = [];
+                if ($value->index_type == "BSE") {
+                    $data['array_bse'][] = $value;
+                }
+                if ($value->index_type == "GLOBAL") {
+                    $data['array_global_it'][] = $value;
+                }
             }
-
-            $data['changes_currency'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_CURRENCY","' . $to_date . '",' . $days . ')');
-            $data['changes_commodity'] = DB::select('CALL sp_snapshot_indices_currency_commodity("GET_COMMODITY","' . $to_date . '",' . $days . ')');
-            $data['best_schemes'] = DB::select('CALL sp_snapshot_monthly_best_fund_new("' . $from_date . '","' . $to_date . '")');
 
             //dd($this->page_path);die;
             return view($this->page_path . '.monthly-snapshot', compact('defDataArr', 'dataArr', 'data', 'from_date', 'to_date'));
@@ -3679,62 +4454,41 @@ class PageController extends BaseController
 
     public function getChangesFundNew(Request $request)
     {
-        // dd($request->all());
-        $dataArr = $responseArr = [];
-        $message = __('message');
-        // $date = date("Y-m-d");
-        $type_id = isset($request->fund_type_id) ? $request->fund_type_id : '';
+        $type_id = (int) ($request->fund_type_id ?? 0);
 
+        if ($this->usingSqlite()) {
+            return ['changes_fund' => $this->buildFundChangesByType($type_id)];
+        }
+
+        $responseArr = [];
         if ($request->type == 'weekly') {
             $date = Carbon::createFromFormat('Y-m-d', $request->date);
-           // $date = date('d-m-Y', strtotime($request->date));
             $weekday = date('l', strtotime($date));
             if ($weekday == 'Monday') {
-                // $start_date = date('Y-m-d', strtotime('-3 days'));
-                // $end_date = date('Y-m-d', strtotime('-9 days'));
-
                 $start_date = $date->subDays(3)->format('Y-m-d');
                 $end_date = $date->subDays(9)->format('Y-m-d');
             }
             if ($weekday == 'Tuesday') {
-                // $start_date = date('Y-m-d', strtotime('-4 days'));
-                // $end_date = date('Y-m-d', strtotime('-10 days'));
-
                 $start_date = $date->subDays(4)->format('Y-m-d');
                 $end_date = $date->subDays(10)->format('Y-m-d');
             }
             if ($weekday == 'Wednesday') {
-                // $start_date = date('Y-m-d', strtotime('-5 days'));
-                // $end_date = date('Y-m-d', strtotime('-11 days'));
-
                 $start_date = $date->subDays(5)->format('Y-m-d');
                 $end_date = $date->subDays(11)->format('Y-m-d');
             }
             if ($weekday == 'Thursday') {
-                // $start_date = date('Y-m-d', strtotime('-6 days'));
-                // $end_date = date('Y-m-d', strtotime('-12 days'));
-
                 $start_date = $date->subDays(6)->format('Y-m-d');
                 $end_date = $date->subDays(12)->format('Y-m-d');
             }
             if ($weekday == 'Friday') {
-                // $start_date = date('Y-m-d', strtotime('-0 days'));
-                // $end_date = date('Y-m-d', strtotime('-6 days'));
-
                 $start_date = $date->subDays(0)->format('Y-m-d');
                 $end_date = $date->subDays(6)->format('Y-m-d');
             }
             if ($weekday == 'Saturday') {
-                // $start_date = date('Y-m-d', strtotime('-1 days'));
-                // $end_date = date('Y-m-d', strtotime('-7 days'));
-
                 $start_date = $date->subDays(1)->format('Y-m-d');
                 $end_date = $date->subDays(7)->format('Y-m-d');
             }
             if ($weekday == 'Sunday') {
-                // $start_date = date('Y-m-d', strtotime('-2 days'));
-                // $end_date = date('Y-m-d', strtotime('-8 days'));
-
                 $start_date = $date->subDays(2)->format('Y-m-d');
                 $end_date = $date->subDays(8)->format('Y-m-d');
             }
@@ -3742,19 +4496,10 @@ class PageController extends BaseController
             $query = 'CALL sp_snapshot_fund_change_val("' . $start_date . '","' . $type_id . '","' . $days . '","weekly")';
         } else {
             $date = Carbon::createFromFormat('Y-m-d', $request->date);
-            // $start_date = date('Y-m-01', mktime(0, 0, 0, date("m"), 0));
-            // $end_date = date('Y-m-d', mktime(0, 0, 0, date("m"), 0));
             $end_date = $date->format('Y-m-d');
             $start_date = $date->subMonth(1)->format('Y-m-d');
-            // dd($end_date);
-            // $days = strtotime($start_date) - strtotime($end_date);
-            // $days = (int)round($days / (60 * 60 * 24))+1;
-            // $days = 30;
-            // dd(date('d', strtotime($end_date)));
             $end_days = date('t', strtotime($end_date));
-            // dd($end_days);
             if ($end_days == 31) {
-                // dd('31');
                 $days = 30;
             } elseif ($end_days == 30) {
                 $days = 29;
@@ -3763,27 +4508,15 @@ class PageController extends BaseController
             } elseif ($end_days == 28) {
                 $days = 27;
             }
-            //  dd($days.'-final');
             $query = 'CALL sp_snapshot_fund_change_val("' . $end_date . '","' . $type_id . '","' . $days . '","monthly")';
         }
 
-        // dd($start_date);
-        // dd($type_id);
-        // dd($days);
-        // $changes_fund = DB::select('CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'",'.$days.')');
-        // dd($changes_fund);
-        // dd($days);
-        // $query = 'CALL sp_snapshot_fund_change_val("'.$start_date.'","'.$type_id.'","'.$days.'","")';
-        // dd($query);
         $changes_fund = DB::select($query);
-        // Print the SQL query
-        // echo $query;
-
         if (count($changes_fund)) {
             $responseArr['changes_fund'] = $changes_fund;
             return $responseArr;
-        } else {
-            return [];
         }
+
+        return [];
     }
 }

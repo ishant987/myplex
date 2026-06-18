@@ -30,6 +30,35 @@ class RatioReportController extends Controller
         $this->Useful = new Useful;
     }
 
+    private static function shouldUseInternalReportApi(): bool
+    {
+        $host = parse_url(rtrim(URL::to('/'), '/'), PHP_URL_HOST);
+
+        return in_array($host, ['127.0.0.1', 'localhost', '::1'], true);
+    }
+
+    private static function invokeInternalReportApi(string $controllerClass, string $method, string $endpoint, array $params): array
+    {
+        $controller = app($controllerClass);
+        $request = Request::create($endpoint, 'GET', $params);
+        $result = app()->call([$controller, $method], ['request' => $request]);
+
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result->getData(true) ?: [];
+        }
+
+        if (is_array($result)) {
+            return $result;
+        }
+
+        if ($result instanceof \Illuminate\Http\Response) {
+            $decoded = json_decode($result->getContent(), true);
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        return [];
+    }
+
     public function stats(Request $request)
     {
         // dd('ok');
@@ -1848,23 +1877,18 @@ class RatioReportController extends Controller
             'search' => 'Search'
         ];
 
-        // dd($params);
-        // dd($url);
-        $fullUrl = $url . '?' . http_build_query($params);
-        // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-
-
-
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\JensonsalphaAPIController::class,
+                'jensonsalpha_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -1883,17 +1907,18 @@ class RatioReportController extends Controller
             'search' => 'Search'
         ];
 
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\SharpeAPIController::class,
+                'sharpe_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function treynorApi($fund_code, $start_date, $end_date)
@@ -1911,17 +1936,18 @@ class RatioReportController extends Controller
             'search' => 'Search'
         ];
 
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\TreynorAPIController::class,
+                'treynor_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -1943,17 +1969,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\InformationratioAPIController::class,
+                'information_ratio_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -1976,20 +2003,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        //   if($fund_code == 'INF959L01CF0'){
-        // dd($response->json());
-        //   }
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\CalculatordashbordAPIController::class,
+                'beta_calculator_mar',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -2011,20 +2036,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        //   if($fund_code == 'INF959L01CF0'){
-        // dd($response->json());
-        //   }
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\CalculatordashbordAPIController::class,
+                'beta_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function volatilityApi($fund_code, $start_date, $end_date, $index_id)
@@ -2047,17 +2070,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\VolatilityAPIController::class,
+                'volatility_calculator_mar',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -2080,17 +2104,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\VolatilityAPIController::class,
+                'volatility_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function trackingErrorApi($fund_code, $start_date, $end_date, $index_id)
@@ -2113,17 +2138,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\TrackingerrorAPIController::class,
+                'tracking_error_calculator_mar',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
 
@@ -2145,17 +2171,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\TrackingerrorAPIController::class,
+                'tracking_error_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function skewnessApi($fund_code, $start_date, $end_date)
@@ -2176,17 +2203,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\SkewnessAPIController::class,
+                'skewness_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function kurtosisApi($fund_code, $start_date, $end_date)
@@ -2207,17 +2235,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\KurtosisAPIController::class,
+                'kurtosis_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function r_squareApi($fund_code, $start_date, $end_date)
@@ -2238,17 +2267,18 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\rsquereAPIController::class,
+                'r_squere_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 
     public static function oneMonthRollingReturnApi($fund_code, $start_date, $end_date)
@@ -2269,16 +2299,17 @@ class RatioReportController extends Controller
         ];
         $fullUrl = $url . '?' . http_build_query($params);
         // dd($fullUrl);
-        // Send a GET request to the URL with the query parameters
-        $response = Http::get($url, $params);
-        // dd($response);
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Get the data from the response
-            $ratioData = $response->json();
-        } else {
-            $ratioData = [];
+        if (self::shouldUseInternalReportApi()) {
+            return self::invokeInternalReportApi(
+                \App\Http\Controllers\Web\RollingreturnAPIController::class,
+                'rolling_return_calculator',
+                $endpoint,
+                $params
+            );
         }
-        return $ratioData;
+
+        $response = Http::timeout(20)->connectTimeout(5)->get($url, $params);
+
+        return $response->successful() ? $response->json() : [];
     }
 }

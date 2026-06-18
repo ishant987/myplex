@@ -710,212 +710,415 @@
     </script>
 
 
-    <!-- Highcharts library -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-
     <script>
         $(document).ready(function() {
-            function initializeChart(graphId, containerId) {
-                let indicesGraphData = document.getElementById(graphId).value;
-
-                if (indicesGraphData !== '') {
-                    try {
-                        indicesGraphData = JSON.parse(indicesGraphData);
-
-                        let seriesData = [];
-
-                        var graph_data1_date = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01',
-                            '2023-05-01'
-                        ];
-                        var graph_data1_value = [65, 59, 80, 81, 56];
-                        var graph_data2_date = ['2023-01-01', '2023-02-01', '2023-03-01', '2023-04-01',
-                            '2023-05-01'
-                        ];
-                        var graph_data2_value = [28, 48, 40, 19, 86];
-
-                        var index_name = [];
-                        var graph_data_date = [];
-                        var graph_data_value = [];
-
-                        // Prepare series data for each index
-                        for (let index in indicesGraphData) {
-
-                            if (indicesGraphData.hasOwnProperty(index)) {
-
-                                index_name.push(index);
-
-                                graph_data_date[index] = [];
-                                graph_data_value[index] = [];
-
-                                indicesGraphData[index].forEach((item) => {
-
-                                    let date = new Date(item[0]).getTime();
-                                    let value = parseFloat(item[1]);
-
-                                    graph_data_date[index].push(date);
-                                    graph_data_value[index].push(value);
-                                });
-
-                            }
-                        }
-
-                        // console.log('graph_data_date', graph_data_date[index_name[0]]);
-                        // console.log('graph_data_value', graph_data_value);
-
-                        Highcharts.chart(containerId, {
-                            accessibility: {
-                                enabled: false
-                            },
-                            chart: {
-                                type: 'spline',
-                                zoomType: 'xy'
-                            },
-
-                            title: {
-                                text: ''
-                            },
-
-                            xAxis: {
-                                type: 'datetime',
-                                labels: {
-                                    formatter: function() {
-                                        return Highcharts.dateFormat('%Y-%m-%d', this.value);
-                                    }
-                                }
-                            },
-
-                            yAxis: [{
-                                    labels: {
-                                        format: '{value}',
-                                        style: {
-                                            color: Highcharts.getOptions().colors[0]
-                                        }
-                                    },
-                                    title: {
-                                        text: index_name[0], // Corrected to index_name[0]
-                                        style: {
-                                            color: Highcharts.getOptions().colors[0]
-                                        }
-                                    }
-                                },
-                                {
-                                    labels: {
-                                        format: '{value}',
-                                        style: {
-                                            color: Highcharts.getOptions().colors[1]
-                                        }
-                                    },
-                                    title: {
-                                        text: index_name[1], // Corrected to index_name[1]
-                                        style: {
-                                            color: Highcharts.getOptions().colors[1]
-                                        }
-                                    },
-                                    opposite: true
-                                }
-                            ],
-                            time: {
-                                useUTC: false
-                            },
-
-                            plotOptions: {
-                                column: {
-                                    pointPadding: 0.2,
-                                    borderWidth: 0
-                                }
-                            },
-
-                            legend: {
-                                title: {
-                                    text: ''
-                                }
-                            },
-
-                            series: [{
-                                    yAxis: 0,
-                                    name: index_name[0], // Corrected to index_name[0]
-                                    marker: {
-                                        enabled: true,
-                                        symbol: 'circle'
-                                    },
-                                    data: (function() {
-                                        return graph_data_date[index_name[0]].map(function(date,
-                                            i) {
-                                            return [date, graph_data_value[index_name[
-                                                0]][i]]; // Directly use date
-                                        });
-                                    })(),
-                                    /*data: (function() {
-                                        return graph_data_date.map(function(date,
-                                            i) {
-                                            return [date, graph_data_value[index_name[
-                                                0]][i]]; // Directly use date
-                                        });
-                                    })(),*/
-                                    color: 'red',
-                                    lineWidth: 1
-                                },
-                                {
-                                    name: index_name[1], // Corrected to index_name[1]
-                                    yAxis: 1,
-                                    marker: {
-                                        enabled: true,
-                                        symbol: 'circle'
-                                    },
-                                    data: (function() {
-                                        return graph_data_date[index_name[1]].map(function(date,
-                                            i) {
-                                            return [date, graph_data_value[index_name[
-                                                1]][i]]; // Directly use date
-                                        });
-                                    })(),
-                                    color: 'blue',
-                                    lineWidth: 1
-                                }
-                            ]
-                        });
-
-                    } catch (error) {
-                        console.error('Error parsing or processing data:', error);
-                    }
-                } else {
-                    console.error(`No data found for ${graphId}.`);
-                }
-
-                $('.highcharts-credits').hide();
+            function validPoints(points) {
+                return (points || [])
+                    .filter((item) => Array.isArray(item) && item.length > 1 && !isNaN(parseFloat(item[1])))
+                    .map((item) => [Date.parse(item[0]), parseFloat(item[1])])
+                    .sort((left, right) => left[0] - right[0]);
             }
 
-            // Example usage
+            function initializeChart(graphId, containerId) {
+                const graphInput = document.getElementById(graphId);
+                const container = document.getElementById(containerId);
+
+                if (!graphInput || !container || !graphInput.value) {
+                    return;
+                }
+
+                try {
+                    const graphData = JSON.parse(graphInput.value);
+                    const names = Object.keys(graphData);
+                    const primaryName = names[0];
+                    const comparisonName = names[1] || '';
+                    const primaryPoints = validPoints(graphData[primaryName]);
+                    const comparisonPoints = comparisonName ? validPoints(graphData[comparisonName]) : [];
+
+                    if (!primaryName || !primaryPoints.length) {
+                        return;
+                    }
+
+                    // NAV data has one closing value per period. Previous close is used as the next candle's open.
+                    const candles = primaryPoints.map((point, index) => {
+                        const open = index === 0 ? point[1] : primaryPoints[index - 1][1];
+                        const close = point[1];
+                        return [point[0], open, Math.max(open, close), Math.min(open, close), close];
+                    });
+                    const latest = candles[candles.length - 1];
+                    const previousClose = candles.length > 1 ? candles[candles.length - 2][4] : latest[1];
+                    const movement = latest[4] - previousClose;
+                    const movementPercent = previousClose ? (movement / previousClose) * 100 : 0;
+                    const graphSection = container.closest('.graph_section');
+
+                    graphSection.classList.add('ivn-trading-card');
+                    graphSection.insertAdjacentHTML('afterbegin', `
+                        <div class="ivn-trading-head">
+                            <div>
+                                <div class="ivn-trading-name">${primaryName}</div>
+                                <div class="ivn-trading-meta">NAV movement ${comparisonName ? `· Compared with ${comparisonName}` : ''}</div>
+                            </div>
+                            <div class="ivn-trading-quote ${movement >= 0 ? 'positive' : 'negative'}">
+                                <strong>${Highcharts.numberFormat(latest[4], 2)}</strong>
+                                <span>${movement >= 0 ? '+' : ''}${Highcharts.numberFormat(movement, 2)} (${movementPercent >= 0 ? '+' : ''}${Highcharts.numberFormat(movementPercent, 2)}%)</span>
+                            </div>
+                        </div>
+                    `);
+
+                    Highcharts.stockChart(containerId, {
+                        accessibility: { enabled: false },
+                        chart: {
+                            backgroundColor: '#ffffff',
+                            height: 510,
+                            spacing: [14, 18, 10, 12],
+                            style: { fontFamily: '"Manrope", "Avenir Next", sans-serif' }
+                        },
+                        title: { text: null },
+                        credits: { enabled: false },
+                        rangeSelector: {
+                            selected: 4,
+                            inputEnabled: false,
+                            buttonSpacing: 6,
+                            buttons: [
+                                { type: 'month', count: 1, text: '1M' },
+                                { type: 'month', count: 3, text: '3M' },
+                                { type: 'month', count: 6, text: '6M' },
+                                { type: 'year', count: 1, text: '1Y' },
+                                { type: 'all', text: 'All' }
+                            ],
+                            buttonTheme: {
+                                width: 38,
+                                height: 24,
+                                r: 6,
+                                fill: '#f5f7fa',
+                                stroke: '#dfe5ec',
+                                style: { color: '#667085', fontSize: '10px', fontWeight: '700' },
+                                states: {
+                                    hover: { fill: '#e8f7f3', style: { color: '#087f6b' } },
+                                    select: { fill: '#16a085', style: { color: '#ffffff' } }
+                                }
+                            }
+                        },
+                        navigator: {
+                            enabled: true,
+                            height: 38,
+                            maskFill: 'rgba(22, 160, 133, 0.08)',
+                            outlineColor: '#dfe5ec',
+                            handles: { backgroundColor: '#ffffff', borderColor: '#16a085' },
+                            series: {
+                                type: 'areaspline',
+                                color: '#16a085',
+                                fillOpacity: 0.08,
+                                lineWidth: 1
+                            }
+                        },
+                        scrollbar: { enabled: false },
+                        xAxis: {
+                            ordinal: false,
+                            lineColor: '#dfe5ec',
+                            tickColor: '#dfe5ec',
+                            gridLineWidth: 1,
+                            gridLineColor: '#eef1f5',
+                            labels: {
+                                format: '{value:%b %Y}',
+                                style: { color: '#667085', fontSize: '11px' }
+                            }
+                        },
+                        yAxis: [{
+                            opposite: true,
+                            gridLineColor: '#edf1f5',
+                            lineWidth: 1,
+                            lineColor: '#dfe5ec',
+                            labels: {
+                                align: 'left',
+                                x: 8,
+                                format: '{value:,.2f}',
+                                style: { color: '#667085', fontSize: '11px' }
+                            },
+                            title: { text: null }
+                        }, {
+                            opposite: false,
+                            gridLineWidth: 0,
+                            visible: comparisonPoints.length > 0,
+                            labels: {
+                                format: '{value:,.2f}',
+                                style: { color: '#3b82f6', fontSize: '11px' }
+                            },
+                            title: { text: null }
+                        }],
+                        time: { useUTC: false },
+                        plotOptions: {
+                            candlestick: {
+                                color: '#ff5b68',
+                                lineColor: '#ff5b68',
+                                upColor: '#22b5a2',
+                                upLineColor: '#22b5a2',
+                                pointPadding: 0.12,
+                                groupPadding: 0.08
+                            },
+                            series: {
+                                dataGrouping: { enabled: false },
+                                states: { inactive: { opacity: 0.3 } }
+                            }
+                        },
+                        legend: {
+                            enabled: comparisonPoints.length > 0,
+                            align: 'left',
+                            verticalAlign: 'top',
+                            itemStyle: { color: '#344054', fontSize: '11px', fontWeight: '700' }
+                        },
+                        tooltip: {
+                            split: false,
+                            shared: true,
+                            useHTML: true,
+                            borderWidth: 0,
+                            borderRadius: 10,
+                            backgroundColor: 'rgba(255,255,255,0.97)',
+                            shadow: {
+                                color: 'rgba(15,23,42,0.16)',
+                                offsetX: 0,
+                                offsetY: 7,
+                                opacity: 0.18,
+                                width: 14
+                            },
+                            style: {
+                                color: '#172033',
+                                width: '225px',
+                                fontSize: '11px'
+                            },
+                            formatter: function() {
+                                const hoveredPoints = this.points || [];
+                                const candlePoint = hoveredPoints.find((point) => point.series.type === 'candlestick');
+                                const linePoint = hoveredPoints.find((point) => point.series.type !== 'candlestick');
+                                let html = `<div class="ivn-market-tooltip"><div class="date">${Highcharts.dateFormat('%d %b %Y', this.x)}</div>`;
+
+                                if (candlePoint) {
+                                    const point = candlePoint.point;
+                                    const change = point.close - point.open;
+                                    html += `<div class="name">${primaryName}</div>
+                                        <div class="ohlc">
+                                            <span>O <b>${Highcharts.numberFormat(point.open, 2)}</b></span>
+                                            <span>H <b>${Highcharts.numberFormat(point.high, 2)}</b></span>
+                                            <span>L <b>${Highcharts.numberFormat(point.low, 2)}</b></span>
+                                            <span>C <b>${Highcharts.numberFormat(point.close, 2)}</b></span>
+                                        </div>
+                                        <div class="move ${change >= 0 ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${Highcharts.numberFormat(change, 2)}</div>`;
+                                }
+
+                                if (linePoint) {
+                                    html += `<div class="compare"><i style="background:${linePoint.color}"></i><span>${linePoint.series.name}</span><b>${Highcharts.numberFormat(linePoint.y, 2)}</b></div>`;
+                                }
+
+                                return html + '</div>';
+                            }
+                        },
+                        series: [{
+                            type: 'candlestick',
+                            name: primaryName,
+                            yAxis: 0,
+                            data: candles,
+                            showInLegend: false
+                        }].concat(comparisonPoints.length ? [{
+                            type: 'spline',
+                            name: comparisonName,
+                            yAxis: 1,
+                            data: comparisonPoints,
+                            color: '#3b82f6',
+                            lineWidth: 2.5,
+                            marker: {
+                                enabled: true,
+                                radius: 3,
+                                fillColor: '#3b82f6',
+                                lineColor: '#ffffff',
+                                lineWidth: 1
+                            }
+                        }] : [])
+                    });
+                } catch (error) {
+                    console.error('Error parsing or processing graph data:', error);
+                }
+            }
+
             initializeChart('indices_graph_1', 'chartContainer_1');
             initializeChart('indices_graph_2', 'chartContainer_2');
             initializeChart('indices_graph_3', 'chartContainer_3');
             initializeChart('indices_graph_4', 'chartContainer_4');
             initializeChart('indices_graph_5', 'chartContainer_5');
             initializeChart('indices_graph_6', 'chartContainer_6');
-            // Repeat for other charts as needed
         });
     </script>
     <style type="text/css">
-    
-.highcharts-label.highcharts-series-label{
-    display: none;
-}
+        .share_pdf {
+            position: static;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
 
-.share_pdf {
-    position: static;
-    right: 0;
-    top: -38px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: end;
-    padding-bottom: 10px;
-}
+        .ivn-trading-card {
+            overflow: hidden;
+            margin: 20px 0;
+            border: 1px solid #dfe5ec;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+        }
 
-</style>
+        .ivn-trading-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px 18px 10px;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .ivn-trading-name {
+            color: #172033;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .ivn-trading-meta {
+            margin-top: 3px;
+            color: #7b8797;
+            font-size: 11px;
+        }
+
+        .ivn-trading-quote {
+            text-align: right;
+        }
+
+        .ivn-trading-quote strong,
+        .ivn-trading-quote span {
+            display: block;
+        }
+
+        .ivn-trading-quote strong {
+            color: #172033;
+            font-size: 18px;
+        }
+
+        .ivn-trading-quote span {
+            margin-top: 2px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .ivn-trading-quote.positive span,
+        .ivn-market-tooltip .positive {
+            color: #15977f;
+        }
+
+        .ivn-trading-quote.negative span,
+        .ivn-market-tooltip .negative {
+            color: #e34f5d;
+        }
+
+        .ivn-market-tooltip {
+            box-sizing: border-box;
+            width: 205px;
+            max-width: 205px;
+            padding: 4px 5px;
+        }
+
+        .ivn-trading-card .highcharts-tooltip,
+        .ivn-trading-card .highcharts-tooltip > span {
+            width: 225px !important;
+            max-width: 225px !important;
+        }
+
+        .ivn-market-tooltip .date {
+            color: #8591a2;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .ivn-market-tooltip .name {
+            overflow: hidden;
+            margin: 5px 0 8px;
+            color: #172033;
+            font-size: 12px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ivn-market-tooltip .ohlc {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 5px 8px;
+            color: #7b8797;
+            font-size: 9px;
+        }
+
+        .ivn-market-tooltip .ohlc span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 5px 6px;
+            border-radius: 6px;
+            background: #f4f7fa;
+        }
+
+        .ivn-market-tooltip .ohlc b {
+            color: #344054;
+            font-size: 10px;
+        }
+
+        .ivn-market-tooltip .move {
+            margin-top: 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .ivn-market-tooltip .compare {
+            display: grid;
+            grid-template-columns: 8px minmax(0, 1fr) auto;
+            gap: 7px;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 7px;
+            border-top: 1px solid #edf1f5;
+            color: #667085;
+            font-size: 10px;
+        }
+
+        .ivn-market-tooltip .compare i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .ivn-market-tooltip .compare span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ivn-market-tooltip .compare b {
+            color: #172033;
+            font-size: 11px;
+        }
+
+        @media (max-width: 767px) {
+            .ivn-trading-head {
+                display: block;
+            }
+
+            .ivn-trading-quote {
+                margin-top: 8px;
+                text-align: left;
+            }
+        }
+    </style>
 @endsection

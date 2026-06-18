@@ -1,0 +1,1 @@
+<?php /**PATH /Users/ishant/Documents/GitHub/myplex/resources/views/emails/web/resourcessubscription_expiry.blade.php ENDPATH**/ ?>

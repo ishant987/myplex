@@ -40,212 +40,124 @@ class PredictiveController extends Controller
     public function jensen_alpha(Request $request)
     {
         $data = RatioController::loggedInUserData();
-        $data['browser_title'] = 'By Volatility';
+        $data['browser_title'] = 'By Jensen Alpha';
         $data['active_menu'] = 'filters_list';
-        $jensonAlphaController = new JensonsalphaAPIController;
-
         $data['fundMasterData'] = FundMaster::where('status', 1)->orderBy('fund_name','asc')->get();
+        $data['graph_date'] = [];
+        $data['nav_value'] = [];
+        $data['closing_value'] = [];
 
-            // dd($data['fundMasterData']);
-
-        $getdata = $request->all();
-
-        if (isset($getdata) && count($getdata) > 0) {
-
-            // dd($getdata);
-
-            $time_frame = intval($getdata['duration']);
-            // $time_frame = 6;
-
-            $request->validate(
-
-                [
-                    'fund_id'   => 'required',
-                    'expected_index'   => 'required',
-                ],
-                [
-                    'fund_id' . 'required' => 'Please Select Fund for Searching',
-                    'expected_index' . 'required' => 'Please Select Year for Searching',
-                ]
-
-            );
+        if ($request->hasAny(['fund_id', 'expected_index', 'duration'])) {
+            $validated = $request->validate([
+                'fund_id' => 'required|integer',
+                'expected_index' => 'required|numeric|min:0.01',
+                'duration' => 'required|in:6,1',
+                'current_date' => 'nullable|date',
+            ], [
+                'fund_id.required' => 'Please select a fund.',
+                'expected_index.required' => 'Please enter the expected future index value.',
+            ]);
 
             $data['getData'] = $request->all();
+            $data['expected_index'] = (float) $validated['expected_index'];
+            $fundDetails = FundMaster::where('status', 1)->where('fund_id', $validated['fund_id'])->firstOrFail();
+            $indicesDetails = IndicesMaster::where('status', 1)
+                ->where('name', $fundDetails->indices_name)
+                ->first();
 
-            $fund_id = $request->fund_id;
+            $data['fund_details'] = $fundDetails;
+            $data['indices_details'] = $indicesDetails;
 
-            $data['fund_details'] = $fund_details = FundMaster::where('status', 1)->where('fund_id', $fund_id)->first();
-
-            $data['indices_details'] = $indices_details = IndicesMaster::where('status', 1)
-                ->where('name', $fund_details->indices_name)->first();
-
-            // $currentDate = date('Y-m-d');
-
-            $currentDate = date('Y-m-d', strtotime($getdata['current_date']));
-
-            // dd($currentDate);
-
-            $date_array = [date('Y-m-d', strtotime($getdata['current_date']))];
-
-            for ($i = 1; $i <= 4; $i++) {
-
-                if ($time_frame == 6) {
-
-                    $one_half_date = date('Y-m-d', strtotime('-45 days', strtotime($currentDate)));
-
-                    array_push($date_array, $one_half_date);
-
-                    $currentDate = $one_half_date;
-                } else if ($time_frame == 1) {
-
-                    $three_month_ago =  date('Y-m-d', strtotime('-90 days', strtotime($currentDate)));
-
-                    array_push($date_array, $three_month_ago);
-
-                    $currentDate = $three_month_ago;
-                }
+            if (!$indicesDetails) {
+                return back()->withInput()->withErrors([
+                    'fund_id' => 'The selected fund does not have an active benchmark index.',
+                ]);
             }
 
-            // echo"<pre>";print_r($date_array);
+            $endDate = !empty($validated['current_date'])
+                ? Carbon::parse($validated['current_date'])->toDateString()
+                : (DB::table('fund_detail')->where('fund_code', $fundDetails->fund_code)->where('publish', 'y')->max('entry_date') ?: now()->toDateString());
+            $pointCount = (int) $validated['duration'] === 1 ? 12 : 6;
 
+            $navRows = DB::table('fund_detail')
+                ->where('fund_code', $fundDetails->fund_code)
+                ->where('publish', 'y')
+                ->where('entry_date', '<=', $endDate)
+                ->orderBy('entry_date', 'desc')
+                ->limit($pointCount)
+                ->get()
+                ->sortBy('entry_date')
+                ->values();
 
-            sort($date_array);
+            $indexRows = DB::table('indices_detail')
+                ->where('name', $indicesDetails->corelation)
+                ->where('publish', 'y')
+                ->where('holiday', 0)
+                ->where('entry_date', '<=', $endDate)
+                ->orderBy('entry_date', 'desc')
+                ->limit($pointCount)
+                ->get()
+                ->sortBy('entry_date')
+                ->keyBy('entry_date');
 
-            // echo"<pre>";print_r($date_array);
+            $graphDates = [];
+            $navValues = [];
+            $indexValues = [];
 
-            $start_date = $date_array[0];
-            $end_date = $date_array[1];
+            foreach ($navRows as $navRow) {
+                $indexRow = $indexRows->get($navRow->entry_date);
 
-            $jenson_alpha_values = 0;
-            $jenson_alpha_values_array = [];
-
-            for ($j = 1; $j < count($date_array); $j++) {
-
-                // echo $start_date." --".$end_date."<br>";
-
-                // $fund_return = self::jensenalphaApi($fund_details->fund_code, $start_date, $end_date);
-                $fund_return = QuartileDecileController::jensenalphaApi($fund_details->fund_code, $start_date, $end_date);
-                // dd($fund_return);
-
-                if (!empty($fund_return)) {
-                    $jenson_alpha_values += floatval($fund_return['jensens_alpha']);
-                    array_push($jenson_alpha_values_array, $fund_return['jensens_alpha']);
+                if (!$indexRow) {
+                    continue;
                 }
 
-                // echo $j."--".$date_array[$j]."<br>";
+                $graphDates[] = $navRow->entry_date;
+                $navValues[] = round((float) $navRow->closing_nav, 2);
+                $indexValues[] = round((float) $indexRow->closing_value, 2);
+            }
 
-                $start_date = $end_date;
-                if (isset($date_array[$j + 1])) {
-                    $end_date = $date_array[$j + 1];
-                } else {
-                    break; // Exit the loop if the next end_date doesn't exist
+            if (count($graphDates) < 2) {
+                return back()->withInput()->withErrors([
+                    'fund_id' => 'At least two matching published NAV and benchmark points are required.',
+                ]);
+            }
+
+            $alphaValues = [];
+            for ($index = 1; $index < count($graphDates); $index++) {
+                $previousNav = $navValues[$index - 1];
+                $previousIndex = $indexValues[$index - 1];
+
+                if ($previousNav == 0.0 || $previousIndex == 0.0) {
+                    continue;
                 }
-            }
-            // die;
 
-            $avg_jenson_alpha = ($jenson_alpha_values / 4);
-
-            // dd($avg_jenson_alpha);
-
-            $closing_nav_array = [];
-            $closing_value_array = [];
-
-            // dd($date_array);
-
-            for ($c = 1; $c < count($date_array); $c++) {
-
-                // Fetching the closing NAV for the given fund_code and entry_date
-                $closing_nav = DB::table('fund_detail')
-                    ->where('fund_code', $fund_details->fund_code)
-                    ->where('entry_date', '<=', $date_array[$c])
-                    ->orderBy('entry_date', 'desc')
-                    ->first();
-
-                // Fetching the closing value for the given indices name and entry_date
-                $closing_value = DB::table('indices_detail')
-                    ->select('indices_detail.*')
-                    ->leftJoin('indices_master', 'indices_master.corelation', '=', 'indices_detail.correlation_new')
-                    ->where('indices_master.name', $fund_details->indices_name)
-                    ->where('indices_detail.entry_date', '<=', $date_array[$c])
-                    ->orderBy('indices_detail.entry_date', 'desc')
-                    ->first();
-
-                // echo $date_array[$c] . '</br>';
-
-                // echo "indices_name==".$fund_details->name;
-                // echo "<pre>";
-                // print_r($closing_nav);
-
-                // echo "indices_name==".$fund_details->indices_name;
-                // echo "<pre>";
-                // print_r($closing_value);
-
-                array_push($closing_nav_array, $closing_nav->closing_nav);
-                array_push($closing_value_array, $closing_value->closing_value);
-            }
-            // die;
-
-            $last_closing_val = end($closing_value_array);
-
-            if ($last_closing_val > intval($request->expected_index)) {
-
-                $diff_expected_index_and_last_closing_val = $last_closing_val -  intval($request->expected_index);
-
-                $percentage_diff_expected_index_and_last_closing_val = ($diff_expected_index_and_last_closing_val * 100) / $last_closing_val;
-
-                $percentage_of_avg_jnsnalpha = $percentage_diff_expected_index_and_last_closing_val * ($avg_jenson_alpha / 100);
-
-                $added_percentage = $percentage_of_avg_jnsnalpha + $percentage_diff_expected_index_and_last_closing_val;
-
-                $final_closing_nav = end($closing_nav_array) - ((end($closing_nav_array) * $added_percentage) / 100);
-
-                $final_closing_nav = round($final_closing_nav, 2);
-
-            } else if ($last_closing_val < intval($request->expected_index)) {
-
-                $diff_expected_index_and_last_closing_val = intval($request->expected_index) -  $last_closing_val;
-
-                $percentage_diff_expected_index_and_last_closing_val = ($diff_expected_index_and_last_closing_val * 100) / $last_closing_val;
-
-                $percentage_of_avg_jnsnalpha = $percentage_diff_expected_index_and_last_closing_val * ($avg_jenson_alpha / 100);
-
-                $added_percentage = $percentage_of_avg_jnsnalpha + $percentage_diff_expected_index_and_last_closing_val;
-
-                $final_closing_nav = end($closing_nav_array) + ((end($closing_nav_array) * $added_percentage) / 100);
-
-                $final_closing_nav = round($final_closing_nav, 2);
+                $fundReturn = (($navValues[$index] - $previousNav) / $previousNav) * 100;
+                $benchmarkReturn = (($indexValues[$index] - $previousIndex) / $previousIndex) * 100;
+                $alphaValues[] = $fundReturn - $benchmarkReturn;
             }
 
+            $averageAlpha = count($alphaValues) > 0 ? array_sum($alphaValues) / count($alphaValues) : 0.0;
+            $lastNav = (float) end($navValues);
+            $lastIndex = (float) end($indexValues);
+            $expectedIndex = (float) $validated['expected_index'];
+            $expectedIndexReturn = $lastIndex != 0.0 ? (($expectedIndex - $lastIndex) / $lastIndex) * 100 : 0.0;
+            $projectedNav = round(max(0, $lastNav * (1 + (($expectedIndexReturn + $averageAlpha) / 100))), 2);
+            $projectionDate = Carbon::parse(end($graphDates))
+                ->addMonths((int) $validated['duration'] === 1 ? 12 : 6)
+                ->toDateString();
 
-            array_push($closing_nav_array, $final_closing_nav);
+            $graphDates[] = $projectionDate;
+            $navValues[] = $projectedNav;
+            $indexValues[] = $expectedIndex;
 
-            $graph_date_array = array_slice($date_array, 1);
-
-            if ($time_frame == 6) {
-
-                $currentDate = date('Y-m-d', strtotime($getdata['current_date']));
-                $dateupcoming = date('Y-m-d', strtotime('+6 months', strtotime($currentDate)));
-            } else if ($time_frame == 1) {
-
-                $currentDate = date('Y-m-d', strtotime($getdata['current_date']));
-                $dateupcoming = date('Y-m-d', strtotime('+1 year', strtotime($currentDate)));
-            }
-            $data['expected_index'] = $request->expected_index;
-            array_push($graph_date_array, $dateupcoming);
-            array_push($closing_value_array, floatval($request->expected_index));
-
-            $data['graph_date'] = $graph_date_array;
-            $data['nav_value'] =  $closing_nav_array;
-            $data['closing_value'] = $closing_value_array;
-
-            // dd($data);
+            $data['graph_date'] = $graphDates;
+            $data['nav_value'] = $navValues;
+            $data['closing_value'] = $indexValues;
+            $data['average_jensen_alpha'] = round($averageAlpha, 2);
         }
 
         $disclaimerQuery = DB::table('fund_watch_disclaimer')->where('status', 1)->first();
-
-        // dd($disclaimerQuery->disclaimer);
-    
-        $data['disclaimer'] = $disclaimerQuery->disclaimer;
+        $data['disclaimer'] = $disclaimerQuery->disclaimer ?? 'Predictive values are illustrative and derived from historical local demo data.';
 
         return view('web.predictive.jensen_alpha', $data);
     }
@@ -669,40 +581,31 @@ class PredictiveController extends Controller
     public function fund_details(Request $request)
     {
         if (isset($request['id'])) {
-            $currentDate = date('Y-m-d');
-
             $fund_detail = DB::table('fund_master')
-                ->select(DB::raw("DATE_FORMAT(mpx_indices_detail.entry_date, '%d-%m-%Y') as entry_date"), 'indices_detail.closing_value', 'indices_master.name')
-                ->Join('indices_master', 'fund_master.indices_name', '=', 'indices_master.name')
-                ->leftJoin('indices_detail', 'indices_master.corelation', '=', 'indices_detail.correlation_new')
+                ->select('indices_detail.entry_date', 'indices_detail.closing_value', 'indices_master.name')
+                ->join('indices_master', 'fund_master.indices_name', '=', 'indices_master.name')
+                ->join('indices_detail', 'indices_master.corelation', '=', 'indices_detail.name')
                 ->where('fund_master.fund_id', $request['id'])
-                ->where('indices_detail.entry_date', '<=', $currentDate)
                 ->where('indices_detail.holiday', 0)
+                ->where('indices_detail.publish', 'y')
                 ->orderBy('indices_detail.entry_date', 'desc')
-                ->limit(1)
                 ->first();
 
-            // $fund_detail = DB::table('fund_master')
-            //     ->select('indices_master.name as iname','fund_master.indices_name as finame')
-            //     ->leftJoin('indices_master', 'fund_master.indices_name', '=', 'indices_master.name')
-            //     ->leftJoin('indices_detail', 'indices_master.corelation', '=', 'indices_detail.name')
-            //     ->where('fund_master.fund_id', $request['id'])
-            //     ->first();
+            if (!$fund_detail) {
+                return response()->json([
+                    'entry_date' => 'N/A',
+                    'current_date' => null,
+                    'closing_value' => 0.0,
+                    'name' => 'N/A',
+                ], 200);
+            }
 
-            // $fund_detail = DB::table('fund_master')
-            //     ->select(DB::raw("DATE_FORMAT(mpx_indices_detail.entry_date, '%d-%m-%Y') as entry_date"), 'indices_detail.closing_value', 'indices_detail.name')
-            //     ->leftJoin('indices_detail', 'fund_master.indices_name', '=', 'indices_detail.name')
-            //     ->where('fund_master.fund_id', $request['id'])
-            //     ->where('indices_detail.entry_date', '<=', $currentDate)
-            //     ->where('indices_detail.holiday', 0)
-            //     ->orderBy('indices_detail.entry_date', 'desc')
-            //     ->limit(1)
-            //     ->first();
-
-            // dd($fund_detail);
-
-
-            return response()->json($fund_detail, 200);
+            return response()->json([
+                'entry_date' => Carbon::parse($fund_detail->entry_date)->format('d-m-Y'),
+                'current_date' => $fund_detail->entry_date,
+                'closing_value' => round((float) $fund_detail->closing_value, 2),
+                'name' => $fund_detail->name,
+            ], 200);
         }
     }
 

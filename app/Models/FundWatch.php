@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 use App\Lib\Core\Core;
 
@@ -42,6 +43,13 @@ class FundWatch extends Model
     protected $guarded = [
         'fw_id',
     ];
+
+    protected static function yearSql(string $column): string
+    {
+        return DB::getDriverName() === 'sqlite'
+            ? "strftime('%Y', {$column})"
+            : "DATE_FORMAT({$column}, '%Y')";
+    }
 
 
     public static function list($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false)
@@ -117,13 +125,11 @@ class FundWatch extends Model
 
     public static function archiveGroupList()
     {
-        $commonconstants = Config('commonconstants');
-
-        // \DB::enableQueryLog(); // Enable query log
-        return FundWatch::selectRaw('DATE_FORMAT(created_at, "%Y") AS year, COUNT(fw_id) AS tot')->where(['status' => $commonconstants['status_val'][1]])->groupByRaw('year')->orderByRaw('year DESC')->get();
-        // dd(\DB::getQueryLog()); // Show results of log
-
-        // return $dataObj;
+        return FundWatch::selectRaw(static::yearSql('created_at') . ' AS year, COUNT(fw_id) AS tot')
+            ->where(['status' => Config('commonconstants')['status_val'][1]])
+            ->groupByRaw(static::yearSql('created_at'))
+            ->orderByRaw('year DESC')
+            ->get();
     }
 
     public static function frontList($filterArr = false, $fields = false, $orderBy = false, $order = false, $perPage = false)
@@ -137,7 +143,7 @@ class FundWatch extends Model
 
         $year = isset($filterArr['year']) ? $filterArr['year'] : null;
         if ($year != null) {
-            $query->whereRaw('DATE_FORMAT(created_at, "%Y") =' . $year);
+            $query->whereRaw(static::yearSql('created_at') . ' = ?', [$year]);
         }
 
         if ($orderBy == false && $order == false) {

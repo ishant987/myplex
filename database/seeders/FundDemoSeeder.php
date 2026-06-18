@@ -122,6 +122,68 @@ class FundDemoSeeder extends Seeder
             );
         }
 
+        $classificationProfiles = [
+            ['classification' => 'Large Cap', 'type' => 'Equity', 'term' => 'Long Term', 'index' => 'NIFTY 100'],
+            ['classification' => 'Flexi Cap', 'type' => 'Equity', 'term' => 'Long Term', 'index' => 'NIFTY 500'],
+            ['classification' => 'Mid Cap', 'type' => 'Equity', 'term' => 'Long Term', 'index' => 'NIFTY 500'],
+            ['classification' => 'Small Cap', 'type' => 'Equity', 'term' => 'Long Term', 'index' => 'NIFTY 500'],
+            ['classification' => 'Value', 'type' => 'Equity', 'term' => 'Long Term', 'index' => 'NIFTY 500'],
+            ['classification' => 'Short Duration', 'type' => 'Debt', 'term' => 'Short Term', 'index' => 'CRISIL Short Term Bond'],
+            ['classification' => 'Corporate Bond', 'type' => 'Debt', 'term' => 'Medium Term', 'index' => 'CRISIL Short Term Bond'],
+            ['classification' => 'Dynamic Bond', 'type' => 'Debt', 'term' => 'Medium Term', 'index' => 'CRISIL Short Term Bond'],
+            ['classification' => 'Aggressive Hybrid', 'type' => 'Hybrid', 'term' => 'Medium Term', 'index' => 'NIFTY 500'],
+            ['classification' => 'Balanced Advantage', 'type' => 'Hybrid', 'term' => 'Medium Term', 'index' => 'NIFTY 500'],
+        ];
+        $managerNames = [
+            'Aarav Mehta',
+            'Neha Iyer',
+            'Rohan Kulkarni',
+            'Diya Shah',
+            'Kabir Rao',
+            'Meera Nair',
+            'Arjun Malhotra',
+            'Ishita Sen',
+            'Vikram Joshi',
+            'Sana Kapoor',
+        ];
+        $fundHouses = [
+            'MyPlex Alpha AMC',
+            'MyPlex Horizon AMC',
+            'MyPlex Crest AMC',
+            'MyPlex Nova AMC',
+            'MyPlex Summit AMC',
+        ];
+
+        for ($index = 1; $index <= 97; $index++) {
+            $profile = $classificationProfiles[($index - 1) % count($classificationProfiles)];
+            $fundCode = 'MPXD' . str_pad((string) $index, 3, '0', STR_PAD_LEFT);
+            $fundName = 'MyPlex ' . $profile['classification'] . ' Fund ' . str_pad((string) $index, 2, '0', STR_PAD_LEFT);
+
+            $fundRows[$fundCode] = FundMaster::updateOrCreate(
+                ['fund_code' => $fundCode],
+                [
+                    'fund_name' => $fundName,
+                    'fund_code' => $fundCode,
+                    'fund_manager' => $managerNames[($index - 1) % count($managerNames)],
+                    'fund_type_id' => $fundTypeMap[$profile['type']] ?? 0,
+                    'fund_term_id' => $fundTermMap[$profile['term']] ?? 0,
+                    'face_value' => 10.0000,
+                    'risk_free_return' => 5.75 + (($index % 8) * 0.15),
+                    'fund_opened' => Carbon::parse('2014-01-01')->addMonths($index)->toDateString(),
+                    'period' => (($index % 8) + 3) . 'Y',
+                    'remarks' => 'Generated local demo fund for heatmap testing.',
+                    'cost' => 0.45 + (($index % 12) * 0.08),
+                    'indices_name' => $profile['index'],
+                    'fund_house' => $fundHouses[($index - 1) % count($fundHouses)],
+                    'classification' => $profile['classification'],
+                    'status' => 1,
+                    'created_id' => 1,
+                    'updated_id' => 1,
+                    'migration_at' => null,
+                ]
+            );
+        }
+
         foreach ($fundRows as $fundCode => $fund) {
             FundCore::updateOrCreate(
                 ['fund_id' => $fund->fund_id],
@@ -172,6 +234,37 @@ class FundDemoSeeder extends Seeder
                         'publish' => $entryDate === '2022-01-31' ? 'y' : 'n',
                         'created_id' => 1,
                         'updated_id' => 1,
+                    ]
+                );
+            }
+        }
+
+        $generatedIndexDates = [
+            '2026-01-01' => ['NIFTY 100 TRI' => 24840.20, 'CRISIL Short Term Bond TRI' => 2388.40, 'NIFTY 500 TRI' => 35620.80],
+            '2026-02-01' => ['NIFTY 100 TRI' => 25215.70, 'CRISIL Short Term Bond TRI' => 2401.15, 'NIFTY 500 TRI' => 36148.30],
+            '2026-03-01' => ['NIFTY 100 TRI' => 24792.10, 'CRISIL Short Term Bond TRI' => 2414.85, 'NIFTY 500 TRI' => 35488.60],
+            '2026-04-01' => ['NIFTY 100 TRI' => 25590.45, 'CRISIL Short Term Bond TRI' => 2428.25, 'NIFTY 500 TRI' => 36795.20],
+            '2026-05-01' => ['NIFTY 100 TRI' => 26118.80, 'CRISIL Short Term Bond TRI' => 2441.90, 'NIFTY 500 TRI' => 37582.40],
+            '2026-06-01' => ['NIFTY 100 TRI' => 25874.35, 'CRISIL Short Term Bond TRI' => 2455.65, 'NIFTY 500 TRI' => 37124.75],
+        ];
+
+        foreach ($generatedIndexDates as $entryDate => $values) {
+            foreach ($values as $indexName => $closingValue) {
+                IndicesDetail::updateOrCreate(
+                    [
+                        'name' => $indexName,
+                        'entry_date' => $entryDate,
+                    ],
+                    [
+                        'name' => $indexName,
+                        'entry_date' => $entryDate,
+                        'closing_value' => $closingValue,
+                        'holiday' => 0,
+                        'percentage_change' => 0.00,
+                        'publish' => 'y',
+                        'created_id' => 1,
+                        'updated_id' => 1,
+                        'migration_at' => null,
                     ]
                 );
             }
@@ -261,6 +354,93 @@ class FundDemoSeeder extends Seeder
             );
         }
 
+        $navDates = [
+            '2026-01-01',
+            '2026-02-01',
+            '2026-03-01',
+            '2026-04-01',
+            '2026-05-01',
+            '2026-06-01',
+        ];
+
+        foreach (array_values($fundRows) as $index => $fund) {
+            $baseNav = 18 + (($index * 13) % 135) + (($index % 7) * 0.37);
+            $previousNav = null;
+
+            foreach ($navDates as $monthIndex => $entryDate) {
+                $direction = (($index + $monthIndex) % 5) < 3 ? 1 : -1;
+                $movementPercent = $direction * (0.55 + ((($index * 7) + ($monthIndex * 3)) % 48) / 10);
+                $closingNav = $previousNav === null
+                    ? round($baseNav, 2)
+                    : round(max(5, $previousNav * (1 + ($movementPercent / 100))), 2);
+                $percentageChange = $previousNav && $previousNav != 0.0
+                    ? round((($closingNav - $previousNav) / $previousNav) * 100, 2)
+                    : 0.0;
+
+                FundDetail::updateOrCreate(
+                    [
+                        'fund_code' => $fund->fund_code,
+                        'entry_date' => $entryDate,
+                    ],
+                    [
+                        'fund_code' => $fund->fund_code,
+                        'entry_date' => $entryDate,
+                        'closing_nav' => $closingNav,
+                        'holiday' => 0,
+                        'percentage_change' => $percentageChange,
+                        'publish' => 'y',
+                        'created_id' => 1,
+                        'updated_id' => 1,
+                        'migration_at' => null,
+                    ]
+                );
+
+                $previousNav = $closingNav;
+            }
+
+            $previousCorpus = round(320 + (($index * 173) % 9200) + (($index % 9) * 41.75), 2);
+            $corpusDirection = $index % 4 === 0 ? -1 : 1;
+            $corpusMovement = $corpusDirection * (18 + (($index * 29) % 310));
+            $currentCorpus = round(max(100, $previousCorpus + $corpusMovement), 2);
+            $corpusPercentage = round((($currentCorpus - $previousCorpus) / $previousCorpus) * 100, 2);
+
+            CorpusEntry::updateOrCreate(
+                [
+                    'fund_code' => $fund->fund_code,
+                    'entry_date' => '2026-05-01',
+                ],
+                [
+                    'fund_code' => $fund->fund_code,
+                    'entry_date' => '2026-05-01',
+                    'corpus_entry' => $previousCorpus,
+                    'percentage_change' => 0.0,
+                    'corpus_change' => 0.0,
+                    'publish' => 'y',
+                    'created_id' => 1,
+                    'updated_id' => 1,
+                    'migration_at' => null,
+                ]
+            );
+
+            CorpusEntry::updateOrCreate(
+                [
+                    'fund_code' => $fund->fund_code,
+                    'entry_date' => '2026-06-01',
+                ],
+                [
+                    'fund_code' => $fund->fund_code,
+                    'entry_date' => '2026-06-01',
+                    'corpus_entry' => $currentCorpus,
+                    'percentage_change' => $corpusPercentage,
+                    'corpus_change' => round($currentCorpus - $previousCorpus, 2),
+                    'publish' => 'y',
+                    'created_id' => 1,
+                    'updated_id' => 1,
+                    'migration_at' => null,
+                ]
+            );
+        }
+
         $compositionRows = [
             ['fund_code' => 'MPXLC001', 'scrip_name' => 'HDFC Bank', 'industry' => 'Banking', 'category' => 'Equity', 'content_per' => 11.40, 'amount' => 175.60, 'no_of_shares' => 120000, 'indices_per' => 10.85],
             ['fund_code' => 'MPXLC001', 'scrip_name' => 'Reliance Industries', 'industry' => 'Energy', 'category' => 'Equity', 'content_per' => 9.85, 'amount' => 151.90, 'no_of_shares' => 54000, 'indices_per' => 8.76],
@@ -338,9 +518,9 @@ class FundDemoSeeder extends Seeder
             );
         }
 
-        $this->command?->info('Fund demo content seeded.');
-        $this->command?->line('Fund codes: MPXLC001, MPXSD001, MPXFC001');
-        $this->command?->line('AUM date: ' . $aumDate->toDateString());
+        $this->command?->info('Fund demo content seeded with 100 heatmap funds.');
+        $this->command?->line('Fund codes: MPXLC001, MPXSD001, MPXFC001, MPXD001-MPXD097');
+        $this->command?->line('Latest NAV and AUM date: 2026-06-01');
         $this->command?->line('Composition date: ' . $compositionDate->toDateString());
     }
 }

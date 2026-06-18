@@ -4,6 +4,10 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 define('LARAVEL_START', microtime(true));
 
+// Keep PHP 8.4 deprecation noise out of browser responses while preserving real errors.
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+ini_set('display_errors', '0');
+
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance

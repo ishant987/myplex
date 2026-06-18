@@ -568,6 +568,8 @@ Route::namespace('App\Http\Controllers\Web')->name('web.')->group(function () {
     Route::get('new-fundwatch/{fund_code}', 'NewfundwatchController@index')->name('new_fundwatch');
 
     Route::get('new-fundwatch2/{fund_code}', 'NewfundwatchController@index2')->name('new_fundwatch2');
+    Route::get('market-overview', 'PageController@marketOverviewData')->name('market-overview');
+    Route::get('market-heatmap', 'PageController@marketHeatmapData')->name('market-heatmap');
 
 
     Route::get('new-fundwatch-list', 'NewfundwatchController@list')->name('new-fundwatch-list');

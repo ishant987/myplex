@@ -30,6 +30,12 @@ class RatioController extends Controller
   {
     $this->Useful = new Useful;
   }
+
+  private function indicesDetailIndexColumn(): string
+  {
+    return DB::getDriverName() === 'sqlite' ? 'name' : 'correlation_new';
+  }
+
   public static function loggedInUserData()
   {
     $user = Auth::user();
@@ -231,6 +237,7 @@ class RatioController extends Controller
     $fund_codes = FundMaster::where('fund_type_id', $fund_type_id)->select('fund_code')->get()->pluck('fund_code')->toArray();
 
     $indices = FundMaster::where('fund_type_id', $fund_type_id)->select('indices_name')->groupBy('indices_name')->get()->pluck('indices_name')->toArray();
+    $indexColumn = $this->indicesDetailIndexColumn();
 
     $mergedResults = [];
 
@@ -248,9 +255,9 @@ class RatioController extends Controller
 
       // dd($sixMonthsAgo,$oneYearAgo,$twoYearsAgo,$threeYearsAgo);
 
-      $indicesDetails = IndicesDetail::whereIn('correlation_new', $indices)
+      $indicesDetails = IndicesDetail::whereIn($indexColumn, $indices)
         ->select(DB::raw("
-                correlation_new,
+                {$indexColumn} as correlation_new,
                 MAX(CASE WHEN entry_date = '$date' THEN closing_value END) AS closing_value_current_date,
                 MAX(CASE WHEN entry_date = '$sixMonthsAgo' THEN closing_value END) AS closing_value_sixMonthsAgo,
                 MAX(CASE WHEN entry_date = '$oneYearAgo' THEN closing_value END) AS closing_value_oneYearAgo,
@@ -284,7 +291,7 @@ class RatioController extends Controller
                         ) - 1 
                     ) * 100
                 ) AS threeyearsReturn
-            "))->groupBy('correlation_new')
+            "))->groupBy($indexColumn)
         ->get()->keyBy('correlation_new')->toArray();
 
       $fundDetails = FundDetail::whereIn('fund_detail.fund_code', $fund_codes)
@@ -362,9 +369,9 @@ class RatioController extends Controller
 
       // dd($sixMonthsAgo,$oneYearAgo,$twoYearsAgo,$threeYearsAgo);
 
-      $indicesDetails = IndicesDetail::whereIn('correlation_new', $indices)
+      $indicesDetails = IndicesDetail::whereIn($indexColumn, $indices)
         ->select(DB::raw("
-            correlation_new,
+            {$indexColumn} as correlation_new,
             MAX(CASE WHEN entry_date = '$date' THEN closing_value END) AS closing_value_current_date,
             MAX(CASE WHEN entry_date = '$sevenDaysAgo' THEN closing_value END) AS closing_value_sevenDaysAgo,
             MAX(CASE WHEN entry_date = '$fourteenDaysAgo' THEN closing_value END) AS closing_value_fourteenDaysAgo,
@@ -391,7 +398,7 @@ class RatioController extends Controller
                 NULLIF(MAX(CASE WHEN entry_date = '$sixtyDaysAgo' THEN closing_value END), 0)
             ) * 100 AS sixtyDaysReturn
         "))
-        ->groupBy('correlation_new')
+        ->groupBy($indexColumn)
         ->get()
         ->keyBy('correlation_new')
         ->toArray();
