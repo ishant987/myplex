@@ -5,6 +5,15 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="base-url" content="{{ url('/') }}">
 <title>@yield('page-title') | {{ config('app.name') }}</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q126PZNHCW"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Q126PZNHCW');
+</script>
 @if (View::hasSection('meta-keywords'))
     <meta name="keywords" content="@yield('meta-keywords')">
 @endif
