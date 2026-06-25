@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   app:
     build:
@@ -7,18 +6,23 @@ services:
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: myplexus
-    container_name: myplexus-app
+    image: myproj
+    container_name: myproj-app
     restart: unless-stopped
     working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=2000
     environment:
       DB_CONNECTION: sqlite
       DB_DATABASE: /var/www/database/database.sqlite
+      APP_URL: http://127.0.0.1:2000
+    ports:
+      - "2000:2000"
     volumes:
       - ./:/var/www
+      - ./.env.docker:/var/www/.env
     networks:
-      - myplexus
+      - myproj
     
 networks:
-  myplexus:
+  myproj:
     driver: bridge
