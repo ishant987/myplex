@@ -47,6 +47,10 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
             Route::post('/create','HomeLatestController@create')->name('latest.create');
         });
 
+        Route::get('/calculatorlogin/list', function() {
+            return redirect()->route('admin.dashboard');
+        })->name('calculatorlogin.list');
+
         Route::post('/change-status', 'BaseController@changeStatus')->name('changestatus');
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
