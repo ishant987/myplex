@@ -164,10 +164,6 @@ class SeoPageController extends BaseController
 
             $seen[$row['url_slug']] = true;
 
-            if (empty($row['featured_image_url'])) {
-                $errors[$rowNo][] = 'Featured image URL is blank.';
-            }
-
             if ($validator->fails()) {
                 $errors[$rowNo] = array_merge($errors[$rowNo] ?? [], $validator->errors()->all());
             }
