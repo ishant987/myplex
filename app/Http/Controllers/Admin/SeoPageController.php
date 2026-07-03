@@ -122,7 +122,11 @@ class SeoPageController extends BaseController
 
     public function bulk()
     {
-        return view('themes.backend.pages.seo_pages.bulk', $this->viewData(['rows' => session('bulk_rows'), 'errorsByRow' => session('bulk_errors', [])]));
+        $rows = session('seo_bulk_rows', []);
+        return view('themes.backend.pages.seo_pages.bulk', $this->viewData([
+            'rows' => $rows,
+            'errorsByRow' => session('bulk_errors', [])
+        ]));
     }
 
     public function template()
@@ -171,12 +175,14 @@ class SeoPageController extends BaseController
             $rows[] = $row;
         }
 
-        return redirect()->route('admin.seo-pages.bulk')->with('bulk_rows', $rows)->with('bulk_errors', $errors);
+        session(['seo_bulk_rows' => $rows]);
+
+        return redirect()->route('admin.seo-pages.bulk')->with('bulk_errors', $errors);
     }
 
     public function publishCsv(Request $request)
     {
-        $rows = json_decode($request->get('rows', '[]'), true) ?: [];
+        $rows = session('seo_bulk_rows', []);
         $status = $request->get('bulk_status', 'draft');
 
         foreach (array_slice($rows, 0, 10) as $row) {
@@ -185,6 +191,8 @@ class SeoPageController extends BaseController
             $page = SeoPage::create($data);
             $this->service->snapshot($page);
         }
+
+        session()->forget('seo_bulk_rows');
 
         return redirect()->route('admin.seo-pages.index')->with('message', count($rows) . ' SEO pages created.');
     }

@@ -6,7 +6,7 @@
   <a class="btn btn-info mb-3" href="{{ route('admin.seo-pages.template') }}">Download CSV Template</a>
   <form method="post" action="{{ route('admin.seo-pages.preview-csv') }}" enctype="multipart/form-data" class="mb-4">@csrf<input type="file" name="csv_file" accept=".csv,text/csv" required><button class="btn btn-primary">Preview CSV</button></form>
   @if($rows)
-  <form method="post" action="{{ route('admin.seo-pages.publish-csv') }}">@csrf<input type="hidden" name="rows" value="{{ e(json_encode($rows)) }}">
+  <form method="post" action="{{ route('admin.seo-pages.publish-csv') }}">@csrf
     <div class="table-responsive"><table class="table table-bordered"><thead><tr><th>#</th><th>Title</th><th>Slug</th><th>Status</th><th>Warnings</th></tr></thead><tbody>
       @foreach($rows as $i => $row)<tr><td>{{ $i+1 }}</td><td>{{ $row['page_title'] ?? '' }}</td><td>{{ $row['url_slug'] ?? '' }}</td><td>{{ $row['status'] ?? '' }}</td><td class="{{ empty($errorsByRow[$i+1]) ? 'text-success' : 'text-danger' }}">{{ empty($errorsByRow[$i+1]) ? 'Ready' : implode(' ', $errorsByRow[$i+1]) }}</td></tr>@endforeach
     </tbody></table></div>
