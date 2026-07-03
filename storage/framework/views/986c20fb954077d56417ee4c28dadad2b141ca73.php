@@ -1,7 +1,53 @@
 <meta charset="utf-8">
+<!-- Schema Markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "myplexus",
+  "url": "https://www.myplexus.com",
+  "logo": "https://www.myplexus.com/favicon.png",
+  "description": "myplexus is India's dedicated mutual fund research and analytics platform offering risk analytics, performance tools and expert insights.",
+  "sameAs": [
+    "https://www.myplexus.com"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "url": "https://www.myplexus.com/contact"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "myplexus",
+  "url": "https://www.myplexus.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.myplexus.com/know-your-scheme?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
 <link rel="icon" type="image/x-icon" href="<?php echo e(asset('favicon.png')); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q126PZNHCW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q126PZNHCW');
+</script>
+<?php if(View::hasSection('cur-url')): ?>
+<link rel="canonical" href="<?php echo $__env->yieldContent('cur-url'); ?>" />
+<?php else: ?>
+<link rel="canonical" href="<?php echo e(url()->current()); ?>">
+<?php endif; ?>
 <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 <meta name="base-url" content="<?php echo e(url('/')); ?>">
 <title><?php echo $__env->yieldContent('page-title'); ?> | <?php echo e(config('app.name')); ?></title>
@@ -17,32 +63,36 @@
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="<?php echo e(config('app.name')); ?>" />
 <meta property="og:type" content="article">
-<!-- <meta property="og:url" content="<?php echo $__env->yieldContent('cur-url'); ?>" />
-<meta property="og:title" content="<?php echo $__env->yieldContent('meta-title'); ?>" /> -->
-<meta property="og:url" content="<?php echo e(config('app.name')); ?>" />
-<meta property="og:title" content="<?php echo e(config('app.name')); ?>" />
-<meta property="og:image" content="<?php echo e(config('app.name')); ?>" />
-
-<?php if(View::hasSection('meta-image')): ?>
-<!-- <meta property="og:image" content="<?php echo $__env->yieldContent('meta-image'); ?>" /> -->
+<?php if(View::hasSection('cur-url')): ?>
+<meta property="og:url" content="<?php echo $__env->yieldContent('cur-url'); ?>" />
+<?php else: ?>
+<meta property="og:url" content="<?php echo e(url()->current()); ?>" />
 <?php endif; ?>
+<meta property="og:title" content="<?php if(View::hasSection('meta-title')): ?><?php echo $__env->yieldContent('meta-title'); ?><?php else: ?><?php echo e(isset($dataArr['meta_title']) && $dataArr['meta_title'] != '' ? $dataArr['meta_title'] : config('app.name')); ?> | <?php echo e(config('app.name')); ?><?php endif; ?>" />
+<?php if(View::hasSection('meta-image')): ?>
+<meta property="og:image" content="<?php echo $__env->yieldContent('meta-image'); ?>" />
+<?php else: ?>
+<meta property="og:image" content="<?php echo e(asset('favicon.png')); ?>" />
+<?php endif; ?>
+
 <?php if(View::hasSection('moneycontrol')): ?>
     <!-- <link rel="stylesheet" href="https://stat.moneycontrol.co.in/mccss/mcradar/https_style.css?ver=1.6" /> -->
 <?php endif; ?>
 <link href="<?php echo e(asset('themes/frontend/assets/v1/css/bootstrap.min.css')); ?>" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="<?php echo e(asset('themes/frontend/assets/v1/css/style.css')); ?>" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" media="print" onload="this.media='all'" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" media="print" onload="this.media='all'" />
 
 <link href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <link href="<?php echo e(asset('themes/frontend/assets/v1/css/all.min.css')); ?>" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" media="print" onload="this.media='all'">
 
-<script src="https://unpkg.com/phosphor-icons"></script>
+<script src="https://unpkg.com/phosphor-icons" defer></script>
 <?php echo $__env->yieldPushContent('style'); ?>
+<?php echo $__env->yieldContent('canonical'); ?>
 <style>
     .live-market-data .live-market-wrap {
         position: relative;

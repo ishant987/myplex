@@ -34,6 +34,14 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix(Config('c
            
         });
 
+        Route::get('/seo-pages/bulk', 'SeoPageController@bulk')->name('seo-pages.bulk');
+        Route::get('/seo-pages/template', 'SeoPageController@template')->name('seo-pages.template');
+        Route::post('/seo-pages/preview-csv', 'SeoPageController@previewCsv')->name('seo-pages.preview-csv');
+        Route::post('/seo-pages/publish-csv', 'SeoPageController@publishCsv')->name('seo-pages.publish-csv');
+        Route::post('/seo-pages/{seoPage}/duplicate', 'SeoPageController@duplicate')->name('seo-pages.duplicate');
+        Route::post('/seo-pages/{seoPage}/restore/{version}', 'SeoPageController@restore')->name('seo-pages.restore');
+        Route::resource('seo-pages', 'SeoPageController')->parameters(['seo-pages' => 'seoPage'])->except(['show']);
+
         Route::group(['prefix'=>'latest_update'],function(){
             Route::get('/','HomeLatestController@index')->name('latest.index');
             Route::post('/create','HomeLatestController@create')->name('latest.create');
@@ -898,3 +906,7 @@ Route::get('correlation-update', 'App\Http\Controllers\CorrelationCornController
 
 
 /*=================correlation_new Corn end====================*/
+
+Route::get('sitemap.xml', 'App\Http\Controllers\Web\SeoPageController@sitemap')->name('seo-pages.sitemap');
+Route::get('robots.txt', 'App\Http\Controllers\Web\SeoPageController@robots')->name('seo-pages.robots');
+Route::get('{slug}', 'App\Http\Controllers\Web\SeoPageController@show')->where('slug', '^(?!admin|api|storage|themes|assets|css|js|images|uploads|correlation-update|sitemap\.xml|robots\.txt).+')->name('seo-pages.public');

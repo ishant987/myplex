@@ -1,2 +1,18 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /login/
+Disallow: /dashboard/
+Disallow: /test-report-beta
+Disallow: /pentatech
+Disallow: /new-fundwatch-list
+Disallow: /mf-taxation
+Disallow: /report-dashboard
+Disallow: /investor-signup
+Disallow: /user-dashboard
+Disallow: /edit-profile
+Disallow: /change-password
+Disallow: /forgot-password
+Disallow: /sign-up
+
+Sitemap: https://www.myplexus.com/sitemap.xml

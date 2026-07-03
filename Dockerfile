@@ -33,3 +33,8 @@ RUN mkdir -p /home/$user/.composer && \
 WORKDIR /var/www
 
 USER $user
+
+EXPOSE 2000
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=2000"]
+

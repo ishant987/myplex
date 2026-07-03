@@ -24,11 +24,10 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplateSeeder::class);
         $this->call(PagesSeeder::class);
         $this->call(CustomFieldTypeSeeder::class);
-        $this->call(UserSeeder::class);
-        $this->call(SubscriptionSeeder::class);
+        $this->call(SeoPageSeeder::class);
+        // $this->call(UserSeeder::class);
+        // $this->call(SubscriptionSeeder::class);
+        // $this->call(LocalDemoContentSeeder::class);
         $this->call(SubscriptionPlanSeeder::class);
-        $this->call(PremiumPlanDemoSeeder::class);
-        $this->call(FundDemoSeeder::class);
-        $this->call(LocalDemoContentSeeder::class);
     }
 }

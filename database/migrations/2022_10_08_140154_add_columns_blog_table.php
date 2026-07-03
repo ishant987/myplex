@@ -13,11 +13,9 @@ class AddColumnsBlogTable extends Migration
      */
     public function up()
     {
-        
         Schema::table('blog', function (Blueprint $table) {
             $table->softDeletes();
         });
-    
     }
 
     /**
@@ -27,6 +25,10 @@ class AddColumnsBlogTable extends Migration
      */
     public function down()
     {
-        //
+        if (Schema::hasTable('blog')) {
+            Schema::table('blog', function (Blueprint $table) {
+                $table->dropSoftDeletes();
+            });
+        }
     }
 }

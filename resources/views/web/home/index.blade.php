@@ -35,9 +35,9 @@
             <div class="col-md-12 col-lg-9 px-0">
                 <div class="hero_banner_right_slider">
                     <div class="single_slider_for">
-                        <img src="{{ asset('themes/frontend/assets/v1/img/home1.jpeg') }}" class="img-fluid" />
+                        <img src="{{ asset('themes/frontend/assets/v1/img/home1.jpeg') }}" class="img-fluid" alt="Mutual Fund Research Platform" />
                         <div class="slider_caption">
-                            <h2 class="animate__animated animate__fadeInUp">Invest in the freedom to choose</h2>
+                            <h1 class="animate__animated animate__fadeInUp">Invest in the freedom to choose</h1>
                             <p class="animate__animated animate__fadeInUp">Wealth is not just about money. It's about
                                 what all you can do with it. It is having your own story of progress. And living it
                                 every single day. So go ahead, imagine a future you want to shape.</p>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="single_slider_for">
-                        <img src="{{ asset('themes/frontend/assets/v1/img/banner-2.jpg') }}" class="img-fluid" />
+                        <img src="{{ asset('themes/frontend/assets/v1/img/banner-2.jpg') }}" class="img-fluid" alt="Invest in Mutual Funds" />
                         <div class="slider_caption">
                             <h2 class="animate__animated animate__fadeInUp">Invest in the freedom to choose</h2>
                             <p class="animate__animated animate__fadeInUp">Wealth is not just about money. It's about
@@ -55,7 +55,7 @@
                         </div>
                     </div>
 					<div class="single_slider_for">
-                        <img src="{{ asset('themes/frontend/assets/v1/img/banner-3.jpg') }}" class="img-fluid" />
+                        <img src="{{ asset('themes/frontend/assets/v1/img/banner-3.jpg') }}" class="img-fluid" alt="Mutual Fund Analytics" />
                         <div class="slider_caption">
                             <h2 class="animate__animated animate__fadeInUp">Invest in the freedom to choose</h2>
                             <p class="animate__animated animate__fadeInUp">Wealth is not just about money. It's about
@@ -162,6 +162,7 @@
                                     <!--End Single Service Box Style1-->
                                     <!--Start Single Service Box Style1-->
                                     <div class="col-xl-4 col-lg-4 mt-4">
+                                        @if (isset($allnewfroms[1]))
                                         <div class="single-service-box-style1 h-100">
 											<div class="top-float">
 												<p class="mb-0">{{ $allnewfroms[1]->type_id }}</p>
@@ -177,6 +178,21 @@
                                                 <a href="{{ $allnewfroms[1]->link }}" target="_blank"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
+                                        @else
+                                        <div class="single-service-box-style1 h-100">
+											<div class="top-float">
+												<p class="mb-0">Calculator</p>
+											</div>
+                                            <div class="icon">
+                                                <span class="icon-online"></span>
+                                            </div>
+                                          <h3><a href="/return-calculator">Return Calculator</a></h3>
+                                            <div class="border-box"></div>
+                                            <div class="btn-box"> 
+                                                <a href="/return-calculator"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                     <!--End Single Service Box Style1-->
                                     <!--Start Single Service Box Style1-->
@@ -226,7 +242,7 @@
                     <div class="col-md-12 col-lg-4">
                         <div class="single_abt_item" data-aos="fade-up" data-aos-duration="1500">
                             <div class="abt_icon d-flex align-items-center">
-                                <img src="{{ asset('themes/frontend/assets/v1/img/ranking-icon.png') }}" />
+                                <img src="{{ asset('themes/frontend/assets/v1/img/ranking-icon.png') }}" alt="Monthly Ranking" />
                                 <h4>Category wise Return & Risk Ranking</h4>
                             </div>
                             <div class="single_abt_content">
@@ -256,7 +272,7 @@
                     <div class="col-md-12 col-lg-4">
                         <div class="single_abt_item " data-aos="fade-up" data-aos-duration="1500">
                             <div class="abt_icon d-flex align-items-center">
-                                <img src="{{ asset('themes/frontend/assets/v1/img/fund-icon.png') }}" />
+                                <img src="{{ asset('themes/frontend/assets/v1/img/fund-icon.png') }}" alt="Fund Portfolio" />
                                 <h4>Category Performance Snapshot</h4>
                             </div>
                             <div class="single_abt_content">
@@ -280,7 +296,7 @@
                     <div class="col-md-12 col-lg-4">
                         <div class="single_abt_item " data-aos="fade-up" data-aos-duration="1500">
                             <div class="abt_icon d-flex align-items-center">
-                                <img src="{{ asset('themes/frontend/assets/v1/img/performance-icon.png') }}" />
+                                <img src="{{ asset('themes/frontend/assets/v1/img/performance-icon.png') }}" alt="Fund Performance" />
                                 <h4>Scheme Performance, Ratios & Highlights:</h4>
                             </div>
                             <div class="single_abt_content">
@@ -331,7 +347,7 @@
                             <h4 class="text-uppercase margin_0">Composition</h4>
                         </div>
                     </div>
-                    <img src="{{ asset('themes/frontend/assets/v1/img/workflow.png') }}" alt="">
+                    <img src="{{ asset('themes/frontend/assets/v1/img/workflow.png') }}" alt="myplexus Workflow">
                     <div class="row columns_margin_bottom_0">
                         <div class="col-xs-12">
                             <h4 class="text-uppercase">Ratio</h4>
@@ -344,7 +360,7 @@
 						
                         <div class="with_padding teaser text-center px-5 px-md-0" data-aos="fade-up" data-aos-duration="1000">
                             <!-- <div class="teaser_icon">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" />
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" alt="Daily Price" />
 								
                             </div>
                                 
@@ -380,7 +396,7 @@
                     <div class="col-lg-4 col-md-4 mt-5">
                             <div class="with_padding teaser text-center" data-aos="fade-up" data-aos-duration="1000">
                                 <!-- <div class="teaser_icon">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" />
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" alt="Fund Ratios" />
                                 </div>
                                 
                                     <h4 class="text-uppercase"><a href="/compare-scheme?compare_ratio_type=information_ratio">Ratio</a></h4>
@@ -415,7 +431,7 @@
                     <div class="col-lg-4 col-md-4 mt-5">
                             <div class="with_padding teaser text-center" data-aos="fade-up" data-aos-duration="1000">
                                 <!-- <div class="teaser_icon">
-                                    <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" />
+                                    <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" alt="Fund Composition" />
                                 </div>
                               
                                 <h4 class="text-uppercase">  <a href="/compare-scheme?compare_composition_type=top_industry">Composition</a></h4>
@@ -467,13 +483,13 @@
         <div class="row align-items-end"> -->
             <!-- <div class="col-lg-6 offset-lg-0 col-md-10 offset-md-1" data-aos="fade-up" data-aos-duration="1500">
                 <div class="compare_left_sction">
-                    <img src="{{ asset('themes/frontend/assets/v1/img/compare-sheme-img.png') }}" class="img-fluid" />
+                    <img src="{{ asset('themes/frontend/assets/v1/img/compare-sheme-img.png') }}" class="img-fluid" alt="Compare Mutual Fund Schemes" />
                 </div>
             </div> -->
             <!-- <div class="col-lg-4 col-md-4">
                  <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" alt="Daily Price" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Daily Price</h4>
@@ -485,7 +501,7 @@
             <div class="col-lg-4 col-md-4">
                     <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" alt="Fund Ratios" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Ratio</h4>
@@ -497,7 +513,7 @@
             <div class="col-lg-4 col-md-4">
                     <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" alt="Fund Composition" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Composition</h4>
@@ -510,7 +526,7 @@
                 <div class="right_compare">
                     <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/daily-price-icon.png') }}" alt="Daily Price" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Daily Price</h4>
@@ -520,7 +536,7 @@
                     </div>
                     <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/ratio-icon.png') }}" alt="Fund Ratios" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Ratio</h4>
@@ -530,7 +546,7 @@
                     </div>
                     <div class="single_right_compare d-flex align-items-start mb-4" data-aos="fade-up" data-aos-duration="1000">
                         <div class="right_compare_icon">
-                            <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" />
+                            <img src="{{ asset('themes/frontend/assets/v1/img/composition-icon.png') }}" alt="Fund Composition" />
                         </div>
                         <div class="righ_compare_content ms-4">
                             <h4>Composition</h4>
@@ -996,7 +1012,9 @@
                             <div class="item">
                                 <div class="pad15">
                                     <div class="money_left_sec car-img">
+                                        @if ($fundManData->media)
                                         <img src="{{ $fundManData->media->getModuleVars()['media_folder'].$fundManData->media['path'] }}" class="img-fluid">
+                                        @endif
                                     </div>
                                     <div class="money_right_section expertHeight">	
                                         <a href="{{ route('web.fundman', $fundManData->slug) }}"><h4>{{ $fundManData->name }}</h4></a>				
@@ -1514,7 +1532,8 @@
 <script>
 	
 	function formatDate() {
-    var d = new Date(),
+    var d = new Date(); d.setDate(d.getDate() - 1);
+    var d = d,
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();

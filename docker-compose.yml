@@ -14,8 +14,11 @@ services:
     environment:
       DB_CONNECTION: sqlite
       DB_DATABASE: /var/www/database/database.sqlite
+    ports:
+      - "2000:2000"
     volumes:
       - ./:/var/www
+      - ./.env.docker:/var/www/.env
     networks:
       - myplexus
     

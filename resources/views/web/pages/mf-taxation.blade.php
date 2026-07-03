@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4>Mutual Fund Taxation</h4>
+                    <h1>Mutual Fund Taxation</h1>
                 </div>
             </div>
         </div>

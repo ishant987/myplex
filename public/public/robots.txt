@@ -1,2 +1,9 @@
 User-agent: *
-Disallow:
+
+Allow: /
+
+Disallow: /admin/
+Disallow: /login/
+Disallow: /dashboard/
+
+Sitemap: https://www.myplexus.com/sitemap.xml

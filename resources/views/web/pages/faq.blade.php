@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4>FAQ</h4>
+                    <h1>FAQ</h1>
                 </div>
             </div>
         </div>

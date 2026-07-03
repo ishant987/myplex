@@ -12,11 +12,9 @@ class CreateActiveFundsProcedure extends Migration
      */
     public function up()
     {
-        // Stored procedures are not supported by SQLite; skip in local dev.
-        if (DB::connection()->getDriverName() === 'sqlite') {
+        if (DB::getDriverName() === 'sqlite') {
             return;
         }
-
         $procedure = "DROP PROCEDURE IF EXISTS active_funds;
             CREATE PROCEDURE active_funds() 
             BEGIN
@@ -36,6 +34,9 @@ class CreateActiveFundsProcedure extends Migration
      */
     public function down()
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
         DB::unprepared('DROP PROCEDURE IF EXISTS active_funds');
     }
 }

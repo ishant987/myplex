@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="inner_section_banner">
-                    <h4>About myplexus</h4>
+                    <h1>About myplexus</h1>
                 </div>
             </div>
         </div>

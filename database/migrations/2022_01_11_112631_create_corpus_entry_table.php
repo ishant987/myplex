@@ -26,7 +26,10 @@ class CreateCorpusEntryTable extends Migration
             $table->addColumn('integer', 'updated_id', ['length' => 10, 'default' => '0', 'comment' => '']);
             $table->timestamps();
             $table->timestamp('migration_at', 0)->nullable();
-            $table->unique(['fund_code', 'entry_date']);
+        });
+
+        Schema::table('corpus_entry', function (Blueprint $table) {
+            $table->unique(['fund_code', 'entry_date'], 'corpus_entry_fund_code_entry_date');
         });
     }
 
@@ -41,7 +44,7 @@ class CreateCorpusEntryTable extends Migration
 
         if (Schema::hasTable('corpus_entry')) {
             Schema::table('corpus_entry', function (Blueprint $table) {
-                $table->dropUnique('ce_fund_code_entry_date_unique');
+                $table->dropUnique('corpus_entry_fund_code_entry_date');
             });
         }
     }

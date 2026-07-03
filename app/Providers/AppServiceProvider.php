@@ -36,6 +36,33 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Register DATE_FORMAT polyfill for SQLite connections dynamically
+        \Event::listen(\Illuminate\Database\Events\StatementPrepared::class, function ($event) {
+            $connection = $event->connection;
+            if ($connection instanceof \Illuminate\Database\SQLiteConnection) {
+                static $registered = [];
+                $id = spl_object_hash($connection);
+                if (!isset($registered[$id])) {
+                    $connection->getPdo()->sqliteCreateFunction('DATE_FORMAT', function ($date, $format) {
+                        if (!$date) return null;
+                        try {
+                            $d = new \DateTime($date);
+                            $mysqlToPhp = [
+                                '%Y' => 'Y', '%y' => 'y', '%m' => 'm', '%d' => 'd',
+                                '%H' => 'H', '%i' => 'i', '%s' => 's', '%W' => 'l',
+                                '%M' => 'F', '%b' => 'M', '%c' => 'n', '%e' => 'j'
+                            ];
+                            $phpFormat = str_replace(array_keys($mysqlToPhp), array_values($mysqlToPhp), $format);
+                            return $d->format($phpFormat);
+                        } catch (\Exception $e) {
+                            return null;
+                        }
+                    });
+                    $registered[$id] = true;
+                }
+            }
+        });
+
         //
         if($this->app->environment('production')) {
             \URL::forceScheme('https');
